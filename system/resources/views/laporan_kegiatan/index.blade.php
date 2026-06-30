@@ -45,8 +45,8 @@
                                 <th class="align-middle" style=" padding-left: 18px; height: 35px; width: 110px">Aksi</th>
                                 <th class="align-middle" style=" padding-left: 18px; height: 35px;">Nama Kegiatan</th>
                                 <th class="align-middle" style=" padding-left: 18px; height: 35px;">Penanggung Jawab</th>
+                                <th class="align-middle" style=" padding-left: 18px; height: 35px;">Lokasi</th>
                                 <th class="align-middle" style=" padding-left: 18px; height: 35px;">Tanggal Laporan</th>
-                                <th class="align-middle" style=" padding-left: 18px; height: 35px;">Status Rencana</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -93,16 +93,11 @@
                                     <td>
                                         {{ $laporan->rencanaKegiatan->nama_kegiatan }}
                                         <br>
-                                        <small class="text-muted">{{ $laporan->rencanaKegiatan->jenis_kegiatan }}</small>
+                                        <small class="text-muted">{{ $laporan->rencanaKegiatan->getJenisKegiatanLabel() }}</small>
                                     </td>
                                     <td>{{ $laporan->rencanaKegiatan->penanggung_jawab ?: '-' }}</td>
+                                    <td>{{ $laporan->rencanaKegiatan->desa ?: '-' }}</td>
                                     <td>{{ $laporan->created_at->format('d/m/Y') }}</td>
-                                    <td>
-                                        <span
-                                            class="badge bg-{{ $laporan->rencanaKegiatan->status == \App\Models\RencanaKegiatan::STATUS_SELESAI ? 'success' : 'secondary' }}">
-                                            {{ ucfirst($laporan->rencanaKegiatan->status) }}
-                                        </span>
-                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

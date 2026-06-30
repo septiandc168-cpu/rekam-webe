@@ -9,18 +9,40 @@ class LaporanKegiatan extends Model
 {
     use HasUuid;
 
+    // Status constants
+    const STATUS_DRAFT = 'draft';
+    const STATUS_FINAL = 'final';
+
+
     protected $fillable = [
         'user_id',
         'rencana_kegiatan_id',
-        'pelaksanaan_kegiatan',
-        'hasil_kegiatan',
+        'realisasi_tanggal_mulai',
+        'realisasi_tanggal_selesai',
+        'rangkaian_kegiatan',
+        'target_peserta',
+        'realisasi_peserta',
+        'profil_peserta',
+        'hasil_dicapai',
+        'output_nyata',
+        'dampak_awal',
         'kendala',
-        'evaluasi',
-        'dokumentasi',
+        'solusi',
+        'evaluasi_rekomendasi',
+        'foto_kegiatan',
+        'daftar_hadir',
+        'notulen',
+        'materi',
+        'berita_acara',
+        'status',
     ];
 
     protected $casts = [
-        'dokumentasi' => 'array',
+        'foto_kegiatan' => 'array',
+        'daftar_hadir' => 'array',
+        'notulen' => 'array',
+        'materi' => 'array',
+        'berita_acara' => 'array',
     ];
 
     /**
@@ -54,8 +76,8 @@ class LaporanKegiatan extends Model
      */
     public static function canCreateFor(RencanaKegiatan $rencanaKegiatan): bool
     {
-        // Only allow laporan for completed rencana kegiatan
-        if ($rencanaKegiatan->status !== RencanaKegiatan::STATUS_SELESAI) {
+        // Only allow laporan for disetujui rencana kegiatan
+        if ($rencanaKegiatan->status !== RencanaKegiatan::STATUS_DISETUJUI) {
             return false;
         }
 
@@ -71,5 +93,99 @@ class LaporanKegiatan extends Model
         return $this->rencanaKegiatan ? 
             RencanaKegiatan::getStatusOptions()[$this->rencanaKegiatan->status] ?? 'Unknown' 
             : 'Unknown';
+    }
+
+    /**
+     * Get status options for laporan kegiatan.
+     */
+    public static function getStatusOptions(): array
+    {
+        return [
+            self::STATUS_DRAFT => 'Draft',
+            self::STATUS_FINAL => 'Final',
+        ];
+    }
+
+
+    /**
+     * Check if laporan is draft.
+     */
+    public function isDraft(): bool
+    {
+        return $this->status === self::STATUS_DRAFT;
+    }
+
+    /**
+     * Check if laporan is final.
+     */
+    public function isFinal(): bool
+    {
+        return $this->status === self::STATUS_FINAL;
+    }
+
+    /**
+     * Get formatted waktu mulai.
+     */
+    public function getFormattedWaktuMulai(): string
+    {
+        return $this->rencanaKegiatan && $this->rencanaKegiatan->waktu_mulai 
+            ? \Carbon\Carbon::parse($this->rencanaKegiatan->waktu_mulai)->format('H:i') 
+            : '-';
+    }
+
+    /**
+     * Get formatted waktu selesai.
+     */
+    public function getFormattedWaktuSelesai(): string
+    {
+        return $this->rencanaKegiatan && $this->rencanaKegiatan->waktu_selesai 
+            ? \Carbon\Carbon::parse($this->rencanaKegiatan->waktu_selesai)->format('H:i') 
+            : '-';
+    }
+
+    /**
+     * Get formatted realisasi tanggal pelaksanaan.
+     */
+    public function getFormattedRealisasiTanggalPelaksanaan(): string
+    {
+        if ($this->realisasi_tanggal_mulai && $this->realisasi_tanggal_selesai) {
+            return \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->format('d F Y') . ' - ' . 
+                   \Carbon\Carbon::parse($this->realisasi_tanggal_selesai)->format('d F Y');
+        } elseif ($this->realisasi_tanggal_mulai) {
+            return \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->format('d F Y');
+        }
+        return '-';
+    }
+
+    /**
+     * Get formatted realisasi tanggal mulai.
+     */
+    public function getFormattedRealisasiTanggalMulai(): string
+    {
+        return $this->realisasi_tanggal_mulai 
+            ? \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->format('d F Y') 
+            : '-';
+    }
+
+    /**
+     * Get formatted realisasi tanggal selesai.
+     */
+    public function getFormattedRealisasiTanggalSelesai(): string
+    {
+        return $this->realisasi_tanggal_selesai 
+            ? \Carbon\Carbon::parse($this->realisasi_tanggal_selesai)->format('d F Y') 
+            : '-';
+    }
+
+    /**
+     * Get formatted waktu pelaksanaan (legacy support).
+     */
+    public function getFormattedWaktuPelaksanaan(): string
+    {
+        if ($this->rencanaKegiatan && $this->rencanaKegiatan->waktu_mulai && $this->rencanaKegiatan->waktu_selesai) {
+            return \Carbon\Carbon::parse($this->rencanaKegiatan->waktu_mulai)->format('H:i') . ' - ' . 
+                   \Carbon\Carbon::parse($this->rencanaKegiatan->waktu_selesai)->format('H:i');
+        }
+        return '-';
     }
 }

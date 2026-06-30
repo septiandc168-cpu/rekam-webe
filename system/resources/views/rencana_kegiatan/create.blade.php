@@ -22,7 +22,7 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Koordinat Lokasi</label>
+                        <label class="form-label">Koordinat Lokasi <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input type="text" id="location_lat" name="lat" class="form-control"
                                 placeholder="Latitude" readonly required>
@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Desa / Wilayah</label>
+                        <label class="form-label">Desa / Wilayah <span class="text-danger">*</span></label>
                         <input type="text" name="desa" class="form-control" placeholder="Nama desa atau wilayah">
                         <small class="form-text text-muted">Tuliskan nama desa atau wilayah lokasi kegiatan</small>
                     </div>
@@ -60,67 +60,120 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Nama Kegiatan</label>
+                                <label class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
                                 <input type="text" name="nama_kegiatan" class="form-control" placeholder="Nama kegiatan"
                                     required>
                                 <small class="form-text text-muted">Tuliskan nama kegiatan yang akan dilaksanakan</small>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Jenis Kegiatan</label>
-                                <select name="jenis_kegiatan" class="form-select" required>
-                                    <option value="">Pilih jenis kegiatan</option>
-                                    <option value="konservasi">Konservasi</option>
-                                    <option value="usaha masyarakat">Usaha Masyarakat</option>
-                                    <option value="edukasi">Edukasi</option>
-                                    <option value="lainnya">Lainnya</option>
-                                </select>
-                                <small class="form-text text-muted">Pilih jenis kegiatan yang sesuai</small>
+                                <label class="form-label">Estimasi Jumlah Peserta <span class="text-danger">*</span></label>
+                                <input type="number" name="estimasi_peserta" class="form-control" min="0" placeholder="Estimasi Jumlah Peserta">
+                                <small class="form-text text-muted">Perkirakan jumlah peserta yang akan hadir</small>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Deskripsi</label>
-                                <textarea name="deskripsi" class="form-control" rows="3" placeholder="Deskripsi Kegiatan"></textarea>
-                                <small class="form-text text-muted">Deskripsikan kegiatan yang akan dilaksanakan dalam kalimat yang singkat dan jelas<br>Deskripsi dapat dibuat dalam bentuk satu paragraf, dua paragraf atau maksimal tiga paragraf</small>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Tujuan</label>
-                                <textarea name="tujuan" class="form-control" rows="2" placeholder="Tujuan Kegiatan"></textarea>
-                                <small class="form-text text-muted">Tuliskan tujuan kegiatan yang akan dilaksanakan<br>Tuliskan dalam kalimat singkat atau cukup menggunakan frasa</small>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Tanggal Mulai</label>
+                                    <label class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
                                     <input type="date" name="tanggal_mulai" class="form-control">
                                     <small class="form-text text-muted">Pilih tanggal mulai kegiatan</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Tanggal Selesai</label>
+                                    <label class="form-label">Tanggal Selesai <span class="text-danger">*</span></label>
                                     <input type="date" name="tanggal_selesai" class="form-control">
                                     <small class="form-text text-muted">Pilih tanggal selesai kegiatan</small>
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Waktu Mulai <span class="text-danger">*</span></label>
+                                    <input type="time" name="waktu_mulai" class="form-control">
+                                    <small class="form-text text-muted">Pilih waktu mulai kegiatan</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Waktu Selesai <span class="text-danger">*</span></label>
+                                    <input type="time" name="waktu_selesai" class="form-control">
+                                    <small class="form-text text-muted">Pilih waktu selesai kegiatan</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Penanggung Jawab</label>
+                                <label class="form-label">Penanggung Jawab <span class="text-danger">*</span></label>
                                 <input type="text" name="penanggung_jawab" class="form-control"
                                     placeholder="Nama Penanggung Jawab">
                                 <small class="form-text text-muted">Tuliskan nama penanggung jawab kegiatan</small>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Kelompok / Komunitas Pelaksana</label>
+                                <label class="form-label">Kelompok / Komunitas Pelaksana <span class="text-danger">*</span></label>
                                 <input type="text" name="kelompok" class="form-control" placeholder="Nama kelompok">
                                 <small class="form-text text-muted">Tuliskan nama kelompok atau komunitas pelaksana</small>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Estimasi Jumlah Peserta</label>
-                                <input type="number" name="estimasi_peserta" class="form-control" min="0" placeholder="Estimasi Jumlah Peserta">
-                                <small class="form-text text-muted">Perkirakan jumlah peserta yang akan hadir</small>
+                                <label class="form-label">Jenis Kegiatan <span class="text-danger">*</span></label>
+                                <select name="jenis_kegiatan" class="form-select" required>
+                                    <option value="">-- Pilih Jenis Kegiatan --</option>
+                                    @foreach(\App\Models\RencanaKegiatan::getJenisKegiatanOptions() as $value => $label)
+                                        <option value="{{ $value }}" {{ old('jenis_kegiatan') == $value ? 'selected' : '' }}>
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text text-muted">Pilih jenis kegiatan yang sesuai</small>
+                            </div>
+
+                            <div class="mb-3" id="jenis_kegiatan_lainnya_row" @if(old('jenis_kegiatan') !== 'lainnya') style="display: none;" @endif>
+                                <label class="form-label">Deskripsi Jenis Kegiatan Lainnya <span class="text-danger">*</span></label>
+                                <input type="text" name="jenis_kegiatan_lainnya" class="form-control" 
+                                    placeholder="Jelaskan jenis kegiatan lainnya..."
+                                    value="{{ old('jenis_kegiatan_lainnya') }}"
+                                    @if(old('jenis_kegiatan') === 'lainnya') required @endif>
+                                <small class="form-text text-muted">Jelaskan jenis kegiatan lainnya</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi <span class="text-danger">*</span></label>
+                                <textarea name="deskripsi" class="form-control" id="summernote-deskripsi" rows="3" placeholder="Deskripsikan kegiatan yang akan dilaksanakan..."></textarea>
+                                <small class="form-text text-muted">
+                                Jelaskan secara singkat gambaran kegiatan yang akan dilaksanakan.
+                                <br>
+                                Tuliskan latar belakang kegiatan, bentuk kegiatan yang akan dilakukan, serta siapa saja yang akan terlibat.
+                                <br>
+                                Deskripsi dapat ditulis dalam 1–3 paragraf singkat agar mudah dipahami.
+                                <br><br>
+                                Contoh:
+                                <ul>
+                                <li>Kegiatan pelatihan pembuatan pupuk organik bagi masyarakat desa untuk meningkatkan pemanfaatan limbah rumah tangga menjadi produk yang bermanfaat bagi pertanian.</li>
+                                <li>Kegiatan identifikasi hama tanaman yang melibatkan masyarakat dan kelompok tani untuk meningkatkan pemahaman dalam pengendalian hama secara alami.</li>
+                                </ul>
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">Tujuan <span class="text-danger">*</span></label>
+                                <textarea name="tujuan" class="form-control" id="summernote-tujuan" rows="2" placeholder="Tuliskan tujuan kegiatan yang akan dilaksanakan..."></textarea>
+                                <small class="form-text text-muted">
+                                Tuliskan tujuan utama dari kegiatan yang akan dilaksanakan.
+                                <br>
+                                Tujuan dapat berupa peningkatan pengetahuan, keterampilan, kesadaran, atau pencapaian tertentu yang diharapkan dari kegiatan ini.
+                                <br>
+                                Tuliskan secara singkat dan jelas dalam 1–2 kalimat.
+                                <br><br>
+                                Contoh:
+                                <ul>
+                                <li>Meningkatkan pemahaman masyarakat tentang pengelolaan limbah organik menjadi pupuk yang bermanfaat.</li>
+                                <li>Meningkatkan keterampilan peserta dalam mengidentifikasi hama tanaman secara mandiri.</li>
+                                <li>Mendorong partisipasi masyarakat dalam kegiatan pelestarian lingkungan.</li>
+                                </ul>
+                                </small>
                             </div>
                         </div>
                     </div>
@@ -139,17 +192,58 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label">Rincian Kebutuhan</label>
+                                <label class="form-label">Rincian Kebutuhan <span class="text-danger">*</span></label>
                                 <textarea type="text" name="rincian_kebutuhan" class="form-control" id="summernote"></textarea>
-                                <small class="form-text text-muted">Sebutkan kebutuhan-kebutuhan yang diperlukan untuk kegiatan beserta nominal biayanya</small>
+                                <small class="form-text text-muted">
+                                Tuliskan kebutuhan yang diperlukan untuk mendukung pelaksanaan kegiatan beserta perkiraan biayanya.
+                                <br>
+                                Kebutuhan dapat berupa perlengkapan, bahan kegiatan, konsumsi, transportasi, atau kebutuhan lainnya.
+                                <br>
+                                Tuliskan secara rinci agar memudahkan perencanaan anggaran kegiatan.
+                                <br><br>
+                                Contoh:
+                                <ul>
+                                <li>Konsumsi peserta (30 orang) – Rp450.000</li>
+                                <li>Bahan praktik pembuatan pupuk organik – Rp300.000</li>
+                                <li>Alat tulis dan kertas – Rp100.000</li>
+                                <li>Transportasi tim pelaksana – Rp200.000</li>
+                                </ul>
+                                </small>
                             </div>
                         </div>
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Unggah Media Publikasi</label>
+                                <label class="form-label fw-bold">Anggaran Kegiatan <span class="text-danger">*</span></label>
+                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="form-control" required
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx">
+                                <small class="text-muted">
+                                    Unggah dokumen anggaran kegiatan<br>
+                                    Ukuran maksimal 5MB<br>
+                                    Format: PDF, DOC, DOCX, XLS, XLSX
+                                </small>
+                            </div>
+                            {{-- PREVIEW ANGGARAN KEGIATAN --}}
+                            <div id="preview-anggaran" class="d-flex flex-column"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-file-alt mr-1"></i>
+                        Media Pendukung Kegiatan
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Media Publikasi</label>
                                 <input type="file" id="fotoInput" name="foto[]" class="form-control" accept="image/*"
                                     multiple>
                                 <small class="text-muted">
@@ -161,7 +255,7 @@
                             {{-- PREVIEW --}}
                             <div id="preview-foto" class="d-flex flex-column"></div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Dokumen Pendukung Kegiatan</label>
                                 <input type="file" id="dokumenInput" name="dokumen[]" class="form-control" multiple
@@ -360,30 +454,178 @@
             dokumenBuffer.forEach(file => dt.items.add(file));
             dokumenInput.files = dt.files;
         }
+
+        // Handle anggaran kegiatan file upload
+        const anggaranKegiatanInput = document.getElementById('anggaranKegiatanInput');
+        const previewAnggaran = document.getElementById('preview-anggaran');
+        let anggaranBuffer = [];
+
+        anggaranKegiatanInput.addEventListener('change', function() {
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const allowedTypes = ['application/pdf', 'application/msword', 
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            
+            if (this.files.length > 1) {
+                alert('Maksimal 1 file anggaran kegiatan.');
+                this.value = '';
+                return;
+            }
+
+            Array.from(this.files).forEach(file => {
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Format file tidak diizinkan. Gunakan PDF, DOC, DOCX, XLS, atau XLSX.');
+                    this.value = '';
+                    return;
+                }
+
+                if (file.size > maxSize) {
+                    alert('Ukuran file maksimal 5MB.');
+                    this.value = '';
+                    return;
+                }
+
+                anggaranBuffer = [file];
+            });
+
+            renderAnggaranPreview();
+        });
+
+        function renderAnggaranPreview() {
+            previewAnggaran.innerHTML = '';
+
+            anggaranBuffer.forEach((file, index) => {
+                const div = document.createElement('div');
+                div.className = 'd-flex align-items-center border rounded p-2';
+                div.innerHTML = `
+            <i class="fas fa-file-excel text-success me-2"></i>
+            <div class="flex-grow-1">
+                <div class="fw-semibold">${file.name}</div>
+                <small class="text-muted">${(file.size/1024).toFixed(1)} KB</small>
+            </div>
+            <button type="button"
+                    class="btn btn-sm btn-danger"
+                    onclick="removeAnggaran(${index})"><i class="fas fa-times"></i></button>
+        `;
+
+                previewAnggaran.appendChild(div);
+            });
+        }
+
+        function removeAnggaran(index) {
+            anggaranBuffer.splice(index, 1);
+            anggaranKegiatanInput.value = '';
+            renderAnggaranPreview();
+        }
+    </script>
+
+    <script>
+        // Toggle jenis kegiatan lainnya field
+        document.addEventListener('DOMContentLoaded', function() {
+            const jenisKegiatanSelect = document.querySelector('select[name="jenis_kegiatan"]');
+            if (jenisKegiatanSelect) {
+                jenisKegiatanSelect.addEventListener('change', function() {
+                    const jenisKegiatanLainnyaRow = document.getElementById('jenis_kegiatan_lainnya_row');
+                    const jenisKegiatanLainnyaInput = document.querySelector('input[name="jenis_kegiatan_lainnya"]');
+                    
+                    if (this.value === 'lainnya') {
+                        jenisKegiatanLainnyaRow.style.display = 'block';
+                        jenisKegiatanLainnyaInput.required = true;
+                    } else {
+                        jenisKegiatanLainnyaRow.style.display = 'none';
+                        jenisKegiatanLainnyaInput.required = false;
+                        jenisKegiatanLainnyaInput.value = '';
+                    }
+                });
+            }
+        });
     </script>
 
     @push('js')
-        <script src="{{ asset('adminlte') }}/plugins/summernote/summernote-bs4.min.js"></script>
-
         <script>
-            $(function() {
-                // Summernote
-                $('#summernote').summernote({
-                    toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'underline', 'clear']],
-                        ['fontname', ['fontname']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph']]
-                    ]
-                })
+            // Wait for jQuery to be available for Summernote
+            function waitForJQuery() {
+                if (typeof $ !== 'undefined') {
+                    console.log('jQuery loaded:', typeof $ !== 'undefined');
+                    initializeSummernote();
+                } else {
+                    setTimeout(waitForJQuery, 100);
+                }
+            }
 
-                // CodeMirror
+            function initializeSummernote() {
+                // Initialize Summernote editors
+                $(document).ready(function() {
+                    console.log('Document ready, initializing Summernote...');
+                    
+                    // Check if elements exist
+                    console.log('Element rincian:', $('#summernote').length);
+                    console.log('Element deskripsi:', $('#summernote-deskripsi').length);
+                    console.log('Element tujuan:', $('#summernote-tujuan').length);
+                    
+                    // Load Summernote from CDN
+                    $.getScript('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js', function() {
+                        console.log('Summernote loaded:', typeof $.summernote !== 'undefined');
+                        
+                        try {
+                            // Summernote untuk rincian kebutuhan
+                            $('#summernote').summernote({
+                                toolbar: [
+                                    ['style', ['style']],
+                                    ['font', ['bold', 'underline', 'clear']],
+                                    ['fontname', ['fontname']],
+                                    ['color', ['color']],
+                                    ['para', ['ul', 'ol', 'paragraph']]
+                                ],
+                                height: 120
+                            });
+                            console.log('Summernote rincian initialized');
+
+                            // Summernote untuk deskripsi
+                            $('#summernote-deskripsi').summernote({
+                                toolbar: [
+                                    ['style', ['style']],
+                                    ['font', ['bold', 'underline', 'clear']],
+                                    ['fontname', ['fontname']],
+                                    ['color', ['color']],
+                                    ['para', ['ul', 'ol', 'paragraph']]
+                                ],
+                                height: 100
+                            });
+                            console.log('Summernote deskripsi initialized');
+
+                            // Summernote untuk tujuan
+                            $('#summernote-tujuan').summernote({
+                                toolbar: [
+                                    ['style', ['style']],
+                                    ['font', ['bold', 'underline', 'clear']],
+                                    ['fontname', ['fontname']],
+                                    ['color', ['color']],
+                                    ['para', ['ul', 'ol', 'paragraph']]
+                                ],
+                                height: 80
+                            });
+                            console.log('Summernote tujuan initialized');
+                            
+                        } catch (error) {
+                            console.error('Error initializing Summernote:', error);
+                        }
+                    }).fail(function() {
+                        console.error('Failed to load Summernote from CDN');
+                    });
+                });
+            }
+
+            // Start waiting for jQuery
+            waitForJQuery();
+
+            // CodeMirror
+            $(function() {
                 CodeMirror.fromTextArea(document.getElementById("codeMirrorDemo"), {
                     mode: "htmlmixed",
                     theme: "monokai"
                 });
-            })
+            });
         </script>
     @endpush
 
@@ -397,7 +639,8 @@
     @endpush
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/summernote/summernote-bs4.min.css">
+        <!-- Include Summernote CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     @endpush
 
     @push('scripts')

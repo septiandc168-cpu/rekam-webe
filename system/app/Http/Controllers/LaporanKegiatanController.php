@@ -4,12 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\LaporanKegiatan;
 use App\Models\RencanaKegiatan;
+use App\Models\User;
+use App\Http\Requests\LaporanKegiatanRequest;
+use App\Notifications\LaporanActivityNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class LaporanKegiatanController extends Controller
 {
+    /**
+     * Helper function to send notifications to all supervisors
+     */
+    private function notifySupervisors($notification)
+    {
+        $supervisors = User::whereHas('role', function($query) {
+            $query->where('role_name', 'supervisor');
+        })->get();
+
+        foreach ($supervisors as $supervisor) {
+            $supervisor->notify($notification);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -66,10 +83,10 @@ class LaporanKegiatanController extends Controller
 
         $rencanaKegiatan = RencanaKegiatan::where('uuid', $rencanaKegiatanId)->firstOrFail();
 
-        // Check if rencana kegiatan is completed
-        if ($rencanaKegiatan->status !== RencanaKegiatan::STATUS_SELESAI) {
+        // Check if rencana kegiatan is ready for reporting (disetujui)
+        if ($rencanaKegiatan->status !== RencanaKegiatan::STATUS_DISETUJUI) {
             return redirect()->route('rencana_kegiatan.show', $rencanaKegiatan)
-                ->with('error', 'Laporan hanya bisa dibuat untuk rencana kegiatan dengan status "Selesai"');
+                ->with('error', 'Laporan hanya bisa dibuat untuk rencana kegiatan dengan status "Disetujui"');
         }
 
         // Check if laporan already exists
@@ -84,67 +101,163 @@ class LaporanKegiatanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(LaporanKegiatanRequest $request)
     {
         // Check authorization
         $this->authorize('create', LaporanKegiatan::class);
         
-        $request->validate([
-            'rencana_kegiatan_id' => 'required|exists:rencana_kegiatans,uuid',
-            'pelaksanaan_kegiatan' => 'required|string|min:10',
-            'hasil_kegiatan' => 'required|string|min:10',
-            'kendala' => 'nullable|string',
-            'evaluasi' => 'nullable|string',
-            'dokumentasi' => 'nullable|array|max:5',
-            'dokumentasi.*' => 'image|mimes:jpg,jpeg,png|max:2048',
-        ], [
-            'rencana_kegiatan_id.required' => 'Rencana kegiatan wajib dipilih.',
-            'rencana_kegiatan_id.exists' => 'Rencana kegiatan tidak valid.',
-            'pelaksanaan_kegiatan.required' => 'Pelaksanaan kegiatan wajib diisi.',
-            'pelaksanaan_kegiatan.min' => 'Pelaksanaan kegiatan minimal 10 karakter.',
-            'hasil_kegiatan.required' => 'Hasil kegiatan wajib diisi.',
-            'hasil_kegiatan.min' => 'Hasil kegiatan minimal 10 karakter.',
-            'dokumentasi.max' => 'Maksimal 5 file dokumentasi.',
-            'dokumentasi.*.image' => 'Dokumentasi harus berupa gambar.',
-            'dokumentasi.*.mimes' => 'Format dokumentasi harus jpg, jpeg, atau png.',
-            'dokumentasi.*.max' => 'Ukuran maksimal file dokumentasi 2MB.',
-        ]);
-
+        $user = auth()->user();
+        $isAdmin = $user->role->role_name === 'admin';
+        
         $rencanaKegiatan = RencanaKegiatan::findOrFail($request->rencana_kegiatan_id);
 
         // Double check if laporan can be created
         if (!LaporanKegiatan::canCreateFor($rencanaKegiatan)) {
             throw ValidationException::withMessages([
                 'rencana_kegiatan_id' => 'Laporan tidak dapat dibuat untuk rencana kegiatan ini. ' .
-                    ($rencanaKegiatan->status !== RencanaKegiatan::STATUS_SELESAI
-                        ? 'Status rencana kegiatan harus "Selesai".'
+                    ($rencanaKegiatan->status !== RencanaKegiatan::STATUS_DISETUJUI
+                        ? 'Status rencana kegiatan harus "Disetujui".'
                         : 'Laporan sudah ada.')
             ]);
         }
 
         // Handle file uploads
-        $dokumentasiPaths = [];
-        if ($request->hasFile('dokumentasi')) {
-            foreach ($request->file('dokumentasi') as $file) {
-                $dokumentasiPaths[] = $file->store('laporan_kegiatan/dokumentasi', 'public');
+        $fotoKegiatanPaths = [];
+        if ($request->hasFile('foto_kegiatan')) {
+            foreach ($request->file('foto_kegiatan') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/foto_kegiatan', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $fotoKegiatanPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
             }
         }
+
+        $daftarHadirPaths = [];
+        if ($request->hasFile('daftar_hadir')) {
+            foreach ($request->file('daftar_hadir') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/daftar_hadir', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $daftarHadirPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
+            }
+        }
+
+        $notulenPaths = [];
+        if ($request->hasFile('notulen')) {
+            foreach ($request->file('notulen') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/notulen', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $notulenPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
+            }
+        }
+
+        $materiPaths = [];
+        if ($request->hasFile('materi')) {
+            foreach ($request->file('materi') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/materi', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $materiPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
+            }
+        }
+
+        $beritaAcaraPaths = [];
+        if ($request->hasFile('berita_acara')) {
+            foreach ($request->file('berita_acara') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/berita_acara', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $beritaAcaraPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
+            }
+        }
+
+        // Determine status based on action
+        $status = LaporanKegiatan::STATUS_FINAL; // Always save as final since we removed draft button
 
         $laporan = LaporanKegiatan::create([
             'user_id' => auth()->id(),
             'rencana_kegiatan_id' => $request->rencana_kegiatan_id,
-            'pelaksanaan_kegiatan' => $request->pelaksanaan_kegiatan,
-            'hasil_kegiatan' => $request->hasil_kegiatan,
+            'realisasi_tanggal_mulai' => $request->realisasi_tanggal_mulai,
+            'realisasi_tanggal_selesai' => $request->realisasi_tanggal_selesai,
+            'rangkaian_kegiatan' => $request->rangkaian_kegiatan,
+            'target_peserta' => $rencanaKegiatan->target_peserta,
+            'realisasi_peserta' => $request->realisasi_peserta,
+            'profil_peserta' => $request->profil_peserta,
+            'hasil_dicapai' => $request->hasil_dicapai,
+            'output_nyata' => $request->output_nyata,
+            'dampak_awal' => $request->dampak_awal,
             'kendala' => $request->kendala,
-            'evaluasi' => $request->evaluasi,
-            'dokumentasi' => !empty($dokumentasiPaths) ? $dokumentasiPaths : null,
+            'solusi' => $request->solusi,
+            'evaluasi_rekomendasi' => $request->evaluasi_rekomendasi,
+            'foto_kegiatan' => !empty($fotoKegiatanPaths) ? $fotoKegiatanPaths : null,
+            'daftar_hadir' => !empty($daftarHadirPaths) ? $daftarHadirPaths : null,
+            'notulen' => !empty($notulenPaths) ? $notulenPaths : null,
+            'materi' => !empty($materiPaths) ? $materiPaths : null,
+            'berita_acara' => !empty($beritaAcaraPaths) ? $beritaAcaraPaths : null,
+            'status' => $status,
         ]);
 
         // Update rencana kegiatan status dan timestamp untuk memindahkan ke urutan teratas
         $rencanaKegiatan->update([
-            'status' => \App\Models\RencanaKegiatan::STATUS_SELESAI,
+            'status' => \App\Models\RencanaKegiatan::STATUS_MENUNGGU_VERIFIKASI,
             'updated_at' => now()
         ]);
+
+        // Kirim notifikasi ke supervisor jika admin yang menambahkan
+        if ($isAdmin) {
+            $notification = new LaporanActivityNotification(
+                $laporan->uuid,
+                $rencanaKegiatan->uuid,
+                null,
+                $rencanaKegiatan->nama_kegiatan,
+                'ditambahkan',
+                $user->name,
+                null,
+                now()
+            );
+            $this->notifySupervisors($notification);
+        }
 
         toast('Laporan kegiatan berhasil disimpan!', 'success');
         return redirect()->route('laporan_kegiatan.index');
@@ -177,61 +290,266 @@ class LaporanKegiatanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LaporanKegiatan $laporanKegiatan)
+    public function update(LaporanKegiatanRequest $request, LaporanKegiatan $laporanKegiatan)
     {
         // Check authorization
         $this->authorize('update', $laporanKegiatan);
-        $request->validate([
-            'pelaksanaan_kegiatan' => 'required|string|min:10',
-            'hasil_kegiatan' => 'required|string|min:10',
-            'kendala' => 'nullable|string',
-            'evaluasi' => 'nullable|string',
-            'dokumentasi' => 'nullable|array|max:5',
-            'dokumentasi.*' => 'image|mimes:jpg,jpeg,png|max:2048',
-            'remove_dokumentasi' => 'nullable|array',
-            'remove_dokumentasi.*' => 'string',
-        ], [
-            'pelaksanaan_kegiatan.required' => 'Pelaksanaan kegiatan wajib diisi.',
-            'pelaksanaan_kegiatan.min' => 'Pelaksanaan kegiatan minimal 10 karakter.',
-            'hasil_kegiatan.required' => 'Hasil kegiatan wajib diisi.',
-            'hasil_kegiatan.min' => 'Hasil kegiatan minimal 10 karakter.',
-            'dokumentasi.max' => 'Maksimal 5 file dokumentasi.',
-            'dokumentasi.*.image' => 'Dokumentasi harus berupa gambar.',
-            'dokumentasi.*.mimes' => 'Format dokumentasi harus jpg, jpeg, atau png.',
-            'dokumentasi.*.max' => 'Ukuran maksimal file dokumentasi 2MB.',
-        ]);
+
+        $user = auth()->user();
+        $isAdmin = $user->role->role_name === 'admin';
 
         // Handle file removals
-        $currentDokumentasi = $laporanKegiatan->dokumentasi ?? [];
-        $removeDokumentasi = $request->input('remove_dokumentasi', []);
+        $currentFotoKegiatan = $laporanKegiatan->foto_kegiatan ?? [];
+        $removeFotoKegiatan = $request->input('remove_foto_kegiatan', []);
 
-        if (!empty($removeDokumentasi)) {
-            foreach ($removeDokumentasi as $path) {
-                if (in_array($path, $currentDokumentasi)) {
-                    Storage::disk('public')->delete($path);
-                    $currentDokumentasi = array_diff($currentDokumentasi, [$path]);
+        if (!empty($removeFotoKegiatan)) {
+            foreach ($removeFotoKegiatan as $pathToRemove) {
+                // Handle both old format (string) and new format (array)
+                $found = false;
+                foreach ($currentFotoKegiatan as $key => $fileData) {
+                    $filePath = is_array($fileData) ? $fileData['path'] : $fileData;
+                    if ($filePath === $pathToRemove) {
+                        Storage::disk('public')->delete($filePath);
+                        unset($currentFotoKegiatan[$key]);
+                        $found = true;
+                        break;
+                    }
+                }
+                // Re-index array if found
+                if ($found) {
+                    $currentFotoKegiatan = array_values($currentFotoKegiatan);
+                }
+            }
+        }
+
+        $currentDaftarHadir = $laporanKegiatan->daftar_hadir ?? [];
+        $removeDaftarHadir = $request->input('remove_daftar_hadir', []);
+
+        if (!empty($removeDaftarHadir)) {
+            foreach ($removeDaftarHadir as $pathToRemove) {
+                // Handle both old format (string) and new format (array)
+                $found = false;
+                foreach ($currentDaftarHadir as $key => $fileData) {
+                    $filePath = is_array($fileData) ? $fileData['path'] : $fileData;
+                    if ($filePath === $pathToRemove) {
+                        Storage::disk('public')->delete($filePath);
+                        unset($currentDaftarHadir[$key]);
+                        $found = true;
+                        break;
+                    }
+                }
+                // Re-index array if found
+                if ($found) {
+                    $currentDaftarHadir = array_values($currentDaftarHadir);
+                }
+            }
+        }
+
+        $currentNotulen = $laporanKegiatan->notulen ?? [];
+        $removeNotulen = $request->input('remove_notulen', []);
+
+        if (!empty($removeNotulen)) {
+            foreach ($removeNotulen as $pathToRemove) {
+                // Handle both old format (string) and new format (array)
+                $found = false;
+                foreach ($currentNotulen as $key => $fileData) {
+                    $filePath = is_array($fileData) ? $fileData['path'] : $fileData;
+                    if ($filePath === $pathToRemove) {
+                        Storage::disk('public')->delete($filePath);
+                        unset($currentNotulen[$key]);
+                        $found = true;
+                        break;
+                    }
+                }
+                // Re-index array if found
+                if ($found) {
+                    $currentNotulen = array_values($currentNotulen);
+                }
+            }
+        }
+
+        $currentMateri = $laporanKegiatan->materi ?? [];
+        $removeMateri = $request->input('remove_materi', []);
+
+        if (!empty($removeMateri)) {
+            foreach ($removeMateri as $pathToRemove) {
+                // Handle both old format (string) and new format (array)
+                $found = false;
+                foreach ($currentMateri as $key => $fileData) {
+                    $filePath = is_array($fileData) ? $fileData['path'] : $fileData;
+                    if ($filePath === $pathToRemove) {
+                        Storage::disk('public')->delete($filePath);
+                        unset($currentMateri[$key]);
+                        $found = true;
+                        break;
+                    }
+                }
+                // Re-index array if found
+                if ($found) {
+                    $currentMateri = array_values($currentMateri);
+                }
+            }
+        }
+
+        $currentBeritaAcara = $laporanKegiatan->berita_acara ?? [];
+        $removeBeritaAcara = $request->input('remove_berita_acara', []);
+
+        if (!empty($removeBeritaAcara)) {
+            foreach ($removeBeritaAcara as $pathToRemove) {
+                // Handle both old format (string) and new format (array)
+                $found = false;
+                foreach ($currentBeritaAcara as $key => $fileData) {
+                    $filePath = is_array($fileData) ? $fileData['path'] : $fileData;
+                    if ($filePath === $pathToRemove) {
+                        Storage::disk('public')->delete($filePath);
+                        unset($currentBeritaAcara[$key]);
+                        $found = true;
+                        break;
+                    }
+                }
+                // Re-index array if found
+                if ($found) {
+                    $currentBeritaAcara = array_values($currentBeritaAcara);
                 }
             }
         }
 
         // Handle new file uploads
-        $newDokumentasiPaths = [];
-        if ($request->hasFile('dokumentasi')) {
-            foreach ($request->file('dokumentasi') as $file) {
-                $newDokumentasiPaths[] = $file->store('laporan_kegiatan/dokumentasi', 'public');
+        $newFotoKegiatanPaths = [];
+        if ($request->hasFile('foto_kegiatan')) {
+            foreach ($request->file('foto_kegiatan') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/foto_kegiatan', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $newFotoKegiatanPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
             }
         }
 
-        // Merge existing and new documentation
-        $finalDokumentasi = array_merge($currentDokumentasi, $newDokumentasiPaths);
+        $newDaftarHadirPaths = [];
+        if ($request->hasFile('daftar_hadir')) {
+            foreach ($request->file('daftar_hadir') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/daftar_hadir', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $newDaftarHadirPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
+            }
+        }
+
+        $newNotulenPaths = [];
+        if ($request->hasFile('notulen')) {
+            foreach ($request->file('notulen') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/notulen', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $newNotulenPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
+            }
+        }
+
+        $newMateriPaths = [];
+        if ($request->hasFile('materi')) {
+            foreach ($request->file('materi') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/materi', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $newMateriPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
+            }
+        }
+
+        $newBeritaAcaraPaths = [];
+        if ($request->hasFile('berita_acara')) {
+            foreach ($request->file('berita_acara') as $file) {
+                // Buat nama file unik dengan nama asli
+                $originalName = $file->getClientOriginalName();
+                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
+                
+                // Simpan file dengan nama asli
+                $path = $file->storeAs('laporan_kegiatan/berita_acara', $fileName, 'public');
+                
+                // Simpan array dengan path dan nama asli
+                $newBeritaAcaraPaths[] = [
+                    'path' => $path,
+                    'original_name' => $originalName
+                ];
+            }
+        }
+
+        // Merge existing and new files
+        $finalFotoKegiatan = array_merge($currentFotoKegiatan, $newFotoKegiatanPaths);
+        $finalDaftarHadir = array_merge($currentDaftarHadir, $newDaftarHadirPaths);
+        $finalNotulen = array_merge($currentNotulen, $newNotulenPaths);
+        $finalMateri = array_merge($currentMateri, $newMateriPaths);
+        $finalBeritaAcara = array_merge($currentBeritaAcara, $newBeritaAcaraPaths);
+
+        // Determine status based on action
+        $status = LaporanKegiatan::STATUS_FINAL; // Always save as final since we removed draft button
 
         $laporanKegiatan->update([
-            'pelaksanaan_kegiatan' => $request->pelaksanaan_kegiatan,
-            'hasil_kegiatan' => $request->hasil_kegiatan,
+            'realisasi_tanggal_mulai' => $request->realisasi_tanggal_mulai,
+            'realisasi_tanggal_selesai' => $request->realisasi_tanggal_selesai,
+            'rangkaian_kegiatan' => $request->rangkaian_kegiatan,
+            'realisasi_peserta' => $request->realisasi_peserta,
+            'profil_peserta' => $request->profil_peserta,
+            'hasil_dicapai' => $request->hasil_dicapai,
+            'output_nyata' => $request->output_nyata,
+            'dampak_awal' => $request->dampak_awal,
             'kendala' => $request->kendala,
-            'evaluasi' => $request->evaluasi,
-            'dokumentasi' => !empty($finalDokumentasi) ? array_values($finalDokumentasi) : null,
+            'solusi' => $request->solusi,
+            'evaluasi_rekomendasi' => $request->evaluasi_rekomendasi,
+            'foto_kegiatan' => !empty($finalFotoKegiatan) ? array_values($finalFotoKegiatan) : null,
+            'daftar_hadir' => !empty($finalDaftarHadir) ? array_values($finalDaftarHadir) : null,
+            'notulen' => !empty($finalNotulen) ? array_values($finalNotulen) : null,
+            'materi' => !empty($finalMateri) ? array_values($finalMateri) : null,
+            'berita_acara' => !empty($finalBeritaAcara) ? array_values($finalBeritaAcara) : null,
+            'status' => $status,
         ]);
+
+        // Kirim notifikasi ke supervisor jika admin yang mengedit
+        if ($isAdmin) {
+            $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
+            $notification = new LaporanActivityNotification(
+                $laporanKegiatan->uuid,
+                $rencanaKegiatan->uuid,
+                null,
+                $rencanaKegiatan->nama_kegiatan,
+                'diedit',
+                $user->name,
+                null,
+                now()
+            );
+            $this->notifySupervisors($notification);
+        }
 
         toast('Laporan kegiatan berhasil diperbarui!', 'success');
         return redirect()->route('laporan_kegiatan.index');
@@ -245,14 +563,67 @@ class LaporanKegiatanController extends Controller
         // Check authorization
         $this->authorize('delete', $laporanKegiatan);
 
-        // Delete documentation files
-        if (!empty($laporanKegiatan->dokumentasi)) {
-            foreach ($laporanKegiatan->dokumentasi as $path) {
+        $user = auth()->user();
+        $isAdmin = $user->role->role_name === 'admin';
+
+        // Simpan data untuk notifikasi sebelum dihapus
+        $laporanUuid = $laporanKegiatan->uuid;
+        $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
+        $rencanaUuid = $rencanaKegiatan->uuid;
+        $rencanaNama = $rencanaKegiatan->nama_kegiatan;
+
+        // Delete all files with support for both old and new format
+        if (!empty($laporanKegiatan->foto_kegiatan)) {
+            foreach ($laporanKegiatan->foto_kegiatan as $fileData) {
+                $path = is_array($fileData) ? $fileData['path'] : $fileData;
+                Storage::disk('public')->delete($path);
+            }
+        }
+
+        if (!empty($laporanKegiatan->daftar_hadir)) {
+            foreach ($laporanKegiatan->daftar_hadir as $fileData) {
+                $path = is_array($fileData) ? $fileData['path'] : $fileData;
+                Storage::disk('public')->delete($path);
+            }
+        }
+
+        if (!empty($laporanKegiatan->notulen)) {
+            foreach ($laporanKegiatan->notulen as $fileData) {
+                $path = is_array($fileData) ? $fileData['path'] : $fileData;
+                Storage::disk('public')->delete($path);
+            }
+        }
+
+        if (!empty($laporanKegiatan->materi)) {
+            foreach ($laporanKegiatan->materi as $fileData) {
+                $path = is_array($fileData) ? $fileData['path'] : $fileData;
+                Storage::disk('public')->delete($path);
+            }
+        }
+
+        if (!empty($laporanKegiatan->berita_acara)) {
+            foreach ($laporanKegiatan->berita_acara as $fileData) {
+                $path = is_array($fileData) ? $fileData['path'] : $fileData;
                 Storage::disk('public')->delete($path);
             }
         }
 
         $laporanKegiatan->delete();
+
+        // Kirim notifikasi ke supervisor jika admin yang menghapus
+        if ($isAdmin) {
+            $notification = new LaporanActivityNotification(
+                $laporanUuid,
+                $rencanaUuid,
+                null,
+                $rencanaNama,
+                'dihapus',
+                $user->name,
+                null,
+                now()
+            );
+            $this->notifySupervisors($notification);
+        }
 
         toast('Laporan kegiatan berhasil dihapus.', 'success');
         return redirect()->route('laporan_kegiatan.index');

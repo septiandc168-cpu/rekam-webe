@@ -10,6 +10,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rekam WeBe</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('public/logo_webe.png') }}">
+
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -81,6 +84,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
+                <!-- Notifications Dropdown -->
+                <x-navbar-notification />
+                
+                <!-- User Dropdown -->
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
                         {{ ucwords(auth()->user()->name) }}
@@ -138,10 +145,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <footer class="main-footer">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline d-flex">
-                Septian
+                <small><strong>Yayasan WeBe</strong></small>
             </div>
             <!-- Default to the left -->
-            <strong>&copy; 2025-2026 Rekam WeBe by</strong>
+            <small>&copy; 2025-2026 <strong>Rekam WeBe</strong>. All rights reserved.</small>
         </footer>
     </div>
     <!-- ./wrapper -->

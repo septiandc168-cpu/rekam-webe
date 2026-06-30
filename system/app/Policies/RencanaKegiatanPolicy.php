@@ -54,10 +54,10 @@ class RencanaKegiatanPolicy
             return true;
         }
 
-        // Admin can only update their own rencana kegiatan with status 'ditolak'
+        // Admin can only update their own rencana kegiatan with status 'ditolak' or 'revisi'
         if ($user->role->role_name === 'admin') {
             return $rencanaKegiatan->user_id === $user->id && 
-                   $rencanaKegiatan->status === RencanaKegiatan::STATUS_DITOLAK;
+                   in_array($rencanaKegiatan->status, [RencanaKegiatan::STATUS_DITOLAK, RencanaKegiatan::STATUS_REVISI]);
         }
 
         return false;
@@ -69,6 +69,15 @@ class RencanaKegiatanPolicy
     public function changeStatus(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
         // Only supervisor can change status
+        return $user->role->role_name === 'supervisor';
+    }
+
+    /**
+     * Determine whether user can update status.
+     */
+    public function updateStatus(User $user, RencanaKegiatan $rencanaKegiatan): bool
+    {
+        // Only supervisor can update status
         return $user->role->role_name === 'supervisor';
     }
 

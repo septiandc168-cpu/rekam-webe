@@ -10,6 +10,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/dashboard/events', [App\Http\Controllers\HomeController::class, 'events'])->name('dashboard.events')->middleware('auth');
 
 Route::fallback(function () {
     return view('404');
@@ -38,10 +39,17 @@ Route::post('/rencana_kegiatan', [App\Http\Controllers\RencanaKegiatanController
 Route::get('/rencana_kegiatan/{rencana_kegiatan}', [App\Http\Controllers\RencanaKegiatanController::class, 'show'])->name('rencana_kegiatan.show');
 Route::get('/rencana_kegiatan/{rencana_kegiatan}/edit', [App\Http\Controllers\RencanaKegiatanController::class, 'edit'])->name('rencana_kegiatan.edit');
 Route::put('/rencana_kegiatan/{rencana_kegiatan}', [App\Http\Controllers\RencanaKegiatanController::class, 'update'])->name('rencana_kegiatan.update');
+Route::post('/rencana_kegiatan/{rencana_kegiatan}/update-status', [App\Http\Controllers\RencanaKegiatanController::class, 'updateStatus'])->name('rencana_kegiatan.updateStatus');
+Route::put('/rencana_kegiatan/{rencana_kegiatan}/verifikasi', [App\Http\Controllers\RencanaKegiatanController::class, 'verifikasiLaporan'])->name('rencana_kegiatan.verifikasi');
 Route::delete('/rencana_kegiatan/{rencana_kegiatan}', [App\Http\Controllers\RencanaKegiatanController::class, 'destroy'])->name('rencana_kegiatan.destroy');
 
 // Public/front map (full-screen map with markers)
 Route::get('/front_rencana_kegiatan', [App\Http\Controllers\RencanaKegiatanController::class, 'frontIndex'])->name('rencana_kegiatan.front');
+
+// Export Excel route (supervisor only)
+Route::get('/rencana_kegiatan/export/excel', [App\Http\Controllers\RencanaKegiatanController::class, 'exportExcel'])
+    ->middleware('isSupervisor')
+    ->name('rencana_kegiatan.export.excel');
 
 // Laporan Kegiatan Routes
 Route::middleware('auth')->group(function () {
@@ -63,4 +71,14 @@ Route::middleware('auth')->group(function () {
 
     // Print route (both admin and supervisor)
     Route::get('/laporan_kegiatan/{laporanKegiatan}/print', [App\Http\Controllers\LaporanKegiatanController::class, 'print'])->name('laporan_kegiatan.print');
+});
+
+// Notification Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/read/{id}', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read/{id}', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read.post');
+    Route::post('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+    Route::delete('/notifications/delete-all', [App\Http\Controllers\NotificationController::class, 'deleteAll'])->name('notifications.deleteAll');
+    Route::get('/api/notifications/unread-count', [App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
 });

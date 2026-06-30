@@ -5,24 +5,12 @@
 @section('content')
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0">Laporan Kegiatan</h5>
-            <div>
-                <a href="{{ route('laporan_kegiatan.index') }}" class="btn btn-secondary btn-sm"
+            <h5 class="mb-0">Detail Laporan Kegiatan</h5>
+            <div class="d-flex gap-2">
+                    <a href="{{ route('laporan_kegiatan.index') }}" class="btn btn-secondary btn-sm"
                     style="height: 35px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-arrow-left mr-1"></i>Kembali
-                </a>
-                {{-- @can('print', $laporanKegiatan)
-                    <a href="{{ route('laporan_kegiatan.print', $laporanKegiatan) }}" class="btn btn-info btn-sm"
-                        style="height: 35px; display: flex; align-items: center; justify-content: center;" target="_blank">
-                        <i class="fas fa-print mr-1"></i>Cetak
+                        <i class="fas fa-arrow-left mr-1"></i>Kembali
                     </a>
-                @endcan
-                @can('update', $laporanKegiatan)
-                    <a href="{{ route('laporan_kegiatan.edit', $laporanKegiatan) }}" class="btn btn-warning btn-sm"
-                        style="height: 35px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-edit mr-1"></i>Edit
-                    </a>
-                @endcan --}}
             </div>
         </div>
 
@@ -35,232 +23,313 @@
                 </h3>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <table class="table table-sm">
-                            <tr>
-                                <td width="150"><strong>Nama Kegiatan</strong></td>
-                                <td>{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Jenis Kegiatan</strong></td>
-                                <td>{{ $laporanKegiatan->rencanaKegiatan->jenis_kegiatan }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Tujuan</strong></td>
-                                <td>{{ $laporanKegiatan->rencanaKegiatan->tujuan ?: '-' }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <table class="table table-sm">
-                            <tr>
-                                <td width="150"><strong>Penanggung Jawab</strong></td>
-                                <td>{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Kelompok</strong></td>
-                                <td>{{ $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Lokasi</strong></td>
-                                <td>{{ $laporanKegiatan->rencanaKegiatan->desa ?: '-' }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <table class="table table-sm">
-                            <tr>
-                                <td width="150"><strong>Tanggal Mulai</strong></td>
-                                <td>{{ $laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->format('d/m/Y') : '-' }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Tanggal Selesai</strong></td>
-                                <td>{{ $laporanKegiatan->rencanaKegiatan->tanggal_selesai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->format('d/m/Y') : '-' }}
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <table class="table table-sm">
-                            <tr>
-                                <td width="150"><strong>Status Rencana</strong></td>
-                                <td>
-                                    <span
-                                        class="badge bg-{{ $laporanKegiatan->rencanaKegiatan->status == \App\Models\RencanaKegiatan::STATUS_SELESAI
-                                            ? 'success'
-                                            : 'secondary' }}">
-                                        {{ ucfirst($laporanKegiatan->rencanaKegiatan->status) }}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Tanggal Dibuat</strong></td>
-                                <td>{{ $laporanKegiatan->created_at->format('d/m/Y H:i') }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+                <table class="table">
+                    <tr style="border-top: none;">
+                        <th style="width: 200px; border-top: none;">Nama Kegiatan</th>
+                        <td style="border-top: none;">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</td>
+                    </tr>
+                    <tr>
+                        <th>Jenis Kegiatan</th>
+                        <td>{{ $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() }}</td>
+                    </tr>
+                    <tr>
+                        <th>Penanggung Jawab</th>
+                        <td>{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab }}</td>
+                    </tr>
+                    <tr>
+                        <th>Kelompok / Komunitas Pelaksana</th>
+                        <td>{{ $laporanKegiatan->rencanaKegiatan->kelompok }}</td>
+                    </tr>
+                    <tr>
+                        <th>Deskripsi</th>
+                        <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->deskripsi) !!}</td>
+                    </tr>
+                    <tr>
+                        <th>Tujuan</th>
+                        <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) !!}</td>
+                    </tr>
+                    <tr>
+                        <th>Tanggal Laporan</th>
+                        <td>{{ $laporanKegiatan->created_at->format('d F Y') }}</td>
+                    </tr>
+                </table>
             </div>
         </div>
 
-        <!-- Detail Laporan Kegiatan -->
+        <!-- Detail Pelaksanaan Kegiatan -->
         <div class="card mb-4">
             <div class="card-header">
                 <h3 class="card-title">
-                    <i class="fas fa-file-alt mr-1"></i>
-                    Detail Laporan
+                    <i class="fas fa-tasks mr-1"></i>
+                    Detail Pelaksanaan Kegiatan
                 </h3>
             </div>
             <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th style="width: 200px; border-top: none;">Lokasi</th>
+                        <td style="border-top: none;">{{ $laporanKegiatan->rencanaKegiatan->desa }}</td>
+                    </tr>
+                    <tr>
+                        <th>Waktu Pelaksanaan</th>
+                        <td>
+                            @if ($laporanKegiatan->rencanaKegiatan->waktu_mulai && $laporanKegiatan->rencanaKegiatan->waktu_selesai)
+                                {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_selesai)->format('H:i') }}
+                            @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai)
+                                {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }}
+                            @else
+                                Belum ditentukan
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Tanggal Pelaksanaan</th>
+                        <td>
+                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->format('d F Y') }} - 
+                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->format('d F Y') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Realisasi Tanggal Pelaksanaan</th>
+                        <td>{{ $laporanKegiatan->getFormattedRealisasiTanggalPelaksanaan() }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rangkaian Kegiatan / Alur Acara</th>
+                        <td>{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
+                    </tr>
+                    <tr>
+                        <th>Target Peserta</th>
+                        <td>{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }} orang</td>
+                    </tr>
+                    <tr>
+                        <th>Realisasi Jumlah Peserta</th>
+                        <td>{{ $laporanKegiatan->realisasi_peserta }} orang</td>
+                    </tr>
+                    <tr>
+                        <th>Profil Peserta</th>
+                        <td>{!! $laporanKegiatan->profil_peserta !!}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Hasil dan Output Kegiatan -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-line mr-1"></i>
+                    Hasil dan Output Kegiatan
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th style="width: 200px; border-top: none;">Hasil yang Dicapai</th>
+                        <td style="border-top: none;">{!! $laporanKegiatan->hasil_dicapai !!}</td>
+                    </tr>
+                    <tr>
+                        <th>Output Nyata</th>
+                        <td>{!! $laporanKegiatan->output_nyata !!}</td>
+                    </tr>
+                    <tr>
+                        <th>Dampak Awal yang Terlihat</th>
+                        <td>{!! $laporanKegiatan->dampak_awal !!}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Kendala dan Evaluasi -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    Kendala dan Evaluasi
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th style="width: 200px; border-top: none;">Kendala yang Dihadapi</th>
+                        <td style="border-top: none;">{!! $laporanKegiatan->kendala ?: '-' !!}</td>
+                    </tr>
+                    <tr>
+                        <th>Solusi yang Dilakukan</th>
+                        <td>{!! $laporanKegiatan->solusi ?: '-' !!}</td>
+                    </tr>
+                    <tr>
+                        <th>Catatan Evaluasi & Rekomendasi</th>
+                        <td>{!! $laporanKegiatan->evaluasi_rekomendasi ?: '-' !!}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Dokumentasi Kegiatan -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-file-upload mr-1"></i>
+                    Dokumentasi Kegiatan
+                </h3>
+            </div>
+            <div class="card-body">
+                <!-- Foto Kegiatan -->
                 <div class="mb-4">
-                    <h5><i class="fas fa-tasks mr-1"></i>Pelaksanaan Kegiatan</h5>
-                    <div class="p-3 bg-light rounded">
-                        {!! nl2br(e($laporanKegiatan->pelaksanaan_kegiatan)) !!}
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <h5><i class="fas fa-check-circle mr-1"></i>Hasil Kegiatan</h5>
-                    <div class="p-3 bg-light rounded">
-                        {!! nl2br(e($laporanKegiatan->hasil_kegiatan)) !!}
-                    </div>
-                </div>
-
-                @if ($laporanKegiatan->kendala)
-                    <div class="mb-4">
-                        <h5><i class="fas fa-exclamation-triangle mr-1"></i>Kendala</h5>
-                        <div class="p-3 bg-light rounded">
-                            {!! nl2br(e($laporanKegiatan->kendala)) !!}
-                        </div>
-                    </div>
-                @endif
-
-                @if ($laporanKegiatan->evaluasi)
-                    <div class="mb-4">
-                        <h5><i class="fas fa-chart-line mr-1"></i>Evaluasi</h5>
-                        <div class="p-3 bg-light rounded">
-                            {!! nl2br(e($laporanKegiatan->evaluasi)) !!}
-                        </div>
-                    </div>
-                @endif
-
-                @if (!empty($laporanKegiatan->dokumentasi))
-                    <div class="mb-4">
-                        <h5><i class="fas fa-images mr-1"></i>Dokumentasi</h5>
+                    <h6 class="fw-bold mb-3">Foto Kegiatan</h6>
+                    @if (!empty($laporanKegiatan->foto_kegiatan))
                         <div class="row">
-                            @foreach ($laporanKegiatan->dokumentasi as $index => $dokumentasi)
+                            @foreach ($laporanKegiatan->foto_kegiatan as $index => $foto_kegiatan)
+                                @php
+                                    // Handle both old format (string) and new format (array)
+                                    $filePath = is_array($foto_kegiatan) ? $foto_kegiatan['path'] : $foto_kegiatan;
+                                    $fileName = is_array($foto_kegiatan) ? $foto_kegiatan['original_name'] : basename($foto_kegiatan);
+                                @endphp
                                 <div class="col-md-3 mb-3">
                                     <div class="card">
-                                        <img src="{{ asset('public/storage/app/' . $dokumentasi) }}" class="card-img-top"
-                                            style="height: 200px; object-fit: cover; width: 100%;"
-                                            alt="Dokumentasi {{ $index + 1 }}" data-toggle="modal"
-                                            data-target="#imageModal{{ $index }}">
-                                        <div class="card-body p-2 text-center">
-                                            <small class="text-muted">Dokumentasi {{ $index + 1 }}</small>
+                                        <img src="{{ asset('public/storage/app/' . $filePath) }}"
+                                            class="card-img-top"
+                                            style="height: 150px; object-fit: cover; width: 100%;"
+                                            alt="{{ $fileName }}">
+                                        <div class="card-body p-2">
+                                            <small class="text-muted text-truncate d-block" title="{{ $fileName }}">{{ $fileName }}</small>
+                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-                    </div>
-                @endif
+                    @else
+                        <p class="text-muted">Tidak ada foto kegiatan</p>
+                    @endif
+                </div>
+
+                <!-- Daftar Hadir -->
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Daftar Hadir</h6>
+                    @if (!empty($laporanKegiatan->daftar_hadir))
+                        <div class="row">
+                            @foreach ($laporanKegiatan->daftar_hadir as $index => $file)
+                                @php
+                                    // Handle both old format (string) and new format (array)
+                                    $filePath = is_array($file) ? $file['path'] : $file;
+                                    $fileName = is_array($file) ? $file['original_name'] : basename($file);
+                                @endphp
+                                <div class="col-md-4 mb-2">
+                                    <div class="card">
+                                        <div class="card-body p-2">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-alt me-2"></i>
+                                                <small class="text-truncate flex-grow-1" title="{{ $fileName }}">{{ $fileName }}</small>
+                                            </div>
+                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted">Tidak ada daftar hadir</p>
+                    @endif
+                </div>
+
+                <!-- Notulen -->
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Notulen</h6>
+                    @if (!empty($laporanKegiatan->notulen))
+                        <div class="row">
+                            @foreach ($laporanKegiatan->notulen as $index => $file)
+                                @php
+                                    // Handle both old format (string) and new format (array)
+                                    $filePath = is_array($file) ? $file['path'] : $file;
+                                    $fileName = is_array($file) ? $file['original_name'] : basename($file);
+                                @endphp
+                                <div class="col-md-4 mb-2">
+                                    <div class="card">
+                                        <div class="card-body p-2">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-alt me-2"></i>
+                                                <small class="text-truncate flex-grow-1" title="{{ $fileName }}">{{ $fileName }}</small>
+                                            </div>
+                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted">Tidak ada notulen</p>
+                    @endif
+                </div>
+
+                <!-- Materi -->
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Materi</h6>
+                    @if (!empty($laporanKegiatan->materi))
+                        <div class="row">
+                            @foreach ($laporanKegiatan->materi as $index => $file)
+                                @php
+                                    // Handle both old format (string) and new format (array)
+                                    $filePath = is_array($file) ? $file['path'] : $file;
+                                    $fileName = is_array($file) ? $file['original_name'] : basename($file);
+                                @endphp
+                                <div class="col-md-4 mb-2">
+                                    <div class="card">
+                                        <div class="card-body p-2">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-alt me-2"></i>
+                                                <small class="text-truncate flex-grow-1" title="{{ $fileName }}">{{ $fileName }}</small>
+                                            </div>
+                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted">Tidak ada materi</p>
+                    @endif
+                </div>
+
+                <!-- Berita Acara -->
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Berita Acara</h6>
+                    @if (!empty($laporanKegiatan->berita_acara))
+                        <div class="row">
+                            @foreach ($laporanKegiatan->berita_acara as $index => $file)
+                                @php
+                                    // Handle both old format (string) and new format (array)
+                                    $filePath = is_array($file) ? $file['path'] : $file;
+                                    $fileName = is_array($file) ? $file['original_name'] : basename($file);
+                                @endphp
+                                <div class="col-md-4 mb-2">
+                                    <div class="card">
+                                        <div class="card-body p-2">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-alt me-2"></i>
+                                                <small class="text-truncate flex-grow-1" title="{{ $fileName }}">{{ $fileName }}</small>
+                                            </div>
+                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted">Tidak ada berita acara</p>
+                    @endif
+                </div>
             </div>
         </div>
-
-        <!-- Modal untuk preview gambar -->
-        @if (!empty($laporanKegiatan->dokumentasi))
-            @foreach ($laporanKegiatan->dokumentasi as $index => $dokumentasi)
-                <div class="modal fade" id="imageModal{{ $index }}">
-                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Dokumentasi {{ $index + 1 }}</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body text-center p-2">
-                                <img src="{{ asset('public/storage/app/' . $dokumentasi) }}" class="img-fluid"
-                                    alt="{{ basename($dokumentasi) }}" style="max-height: 70vh; object-fit: contain;">
-                            </div>
-                            <div class="modal-footer justify-content-between">
-                                <a href="{{ asset('public/storage/app/' . $dokumentasi) }}"
-                                    download="{{ basename($dokumentasi) }}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-download mr-1"></i>Download
-                                </a>
-                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        @endif
     </div>
-
-    {{-- SCRIPT MODAL --}}
-    @push('scripts')
-        <script>
-            // Bootstrap 4 - modal akan otomatis berfungsi dengan data-toggle dan data-target
-            console.log('Modal Bootstrap 4 siap');
-        </script>
-    @endpush
-
-    {{-- RESPONSIVE MODAL CSS --}}
-    @push('styles')
-        <style>
-            /* Responsive modal untuk mobile */
-            @media (max-width: 576px) {
-                .modal-dialog {
-                    margin: 10px;
-                    max-width: calc(100vw - 20px);
-                }
-
-                .modal-body {
-                    padding: 10px !important;
-                }
-
-                .modal-body img {
-                    max-height: 60vh !important;
-                }
-
-                .modal-footer {
-                    padding: 10px !important;
-                    flex-direction: column;
-                    gap: 5px;
-                }
-
-                .modal-footer .btn {
-                    width: 100%;
-                    margin: 0;
-                }
-            }
-
-            @media (max-width: 768px) {
-                .modal-dialog.modal-lg {
-                    max-width: 95%;
-                }
-            }
-        </style>
-    @endpush
-
-    <style>
-        .card-img-top {
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .card-img-top:hover {
-            transform: scale(1.05);
-        }
-
-        .modal-body img {
-            max-height: 70vh;
-            object-fit: contain;
-        }
-    </style>
 @endsection

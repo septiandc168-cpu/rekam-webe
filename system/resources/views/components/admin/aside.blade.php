@@ -1,10 +1,10 @@
 <aside class="main-sidebar sidebar-dark-secondary elevation-4" style="background-color: #001f3f !important;">
     <!-- Brand Logo -->
-    <a href="/home" class="brand-link text-center">
-        {{-- <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-            style="opacity: .8"> --}}
-        <span class="brand-text font-weight-light"><b>Rekam WeBe</b></span>
-    </a>
+    <div class="brand-link text-center">
+        <!-- <img src="{{ asset('public/adminlte/dist/img/logo_webe.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+            style="opacity: .8"> -->
+        <span class="brand-text font-weight-light-active"><b>Rekam WeBe</b></span>
+    </div>
 
     <!-- Sidebar -->
     <div class="sidebar" style="background-color: #001f3f !important;">

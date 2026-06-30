@@ -45,15 +45,25 @@
                 <div class="mb-3" id="map-show"
                     style="width:100%; height:70vh; border:1px solid #ddd; border-radius:4px;"></div>
             </div>
-            <div class="col-md-12 mb-3">
+        </div>
+
+        <!-- Informasi Dasar Kegiatan -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Informasi Dasar Kegiatan
+                </h3>
+            </div>
+            <div class="card-body">
                 <table class="table">
                     <tr>
-                        <th>Nama Kegiatan</th>
-                        <td>{{ $rencana_kegiatan->nama_kegiatan }}</td>
+                        <th style="width: 200px; border-top: none;">Nama Kegiatan</th>
+                        <td style="border-top: none;">{{ $rencana_kegiatan->nama_kegiatan }}</td>
                     </tr>
                     <tr>
                         <th>Jenis Kegiatan</th>
-                        <td>{{ $rencana_kegiatan->jenis_kegiatan }}</td>
+                        <td>{{ $rencana_kegiatan->getJenisKegiatanLabel() }}</td>
                     </tr>
                     <tr>
                         <th>Desa</th>
@@ -63,10 +73,23 @@
                         <th>Tanggal</th>
                         <td>
                             @if ($rencana_kegiatan->tanggal_mulai)
-                                {{ \Carbon\Carbon::parse($rencana_kegiatan->tanggal_mulai)->format('d/m/Y') }}
+                                {{ \Carbon\Carbon::parse($rencana_kegiatan->tanggal_mulai)->format('d F Y') }}
                                 @if ($rencana_kegiatan->tanggal_selesai)
-                                    - {{ \Carbon\Carbon::parse($rencana_kegiatan->tanggal_selesai)->format('d/m/Y') }}
+                                    - {{ \Carbon\Carbon::parse($rencana_kegiatan->tanggal_selesai)->format('d F Y') }}
                                 @endif
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Waktu</th>
+                        <td>
+                            @if ($rencana_kegiatan->waktu_mulai)
+                                {{ \Carbon\Carbon::parse($rencana_kegiatan->waktu_mulai)->format('H:i') }}
+                                @if ($rencana_kegiatan->waktu_selesai)
+                                    - {{ \Carbon\Carbon::parse($rencana_kegiatan->waktu_selesai)->format('H:i') }}
+                                @endif
+                            @else
+                                Belum ditentukan
                             @endif
                         </td>
                     </tr>
@@ -80,24 +103,20 @@
                     </tr>
                     <tr>
                         <th>Estimasi Peserta</th>
-                        <td>{{ $rencana_kegiatan->estimasi_peserta }}</td>
-                    </tr>
-                    <tr>
-                        <th>Rincian Kebutuhan</th>
-                        <td>{!! $rencana_kegiatan->rincian_kebutuhan !!}</td>
+                        <td>{{ $rencana_kegiatan->estimasi_peserta }} orang</td>
                     </tr>
                     <tr>
                         <th>Status</th>
                         <td>
                             <span
                                 class="badge bg-{{ $rencana_kegiatan->status == \App\Models\RencanaKegiatan::STATUS_DIAJUKAN
-                                    ? 'warning text-dark'
-                                    : ($rencana_kegiatan->status == \App\Models\RencanaKegiatan::STATUS_DISETUJUI
-                                        ? 'primary'
-                                        : ($rencana_kegiatan->status == \App\Models\RencanaKegiatan::STATUS_SELESAI
-                                            ? 'success'
-                                            : ($rencana_kegiatan->status == \App\Models\RencanaKegiatan::STATUS_DITOLAK
-                                                ? 'danger'
+                                    ? 'primary'
+                                    : ($rencana_kegiatan->status == \App\Models\RencanaKegiatan::STATUS_REVISI
+                                        ? 'warning text-dark'
+                                        : ($rencana_kegiatan->status == \App\Models\RencanaKegiatan::STATUS_DITOLAK
+                                            ? 'danger'
+                                            : ($rencana_kegiatan->status == \App\Models\RencanaKegiatan::STATUS_DISETUJUI
+                                                ? 'success'
                                                 : 'secondary'))) }}">
                                 {{ ucfirst($rencana_kegiatan->status) }}
                             </span>
@@ -111,99 +130,173 @@
                     @endif
                 </table>
             </div>
-            <div>
-                    @php
-                        $fotoData = $rencana_kegiatan->foto;
-                        if (is_string($fotoData)) {
-                            $fotoData = json_decode($fotoData, true);
-                        }
-                        $fotoData = is_array($fotoData) ? $fotoData : [];
-                    @endphp
+        </div>
 
-                    @if (!empty($fotoData))
-                        <div class="mb-3">
-                            <h5><i class="fas fa-images mr-1"></i>Media Publikasi</h5>
-                            <div class="row">
-                                @foreach ($fotoData as $index => $foto)
-                                    @if ($foto)
-                                        @php
-                                            // Handle format baru (array dengan path dan original_name)
-                                            if (is_array($foto)) {
-                                                $fotoPath = $foto['path'];
-                                                $fotoName = $foto['original_name'];
-                                            } else {
-                                                // Handle format lama (string path)
-                                                $fotoPath = $foto;
-                                                $fotoName = 'Foto ' . ($index + 1);
-                                            }
-                                        @endphp
-                                        <div class="col-md-3 mb-3">
-                                            <div class="card">
-                                                <img src="{{ asset('public/storage/app/' . $fotoPath) }}" class="card-img-top"
-                                                    style="height: 200px; object-fit: cover; width: 100%;"
-                                                    alt="{{ $fotoName }}" data-toggle="modal"
-                                                    data-target="#imageModal{{ $index }}">
-                                                <div class="card-body p-2 text-center">
-                                                    <small class="text-muted">{{ $fotoName }}</small>
+        <!-- Detail Kegiatan -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-list-alt mr-1"></i>
+                    Detail Kegiatan
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th style="width: 200px; border-top: none;">Deskripsi</th>
+                        <td style="border-top: none;">{!! $rencana_kegiatan->deskripsi !!}</td>
+                    </tr>
+                    <tr>
+                        <th>Tujujuan</th>
+                        <td>{!! $rencana_kegiatan->tujuan !!}</td>
+                    </tr>
+                    <tr>
+                        <th>Rincian Kebutuhan</th>
+                        <td>{!! $rencana_kegiatan->rincian_kebutuhan !!}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+            <!-- Media Publikasi -->
+        @php
+            $fotoData = $rencana_kegiatan->foto;
+            if (is_string($fotoData)) {
+                $fotoData = json_decode($fotoData, true);
+            }
+            $fotoData = is_array($fotoData) ? $fotoData : [];
+        @endphp
+
+        @if (!empty($fotoData))
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-images mr-1"></i>
+                        Media Publikasi
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach ($fotoData as $index => $foto)
+                            @if ($foto)
+                                @php
+                                    // Handle format baru (array dengan path dan original_name)
+                                    if (is_array($foto)) {
+                                        $fotoPath = $foto['path'];
+                                        $fotoName = $foto['original_name'];
+                                    } else {
+                                        // Handle format lama (string path)
+                                        $fotoPath = $foto;
+                                        $fotoName = 'Foto ' . ($index + 1);
+                                    }
+                                @endphp
+                                <div class="col-md-3 mb-3">
+                                    <div class="card">
+                                        <img src="{{ asset('public/storage/app/' . $fotoPath) }}" class="card-img-top"
+                                            style="height: 200px; object-fit: cover; width: 100%;"
+                                            alt="{{ $fotoName }}" data-toggle="modal"
+                                            data-target="#imageModal{{ $index }}">
+                                        <div class="card-body p-2 text-center">
+                                            <small class="text-muted">{{ $fotoName }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- Dokumen Pendukung -->
+        @if (!empty($rencana_kegiatan->dokumen))
+            @php
+                // Pastikan selalu array
+                $dokumens = $rencana_kegiatan->dokumen;
+
+                if (is_string($dokumens)) {
+                    $dokumens = json_decode($dokumens, true);
+                }
+
+                $dokumens = is_array($dokumens) ? $dokumens : [];
+            @endphp
+
+            @if (count($dokumens))
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-file-alt mr-1"></i>
+                            Dokumen Pendukung Kegiatan
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach ($dokumens as $index => $file)
+                                @if ($file)
+                                    @php
+                                        // Handle format baru (array dengan path dan original_name)
+                                        if (is_array($file)) {
+                                            $filePath = $file['path'];
+                                            $fileName = $file['original_name'];
+                                        } else {
+                                            // Handle format lama (string path)
+                                            $filePath = $file;
+                                            $fileName = basename($file);
+                                        }
+                                    @endphp
+                                    <div class="col-md-4 mb-2">
+                                        <div class="card">
+                                            <div class="card-body p-3">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-file-alt text-primary me-2"></i>
+                                                    <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank"
+                                                        class="text-decoration-none text-truncate" download="{{ $fileName }}">
+                                                        {{ $fileName }}
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endif
-                                @endforeach
-                            </div>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
-                    @endif
+                    </div>
+                </div>
+            @endif
+        @endif
 
-                    @if (!empty($rencana_kegiatan->dokumen))
-                        @php
-                            // Pastikan selalu array
-                            $dokumens = $rencana_kegiatan->dokumen;
-
-                            if (is_string($dokumens)) {
-                                $dokumens = json_decode($dokumens, true);
-                            }
-
-                            $dokumens = is_array($dokumens) ? $dokumens : [];
-                        @endphp
-
-                        @if (count($dokumens))
-                            <div class="mb-3">
-                                <h5><i class="fas fa-file-alt mr-1"></i>Dokumen Pendukung Kegiatan</h5>
-                                <div class="row">
-                                    @foreach ($dokumens as $index => $file)
-                                        @if ($file)
-                                            @php
-                                                // Handle format baru (array dengan path dan original_name)
-                                                if (is_array($file)) {
-                                                    $filePath = $file['path'];
-                                                    $fileName = $file['original_name'];
-                                                } else {
-                                                    // Handle format lama (string path)
-                                                    $filePath = $file;
-                                                    $fileName = basename($file);
-                                                }
-                                            @endphp
-                                            <div class="col-md-4 mb-2">
-                                                <div class="card">
-                                                    <div class="card-body p-3">
-                                                        <div class="d-flex align-items-center">
-                                                            <i class="fas fa-file-alt text-primary me-2"></i>
-                                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank"
-                                                                class="text-decoration-none text-truncate" download="{{ $fileName }}">
-                                                                {{ $fileName }}
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    @endforeach
+        <!-- Anggaran Kegiatan -->
+        @if (!empty($rencana_kegiatan->anggaran_kegiatan))
+            @php
+                $anggaranFile = $rencana_kegiatan->anggaran_kegiatan;
+                $anggaranPath = is_array($anggaranFile) ? $anggaranFile['path'] : $anggaranFile;
+                $anggaranName = is_array($anggaranFile) ? $anggaranFile['original_name'] : basename($anggaranPath);
+            @endphp
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-file-excel mr-1"></i>
+                        Anggaran Kegiatan
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <div class="card">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-file-excel text-success me-2"></i>
+                                        <a href="{{ asset('public/storage/app/' . $anggaranPath) }}" target="_blank"
+                                            class="text-decoration-none text-truncate" download="{{ $anggaranName }}">
+                                            {{ $anggaranName }}
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        @endif
-                    @endif
+                        </div>
+                    </div>
                 </div>
-        </div>
+            </div>
+        @endif
 
         {{-- MODAL FOTO --}}
     @if (!empty($fotoData))
