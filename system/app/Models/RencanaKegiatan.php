@@ -5,12 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class RencanaKegiatan extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, LogsActivity;
 
     protected $guarded = ['id', 'uuid'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['status', 'keterangan_status', 'nama_kegiatan', 'jenis_kegiatan'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(fn(string $eventName) => "Rencana Kegiatan {$eventName}");
+    }
 
     protected $table = 'rencana_kegiatans';
 
@@ -56,12 +67,12 @@ class RencanaKegiatan extends Model
     ];
 
     // Status constants
+    const STATUS_DRAFT = 'draft';
     const STATUS_DIAJUKAN = 'diajukan';
     const STATUS_DISETUJUI = 'disetujui';
     const STATUS_REVISI = 'revisi';
     const STATUS_DITOLAK = 'ditolak';
     const STATUS_SELESAI = 'selesai';
-    const STATUS_MENUNGGU_VERIFIKASI = 'menunggu_verifikasi';
 
     // Jenis Kegiatan constants
     const JENIS_KONSERVASI = 'konservasi';
@@ -72,6 +83,7 @@ class RencanaKegiatan extends Model
     public static function getStatusOptions(): array
     {
         return [
+            self::STATUS_DRAFT => 'Draft',
             self::STATUS_DIAJUKAN => 'Diajukan',
             self::STATUS_DISETUJUI => 'Disetujui',
             self::STATUS_REVISI => 'Revisi',
@@ -100,6 +112,24 @@ class RencanaKegiatan extends Model
         }
 
         return self::getJenisKegiatanOptions()[$this->jenis_kegiatan] ?? 'Unknown';
+    }
+
+    /**
+     * Get HTML badge based on status for clean Blade views.
+     */
+    public function getStatusBadgeAttribute(): string
+    {
+        $label = ucwords(str_replace('_', ' ', $this->status));
+
+        return match ($this->status) {
+            self::STATUS_DRAFT     => '<span style="background:#f1f3f5; color:#495057; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500;">' . $label . '</span>',
+            self::STATUS_DIAJUKAN  => '<span style="background:#e8f0fe; color:#1a56db; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500;">' . $label . '</span>',
+            self::STATUS_REVISI    => '<span style="background:#fff3cd; color:#856404; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500;">' . $label . '</span>',
+            self::STATUS_DITOLAK   => '<span style="background:#fde8e8; color:#c81e1e; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500;">' . $label . '</span>',
+            self::STATUS_DISETUJUI => '<span style="background:#def7ec; color:#03543f; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500;">' . $label . '</span>',
+            self::STATUS_SELESAI   => '<span style="background:#e2e8f0; color:#334155; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500;">' . $label . '</span>',
+            default                => '<span style="background:#f1f3f5; color:#495057; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500;">' . $label . '</span>',
+        };
     }
 
     public function getRouteKeyName()

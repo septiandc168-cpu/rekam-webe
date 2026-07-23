@@ -3,14 +3,13 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class StatusKegiatanNotification extends Notification
+class StatusLaporanNotification extends Notification
 {
     use Queueable;
 
-    public $id_kegiatan;
+    public $id_laporan;
     public $judul_kegiatan;
     public $status_baru;
     public $keterangan;
@@ -19,9 +18,9 @@ class StatusKegiatanNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($kegiatanUuid, $judul_kegiatan, $status_baru, $keterangan = null, $updated_at = null)
+    public function __construct($laporanUuid, $judul_kegiatan, $status_baru, $keterangan = null, $updated_at = null)
     {
-        $this->id_kegiatan = $kegiatanUuid; // Use UUID instead of ID
+        $this->id_laporan = $laporanUuid;
         $this->judul_kegiatan = $judul_kegiatan;
         $this->status_baru = $status_baru;
         $this->keterangan = $keterangan;
@@ -46,13 +45,13 @@ class StatusKegiatanNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'id_kegiatan' => $this->id_kegiatan,
+            'id_laporan' => $this->id_laporan,
             'judul_kegiatan' => $this->judul_kegiatan,
             'status_baru' => $this->status_baru,
             'keterangan' => $this->keterangan,
             'updated_at' => $this->updated_at,
-            'message' => "Kegiatan {$this->judul_kegiatan} telah diubah menjadi {$this->status_baru}",
-            'type' => 'rencana_kegiatan'
+            'message' => "Laporan kegiatan {$this->judul_kegiatan} telah diubah menjadi {$this->status_baru}",
+            'type' => 'laporan_kegiatan'
         ];
     }
 }

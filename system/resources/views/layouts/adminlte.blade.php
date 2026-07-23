@@ -66,10 +66,95 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .bg-navy th {
             color: #ffffff !important;
         }
+
+        /* Highlight active sidebar item */
+        .nav-sidebar > .nav-item > .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.12) !important;
+            border-left: 3px solid rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            color: #ffffff !important;
+        }
+ 
+        /* Pastikan btn-secondary selalu berteks putih */
+        .btn-secondary, 
+        .btn-secondary:hover, 
+        .btn-secondary i, 
+        a.btn-secondary, 
+        a.btn-secondary:hover {
+            color: #ffffff !important;
+        }
+        
+        /* UI/UX Enhancements */
+        .hover-card, .small-box {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-card:hover, .small-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        }
+
+        /* Page load fade-in animation */
+        .content-wrapper {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Empty State */
+        .empty-state {
+            padding: 3rem 1rem;
+            text-align: center;
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+        
+        /* Button Loading State */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .btn-loading .spinner-border {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.15em;
+        }
+
+        /* Fix Tooltip and UI Tooltip sizing globally */
+        .tooltip, .ui-tooltip {
+            font-size: 0.75rem !important;
+            z-index: 9999 !important;
+            max-width: 280px !important;
+        }
+        .tooltip-inner, .ui-tooltip-content {
+            max-width: 280px !important;
+            font-size: 0.75rem !important;
+            padding: 6px 10px !important;
+            background-color: rgba(0, 0, 0, 0.9) !important;
+            color: #fff !important;
+            text-align: left !important;
+            line-height: 1.4 !important;
+            border-radius: 4px !important;
+            border: none !important;
+        }
+        .tooltip-inner *, .ui-tooltip-content * {
+            font-size: 0.75rem !important;
+            line-height: 1.4 !important;
+        }
     </style>
 </head>
 
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
 
         <!-- Navbar -->
@@ -96,10 +181,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <button type="button" class="btn" data-toggle="modal" data-target="#formGantiPassword">
                             Ganti Password
                         </button>
-                        <form action="{{ route('logout') }}" method="POST">
+                        <form id="form-logout" action="{{ route('logout') }}" method="POST" class="d-none no-loader">
                             @csrf
-                            <button type="submit" class="btn text-danger btn-sm">Logout</button>
                         </form>
+                        <button type="button" class="btn text-danger btn-sm dropdown-item" style="cursor: pointer;" onclick="confirmLogout()">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </button>
                     </div>
                 </div>
             </ul>
@@ -116,12 +203,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid">
-                    <div class="row mb-2">
+                    <div class="row mb-2 align-items-center">
                         <div class="col-sm-6">
-                            <h1 class="m-0">@yield('content_title')</h1>
+                            <h4 class="m-0 font-weight-bold text-dark">@yield('content_title')</h4>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
+                            <ol class="breadcrumb float-sm-right text-sm mb-0">
                                 <li class="breadcrumb-item"><a href="/home">Dashboard</a></li>
                                 <li class="breadcrumb-item active">@yield('content_title')</li>
                             </ol>
@@ -259,6 +346,105 @@ scratch. This page gets rid of all links and provides the needed markup only.
     @stack('scripts')
     <script src="{{ url('public/adminlte') }}/plugins/sweetalert2/sweetalert2.all.js"></script>
     @include('sweetalert::alert')
+    
+    <script>
+        $(document).ready(function() {
+            // SweetAlert2 Delete Confirmation
+            $('form[data-confirm-delete="true"]').on('submit', function(e) {
+                e.preventDefault();
+                let $form = $(this);
+                
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading before submitting natively
+                        Swal.fire({
+                            title: 'Menghapus Data...',
+                            text: 'Mohon tunggu sebentar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        // Use native DOM submit after a small delay so Swal can render
+                        setTimeout(() => {
+                            $form[0].submit();
+                        }, 200);
+                    }
+                });
+            });
+
+            // Global Loading Spinner
+            $('form').not('.no-loader').on('submit', function(e) {
+                // Ignore if it's a delete form waiting for confirmation
+                if ($(this).attr('data-confirm-delete') === 'true') {
+                    return;
+                }
+                
+                // Ensure HTML5 validation passes before showing loader
+                if (this.checkValidity && !this.checkValidity()) {
+                    return;
+                }
+                
+                let $form = $(this);
+                // Disable submit buttons to prevent double click after a slight delay
+                // so the browser can still send the clicked button's value
+                setTimeout(function() {
+                    $form.find('button[type="submit"], input[type="submit"]').prop('disabled', true);
+                }, 50);
+                
+                Swal.fire({
+                    title: 'Memproses Data...',
+                    text: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            });
+        });
+
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda akan keluar dari sistem.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Logout!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Logout...',
+                        text: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    setTimeout(() => {
+                        document.getElementById('form-logout').submit();
+                    }, 100);
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

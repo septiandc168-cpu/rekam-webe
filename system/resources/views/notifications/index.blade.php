@@ -5,34 +5,22 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="p-3 d-flex align-items-center justify-content-between border-bottom">
-                    <h4 class="h5 mb-0 d-flex align-items-center">
-                        <i class="fas fa-bell mr-2"></i> Daftar Notifikasi
-                    </h4>
+            <div class="card shadow-sm elevation-1">
+                <div class="card-header bg-white py-3 px-4">
+                    <h3 class="card-title font-weight-bold text-dark mt-1">
+                        <i class="fas fa-bell text-navy mr-2"></i> Daftar Notifikasi
+                    </h3>
 
-                    <div class="d-flex align-items-center">
+                    <div class="card-tools d-flex align-items-center">
                         @if (auth()->user()->unreadNotifications()->count() > 0)
-                            <form action="{{ route('notifications.readAll') }}" method="POST" class="mr-2">
+                            <form action="{{ route('notifications.readAll') }}" method="POST" class="mb-0">
                                 @csrf
-                                <button type="submit" class="btn btn-sm btn-primary d-flex align-items-center justify-content-center"
-                                     style="height: 35px; min-width: 35px;"
+                                <button type="submit" class="btn btn-sm bg-navy text-white shadow-sm rounded-pill px-3"
                                      title="Tandai Semua Dibaca">
                                     <i class="fas fa-check-double"></i>
                                     <span class="d-none d-sm-inline ml-1"> Tandai Semua Dibaca</span>
                                 </button>
                             </form>
-                        @endif
-
-                        @if (auth()->user()->notifications()->count() > 0)
-                            <a href="{{ route('notifications.deleteAll') }}" 
-                               class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
-                               style="height: 35px; min-width: 35px;"
-                               title="Hapus Semua Notifikasi" 
-                               data-confirm-delete="true">
-                                <i class="fas fa-trash"></i>
-                                <span class="d-none d-sm-inline ml-1"> Hapus Semua</span>
-                            </a>
                         @endif
                     </div>
                 </div>
@@ -52,24 +40,24 @@
 
                             <div class="time-label">
                                 <span class="bg-{{ $isUnread ? 'warning' : 'secondary' }}">
-                                    {{ $notification->created_at->format('d M Y H:i') }}
+                                    {{ $notification->created_at->translatedFormat('d M Y H:i') }}
                                 </span>
                             </div>
 
                             <div>
-                                <i class="fas fa-bell bg-{{ $isUnread ? 'blue' : 'gray' }}"></i>
+                                <i class="fas fa-bell {{ $isUnread ? 'bg-navy text-white' : 'bg-secondary text-white' }} shadow-sm"></i>
 
-                                <div class="timeline-item">
-                                    <h3 class="timeline-header">
+                                <div class="timeline-item shadow-sm border-0 border-left-{{ $isUnread ? 'navy' : 'secondary' }}">
+                                    <h3 class="timeline-header border-0 font-weight-bold text-dark pt-3 pb-1">
                                         @if($isUnread)
-                                            <span class="badge badge-warning">Baru</span>
+                                            <span class="badge badge-danger mr-1 badge-pill px-2">Baru</span>
                                         @endif
                                         {{ $data['message'] ?? 'Notifikasi' }}
                                     </h3>
 
-                                    @if($data['keterangan'])
-                                        <div class="timeline-body">
-                                            <strong>Keterangan:</strong> {{ $data['keterangan'] }}
+                                    @if(!empty($data['keterangan']))
+                                        <div class="timeline-body bg-light rounded px-3 py-2 text-muted mx-3 mb-2">
+                                            <i class="fas fa-info-circle mr-1 text-navy"></i> {{ $data['keterangan'] }}
                                         </div>
                                     @endif
 
@@ -115,17 +103,17 @@
 
                                         @if($isUnread && $hasValidLink)
                                             <a href="{{ route('notifications.read', $notification->id) }}" 
-                                               class="btn btn-sm btn-primary float-right" style="height: 35px; display: flex; align-items: center; justify-content: center;">
+                                               class="btn btn-sm bg-navy text-white shadow-sm rounded-pill px-3 mt-2 mt-md-0">
                                                 <i class="fas fa-eye mr-1"></i> Lihat Detail
                                             </a>
                                         @elseif($notificationType === 'laporan_kegiatan' && $laporanUuid)
                                             <a href="{{ route('laporan_kegiatan.show', ['laporan_kegiatan' => $laporanUuid]) }}" 
-                                               class="btn btn-sm btn-primary float-right" style="height: 35px; display: flex; align-items: center; justify-content: center;">
+                                               class="btn btn-sm bg-navy text-white shadow-sm rounded-pill px-3 mt-2 mt-md-0">
                                                 <i class="fas fa-eye mr-1"></i> Lihat Detail
                                             </a>
                                         @elseif($kegiatanUuid)
                                             <a href="{{ route('rencana_kegiatan.show', ['rencana_kegiatan' => $kegiatanUuid]) }}" 
-                                               class="btn btn-sm btn-primary float-right" style="height: 35px; display: flex; align-items: center; justify-content: center;">
+                                               class="btn btn-sm bg-navy text-white shadow-sm rounded-pill px-3 mt-2 mt-md-0">
                                                 <i class="fas fa-eye mr-1"></i> Lihat Detail
                                             </a>
                                         @endif
@@ -165,8 +153,17 @@
             border-radius: 0 5px 5px 0;
         }
 
-        .border-left-blue {
-            border-left-color: #007bff !important;
+        .border-left-blue, .border-left-navy {
+            border-left-color: #001f3f !important;
+        }
+
+        .text-navy {
+            color: #001f3f !important;
+        }
+
+        .bg-navy {
+            background-color: #001f3f !important;
+            color: #ffffff !important;
         }
 
         .timeline-header {

@@ -11,7 +11,7 @@ return new class extends Migration
     public function up(): void
     {
         // Pastikan menyertakan semua status lama beserta status baru
-        DB::statement("ALTER TABLE rencana_kegiatans MODIFY COLUMN status ENUM('diajukan', 'disetujui', 'revisi', 'ditolak', 'menunggu_verifikasi', 'selesai') DEFAULT 'diajukan'");
+        DB::statement("ALTER TABLE rencana_kegiatans MODIFY COLUMN status ENUM('diajukan', 'disetujui', 'revisi', 'ditolak', 'menunggu_verifikasi', 'revisi_laporan', 'selesai') DEFAULT 'diajukan'");
     }
 
     /**

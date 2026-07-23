@@ -64,9 +64,21 @@ class LaporanKegiatanRequest extends FormRequest
             'remove_berita_acara.*' => 'string',
         ];
 
-        // Add rencana_kegiatan_id only for store
+        // Add rencana_kegiatan_id only for store, but make it nullable if it's a laporan langsung
         if ($this->isMethod('POST')) {
-            $rules['rencana_kegiatan_id'] = 'required|exists:rencana_kegiatans,uuid';
+            if ($this->has('is_laporan_langsung') && $this->is_laporan_langsung == '1') {
+                $rules['rencana_kegiatan_id'] = 'nullable';
+                $rules['judul_kegiatan'] = 'required|string|max:255';
+                $rules['lokasi_kegiatan'] = 'required|string|max:255';
+            } else {
+                $rules['rencana_kegiatan_id'] = 'required|exists:rencana_kegiatans,uuid';
+            }
+        }
+        
+        // Validation for edit if it's laporan langsung
+        if (in_array($this->method(), ['PUT', 'PATCH']) && $this->route('laporan_kegiatan') && $this->route('laporan_kegiatan')->isDarurat()) {
+            $rules['judul_kegiatan'] = 'required|string|max:255';
+            $rules['lokasi_kegiatan'] = 'required|string|max:255';
         }
 
         return $rules;
@@ -127,6 +139,8 @@ class LaporanKegiatanRequest extends FormRequest
             // Rencana Kegiatan
             'rencana_kegiatan_id.required' => 'Rencana kegiatan wajib dipilih.',
             'rencana_kegiatan_id.exists' => 'Rencana kegiatan tidak valid.',
+            'judul_kegiatan.required' => 'Judul kegiatan wajib diisi untuk laporan langsung.',
+            'lokasi_kegiatan.required' => 'Lokasi kegiatan wajib diisi untuk laporan langsung.',
         ];
     }
 

@@ -3,38 +3,43 @@
 @section('content_title', 'Daftar Rencana Kegiatan')
 
 @section('content')
-    <div class="card">
-        <div class="p-2 d-flex align-items-center flex-wrap flex-lg-nowrap border">
-            <h4 class="h5 mb-0 d-flex align-items-center {{ auth()->user()->role->role_name === 'supervisor' ? 'w-100 w-lg-auto mb-2 mb-lg-0' : '' }}">
-                Data Rencana Kegiatan
-            </h4>
+    <div class="card shadow-sm elevation-1 text-sm">
+        <div class="card-header bg-white">
+            <h6 class="card-title fw-bold text-dark mt-1 mb-0" style="font-size: 0.95rem;">Data Rencana Kegiatan</h6>
+            <div class="card-tools">
+                @can('create', \App\Models\RencanaKegiatan::class)
+                    <a href="{{ route('rencana_kegiatan.create') }}" class="btn bg-navy text-white btn-sm shadow-sm">
+                        <i class="fas fa-plus mr-1"></i> Tambah Rencana Kegiatan
+                    </a>
+                @endcan
+            </div>
+        </div>
 
-            <div class="d-flex align-items-center flex-nowrap flex-lg-wrap ml-auto">
-                <!-- Export Excel Form (Supervisor only) -->
-                @if(auth()->user()->role->role_name === 'supervisor')
-                    <form action="{{ route('rencana_kegiatan.export.excel') }}" method="GET" class="mb-2 mb-lg-0 mr-lg-2 flex-grow-1" id="export-form">
-                        @csrf
-                        <div class="export-form-container">
-                            <!-- Desktop Layout -->
-                            <div class="d-none d-lg-flex input-group input-group-sm">
-                                <select name="bulan" class="form-control mr-2" required style="min-width: 120px;">
-                                    <option value="">Pilih Bulan</option>
-                                    @for($i = 1; $i <= 12; $i++)
-                                        <option value="{{ $i }}" {{ (request('bulan') == $i) ? 'selected' : '' }}>
-                                            {{ ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][$i - 1] }}
-                                        </option>
-                                    @endfor
-                                </select>
-                                <input type="number" name="tahun" class="form-control mr-2" placeholder="Tahun" 
-                                       value="{{ request('tahun', date('Y')) }}" min="2020" max="2030" required style="min-width: 80px;">
-                                <select name="status" class="form-control mr-2" style="min-width: 130px;">
-                                    <option value="">Semua Status</option>
-                                    <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
-                                    <option value="disetujui" {{ (request('status') == 'disetujui') ? 'selected' : '' }}>Disetujui</option>
-                                    <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
-                                    <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
-                                </select>
-                                <select name="user_id" class="form-control mr-2" style="min-width: 150px;">
+            <div class="card-body border-bottom bg-light py-2 px-3">
+                <form action="{{ route('rencana_kegiatan.index') }}" method="GET" class="mb-0 no-loader" id="filter-form">
+                    <div class="export-form-container">
+                        <!-- Desktop Layout -->
+                        <div class="d-none d-lg-flex input-group input-group-sm align-items-center">
+                            <span class="mr-2 text-muted fw-bold"><i class="fas fa-filter mr-1"></i> Filter {{ auth()->user()->role->role_name === 'admin' ? '& Export' : '' }}:</span>
+                            <select name="bulan" class="form-control mr-2 rounded" style="min-width: 120px;">
+                                <option value="">Semua Bulan</option>
+                                @for($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}" {{ (request('bulan') == $i) ? 'selected' : '' }}>
+                                        {{ ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][$i - 1] }}
+                                    </option>
+                                @endfor
+                            </select>
+                            <input type="number" name="tahun" class="form-control mr-2 rounded" placeholder="Tahun" 
+                                   value="{{ request('tahun') }}" min="2020" max="2030" style="min-width: 80px;">
+                            <select name="status" class="form-control mr-2 rounded" style="min-width: 130px;">
+                                <option value="">Semua Status</option>
+                                <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
+                                <option value="disetujui" {{ (request('status') == 'disetujui') ? 'selected' : '' }}>Disetujui</option>
+                                <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
+                                <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
+                            </select>
+                            @if(auth()->user()->role->role_name === 'admin')
+                                <select name="user_id" class="form-control mr-2 rounded" style="min-width: 150px;">
                                     <option value="">Semua User</option>
                                     @if(isset($users))
                                         @foreach($users as $user)
@@ -44,39 +49,46 @@
                                         @endforeach
                                     @endif
                                 </select>
-                                <button type="submit" class="btn btn-success btn-sm flex-shrink-0 mr-2" title="Export Excel">
+                            @endif
+                            <button type="submit" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1" title="Filter Tabel">
+                                <i class="fas fa-filter mr-1"></i> Filter
+                            </button>
+                            @if(auth()->user()->role->role_name === 'admin')
+                                <button type="submit" formaction="{{ route('rencana_kegiatan.export.excel') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm" title="Export Excel">
                                     <i class="fas fa-file-excel mr-1"></i> Export
                                 </button>
-                            </div>
-                            
-                            <!-- Mobile Layout -->
-                            <div class="d-lg-none">
-                                <div class="row g-2">
+                            @endif
+                        </div>
+                        
+                        <!-- Mobile Layout -->
+                        <div class="d-lg-none">
+                            <div class="row g-2">
+                                <div class="col-6 mt-2">
+                                    <select name="bulan" class="form-control form-control-sm rounded">
+                                        <option value="">Semua Bulan</option>
+                                        @for($i = 1; $i <= 12; $i++)
+                                            <option value="{{ $i }}" {{ (request('bulan') == $i) ? 'selected' : '' }}>
+                                                {{ ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][$i - 1] }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <input type="number" name="tahun" class="form-control form-control-sm rounded" placeholder="Tahun" 
+                                           value="{{ request('tahun') }}" min="2020" max="2030">
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <select name="status" class="form-control form-control-sm rounded">
+                                        <option value="">Status</option>
+                                        <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
+                                        <option value="disetujui" {{ (request('status') == 'disetujui') ? 'selected' : '' }}>Disetujui</option>
+                                        <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
+                                        <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
+                                    </select>
+                                </div>
+                                @if(auth()->user()->role->role_name === 'admin')
                                     <div class="col-6 mt-2">
-                                        <select name="bulan" class="form-control form-control-sm" required>
-                                            <option value="">Bulan</option>
-                                            @for($i = 1; $i <= 12; $i++)
-                                                <option value="{{ $i }}" {{ (request('bulan') == $i) ? 'selected' : '' }}>
-                                                    {{ ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][$i - 1] }}
-                                                </option>
-                                            @endfor
-                                        </select>
-                                    </div>
-                                    <div class="col-6 mt-2">
-                                        <input type="number" name="tahun" class="form-control form-control-sm" placeholder="Tahun" 
-                                               value="{{ request('tahun', date('Y')) }}" min="2020" max="2030" required>
-                                    </div>
-                                    <div class="col-6 mt-2">
-                                        <select name="status" class="form-control form-control-sm">
-                                            <option value="">Status</option>
-                                            <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
-                                            <option value="disetujui" {{ (request('status') == 'disetujui') ? 'selected' : '' }}>Disetujui</option>
-                                            <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
-                                            <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-6 mt-2">
-                                        <select name="user_id" class="form-control form-control-sm">
+                                        <select name="user_id" class="form-control form-control-sm rounded">
                                             <option value="">User</option>
                                             @if(isset($users))
                                                 @foreach($users as $user)
@@ -87,190 +99,118 @@
                                             @endif
                                         </select>
                                     </div>
-                                    <div class="col-12 mt-2">
-                                        <button type="submit" class="btn btn-success btn-sm btn-block w-100">
-                                            <i class="fas fa-file-excel mr-1"></i> Export Excel
+                                @endif
+                                <div class="{{ auth()->user()->role->role_name === 'admin' ? 'col-6' : 'col-12' }} mt-2">
+                                    <button type="submit" class="btn bg-navy text-white btn-sm btn-block w-100 shadow-sm">
+                                        <i class="fas fa-filter mr-1"></i> Filter
+                                    </button>
+                                </div>
+                                @if(auth()->user()->role->role_name === 'admin')
+                                    <div class="col-6 mt-2">
+                                        <button type="submit" formaction="{{ route('rencana_kegiatan.export.excel') }}" class="btn bg-navy text-white btn-sm btn-block w-100 shadow-sm">
+                                            <i class="fas fa-file-excel mr-1"></i> Export
                                         </button>
                                     </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
-                    </form>
-                    
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const form = document.getElementById('export-form');
-                            const desktopFields = form.querySelectorAll('.d-none.d-lg-flex select, .d-none.d-lg-flex input');
-                            const mobileFields = form.querySelectorAll('.d-lg-none select, .d-lg-none input');
-                            
-                            // Sync desktop to mobile
-                            desktopFields.forEach((desktopField, index) => {
-                                if (mobileFields[index]) {
-                                    desktopField.addEventListener('change', function() {
-                                        mobileFields[index].value = this.value;
-                                    });
-                                }
-                            });
-                            
-                            // Sync mobile to desktop
-                            mobileFields.forEach((mobileField, index) => {
-                                if (desktopFields[index]) {
-                                    mobileField.addEventListener('change', function() {
-                                        desktopFields[index].value = this.value;
-                                    });
-                                }
-                            });
-                            
-                            // Remove name attribute from mobile fields to prevent form submission conflicts
-                            mobileFields.forEach(field => {
-                                field.removeAttribute('name');
-                            });
-                        });
-                    </script>
-                @endif
-
-                @can('create', \App\Models\RencanaKegiatan::class)
-                    <div class="mb-0 mb-lg-0 ml-auto">
-                        <a href="{{ route('rencana_kegiatan.create') }}" class="btn btn-primary btn-sm"
-                            style="height: 35px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-plus mr-1"></i>
-                            Tambah
-                        </a>
                     </div>
-                @endcan
+                </form>
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const form = document.getElementById('filter-form');
+                        const desktopFields = form.querySelectorAll('.d-none.d-lg-flex select, .d-none.d-lg-flex input');
+                        const mobileFields = form.querySelectorAll('.d-lg-none select, .d-lg-none input');
+                        
+                        // Sync desktop to mobile
+                        desktopFields.forEach((desktopField, index) => {
+                            if (mobileFields[index]) {
+                                desktopField.addEventListener('change', function() {
+                                    mobileFields[index].value = this.value;
+                                });
+                            }
+                        });
+                        
+                        // Sync mobile to desktop
+                        mobileFields.forEach((mobileField, index) => {
+                            if (desktopFields[index]) {
+                                mobileField.addEventListener('change', function() {
+                                    desktopFields[index].value = this.value;
+                                });
+                            }
+                        });
+                        
+                        // Remove name attribute from mobile fields to prevent form submission conflicts
+                        mobileFields.forEach(field => {
+                            field.removeAttribute('name');
+                        });
+                    });
+                </script>
             </div>
-        </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-sm" id="table2">
-                    <thead class="bg-navy">
-                        <tr>
-                            <th class="align-middle" style=" padding-left: 17px; height: 35px; width: 35px">No</th>
-                            <th class="align-middle" style=" padding-left: 17px; height: 35px; width: 110px">Aksi</th>
-                            <th class="align-middle" style=" padding-left: 18px; height: 35px;">Nama Kegiatan</th>
-                            <th class="align-middle text-nowrap" style=" padding-left: 18px; height: 35px; width: 165px">Penanggung Jawab</th>
-                            <!-- <th class="align-middle" style=" padding-left: 18px; height: 35px;">Desa</th> -->
-                            <th class="align-middle" style=" padding-left: 18px; height: 35px;">Tanggal</th>
-                            <th class="align-middle" style=" padding-left: 18px; height: 35px; width: 120px">Status</th>
-                        </tr>
+            <table class="table table-hover table-borderless align-middle w-100" id="table2">
+                <thead class="bg-navy text-white text-nowrap">
+                    <tr>
+                        <th class="align-middle text-center" style="width: 50px;">No</th>
+                        <th class="align-middle text-center" style="width: 100px;">Aksi</th>
+                        <th class="align-middle" style="width: 35%;">Judul Kegiatan</th>
+                        <th class="align-middle text-nowrap" style="width: 20%;">Tanggal Pelaksanaan</th>
+                        <th class="align-middle" style="width: 20%;">Penanggung Jawab</th>
+                        <th class="align-middle text-center" style="width: 120px;">Status</th>
+                    </tr>
                     </thead>
                     <tbody>
                         @forelse ($rencanaKegiatans as $i => $rencanaKegiatan)
-                            <tr>
-                                <td>{{ $i + 1 }}</td>
+                            <tr class="border-bottom">
+                                <td class="text-center text-muted">{{ $i + 1 }}</td>
+                                <td class="text-center">
+                                    <a class="btn btn-sm bg-navy text-white shadow-sm rounded"
+                                        style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
+                                        href="{{ route('rencana_kegiatan.show', $rencanaKegiatan) }}"
+                                        title="Lihat Detail">
+                                        <i class="fas fa-info" style="font-size: 12px;"></i>
+                                    </a>
+                                </td>
+                                <td class="py-3">
+                                    <a href="{{ route('rencana_kegiatan.show', $rencanaKegiatan) }}" class="text-dark text-wrap d-block" style="max-width: 300px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-decoration: none;" title="{{ $rencanaKegiatan->nama_kegiatan ?? ($rencanaKegiatan->judul ?? '-') }}">
+                                        <strong>{{ $rencanaKegiatan->nama_kegiatan ?? ($rencanaKegiatan->judul ?? '-') }}</strong>
+                                    </a>
+                                    <small class="text-muted text-truncate d-block" style="max-width: 250px;" title="{{ $rencanaKegiatan->getJenisKegiatanLabel() }}"><i class="fas fa-tags mr-1"></i> {{ $rencanaKegiatan->getJenisKegiatanLabel() }}</small>
+                                </td>
                                 <td>
-                                    <div class="btn-group" role="group">
-                                        <a class="btn btn-primary btn-sm"
-                                            style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
-                                            href="{{ route('rencana_kegiatan.show', $rencanaKegiatan) }}"
-                                            title="Detail Rencana Kegiatan">
-                                            <i class="fas fa-info"></i>
-                                        </a>
-
-                                        {{-- Tombol Laporan Kegiatan --}}
-                                        @if ($rencanaKegiatan->status === \App\Models\RencanaKegiatan::STATUS_DISETUJUI)
-                                            @if (!$rencanaKegiatan->hasLaporan())
-                                                @can('create', \App\Models\LaporanKegiatan::class)
-                                                    <a class="btn btn-success btn-sm"
-                                                        style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
-                                                        href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencanaKegiatan->uuid]) }}"
-                                                        title="Buat Laporan">
-                                                        <i class="fas fa-file-medical"></i>
-                                                    </a>
-                                                @endcan
-                                            @endif
-                                        @elseif ($rencanaKegiatan->status === \App\Models\RencanaKegiatan::STATUS_MENUNGGU_VERIFIKASI)
-                                            @if(auth()->user()->role->role_name === 'supervisor')
-                                                <form action="{{ route('rencana_kegiatan.verifikasi', $rencanaKegiatan->uuid) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="submit" class="btn btn-success btn-sm" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;" onclick="return confirm('Verifikasi laporan dan selesaikan kegiatan?')" title="Verifikasi Laporan">
-                                                        <i class="fas fa-check-circle"></i>
-                                                    </button>
-                                                </form>
-                                                @if ($rencanaKegiatan->hasLaporan() && $rencanaKegiatan->laporanKegiatan)
-                                                    <a class="btn btn-info btn-sm"
-                                                        style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
-                                                        href="{{ route('laporan_kegiatan.show', $rencanaKegiatan->laporanKegiatan) }}"
-                                                        title="Cek Laporan">
-                                                        <i class="fas fa-search"></i>
-                                                    </a>
-                                                @endif
-                                            @else
-                                                <a class="btn btn-warning btn-sm" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;" title="Menunggu Verifikasi Admin">
-                                                    <i class="fas fa-clock"></i>
-                                                </a>
-                                            @endif
-                                        @elseif ($rencanaKegiatan->status === \App\Models\RencanaKegiatan::STATUS_SELESAI)
-                                            @if ($rencanaKegiatan->hasLaporan() && $rencanaKegiatan->laporanKegiatan)
-                                                <a class="btn btn-info btn-sm"
-                                                    style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
-                                                    href="{{ route('laporan_kegiatan.show', $rencanaKegiatan->laporanKegiatan) }}"
-                                                    title="Lihat Laporan">
-                                                    <i class="fas fa-file-alt"></i>
-                                                </a>
-                                            @endif
-                                        @endif
-
-                                        @can('update', $rencanaKegiatan)
-                                            <a class="btn btn-warning btn-sm"
-                                                style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
-                                                href="{{ route('rencana_kegiatan.edit', $rencanaKegiatan) }}"
-                                                title="Edit Rencana Kegiatan">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        @endcan
-                                        @can('delete', $rencanaKegiatan)
-                                            <a class="btn btn-danger btn-sm"
-                                                style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
-                                                href="{{ route('rencana_kegiatan.destroy', $rencanaKegiatan) }}"
-                                                title="Hapus Rencana Kegiatan" data-confirm-delete="true">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        @endcan
-                                    </div>
-                                </td>
-                                <td>{{ $rencanaKegiatan->nama_kegiatan ?? ($rencanaKegiatan->judul ?? '-') }}
-                                    <br>
-                                    <small
-                                        class="text-muted">{{ $rencanaKegiatan->getJenisKegiatanLabel() }}</small>
-                                </td>
-                                <td>{{ $rencanaKegiatan->penanggung_jawab ?? '-' }}</td>
-                                <!-- <td>{{ $rencanaKegiatan->desa ?? '-' }}</td> -->
-                                <td class="text-nowrap">
                                     @if ($rencanaKegiatan->tanggal_mulai)
-                                        {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_mulai)->format('d/m/Y') }}
-                                        @if ($rencanaKegiatan->tanggal_selesai)
-                                            -
-                                            {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_selesai)->format('d/m/Y') }}
+                                        <span class="text-dark"><i class="far fa-calendar-alt mr-1 text-muted"></i> {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }}</span>
+                                        @if ($rencanaKegiatan->tanggal_selesai && $rencanaKegiatan->tanggal_selesai != $rencanaKegiatan->tanggal_mulai)
+                                            <br><small class="text-muted">s/d {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}</small>
                                         @endif
                                     @else
-                                        -
+                                        <span class="text-muted">-</span>
                                     @endif
                                 </td>
                                 <td>
-                                    <span
-                                        class="badge bg-{{ $rencanaKegiatan->status == \App\Models\RencanaKegiatan::STATUS_DIAJUKAN
-                                            ? 'primary'
-                                            : ($rencanaKegiatan->status == \App\Models\RencanaKegiatan::STATUS_REVISI
-                                                ? 'warning text-dark'
-                                                : ($rencanaKegiatan->status == \App\Models\RencanaKegiatan::STATUS_DITOLAK
-                                                    ? 'danger'
-                                                    : ($rencanaKegiatan->status == \App\Models\RencanaKegiatan::STATUS_DISETUJUI
-                                                        ? 'success'
-                                                        : 'secondary'))) }}">
-                                        {{ ucfirst($rencanaKegiatan->status) }}
-                                    </span>
+                                    <div class="d-flex align-items-center">
+                                        @if($rencanaKegiatan->penanggung_jawab)
+                                            <span class="text-dark text-truncate" style="max-width: 170px;" title="{{ $rencanaKegiatan->penanggung_jawab }}">{{ $rencanaKegiatan->penanggung_jawab }}</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    {!! $rencanaKegiatan->status_badge !!}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">Tidak ada data rencana kegiatan.</td>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    <i class="fas fa-folder-open fa-2x mb-2"></i><br>
+                                    Tidak ada data rencana kegiatan.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
-                </table>
-            </div>
+            </table>
         </div>
     </div>
 
@@ -406,6 +346,30 @@
         });
     </script>
 
-    {{-- Deletion is handled via SweetAlert using data-confirm-delete attribute. --}}
-
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                if (!$.fn.DataTable.isDataTable('#table2')) {
+                    $('#table2').DataTable({
+                        "responsive": true,
+                        "autoWidth": false,
+                        "language": {
+                            "search": "Cari:",
+                            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                            "zeroRecords": "Data tidak ditemukan",
+                            "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+                            "infoEmpty": "Tidak ada data yang tersedia",
+                            "infoFiltered": "(difilter dari _MAX_ total data)",
+                            "paginate": {
+                                "first": "Pertama",
+                                "last": "Terakhir",
+                                "next": "Selanjutnya",
+                                "previous": "Sebelumnya"
+                            }
+                        }
+                    });
+                }
+            }));
+        </script>
+    @endpush
 @endsection

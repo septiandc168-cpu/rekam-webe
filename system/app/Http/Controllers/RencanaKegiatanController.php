@@ -33,7 +33,7 @@ class RencanaKegiatanController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $isSupervisor = $user->role->role_name === 'supervisor';
+        $isSupervisor = $user->role->role_name === 'admin';
         
         // Handle filter_status parameter from dashboard
         $filterStatus = $request->get('filter_status');
@@ -44,28 +44,43 @@ class RencanaKegiatanController extends Controller
         
         // Filter data berdasarkan peran
         if ($isSupervisor) {
-            // Supervisor melihat semua data
+            // Supervisor (admin) melihat semua data
             $query = RencanaKegiatan::with('laporanKegiatan', 'user');
             
-            // Apply status filter if provided
+            // Apply filters if provided
             if ($request->filled('status')) {
                 $query->where('status', $request->status);
+            }
+            if ($request->filled('bulan')) {
+                $query->whereMonth('tanggal_mulai', $request->bulan);
+            }
+            if ($request->filled('tahun')) {
+                $query->whereYear('tanggal_mulai', $request->tahun);
+            }
+            if ($request->filled('user_id')) {
+                $query->where('user_id', $request->user_id);
             }
             
             $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->get();
             
-            // Get all admin users for export filter
+            // Get all anggota users for filter
             $users = User::whereHas('role', function($query) {
-                $query->where('role_name', 'admin');
+                $query->where('role_name', 'anggota');
             })->orderBy('name')->get();
         } else {
-            // Admin hanya melihat datanya sendiri
+            // Anggota hanya melihat datanya sendiri
             $query = RencanaKegiatan::with('laporanKegiatan', 'user')
                 ->where('user_id', $user->id);
             
-            // Apply status filter if provided
+            // Apply filters if provided
             if ($request->filled('status')) {
                 $query->where('status', $request->status);
+            }
+            if ($request->filled('bulan')) {
+                $query->whereMonth('tanggal_mulai', $request->bulan);
+            }
+            if ($request->filled('tahun')) {
+                $query->whereYear('tanggal_mulai', $request->tahun);
             }
             
             $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->get();
@@ -354,8 +369,8 @@ class RencanaKegiatanController extends Controller
         $this->authorize('update', $rencana_kegiatan);
 
         $user = auth()->user();
-        $isSupervisor = $user->role->role_name === 'supervisor';
-        $isAdmin = $user->role->role_name === 'admin';
+        $isSupervisor = $user->role->role_name === 'admin';
+        $isAdmin = $user->role->role_name === 'anggota';
         Log::info('RencanaKegiatanController@update called', ['id' => $rencana_kegiatan->id, 'input' => $request->all()]);
 
         // Different validation rules based on role
@@ -656,7 +671,7 @@ class RencanaKegiatanController extends Controller
         $this->authorize('updateStatus', $rencana_kegiatan);
 
         $user = auth()->user();
-        $isSupervisor = $user->role->role_name === 'supervisor';
+        $isSupervisor = $user->role->role_name === 'admin';
 
         if (!$isSupervisor) {
             abort(403, 'Unauthorized action.');
@@ -705,6 +720,102 @@ class RencanaKegiatanController extends Controller
 
         toast('Status rencana kegiatan berhasil diperbarui!', 'success');
         return redirect()->route('rencana_kegiatan.index');
+    }
+
+    public function setujuiRencana(Request $request, $id)
+    {
+        $rencana = RencanaKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        $this->authorize('updateStatus', $rencana);
+
+        $rencana->update([
+            'status' => RencanaKegiatan::STATUS_DISETUJUI,
+            'keterangan_status' => null, // Bersihkan keterangan karena sudah disetujui
+        ]);
+
+        // Kirim notifikasi ke pembuat rencana
+        if ($rencana->user_id !== auth()->id()) {
+            $pembuat = User::find($rencana->user_id);
+            if ($pembuat) {
+                $pembuat->notify(new StatusKegiatanNotification(
+                    $rencana->uuid,
+                    $rencana->nama_kegiatan,
+                    RencanaKegiatan::STATUS_DISETUJUI,
+                    null,
+                    now()
+                ));
+            }
+        }
+
+        toast('Rencana kegiatan berhasil disetujui!', 'success');
+        return redirect()->back();
+    }
+
+    public function revisiRencana(Request $request, $id)
+    {
+        $rencana = RencanaKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        $this->authorize('updateStatus', $rencana);
+
+        $request->validate([
+            'keterangan_status' => 'required|string',
+        ], [
+            'keterangan_status.required' => 'Catatan revisi wajib diisi.',
+        ]);
+
+        $rencana->update([
+            'status' => RencanaKegiatan::STATUS_REVISI,
+            'keterangan_status' => $request->keterangan_status,
+        ]);
+
+        // Kirim notifikasi ke pembuat rencana
+        if ($rencana->user_id !== auth()->id()) {
+            $pembuat = User::find($rencana->user_id);
+            if ($pembuat) {
+                $pembuat->notify(new StatusKegiatanNotification(
+                    $rencana->uuid,
+                    $rencana->nama_kegiatan,
+                    RencanaKegiatan::STATUS_REVISI,
+                    $request->keterangan_status,
+                    now()
+                ));
+            }
+        }
+
+        toast('Permintaan revisi berhasil dikirim!', 'warning');
+        return redirect()->back();
+    }
+
+    public function tolakRencana(Request $request, $id)
+    {
+        $rencana = RencanaKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        $this->authorize('updateStatus', $rencana);
+
+        $request->validate([
+            'keterangan_status' => 'required|string',
+        ], [
+            'keterangan_status.required' => 'Alasan penolakan wajib diisi.',
+        ]);
+
+        $rencana->update([
+            'status' => RencanaKegiatan::STATUS_DITOLAK,
+            'keterangan_status' => $request->keterangan_status,
+        ]);
+
+        // Kirim notifikasi ke pembuat rencana
+        if ($rencana->user_id !== auth()->id()) {
+            $pembuat = User::find($rencana->user_id);
+            if ($pembuat) {
+                $pembuat->notify(new StatusKegiatanNotification(
+                    $rencana->uuid,
+                    $rencana->nama_kegiatan,
+                    RencanaKegiatan::STATUS_DITOLAK,
+                    $request->keterangan_status,
+                    now()
+                ));
+            }
+        }
+
+        toast('Rencana kegiatan telah ditolak.', 'error');
+        return redirect()->back();
     }
 
     public function verifikasiLaporan(Request $request, RencanaKegiatan $rencana_kegiatan)
@@ -847,22 +958,20 @@ class RencanaKegiatanController extends Controller
      */
     public function exportExcel(Request $request)
     {
-        // Only supervisor can access this method
-        if (auth()->user()->role->role_name !== 'supervisor') {
+        // Only admin can access this method
+        if (auth()->user()->role->role_name !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
-            'bulan' => 'required|integer|min:1|max:12',
-            'tahun' => 'required|integer|min:2020|max:2030',
+            'bulan' => 'nullable|integer|min:1|max:12',
+            'tahun' => 'nullable|integer|min:2020|max:2030',
             'status' => 'nullable|in:diajukan,disetujui,ditolak,selesai',
             'user_id' => 'nullable|exists:users,id',
         ], [
-            'bulan.required' => 'Bulan wajib dipilih.',
             'bulan.integer' => 'Format bulan tidak valid.',
             'bulan.min' => 'Bulan minimal 1.',
             'bulan.max' => 'Bulan maksimal 12.',
-            'tahun.required' => 'Tahun wajib diisi.',
             'tahun.integer' => 'Format tahun tidak valid.',
             'tahun.min' => 'Tahun minimal 2020.',
             'tahun.max' => 'Tahun maksimal 2030.',
@@ -876,9 +985,20 @@ class RencanaKegiatanController extends Controller
         $userId = $request->user_id;
 
         // Query data
-        $query = RencanaKegiatan::with('user')
-            ->whereYear('tanggal_mulai', $tahun)
-            ->whereMonth('tanggal_mulai', $bulan);
+        $query = RencanaKegiatan::with('user');
+
+        if ($tahun) {
+            $query->whereYear('tanggal_mulai', $tahun);
+        }
+        if ($bulan) {
+            $query->whereMonth('tanggal_mulai', $bulan);
+        }
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+        if ($status) {
+            $query->where('status', $status);
+        }
 
         // Filter berdasarkan user jika ada (hanya supervisor yang bisa filter per user)
         if ($userId) {
@@ -952,5 +1072,48 @@ class RencanaKegiatanController extends Controller
         ];
 
         return $statusLabels[$status] ?? ucfirst($status);
+    }
+
+    public function exportPdf(RencanaKegiatan $rencanaKegiatan)
+    {
+        $this->authorize('view', $rencanaKegiatan);
+        
+        $rencanaKegiatan->load(['user', 'laporanKegiatan']);
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('rencana_kegiatan.pdf', compact('rencanaKegiatan'));
+        
+        return $pdf->download('Rencana_Kegiatan_'.$rencanaKegiatan->uuid.'.pdf');
+    }
+
+    /**
+     * Anggota action: Ajukan Rencana Kegiatan (Direct)
+     */
+    public function ajukanRencana(Request $request, $id)
+    {
+        $rencanaKegiatan = RencanaKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        
+        // Authorization check: User can only submit their own draft/revisi
+        if ($rencanaKegiatan->user_id !== auth()->id() || !in_array($rencanaKegiatan->status, [RencanaKegiatan::STATUS_DRAFT, RencanaKegiatan::STATUS_REVISI])) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $rencanaKegiatan->update([
+            'status' => RencanaKegiatan::STATUS_DIAJUKAN,
+            'keterangan_status' => null // Reset keterangan
+        ]);
+        
+        // Send notification to supervisors
+        $notification = new \App\Notifications\KegiatanActivityNotification(
+            $rencanaKegiatan->uuid,
+            $rencanaKegiatan->nama_kegiatan,
+            'diajukan',
+            auth()->user()->name,
+            null,
+            now()
+        );
+        $this->notifySupervisors($notification);
+        
+        toast('Rencana kegiatan berhasil diajukan!', 'success');
+        return redirect()->back();
     }
 }

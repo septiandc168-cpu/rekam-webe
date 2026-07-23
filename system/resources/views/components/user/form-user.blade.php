@@ -1,11 +1,12 @@
 <div>
-    <button type="button" class="btn {{ $id ? 'btn-warning' : 'btn-primary' }}"
-        style="{{ $id ? 'width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;' : '' }}"
+    <button type="button" class="btn {{ $id ? 'btn-sm btn-outline-warning shadow-sm rounded-circle mx-1' : 'btn-sm bg-navy text-white shadow-sm' }}"
+        title="{{ $id ? 'Edit User' : 'Tambah User' }}"
+        style="{{ $id ? 'width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center;' : '' }}"
         data-toggle="modal" data-target="#formUser{{ $id ?? '' }}">
         @if ($id)
             <i class="fas fa-edit"></i>
         @else
-            <i class="fas fa-plus mx-1"></i>Tambah
+            <i class="fas fa-plus mr-1"></i> Tambah Pengguna
         @endif
     </button>
     <div class="modal fade" id="formUser{{ $id ?? '' }}">
@@ -15,7 +16,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">{{ $id ? 'Form Edit User' : 'Form User Baru' }}</h4>
+                        <h4 class="modal-title">{{ $id ? 'Form Edit Pengguna' : 'Form Pengguna Baru' }}</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -33,7 +34,7 @@
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn bg-navy text-white">Simpan</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->

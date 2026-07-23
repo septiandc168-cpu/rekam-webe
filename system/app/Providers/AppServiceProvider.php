@@ -24,8 +24,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set locale to Indonesian for dates
+        \Carbon\Carbon::setLocale('id');
+
         // Register policies
         Gate::policy(RencanaKegiatan::class, RencanaKegiatanPolicy::class);
         Gate::policy(LaporanKegiatan::class, LaporanKegiatanPolicy::class);
+
+        // Register observers
+        LaporanKegiatan::observe(\App\Observers\LaporanKegiatanObserver::class);
     }
 }

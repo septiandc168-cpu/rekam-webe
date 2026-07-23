@@ -18,7 +18,7 @@ class VerifyIsSupervisor
     public function handle(Request $request, Closure $next): Response
     {
         $role_id = $request->user()->role_id;
-        $superVisorId = Role::where('role_name', 'supervisor')->first()->id;
+        $superVisorId = Role::where('role_name', 'admin')->first()->id;
 
         if ($role_id != $superVisorId) {
             Alert::error('Gagal', 'Anda tidak memiliki akses ke halaman ini');

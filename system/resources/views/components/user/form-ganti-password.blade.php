@@ -34,7 +34,7 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-between mt-3">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
-                        <button type="submit" class="btn btn-primary">Ganti Password</button>
+                        <button type="submit" class="btn bg-navy text-white">Ganti Password</button>
                     </div>
                 </div>
             </div>

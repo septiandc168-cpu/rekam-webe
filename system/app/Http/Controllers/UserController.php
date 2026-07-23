@@ -15,11 +15,13 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
         $users = User::with('role')
+            ->whereHas('role', function($query) {
+                $query->where('role_name', '!=', 'admin');
+            })
             ->orderBy('updated_at', 'desc')
             ->get();
-        $roles = Role::all();
+        $roles = Role::where('role_name', '!=', 'admin')->get();
 
         // Konfigurasi SweetAlert untuk delete dengan warna danger
         $confirm = [
@@ -58,7 +60,7 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::all();
+        $roles = Role::where('role_name', '!=', 'admin')->get();
         return view('users.create', compact('roles'));
     }
 

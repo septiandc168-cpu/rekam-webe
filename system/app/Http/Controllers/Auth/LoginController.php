@@ -40,6 +40,17 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
 
+    /**
+     * Override attemptLogin method to explicitly prevent Remember Me functionality
+     */
+    protected function attemptLogin(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        // Only authenticate using credentials, no remember token will be generated
+        return \Illuminate\Support\Facades\Auth::attempt($credentials);
+    }
+
     protected function validateLogin(Request $request)
     {
         $request->validate(

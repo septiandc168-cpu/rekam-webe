@@ -1,49 +1,67 @@
 @extends('layouts.adminlte')
 
-@section('content_title', 'Daftar User')
+@section('content_title', 'Daftar Pengguna')
 
 @section('content')
-    <div class="card">
-        <div class="p-2 d-flex align-items-center justify-content-between border">
-            <h4 class="h5 mb-0 d-flex align-items-center">
-                Daftar User
-            </h4>
-            <div>
+    <div class="card shadow-sm elevation-1 text-sm">
+        <div class="card-header bg-white">
+            <h6 class="card-title fw-bold text-dark mt-1 mb-0" style="font-size: 0.95rem;">Daftar Pengguna</h6>
+            <div class="card-tools">
                 <x-user.form-user />
             </div>
         </div>
         <div class="card-body">
             <x-alert :errors="$errors" />
-            <table class="table table-bordered table-sm" id="table2">
-                <thead class="bg-navy">
-                    <tr>
-                        <th class="align-middle" style=" padding-left: 18px; height: 35px; width: 35px">No</th>
-                        <th class="align-middle" style=" padding-left: 18px; height: 35px; width: 85px">Aksi</th>
-                        <th class="align-middle" style=" padding-left: 18px; height: 35px;">Nama</th>
-                        <th class="align-middle" style=" padding-left: 18px; height: 35px;">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($users as $index => $user)
+            <div class="table-responsive">
+                <table class="table table-hover table-borderless align-middle w-100" id="table2">
+                    <thead class="bg-navy text-white text-nowrap border-bottom">
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <x-user.form-user :id="$user->id" />
-                                    <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger mx-1"
-                                        style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
-                                        data-confirm-delete="true">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                    <x-user.reset-password :id="$user->id" />
-                                </div>
-                            </td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
+                            <th class="align-middle text-center" style="width: 50px;">No</th>
+                            <th class="align-middle text-center" style="width: 150px;">Aksi</th>
+                            <th class="align-middle">Nama</th>
+                            <th class="align-middle">Email</th>
+                            <th class="align-middle text-center">Role</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($users as $index => $user)
+                            <tr class="border-bottom">
+                                <td class="text-center text-muted">{{ $index + 1 }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <x-user.form-user :id="$user->id" />
+                                        
+                                        <x-user.reset-password :id="$user->id" />
+                                        
+                                        <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-sm btn-outline-danger shadow-sm mx-1 rounded-circle" style="width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Hapus User" data-confirm-delete="true">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-dark">{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td class="text-center text-nowrap">
+                                    @if($user->role)
+                                        @if($user->role->role_name === 'admin')
+                                            <span style="background:#fde8e8; color:#c81e1e; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500; display:inline-block;">
+                                                {{ ucfirst($user->role->role_name) }}
+                                            </span>
+                                        @else
+                                            <span style="background:#e8f0fe; color:#1a56db; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500; display:inline-block;">
+                                                {{ ucfirst($user->role->role_name) }}
+                                            </span>
+                                        @endif
+                                    @else
+                                        <span style="background:#f1f3f5; color:#495057; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500; display:inline-block;">
+                                            Unknown
+                                        </span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     {{-- @foreach ($users as $user)
@@ -72,7 +90,7 @@
                                 </select>
                             </div>
                             <div>
-                                <button type="submit" class="btn btn-primary mt-2 w-100">
+                                <button type="submit" class="btn bg-navy text-white mt-2 w-100">
                                     Ganti Role
                                 </button>
                             </div>

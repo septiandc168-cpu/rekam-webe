@@ -31,11 +31,11 @@ class TestPolicy extends Command
         
         // Get users
         $supervisor = User::whereHas('role', function($query) {
-            $query->where('role_name', 'supervisor');
+            $query->where('role_name', 'admin');
         })->first();
         
         $admin = User::whereHas('role', function($query) {
-            $query->where('role_name', 'admin');
+            $query->where('role_name', 'anggota');
         })->first();
         
         if (!$supervisor) {

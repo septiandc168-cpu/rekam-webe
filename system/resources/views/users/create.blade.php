@@ -1,11 +1,11 @@
 @extends('layouts.adminlte')
 
-@section('content_title', 'Tambah User')
+@section('content_title', 'Tambah Pengguna')
 
 @section('content')
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">Form Tambah User</h3>
+            <h3 class="mb-0">Form Tambah Pengguna</h3>
             <div class="text-end">
                 <a href="{{ route('users.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left mx-1"></i> Kembali
@@ -41,7 +41,7 @@
                 <a href="{{ route('users.index') }}" class="btn btn-secondary me-2">
                     Kembali
                 </a>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn bg-navy text-white">
                     Simpan
                 </button>
             </div>

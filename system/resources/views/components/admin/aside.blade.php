@@ -19,7 +19,7 @@
         </div> --}}
 
         <!-- Sidebar Menu -->
-        <nav class="mt-2">
+        <nav class="mt-2" style="font-size: 0.85rem;">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
@@ -60,7 +60,7 @@
                             class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
-                                Data User
+                                Pengguna
                             </p>
                         </a>
                     </li>
@@ -74,7 +74,7 @@
                         </p>
                     </a>
                 </li>
-                @if (in_array(Auth::user()->role->role_name, ['admin', 'supervisor']))
+                @if (in_array(Auth::user()->role->role_name, ['anggota', 'admin']))
                     <li class="nav-item">
                         <a href="{{ route('laporan_kegiatan.index') }}"
                             class="nav-link {{ request()->routeIs('laporan_kegiatan.*') ? 'active' : '' }}">

@@ -4,19 +4,34 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasUuid;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class LaporanKegiatan extends Model
 {
-    use HasUuid;
+    use HasUuid, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['status'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(fn(string $eventName) => "Laporan Kegiatan {$eventName}");
+    }
 
     // Status constants
     const STATUS_DRAFT = 'draft';
+    const STATUS_DIAJUKAN = 'diajukan';
+    const STATUS_REVISI = 'revisi';
     const STATUS_FINAL = 'final';
 
 
     protected $fillable = [
         'user_id',
         'rencana_kegiatan_id',
+        'judul_kegiatan',
+        'lokasi_kegiatan',
         'realisasi_tanggal_mulai',
         'realisasi_tanggal_selesai',
         'rangkaian_kegiatan',
@@ -35,6 +50,7 @@ class LaporanKegiatan extends Model
         'materi',
         'berita_acara',
         'status',
+        'catatan_evaluasi',
     ];
 
     protected $casts = [
@@ -114,6 +130,14 @@ class LaporanKegiatan extends Model
     {
         return $this->status === self::STATUS_DRAFT;
     }
+    
+    /**
+     * Check if laporan is tanggap darurat (laporan langsung).
+     */
+    public function isDarurat(): bool
+    {
+        return is_null($this->rencana_kegiatan_id);
+    }
 
     /**
      * Check if laporan is final.
@@ -187,5 +211,21 @@ class LaporanKegiatan extends Model
                    \Carbon\Carbon::parse($this->rencanaKegiatan->waktu_selesai)->format('H:i');
         }
         return '-';
+    }
+
+    /**
+     * Get HTML badge based on status for clean Blade views.
+     */
+    public function getStatusBadgeAttribute(): string
+    {
+        $label = ucwords(str_replace('_', ' ', $this->status));
+
+        return match ($this->status) {
+            self::STATUS_DRAFT     => '<span style="background:#f1f3f5; color:#495057; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500; display:inline-block;">' . $label . '</span>',
+            self::STATUS_DIAJUKAN  => '<span style="background:#e8f0fe; color:#1a56db; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500; display:inline-block;">' . $label . '</span>',
+            self::STATUS_REVISI    => '<span style="background:#fff3cd; color:#856404; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500; display:inline-block;">' . $label . '</span>',
+            self::STATUS_FINAL     => '<span style="background:#def7ec; color:#03543f; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500; display:inline-block;">' . $label . '</span>',
+            default                => '<span style="background:#f1f3f5; color:#495057; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500; display:inline-block;">' . $label . '</span>',
+        };
     }
 }

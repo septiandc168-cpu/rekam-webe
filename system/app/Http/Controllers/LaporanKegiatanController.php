@@ -9,6 +9,8 @@ use App\Http\Requests\LaporanKegiatanRequest;
 use App\Notifications\LaporanActivityNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class LaporanKegiatanController extends Controller
@@ -19,7 +21,7 @@ class LaporanKegiatanController extends Controller
     private function notifySupervisors($notification)
     {
         $supervisors = User::whereHas('role', function($query) {
-            $query->where('role_name', 'supervisor');
+            $query->where('role_name', 'admin');
         })->get();
 
         foreach ($supervisors as $supervisor) {
@@ -30,23 +32,58 @@ class LaporanKegiatanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $isSupervisor = $user->role->role_name === 'supervisor';
+        $isSupervisor = $user->role->role_name === 'admin';
         
         // Filter data berdasarkan peran
         if ($isSupervisor) {
-            // Supervisor melihat semua data
-            $laporans = LaporanKegiatan::with('rencanaKegiatan', 'user')
-                ->orderBy('updated_at', 'desc')
-                ->get();
+            // Supervisor melihat semua data KECUALI draft milik orang lain
+            $query = LaporanKegiatan::with('rencanaKegiatan', 'user')
+                ->where(function($q) use ($user) {
+                    $q->whereNotIn('status', ['draft'])
+                      ->orWhere('user_id', $user->id);
+                });
+                
+            // Apply filters if provided
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+            if ($request->filled('bulan')) {
+                $query->whereMonth('created_at', $request->bulan);
+            }
+            if ($request->filled('tahun')) {
+                $query->whereYear('created_at', $request->tahun);
+            }
+            if ($request->filled('user_id')) {
+                $query->where('user_id', $request->user_id);
+            }
+
+            $laporans = $query->orderBy('updated_at', 'desc')->get();
+            
+            // Get all anggota users for filter
+            $users = User::whereHas('role', function($q) {
+                $q->where('role_name', 'anggota');
+            })->orderBy('name')->get();
         } else {
-            // Admin hanya melihat datanya sendiri
-            $laporans = LaporanKegiatan::with('rencanaKegiatan', 'user')
-                ->where('user_id', $user->id)
-                ->orderBy('updated_at', 'desc')
-                ->get();
+            // Anggota hanya melihat datanya sendiri
+            $query = LaporanKegiatan::with('rencanaKegiatan', 'user')
+                ->where('user_id', $user->id);
+                
+            // Apply filters if provided
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+            if ($request->filled('bulan')) {
+                $query->whereMonth('created_at', $request->bulan);
+            }
+            if ($request->filled('tahun')) {
+                $query->whereYear('created_at', $request->tahun);
+            }
+
+            $laporans = $query->orderBy('updated_at', 'desc')->get();
+            $users = null;
         }
         
         // Konfigurasi SweetAlert untuk delete dengan warna danger
@@ -63,7 +100,7 @@ class LaporanKegiatanController extends Controller
 
         session()->flash('alert.delete', json_encode($confirm, JSON_UNESCAPED_SLASHES));
 
-        return view('laporan_kegiatan.index', compact('laporans'));
+        return view('laporan_kegiatan.index', compact('laporans', 'users'));
     }
 
     /**
@@ -74,6 +111,13 @@ class LaporanKegiatanController extends Controller
         // Check authorization
         $this->authorize('create', LaporanKegiatan::class);
         
+        $isLaporanLangsung = $request->get('jenis') === 'langsung';
+        
+        if ($isLaporanLangsung) {
+            $rencanaKegiatan = null;
+            return view('laporan_kegiatan.create', compact('rencanaKegiatan', 'isLaporanLangsung'));
+        }
+
         $rencanaKegiatanId = $request->get('rencana_kegiatan_id');
 
         if (!$rencanaKegiatanId) {
@@ -95,7 +139,7 @@ class LaporanKegiatanController extends Controller
                 ->with('error', 'Laporan untuk rencana kegiatan ini sudah ada');
         }
 
-        return view('laporan_kegiatan.create', compact('rencanaKegiatan'));
+        return view('laporan_kegiatan.create', compact('rencanaKegiatan', 'isLaporanLangsung'));
     }
 
     /**
@@ -107,18 +151,26 @@ class LaporanKegiatanController extends Controller
         $this->authorize('create', LaporanKegiatan::class);
         
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'admin';
-        
-        $rencanaKegiatan = RencanaKegiatan::findOrFail($request->rencana_kegiatan_id);
+        $isAdmin = $user->role->role_name === 'anggota';
+        $isLaporanLangsung = $request->input('is_laporan_langsung') == '1';
+        $rencanaKegiatan = null;
 
-        // Double check if laporan can be created
-        if (!LaporanKegiatan::canCreateFor($rencanaKegiatan)) {
-            throw ValidationException::withMessages([
-                'rencana_kegiatan_id' => 'Laporan tidak dapat dibuat untuk rencana kegiatan ini. ' .
-                    ($rencanaKegiatan->status !== RencanaKegiatan::STATUS_DISETUJUI
-                        ? 'Status rencana kegiatan harus "Disetujui".'
-                        : 'Laporan sudah ada.')
-            ]);
+        if (!$isLaporanLangsung) {
+            $rencanaKegiatan = RencanaKegiatan::findOrFail($request->rencana_kegiatan_id);
+
+            // PROTEKSI 1: Tolak jika status rencana belum 'disetujui'
+            if ($rencanaKegiatan->status !== \App\Models\RencanaKegiatan::STATUS_DISETUJUI) {
+                throw ValidationException::withMessages([
+                    'rencana_kegiatan_id' => 'Pelanggaran keamanan: Laporan kegiatan HANYA dapat dibuat untuk rencana kegiatan yang berstatus "Disetujui".'
+                ]);
+            }
+
+            // PROTEKSI 2: Tolak jika rencana ini sudah memiliki laporan (Mencegah duplikasi data)
+            if ($rencanaKegiatan->laporanKegiatan()->exists()) {
+                 throw ValidationException::withMessages([
+                    'rencana_kegiatan_id' => 'Pelanggaran keamanan: Laporan untuk rencana kegiatan ini sudah pernah dibuat sebelumnya.'
+                ]);
+            }
         }
 
         // Handle file uploads
@@ -213,15 +265,18 @@ class LaporanKegiatanController extends Controller
         }
 
         // Determine status based on action
-        $status = LaporanKegiatan::STATUS_FINAL; // Always save as final since we removed draft button
+        $action = $request->input('action', 'diajukan');
+        $status = ($action === 'draft') ? LaporanKegiatan::STATUS_DRAFT : LaporanKegiatan::STATUS_DIAJUKAN;
 
         $laporan = LaporanKegiatan::create([
             'user_id' => auth()->id(),
             'rencana_kegiatan_id' => $request->rencana_kegiatan_id,
+            'judul_kegiatan' => $request->judul_kegiatan,
+            'lokasi_kegiatan' => $request->lokasi_kegiatan,
             'realisasi_tanggal_mulai' => $request->realisasi_tanggal_mulai,
             'realisasi_tanggal_selesai' => $request->realisasi_tanggal_selesai,
             'rangkaian_kegiatan' => $request->rangkaian_kegiatan,
-            'target_peserta' => $rencanaKegiatan->target_peserta,
+            'target_peserta' => $rencanaKegiatan ? $rencanaKegiatan->target_peserta : 0,
             'realisasi_peserta' => $request->realisasi_peserta,
             'profil_peserta' => $request->profil_peserta,
             'hasil_dicapai' => $request->hasil_dicapai,
@@ -238,20 +293,14 @@ class LaporanKegiatanController extends Controller
             'status' => $status,
         ]);
 
-        // Update rencana kegiatan status dan timestamp untuk memindahkan ke urutan teratas
-        $rencanaKegiatan->update([
-            'status' => \App\Models\RencanaKegiatan::STATUS_MENUNGGU_VERIFIKASI,
-            'updated_at' => now()
-        ]);
-
-        // Kirim notifikasi ke supervisor jika admin yang menambahkan
-        if ($isAdmin) {
+        // Kirim notifikasi ke admin jika anggota yang mengajukan
+        if ($isAdmin && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
             $notification = new LaporanActivityNotification(
                 $laporan->uuid,
-                $rencanaKegiatan->uuid,
+                $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
                 null,
-                $rencanaKegiatan->nama_kegiatan,
-                'ditambahkan',
+                $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($request->judul_kegiatan ?? 'Laporan Darurat'),
+                'diajukan',
                 $user->name,
                 null,
                 now()
@@ -259,7 +308,11 @@ class LaporanKegiatanController extends Controller
             $this->notifySupervisors($notification);
         }
 
-        toast('Laporan kegiatan berhasil disimpan!', 'success');
+        $message = $status === \App\Models\LaporanKegiatan::STATUS_DRAFT 
+            ? 'Draft laporan kegiatan berhasil disimpan!'
+            : 'Laporan kegiatan berhasil diajukan!';
+            
+        toast($message, 'success');
         return redirect()->route('laporan_kegiatan.index');
     }
 
@@ -270,6 +323,13 @@ class LaporanKegiatanController extends Controller
     {
         // Check authorization
         $this->authorize('view', $laporanKegiatan);
+        
+        // Security Proteksi: Anggota tidak boleh melihat draft orang lain
+        if (auth()->user()->role->role_name === 'anggota' && $laporanKegiatan->user_id != auth()->id()) {
+            if (in_array($laporanKegiatan->status, ['draft', 'revisi'])) {
+                abort(403, 'Akses Ditolak. Anda tidak bisa melihat draf milik pengguna lain.');
+            }
+        }
         
         $laporanKegiatan->load('rencanaKegiatan');
         return view('laporan_kegiatan.show', compact('laporanKegiatan'));
@@ -283,6 +343,16 @@ class LaporanKegiatanController extends Controller
         // Check authorization
         $this->authorize('update', $laporanKegiatan);
         
+        // Transparansi Terkontrol: Cegah bypass edit data orang lain
+        if ($laporanKegiatan->user_id != auth()->id() && auth()->user()->role->role_name !== 'admin') {
+            abort(403, 'Anda tidak memiliki akses untuk mengubah dokumen milik orang lain.');
+        }
+        
+        // PROTEKSI: Tidak boleh mengedit jika status diajukan atau final
+        if (in_array($laporanKegiatan->status, [LaporanKegiatan::STATUS_DIAJUKAN, LaporanKegiatan::STATUS_FINAL])) {
+            abort(403, 'Dokumen terkunci dan tidak dapat diubah.');
+        }
+        
         $laporanKegiatan->load('rencanaKegiatan');
         return view('laporan_kegiatan.edit', compact('laporanKegiatan'));
     }
@@ -295,8 +365,12 @@ class LaporanKegiatanController extends Controller
         // Check authorization
         $this->authorize('update', $laporanKegiatan);
 
+        // PROTEKSI: Tidak boleh mengedit/update jika status diajukan atau final
+        if (in_array($laporanKegiatan->status, [LaporanKegiatan::STATUS_DIAJUKAN, LaporanKegiatan::STATUS_FINAL])) {
+            abort(403, 'Dokumen terkunci dan tidak dapat diperbarui.');
+        }
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'admin';
+        $isAdmin = $user->role->role_name === 'anggota';
 
         // Handle file removals
         $currentFotoKegiatan = $laporanKegiatan->foto_kegiatan ?? [];
@@ -513,9 +587,18 @@ class LaporanKegiatanController extends Controller
         $finalBeritaAcara = array_merge($currentBeritaAcara, $newBeritaAcaraPaths);
 
         // Determine status based on action
-        $status = LaporanKegiatan::STATUS_FINAL; // Always save as final since we removed draft button
+        $action = $request->input('action');
+        $currentStatus = $laporanKegiatan->status;
+        
+        $status = match(true) {
+            $currentStatus === LaporanKegiatan::STATUS_DRAFT && $action === 'draft' => LaporanKegiatan::STATUS_DRAFT,
+            $currentStatus === LaporanKegiatan::STATUS_DRAFT && $action === 'diajukan' => LaporanKegiatan::STATUS_DIAJUKAN,
+            $currentStatus === LaporanKegiatan::STATUS_REVISI && $action === 'draft' => LaporanKegiatan::STATUS_REVISI,
+            $currentStatus === LaporanKegiatan::STATUS_REVISI && $action === 'diajukan' => LaporanKegiatan::STATUS_DIAJUKAN,
+            default => LaporanKegiatan::STATUS_DIAJUKAN,
+        };
 
-        $laporanKegiatan->update([
+        $updateData = [
             'realisasi_tanggal_mulai' => $request->realisasi_tanggal_mulai,
             'realisasi_tanggal_selesai' => $request->realisasi_tanggal_selesai,
             'rangkaian_kegiatan' => $request->rangkaian_kegiatan,
@@ -533,17 +616,24 @@ class LaporanKegiatanController extends Controller
             'materi' => !empty($finalMateri) ? array_values($finalMateri) : null,
             'berita_acara' => !empty($finalBeritaAcara) ? array_values($finalBeritaAcara) : null,
             'status' => $status,
-        ]);
+        ];
 
-        // Kirim notifikasi ke supervisor jika admin yang mengedit
-        if ($isAdmin) {
+        if ($laporanKegiatan->isDarurat()) {
+            $updateData['judul_kegiatan'] = $request->judul_kegiatan;
+            $updateData['lokasi_kegiatan'] = $request->lokasi_kegiatan;
+        }
+
+        $laporanKegiatan->update($updateData);
+
+        // Kirim notifikasi ke admin jika anggota yang mengajukan ulang
+        if ($isAdmin && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
             $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
             $notification = new LaporanActivityNotification(
                 $laporanKegiatan->uuid,
-                $rencanaKegiatan->uuid,
+                $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
                 null,
-                $rencanaKegiatan->nama_kegiatan,
-                'diedit',
+                $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Darurat'),
+                'diajukan',
                 $user->name,
                 null,
                 now()
@@ -551,7 +641,15 @@ class LaporanKegiatanController extends Controller
             $this->notifySupervisors($notification);
         }
 
-        toast('Laporan kegiatan berhasil diperbarui!', 'success');
+        $message = match(true) {
+            $currentStatus === LaporanKegiatan::STATUS_DRAFT && $action === 'draft' => 'Draft laporan kegiatan berhasil diperbarui!',
+            $currentStatus === LaporanKegiatan::STATUS_DRAFT && $action === 'diajukan' => 'Laporan kegiatan berhasil diajukan!',
+            $currentStatus === LaporanKegiatan::STATUS_REVISI && $action === 'draft' => 'Draft revisi laporan berhasil diperbarui!',
+            $currentStatus === LaporanKegiatan::STATUS_REVISI && $action === 'diajukan' => 'Laporan kegiatan berhasil direvisi dan diajukan ulang!',
+            default => 'Laporan kegiatan berhasil diperbarui!'
+        };
+
+        toast($message, 'success');
         return redirect()->route('laporan_kegiatan.index');
     }
 
@@ -562,15 +660,24 @@ class LaporanKegiatanController extends Controller
     {
         // Check authorization
         $this->authorize('delete', $laporanKegiatan);
+        
+        // Transparansi Terkontrol: Cegah bypass delete data orang lain
+        if ($laporanKegiatan->user_id != auth()->id() && auth()->user()->role->role_name !== 'admin') {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus dokumen milik orang lain.');
+        }
 
+        // PROTEKSI: Hanya boleh menghapus jika status masih draft
+        if ($laporanKegiatan->status !== LaporanKegiatan::STATUS_DRAFT) {
+            abort(403, 'Dokumen terkunci dan tidak dapat dihapus.');
+        }
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'admin';
+        $isAdmin = $user->role->role_name === 'anggota';
 
         // Simpan data untuk notifikasi sebelum dihapus
         $laporanUuid = $laporanKegiatan->uuid;
         $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
-        $rencanaUuid = $rencanaKegiatan->uuid;
-        $rencanaNama = $rencanaKegiatan->nama_kegiatan;
+        $rencanaUuid = $rencanaKegiatan ? $rencanaKegiatan->uuid : null;
+        $rencanaNama = $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Darurat');
 
         // Delete all files with support for both old and new format
         if (!empty($laporanKegiatan->foto_kegiatan)) {
@@ -639,5 +746,84 @@ class LaporanKegiatanController extends Controller
         $laporanKegiatan->load('rencanaKegiatan');
 
         return view('laporan_kegiatan.print', compact('laporanKegiatan'));
+    }
+
+    public function terimaLaporan(Request $request, $id)
+    {
+        if (auth()->user()->role->role_name !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $laporan = LaporanKegiatan::with('rencanaKegiatan')->where('uuid', $id)->firstOrFail();
+        
+        try {
+            DB::transaction(function () use ($laporan) {
+                // 1. Finalisasi Laporan
+                $laporan->update([
+                    'status' => \App\Models\LaporanKegiatan::STATUS_FINAL,
+                ]);
+
+                // 2. Selesaikan Rencana Kegiatan
+                if ($laporan->rencanaKegiatan) {
+                    $laporan->rencanaKegiatan->update([
+                        'status' => \App\Models\RencanaKegiatan::STATUS_SELESAI,
+                        'keterangan_status' => 'Kegiatan telah diselesaikan berdasarkan laporan final.'
+                    ]);
+                }
+            });
+
+            // Kirim notifikasi ke pembuat laporan
+            if ($laporan->user_id !== auth()->id()) {
+                $pembuat = \App\Models\User::find($laporan->user_id);
+                if ($pembuat) {
+                    $pembuat->notify(new \App\Notifications\StatusLaporanNotification(
+                        $laporan->uuid,
+                        $laporan->rencanaKegiatan->nama_kegiatan ?? 'Kegiatan',
+                        \App\Models\LaporanKegiatan::STATUS_FINAL,
+                        'Laporan telah diterima dan kegiatan selesai.',
+                        now()
+                    ));
+                }
+            }
+
+            toast('Laporan diterima dan kegiatan dinyatakan Selesai secara otomatis.', 'success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error('Gagal menyetujui laporan: ' . $e->getMessage());
+            toast('Terjadi kesalahan sistem saat menyetujui laporan.', 'error');
+            return redirect()->back();
+        }
+    }
+
+    public function revisiLaporan(Request $request, $id)
+    {
+        if (auth()->user()->role->role_name !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+        $request->validate(['catatan_evaluasi' => 'required|string']);
+
+        $laporan = LaporanKegiatan::where('uuid', $id)->firstOrFail();
+        
+        $laporan->update([
+            'status' => \App\Models\LaporanKegiatan::STATUS_REVISI,
+            'catatan_evaluasi' => $request->catatan_evaluasi,
+        ]);
+
+        // Kirim notifikasi ke pembuat laporan
+        if ($laporan->user_id !== auth()->id()) {
+            $pembuat = \App\Models\User::find($laporan->user_id);
+            if ($pembuat) {
+                $pembuat->notify(new \App\Notifications\StatusLaporanNotification(
+                    $laporan->uuid,
+                    $laporan->rencanaKegiatan->nama_kegiatan ?? 'Kegiatan',
+                    \App\Models\LaporanKegiatan::STATUS_REVISI,
+                    $request->catatan_evaluasi,
+                    now()
+                ));
+            }
+        }
+
+        toast('Permintaan revisi berhasil dikirim ke anggota.', 'success');
+        return redirect()->back();
     }
 }

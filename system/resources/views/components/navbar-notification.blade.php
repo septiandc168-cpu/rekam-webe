@@ -29,7 +29,7 @@
 
             <a href="{{ $hasValidLink ? route('notifications.read', $notification->id) : '#' }}"
                 class="dropdown-item {{ $isUnread ? 'notification-unread' : '' }}"
-                style="{{ $isUnread ? 'background-color: #f8f9fa; border-left: 3px solid #007bff;' : '' }} padding: 12px 16px;">
+                style="{{ $isUnread ? 'background-color: #f8f9fa; border-left: 3px solid #001f3f;' : '' }} padding: 12px 16px;">
 
                 <div class="d-flex">
                     <div class="flex-grow-1">
@@ -81,7 +81,7 @@
                     </div>
                     @if ($isUnread)
                         <div class="ml-2">
-                            <span class="badge badge-primary">Baru</span>
+                            <span class="badge bg-navy text-white">Baru</span>
                         </div>
                     @endif
                 </div>
@@ -143,11 +143,11 @@
     .dropdown-footer {
         text-align: center;
         font-weight: 500;
-        color: #007bff !important;
+        color: #001f3f !important;
     }
 
     .dropdown-footer:hover {
         background-color: #f8f9fa !important;
-        color: #0056b3 !important;
+        color: #000d1a !important;
     }
 </style>

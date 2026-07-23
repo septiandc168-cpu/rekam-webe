@@ -14,7 +14,7 @@ class UpdateExistingDataWithUserIdSeeder extends Seeder
     {
         // Get the first admin user to assign existing data to
         $adminUser = \App\Models\User::whereHas('role', function($query) {
-            $query->where('role_name', 'admin');
+            $query->where('role_name', 'anggota');
         })->first();
 
         if ($adminUser) {

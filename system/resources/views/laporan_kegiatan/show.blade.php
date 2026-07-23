@@ -2,334 +2,538 @@
 
 @section('content_title', 'Detail Laporan Kegiatan')
 
+@push('styles')
+    <style>
+        .list-group-item {
+            border-left: 0;
+            border-right: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .list-group-item:first-child {
+            border-top: 0;
+        }
+        .list-group-item:last-child {
+            border-bottom: 0;
+        }
+        .info-box-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        
+        .gallery-img-wrapper {
+            overflow: hidden;
+            border-radius: 4px;
+            cursor: pointer;
+            height: 180px;
+            width: 100%;
+        }
+        .gallery-img {
+            transition: transform 0.3s ease;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+        .gallery-img-wrapper:hover .gallery-img {
+            transform: scale(1.1);
+        }
+        
+        /* Timeline Tracker CSS */
+        .timeline-tracker {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+            padding: 0 20px;
+        }
+        .timeline-tracker::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50px;
+            right: 50px;
+            height: 4px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+        .timeline-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        .timeline-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 14px;
+            border: 4px solid #fff;
+            transition: all 0.3s;
+        }
+        .timeline-step.active .timeline-icon {
+            background: #007bff;
+            color: #fff;
+            box-shadow: 0 0 0 3px #007bff;
+        }
+        .timeline-step.completed .timeline-icon {
+            background: #28a745;
+            color: #fff;
+            box-shadow: 0 0 0 3px #28a745;
+        }
+        .timeline-step.rejected .timeline-icon {
+            background: #dc3545;
+            color: #fff;
+            box-shadow: 0 0 0 3px #dc3545;
+        }
+        .timeline-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #6c757d;
+        }
+        .timeline-step.active .timeline-label { color: #007bff; }
+        .timeline-step.completed .timeline-label { color: #28a745; }
+        .timeline-step.rejected .timeline-label { color: #dc3545; }
+
+        /* Accordion polished */
+        .accordion-toggle-icon {
+            font-size: 0.75rem;
+            transition: transform 0.3s;
+        }
+        .accordion-item-header {
+            transition: background-color 0.2s ease;
+        }
+        .accordion-item-header:hover {
+            background-color: #f0f4f8 !important;
+        }
+        .accordion-item-header.is-open {
+            background-color: #eef2ff !important;
+        }
+        .accordion-item-header.is-open h6,
+        .accordion-item-header.is-open .accordion-toggle-icon {
+            color: #1a365d !important;
+        }
+        .accordion-item-header.is-open .accordion-toggle-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+@endpush
+
 @section('content')
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0">Detail Laporan Kegiatan</h5>
-            <div class="d-flex gap-2">
-                    <a href="{{ route('laporan_kegiatan.index') }}" class="btn btn-secondary btn-sm"
-                    style="height: 35px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-arrow-left mr-1"></i>Kembali
+<div class="container-fluid text-sm">
+    <!-- Header & Action Bar -->
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4 pb-3 border-bottom">
+        <div class="d-flex flex-column mb-3 mb-lg-0 pr-lg-3" style="flex: 1; min-width: 0;">
+            <div class="d-flex align-items-center flex-wrap mb-2" style="gap: 8px;">
+                @if($laporanKegiatan->isDarurat())
+                    <span class="d-inline-flex align-items-center" style="background:#f1f5f9; color:#334155; padding:3px 10px; border-radius:4px; font-size:0.75rem; font-weight:600; border:1px solid #e2e8f0; white-space:nowrap; flex-shrink:0;">
+                        <i class="fas fa-bolt mr-1 text-warning"></i> Laporan Langsung
+                    </span>
+                @endif
+                <div class="flex-shrink-0 d-inline-flex align-items-center">
+                    {!! $laporanKegiatan->status_badge !!}
+                </div>
+            </div>
+            <h4 class="mb-0 fw-bold text-dark" style="line-height: 1.4;">
+                {{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}
+            </h4>
+        </div>
+        
+        <div class="d-flex align-items-center flex-wrap flex-shrink-0">
+            @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN && auth()->user()->role->role_name === 'admin')
+                <!-- Tombol Terima & Finalisasi -->
+                <form action="{{ route('laporan_kegiatan.terima', $laporanKegiatan->uuid) }}" method="POST" class="d-inline mr-2">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-success btn-sm font-weight-bold" onclick="return confirm('Terima & Finalisasi Laporan ini?')">
+                        <i class="fas fa-check-circle mr-1"></i> Terima & Finalisasi
+                    </button>
+                </form>
+                
+                <!-- Tombol Buka Modal Revisi -->
+                <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark" data-toggle="modal" data-target="#modal-revisi">
+                    <i class="fas fa-edit mr-1"></i> Minta Revisi
+                </button>
+            @endif
+
+            @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_FINAL)
+                @can('print', $laporanKegiatan)
+                    <a href="{{ route('laporan_kegiatan.print', $laporanKegiatan) }}" class="btn btn-sm btn-outline-primary mr-2" target="_blank">
+                        <i class="fas fa-print mr-1"></i> Cetak Laporan
                     </a>
+                @endcan
+            @endif
+
+            @if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DRAFT, \App\Models\LaporanKegiatan::STATUS_REVISI]))
+                @can('update', $laporanKegiatan)
+                    <a href="{{ route('laporan_kegiatan.edit', $laporanKegiatan) }}" class="btn btn-warning btn-sm mr-2">
+                        <i class="fas fa-edit mr-1"></i> Edit Laporan
+                    </a>
+                @endcan
+            @endif
+
+            @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DRAFT)
+                @can('delete', $laporanKegiatan)
+                    <form action="{{ route('laporan_kegiatan.destroy', $laporanKegiatan) }}" method="POST" class="d-inline mr-2" data-confirm-delete="true">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash mr-1"></i> Hapus
+                        </button>
+                    </form>
+                @endcan
+            @endif
+            
+            <a href="{{ route('laporan_kegiatan.index') }}" class="btn btn-secondary text-white btn-sm">
+                <i class="fas fa-arrow-left mr-1"></i> Kembali
+            </a>
+        </div>
+    </div>
+
+    <!-- Visual Progress Tracker -->
+    @php
+        $lapSt = $laporanKegiatan->status;
+        $isDiajukan = in_array($lapSt, ['diajukan', 'revisi', 'final']);
+        $isRevisi = $lapSt === 'revisi';
+        $isFinal = $lapSt === 'final';
+    @endphp
+    <div class="card shadow-sm mb-4 border-0 rounded">
+        <div class="card-body py-4">
+            <div class="timeline-tracker">
+                <div class="timeline-step {{ 'completed' }}">
+                    <div class="timeline-icon"><i class="fas fa-pen"></i></div>
+                    <div class="timeline-label">Draft Laporan</div>
+                </div>
+                <div class="timeline-step {{ $isDiajukan ? ($isFinal ? 'completed' : ($isRevisi ? 'rejected' : 'active')) : '' }}">
+                    <div class="timeline-icon"><i class="fas {{ $isRevisi ? 'fa-exclamation-triangle' : 'fa-paper-plane' }}"></i></div>
+                    <div class="timeline-label">{{ $isRevisi ? 'Perlu Revisi' : 'Menunggu Verifikasi' }}</div>
+                </div>
+                <div class="timeline-step {{ $isFinal ? 'completed' : '' }}">
+                    <div class="timeline-icon"><i class="fas fa-check-double"></i></div>
+                    <div class="timeline-label">Final / Diterima</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if(!$laporanKegiatan->isDarurat())
+        <!-- CALLOUT: Konteks Rencana Kegiatan -->
+        <div class="card shadow-sm mb-4 bg-white p-3" style="border: 1px solid #e2e8f0; border-radius: 8px;">
+            <h6 class="text-dark fw-bold mb-3"><i class="fas fa-info-circle mr-1 text-secondary"></i> Konteks Rencana Kegiatan</h6>
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Nama Kegiatan:</strong><br>
+                    <span class="text-dark">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Waktu & Lokasi Rencana:</strong><br>
+                    <span class="text-dark">
+                        {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}<br>
+                        Di {{ $laporanKegiatan->rencanaKegiatan->desa }}
+                    </span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Target Peserta:</strong><br>
+                    <span class="text-dark">{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }} Orang</span>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Grid Layout 8-4 -->
+    <div class="row">
+        <!-- Kolom Kiri: Informasi Evaluasi Utama -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i> Detail Realisasi & Evaluasi</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex align-items-center">
+                                    <div class="info-box-icon bg-light text-primary"><i class="fas fa-calendar-check"></i></div>
+                                    <div>
+                                        <small class="text-muted d-block">Tanggal Aktual</small>
+                                        <strong>{{ $laporanKegiatan->getFormattedRealisasiTanggalPelaksanaan() }}</strong>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center">
+                                    <div class="info-box-icon bg-light text-success"><i class="fas fa-users"></i></div>
+                                    <div>
+                                        <small class="text-muted d-block">Realisasi Peserta</small>
+                                        <strong>{{ $laporanKegiatan->realisasi_peserta }} Orang</strong>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex align-items-center">
+                                    <div class="info-box-icon bg-light text-warning"><i class="fas fa-map-marker-alt"></i></div>
+                                    <div>
+                                        <small class="text-muted d-block">Lokasi (Desa)</small>
+                                        <strong>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</strong>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center">
+                                    <div class="info-box-icon bg-light text-danger"><i class="fas fa-user-tie"></i></div>
+                                    <div>
+                                        <small class="text-muted d-block">Penanggung Jawab</small>
+                                        <strong>{{ $laporanKegiatan->isDarurat() ? ($laporanKegiatan->user->name ?? '-') : $laporanKegiatan->rencanaKegiatan->penanggung_jawab }}</strong>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Card: Narasi Laporan (Accordion) --}}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white d-flex align-items-center">
+                    <h3 class="card-title fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-2"></i>Narasi Laporan</h3>
+                    <small class="text-muted ml-2">— klik bagian untuk membuka</small>
+                </div>
+                <div class="card-body p-3">
+
+                    {{-- ACCORDION untuk semua seksi konten panjang --}}
+                    <div class="accordion" id="accordionLaporan">
+
+                        {{-- Rangkaian Kegiatan --}}
+                        <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                            <div class="accordion-item-header card-header bg-white py-2 px-3" id="headRangkaian"
+                                 style="cursor:pointer;" data-toggle="collapse" data-target="#collapseRangkaian"
+                                 aria-expanded="false" aria-controls="collapseRangkaian">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-list-ul mr-2" style="color:#1a365d;"></i>Rangkaian Kegiatan / Alur Acara</h6>
+                                    <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon" style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                                </div>
+                            </div>
+                            <div id="collapseRangkaian" class="collapse" aria-labelledby="headRangkaian" data-parent="#accordionLaporan">
+                                <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                    {!! $laporanKegiatan->rangkaian_kegiatan !!}
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Profil Peserta --}}
+                        <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                            <div class="accordion-item-header card-header bg-white py-2 px-3" id="headProfil"
+                                 style="cursor:pointer;" data-toggle="collapse" data-target="#collapseProfil"
+                                 aria-expanded="false" aria-controls="collapseProfil">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-users mr-2" style="color:#1a365d;"></i>Profil Peserta</h6>
+                                    <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon" style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                                </div>
+                            </div>
+                            <div id="collapseProfil" class="collapse" aria-labelledby="headProfil" data-parent="#accordionLaporan">
+                                <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                    {!! $laporanKegiatan->profil_peserta !!}
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Hasil & Output --}}
+                        <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                            <div class="accordion-item-header card-header bg-white py-2 px-3" id="headHasil"
+                                 style="cursor:pointer;" data-toggle="collapse" data-target="#collapseHasil"
+                                 aria-expanded="false" aria-controls="collapseHasil">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-chart-line mr-2" style="color:#1a365d;"></i>Hasil yang Dicapai & Output Nyata</h6>
+                                    <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon" style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                                </div>
+                            </div>
+                            <div id="collapseHasil" class="collapse" aria-labelledby="headHasil" data-parent="#accordionLaporan">
+                                <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                    <div class="mb-3">
+                                        <strong class="text-dark d-block mb-1">Hasil yang Dicapai:</strong>
+                                        {!! $laporanKegiatan->hasil_dicapai !!}
+                                    </div>
+                                    <hr>
+                                    <div class="mb-3 mt-3">
+                                        <strong class="text-dark d-block mb-1">Output Nyata:</strong>
+                                        {!! $laporanKegiatan->output_nyata !!}
+                                    </div>
+                                    <hr>
+                                    <div class="mt-3">
+                                        <strong class="text-dark d-block mb-1">Dampak Awal:</strong>
+                                        {!! $laporanKegiatan->dampak_awal !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Kendala, Solusi & Evaluasi --}}
+                        <div class="rounded mb-0 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                            <div class="accordion-item-header card-header bg-white py-2 px-3" id="headKendala"
+                                 style="cursor:pointer;" data-toggle="collapse" data-target="#collapseKendala"
+                                 aria-expanded="false" aria-controls="collapseKendala">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-exclamation-triangle mr-2" style="color:#1a365d;"></i>Kendala, Solusi & Evaluasi</h6>
+                                    <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon" style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                                </div>
+                            </div>
+                            <div id="collapseKendala" class="collapse" aria-labelledby="headKendala" data-parent="#accordionLaporan">
+                                <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                    <div class="mb-4">
+                                        <strong class="text-dark d-block mb-2"><i class="fas fa-exclamation-triangle mr-1 text-dark"></i> Kendala yang Dihadapi:</strong>
+                                        <div class="text-dark">
+                                            {!! $laporanKegiatan->kendala ?: '<em class="text-dark">Tidak ada kendala.</em>' !!}
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <strong class="text-dark d-block mb-2"><i class="fas fa-check-circle mr-1 text-dark"></i> Solusi yang Dilakukan:</strong>
+                                        <div class="text-dark">
+                                            {!! $laporanKegiatan->solusi ?: '<em class="text-dark">Tidak ada solusi yang dicatat.</em>' !!}
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong class="text-dark d-block mb-2"><i class="fas fa-lightbulb mr-1 text-dark"></i> Evaluasi & Rekomendasi:</strong>
+                                        <div class="text-dark">
+                                            {!! $laporanKegiatan->evaluasi_rekomendasi ?: '<em class="text-dark">Tidak ada evaluasi.</em>' !!}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>{{-- End accordion --}}
+                </div>
             </div>
         </div>
 
-        <!-- Informasi Rencana Kegiatan -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-info-circle mr-1"></i>
-                    Informasi Rencana Kegiatan
-                </h3>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <tr style="border-top: none;">
-                        <th style="width: 200px; border-top: none;">Nama Kegiatan</th>
-                        <td style="border-top: none;">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</td>
-                    </tr>
-                    <tr>
-                        <th>Jenis Kegiatan</th>
-                        <td>{{ $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() }}</td>
-                    </tr>
-                    <tr>
-                        <th>Penanggung Jawab</th>
-                        <td>{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab }}</td>
-                    </tr>
-                    <tr>
-                        <th>Kelompok / Komunitas Pelaksana</th>
-                        <td>{{ $laporanKegiatan->rencanaKegiatan->kelompok }}</td>
-                    </tr>
-                    <tr>
-                        <th>Deskripsi</th>
-                        <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->deskripsi) !!}</td>
-                    </tr>
-                    <tr>
-                        <th>Tujuan</th>
-                        <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) !!}</td>
-                    </tr>
-                    <tr>
-                        <th>Tanggal Laporan</th>
-                        <td>{{ $laporanKegiatan->created_at->format('d F Y') }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- Detail Pelaksanaan Kegiatan -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-tasks mr-1"></i>
-                    Detail Pelaksanaan Kegiatan
-                </h3>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <tr>
-                        <th style="width: 200px; border-top: none;">Lokasi</th>
-                        <td style="border-top: none;">{{ $laporanKegiatan->rencanaKegiatan->desa }}</td>
-                    </tr>
-                    <tr>
-                        <th>Waktu Pelaksanaan</th>
-                        <td>
-                            @if ($laporanKegiatan->rencanaKegiatan->waktu_mulai && $laporanKegiatan->rencanaKegiatan->waktu_selesai)
-                                {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_selesai)->format('H:i') }}
-                            @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai)
-                                {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }}
-                            @else
-                                Belum ditentukan
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Tanggal Pelaksanaan</th>
-                        <td>
-                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->format('d F Y') }} - 
-                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->format('d F Y') }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Realisasi Tanggal Pelaksanaan</th>
-                        <td>{{ $laporanKegiatan->getFormattedRealisasiTanggalPelaksanaan() }}</td>
-                    </tr>
-                    <tr>
-                        <th>Rangkaian Kegiatan / Alur Acara</th>
-                        <td>{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
-                    </tr>
-                    <tr>
-                        <th>Target Peserta</th>
-                        <td>{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }} orang</td>
-                    </tr>
-                    <tr>
-                        <th>Realisasi Jumlah Peserta</th>
-                        <td>{{ $laporanKegiatan->realisasi_peserta }} orang</td>
-                    </tr>
-                    <tr>
-                        <th>Profil Peserta</th>
-                        <td>{!! $laporanKegiatan->profil_peserta !!}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- Hasil dan Output Kegiatan -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-chart-line mr-1"></i>
-                    Hasil dan Output Kegiatan
-                </h3>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <tr>
-                        <th style="width: 200px; border-top: none;">Hasil yang Dicapai</th>
-                        <td style="border-top: none;">{!! $laporanKegiatan->hasil_dicapai !!}</td>
-                    </tr>
-                    <tr>
-                        <th>Output Nyata</th>
-                        <td>{!! $laporanKegiatan->output_nyata !!}</td>
-                    </tr>
-                    <tr>
-                        <th>Dampak Awal yang Terlihat</th>
-                        <td>{!! $laporanKegiatan->dampak_awal !!}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- Kendala dan Evaluasi -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-exclamation-triangle mr-1"></i>
-                    Kendala dan Evaluasi
-                </h3>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <tr>
-                        <th style="width: 200px; border-top: none;">Kendala yang Dihadapi</th>
-                        <td style="border-top: none;">{!! $laporanKegiatan->kendala ?: '-' !!}</td>
-                    </tr>
-                    <tr>
-                        <th>Solusi yang Dilakukan</th>
-                        <td>{!! $laporanKegiatan->solusi ?: '-' !!}</td>
-                    </tr>
-                    <tr>
-                        <th>Catatan Evaluasi & Rekomendasi</th>
-                        <td>{!! $laporanKegiatan->evaluasi_rekomendasi ?: '-' !!}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- Dokumentasi Kegiatan -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-file-upload mr-1"></i>
-                    Dokumentasi Kegiatan
-                </h3>
-            </div>
-            <div class="card-body">
-                <!-- Foto Kegiatan -->
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Foto Kegiatan</h6>
+        <!-- Kolom Kanan: Dokumen & Foto -->
+        <div class="col-md-4">
+            
+            <!-- Foto Kegiatan -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white py-2 px-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-images mr-1"></i> Foto Kegiatan</h6>
+                </div>
+                <div class="card-body p-2">
                     @if (!empty($laporanKegiatan->foto_kegiatan))
                         <div class="row">
-                            @foreach ($laporanKegiatan->foto_kegiatan as $index => $foto_kegiatan)
+                            @foreach ($laporanKegiatan->foto_kegiatan as $foto)
                                 @php
-                                    // Handle both old format (string) and new format (array)
-                                    $filePath = is_array($foto_kegiatan) ? $foto_kegiatan['path'] : $foto_kegiatan;
-                                    $fileName = is_array($foto_kegiatan) ? $foto_kegiatan['original_name'] : basename($foto_kegiatan);
+                                    $filePath = is_array($foto) ? $foto['path'] : $foto;
                                 @endphp
-                                <div class="col-md-3 mb-3">
-                                    <div class="card">
-                                        <img src="{{ asset('public/storage/app/' . $filePath) }}"
-                                            class="card-img-top"
-                                            style="height: 150px; object-fit: cover; width: 100%;"
-                                            alt="{{ $fileName }}">
-                                        <div class="card-body p-2">
-                                            <small class="text-muted text-truncate d-block" title="{{ $fileName }}">{{ $fileName }}</small>
-                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
-                                        </div>
-                                    </div>
+                                <div class="col-6 mb-2 px-2">
+                                    <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank">
+                                        <img src="{{ asset('public/storage/app/' . $filePath) }}" class="gallery-img border shadow-sm" style="height: 120px; width: 100%; object-fit: cover;">
+                                    </a>
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <p class="text-muted">Tidak ada foto kegiatan</p>
+                        <div class="text-center text-muted py-3">Tidak ada foto kegiatan</div>
                     @endif
                 </div>
+            </div>
 
-                <!-- Daftar Hadir -->
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Daftar Hadir</h6>
-                    @if (!empty($laporanKegiatan->daftar_hadir))
-                        <div class="row">
-                            @foreach ($laporanKegiatan->daftar_hadir as $index => $file)
-                                @php
-                                    // Handle both old format (string) and new format (array)
-                                    $filePath = is_array($file) ? $file['path'] : $file;
-                                    $fileName = is_array($file) ? $file['original_name'] : basename($file);
-                                @endphp
-                                <div class="col-md-4 mb-2">
-                                    <div class="card">
-                                        <div class="card-body p-2">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-file-alt me-2"></i>
-                                                <small class="text-truncate flex-grow-1" title="{{ $fileName }}">{{ $fileName }}</small>
-                                            </div>
-                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="text-muted">Tidak ada daftar hadir</p>
-                    @endif
+            <!-- Dokumen Lampiran -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white py-2 px-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Lampiran</h6>
                 </div>
-
-                <!-- Notulen -->
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Notulen</h6>
-                    @if (!empty($laporanKegiatan->notulen))
-                        <div class="row">
-                            @foreach ($laporanKegiatan->notulen as $index => $file)
-                                @php
-                                    // Handle both old format (string) and new format (array)
-                                    $filePath = is_array($file) ? $file['path'] : $file;
-                                    $fileName = is_array($file) ? $file['original_name'] : basename($file);
-                                @endphp
-                                <div class="col-md-4 mb-2">
-                                    <div class="card">
-                                        <div class="card-body p-2">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-file-alt me-2"></i>
-                                                <small class="text-truncate flex-grow-1" title="{{ $fileName }}">{{ $fileName }}</small>
-                                            </div>
-                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+                <div class="card-body py-2 px-3">
+                    @php
+                        $renderFileItem = function($files, $title, $iconClass) {
+                            if(empty($files)) return '';
+                            $html = "<div class='text-muted font-weight-bold mb-1' style='font-size:0.75rem;'>{$title}</div>";
+                            foreach($files as $file) {
+                                $path = is_array($file) ? $file['path'] : $file;
+                                $name = is_array($file) ? $file['original_name'] : basename($file);
+                                $url = asset('public/storage/app/' . $path);
+                                $html .= "<a href='{$url}' target='_blank' class='btn btn-sm bg-navy text-white btn-block text-left mb-2 text-truncate' title='{$name}' style='font-size:0.78rem;'><i class='{$iconClass} mr-1'></i> {$name}</a>";
+                            }
+                            return $html;
+                        };
+                        
+                        $hasFiles = !empty($laporanKegiatan->daftar_hadir) || !empty($laporanKegiatan->notulen) || !empty($laporanKegiatan->materi) || !empty($laporanKegiatan->berita_acara);
+                    @endphp
+                    
+                    @if($hasFiles)
+                        {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
+                        {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
+                        {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint') !!}
+                        {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf') !!}
                     @else
-                        <p class="text-muted">Tidak ada notulen</p>
-                    @endif
-                </div>
-
-                <!-- Materi -->
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Materi</h6>
-                    @if (!empty($laporanKegiatan->materi))
-                        <div class="row">
-                            @foreach ($laporanKegiatan->materi as $index => $file)
-                                @php
-                                    // Handle both old format (string) and new format (array)
-                                    $filePath = is_array($file) ? $file['path'] : $file;
-                                    $fileName = is_array($file) ? $file['original_name'] : basename($file);
-                                @endphp
-                                <div class="col-md-4 mb-2">
-                                    <div class="card">
-                                        <div class="card-body p-2">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-file-alt me-2"></i>
-                                                <small class="text-truncate flex-grow-1" title="{{ $fileName }}">{{ $fileName }}</small>
-                                            </div>
-                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="text-muted">Tidak ada materi</p>
-                    @endif
-                </div>
-
-                <!-- Berita Acara -->
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Berita Acara</h6>
-                    @if (!empty($laporanKegiatan->berita_acara))
-                        <div class="row">
-                            @foreach ($laporanKegiatan->berita_acara as $index => $file)
-                                @php
-                                    // Handle both old format (string) and new format (array)
-                                    $filePath = is_array($file) ? $file['path'] : $file;
-                                    $fileName = is_array($file) ? $file['original_name'] : basename($file);
-                                @endphp
-                                <div class="col-md-4 mb-2">
-                                    <div class="card">
-                                        <div class="card-body p-2">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-file-alt me-2"></i>
-                                                <small class="text-truncate flex-grow-1" title="{{ $fileName }}">{{ $fileName }}</small>
-                                            </div>
-                                            <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="text-muted">Tidak ada berita acara</p>
+                        <div class="text-center text-muted py-3">Belum ada dokumen yang dilampirkan</div>
                     @endif
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal Minta Revisi -->
+@if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN && auth()->user()->role->role_name === 'admin')
+<div class="modal fade" id="modal-revisi" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('laporan_kegiatan.revisi', $laporanKegiatan->uuid) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-edit mr-2 text-warning"></i>Minta Revisi Laporan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Catatan Revisi <span class="text-danger">*</span></label>
+                        <textarea name="catatan_evaluasi" class="form-control" rows="4" required placeholder="Tuliskan catatan revisi untuk pelaksana..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary text-white" data-dismiss="modal"><i class="fas fa-times mr-1"></i> Batal</button>
+                    <button type="submit" class="btn btn-warning font-weight-bold"><i class="fas fa-paper-plane mr-1"></i> Kirim Permintaan Revisi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
+@push('scripts')
+<script>
+    // Accordion chevron rotation + active state
+    document.addEventListener('DOMContentLoaded', function () {
+        var collapseEls = document.querySelectorAll('#accordionLaporan .collapse');
+        collapseEls.forEach(function (el) {
+            el.addEventListener('show.bs.collapse', function () {
+                var header = document.querySelector('[data-target="#' + el.id + '"]');
+                if (header) {
+                    header.classList.add('is-open');
+                    var icon = header.querySelector('.accordion-toggle-icon');
+                    if (icon) icon.style.transform = 'rotate(180deg)';
+                }
+            });
+            el.addEventListener('hide.bs.collapse', function () {
+                var header = document.querySelector('[data-target="#' + el.id + '"]');
+                if (header) {
+                    header.classList.remove('is-open');
+                    var icon = header.querySelector('.accordion-toggle-icon');
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+    });
+</script>
+@endpush
+
 @endsection

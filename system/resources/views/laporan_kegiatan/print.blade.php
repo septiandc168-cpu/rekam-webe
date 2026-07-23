@@ -30,19 +30,40 @@
         <div class="web-header no-print mb-4">
             <div class="col-12 text-center">
                 <h2 class="text-dark">LAPORAN KEGIATAN</h2>
-                <h3>{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h3>
+                <h3>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h3>
                 <p class="text-muted">Tanggal Cetak: {{ $tanggalIndo }}</p>
             </div>
         </div>
 
-        <!-- Judul untuk Print (muncul di halaman pertama) -->
-        <div class="print-title-section mb-4">
-            <div class="col-12 text-center">
-                <h2 class="text-dark">LAPORAN KEGIATAN</h2>
-                <h3>{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h3>
+        
+        <!-- Kop Surat -->
+        <div class="kop-surat mb-4">
+            <div class="d-flex align-items-center">
+                <div class="logo-kiri">
+                    <img src="{{ asset('public/adminlte/dist/img/logo_webe.png') }}" alt="Logo" style="width: 100px;">
+                </div>
+                <div class="teks-tengah text-center flex-grow-1">
+                    <h2 class="fw-bold mb-1" style="font-size: 24px; color: black; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</h2>
+                    <h4 class="mb-1" style="font-size: 16px; color: black; margin-bottom: 2px;">REKAM WEBE - SISTEM PELAPORAN KEGIATAN</h4>
+                    <p class="mb-0" style="font-size: 12px; color: black;">
+                        JL RM Sudiono, No.49A, Ketapang, Kalimantan Barat<br>
+                        Email: yayasanwebe@gmail.com | Telp/WA: +62 813 6022 733
+                    </p>
+                </div>
             </div>
+            <hr class="garis-kop">
+        </div>
+        
+        <!-- Judul untuk Print -->
+        <div class="print-title-section mb-4 text-center">
+            <h3 style="text-decoration: underline; font-weight: bold; font-size: 18px; margin-bottom: 5px;">LAPORAN KEGIATAN</h3>
+            <h4 style="font-size: 14px; font-weight: normal;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h4>
+            @if($laporanKegiatan->isDarurat())
+                <span class="badge bg-info mt-1"><i class="fas fa-exclamation-triangle mr-1"></i> Laporan Tanggap Darurat</span>
+            @endif
         </div>
 
+        @if(!$laporanKegiatan->isDarurat())
         <!-- Informasi Rencana Kegiatan -->
         <div class="row mb-4">
             <div class="col-12">
@@ -58,27 +79,27 @@
                             <div class="col-12">
                                 <table class="table table-sm table-borderless">
                                     <tr>
-                                        <td width="180" class="label-field"><strong>Nama Kegiatan</strong></td>
+                                        <td width="200" class="label-field"><strong>Nama Kegiatan</strong></td><td width="20">:</td>
                                         <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="label-field"><strong>Jenis Kegiatan</strong></td>
+                                        <td class="label-field"><strong>Jenis Kegiatan</strong></td><td width="20">:</td>
                                         <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="label-field"><strong>Tujuan</strong></td>
+                                        <td class="label-field"><strong>Tujuan</strong></td><td width="20">:</td>
                                         <td class="value-field">{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) ?: '-' !!}</td>
                                     </tr>
                                     <tr>
-                                        <td class="label-field"><strong>Penanggung Jawab</strong></td>
+                                        <td class="label-field"><strong>Penanggung Jawab</strong></td><td width="20">:</td>
                                         <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="label-field"><strong>Kelompok</strong></td>
+                                        <td class="label-field"><strong>Kelompok</strong></td><td width="20">:</td>
                                         <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="label-field"><strong>Tanggal Laporan</strong></td>
+                                        <td class="label-field"><strong>Tanggal Laporan</strong></td><td width="20">:</td>
                                         <td class="value-field">{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
                                     </tr>
                                 </table>
@@ -88,6 +109,7 @@
                 </div>
             </div>
         </div>
+        @endif
 
         <!-- Detail Pelaksanaan Kegiatan -->
         <div class="row mb-4">
@@ -102,31 +124,33 @@
                     <div class="card-body">
                         <table class="table table-sm table-borderless">
                             <tr>
-                                <td width="180" class="label-field"><strong>Tanggal Pelaksanaan</strong></td>
+                                <td width="200" class="label-field"><strong>Tanggal Pelaksanaan</strong></td><td width="20">:</td>
                                 <td class="value-field">
-                                    {{ $laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->format('d F Y') : '-' }}
-                                    @if($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai)
-                                        s/d {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->format('d F Y') }}
+                                    {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
+                                    @if ($laporanKegiatan->isDarurat() ? ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai) : ($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai))
+                                        s/d {{ \Carbon\Carbon::parse($laporanKegiatan->isDarurat() ? $laporanKegiatan->realisasi_tanggal_selesai : $laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d F Y') }}
                                     @endif
                                 </td>
                             </tr>
                             <tr>
-                                <td class="label-field"><strong>Realisasi Tanggal Pelaksanaan</strong></td>
+                                <td class="label-field"><strong>Realisasi Tanggal Pelaksanaan</strong></td><td width="20">:</td>
                                 <td class="value-field">
-                                    {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->format('d F Y') : '-' }}
-                                    @if($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
-                                        s/d {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->format('d F Y') }}
+                                    {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
+                                    @if ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
+                                        s/d {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->translatedFormat('d F Y') }}
                                     @endif
                                 </td>
                             </tr>
                             <tr>
-                                <td class="label-field"><strong>Lokasi</strong></td>
-                                <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->desa ?: '-' }}</td>
+                                <td class="label-field"><strong>Lokasi</strong></td><td width="20">:</td>
+                                <td class="value-field">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</td>
                             </tr>
                             <tr>
-                                <td class="label-field"><strong>Waktu Pelaksanaan</strong></td>
+                                <td class="label-field"><strong>Waktu Pelaksanaan</strong></td><td width="20">:</td>
                                 <td class="value-field">
-                                    @if ($laporanKegiatan->rencanaKegiatan->waktu_mulai && $laporanKegiatan->rencanaKegiatan->waktu_selesai)
+                                    @if ($laporanKegiatan->isDarurat())
+                                        Menyesuaikan
+                                    @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai && $laporanKegiatan->rencanaKegiatan->waktu_selesai)
                                         {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_selesai)->format('H:i') }}
                                     @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai)
                                         {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }}
@@ -136,19 +160,19 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="label-field"><strong>Rangkaian Kegiatan</strong></td>
+                                <td class="label-field"><strong>Rangkaian Kegiatan</strong></td><td width="20">:</td>
                                 <td class="value-field">{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
                             </tr>
                             <tr>
-                                <td class="label-field"><strong>Target Peserta</strong></td>
-                                <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }} orang</td>
+                                <td class="label-field"><strong>Target Peserta</strong></td><td width="20">:</td>
+                                <td class="value-field">{{ $laporanKegiatan->isDarurat() ? '-' : ($laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-') }} orang</td>
                             </tr>
                             <tr>
-                                <td class="label-field"><strong>Realisasi Peserta</strong></td>
+                                <td class="label-field"><strong>Realisasi Peserta</strong></td><td width="20">:</td>
                                 <td class="value-field">{{ $laporanKegiatan->realisasi_peserta }} orang</td>
                             </tr>
                             <tr>
-                                <td class="label-field"><strong>Profil Peserta</strong></td>
+                                <td class="label-field"><strong>Profil Peserta</strong></td><td width="20">:</td>
                                 <td class="value-field">{!! $laporanKegiatan->profil_peserta !!}</td>
                             </tr>
                         </table>
@@ -356,6 +380,20 @@
             </div>
         </div>
 
+        
+        <!-- Kolom Tanda Tangan -->
+        <div class="signature-block no-break mt-5">
+            <div class="float-right text-center" style="width: 300px; padding-right: 20px;">
+                <p class="mb-5" style="color: black;">
+                    Ketapang, {{ $tanggalIndo }}<br>
+                    Penanggung Jawab Kegiatan
+                </p>
+                <br><br><br>
+                <p class="mb-0 fw-bold" style="text-decoration: underline; color: black;">{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '........................................' }}</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
         <!-- Footer Web (tidak muncul saat print) -->
         <!-- <div class="web-footer no-print mt-5">
             <div class="col-12 text-center">
@@ -398,6 +436,24 @@
         }
         
         /* Base styles for both print and screen */
+
+        .garis-kop {
+            border: none;
+            border-bottom: 4px double black;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .no-break {
+            page-break-inside: avoid;
+        }
+
+        /* 4. Pengamanan Render WYSIWYG untuk gambar di dalam konten */
+        .content-box img, .value-field img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
         .label-field {
             font-weight: bold !important;
             vertical-align: top !important;
@@ -444,17 +500,20 @@
         }
         
                 
+        
         .documentation-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
             margin-top: 15px;
+            page-break-inside: auto;
         }
-        
         .doc-item {
             text-align: center;
             page-break-inside: avoid;
+            margin-bottom: 20px;
         }
+
         
         .doc-image-container {
             margin-bottom: 8px;
@@ -622,17 +681,20 @@
             }
             
                         
-            .documentation-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 15px;
-                margin-top: 15px;
-            }
             
-            .doc-item {
-                text-align: center;
-                page-break-inside: avoid;
-            }
+        .documentation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+            page-break-inside: auto;
+        }
+        .doc-item {
+            text-align: center;
+            page-break-inside: avoid;
+            margin-bottom: 20px;
+        }
+
             
             .doc-image-container {
                 margin-bottom: 8px;

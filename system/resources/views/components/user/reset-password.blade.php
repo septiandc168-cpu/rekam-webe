@@ -1,7 +1,6 @@
 <div>
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-dark"
-        style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
+    <button type="button" class="btn btn-sm btn-outline-secondary shadow-sm rounded-circle mx-1" style="width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Reset Password"
         data-toggle="modal" data-target="#formResetPassword{{ $id }}">
         <i class="fas fa-lock-open"></i>
     </button>
