@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use App\Models\RencanaKegiatan;
 use App\Policies\RencanaKegiatanPolicy;
 use App\Models\LaporanKegiatan;
@@ -24,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production environment
+        if (config('app.env') === 'production' || strpos(config('app.url'), 'https://') !== false) {
+            URL::forceScheme('https');
+        }
+
         // Set locale to Indonesian for dates
         \Carbon\Carbon::setLocale('id');
 
