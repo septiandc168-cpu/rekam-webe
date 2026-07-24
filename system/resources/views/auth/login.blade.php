@@ -7,7 +7,7 @@
     <title>Login | Rekam WeBe</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('public/logo_webe.png') }}">
+    <link rel="icon" type="image/png" href="/public/logo_webe.png">
 
     <!-- Google Font: Source Sans Pro (or Inter for a more modern look) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -240,7 +240,7 @@
             <div style="max-width: 450px; width: 100%; padding: 2rem;">
                 <!-- Logo -->
                 <div class="text-center mb-4">
-                    <img src="{{ asset('public/logo_webe.png') }}" alt="Logo WeBe" class="brand-logo" style="width: 80px;">
+                    <img src="/public/logo_webe.png" alt="Logo WeBe" class="brand-logo" style="width: 80px;">
                 </div>
                 
                 <!-- Welcome Text -->
