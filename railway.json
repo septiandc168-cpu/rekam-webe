@@ -10,9 +10,8 @@
     "buildCommand": "cd system && composer install --no-dev --optimize-autoloader && php artisan config:cache && php artisan route:cache"
   },
   "deploy": {
-    "startCommand": "cd system && php artisan serve --host=0.0.0.0 --port=$PORT",
+    "startCommand": "cd system && php -S 0.0.0.0:$PORT server.php",
     "healthcheckPath": "/",
     "healthcheckTimeout": 100
   }
 }
-
