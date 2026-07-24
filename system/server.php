@@ -1,21 +1,53 @@
 <?php
 
-/**
- * Laravel - A PHP Framework For Web Artisans
- *
- * @package  Laravel
- * @author   Taylor Otwell <taylor@laravel.com>
- */
-
 $uri = urldecode(
     parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
 );
 
-// This file allows us to emulate Apache's "mod_rewrite" functionality from the
-// built-in PHP web server. This provides a convenient way to test a Laravel
-// application without having installed a "real" web server software here.
-if ($uri !== '/' && file_exists(__DIR__.'/../public'.$uri)) {
+// Trik untuk menggantikan storage:link di Railway Nixpacks (Custom Folder Structure)
+// Tangkap semua URL yang diawali dengan /public/storage/app/
+if (strpos($uri, '/public/storage/app/') === 0) {
+    $storagePath = substr($uri, strlen('/public/storage/app/'));
+    
+    // Cek beberapa kemungkinan lokasi file karena struktur folder yang tidak biasa
+    $possiblePaths = [
+        __DIR__ . '/storage/app/public/' . $storagePath,        // Standard Laravel
+        __DIR__ . '/public/storage/app/' . $storagePath,        // Folder statis luar
+        __DIR__ . '/system/storage/app/public/' . $storagePath, // Di dalam folder system
+    ];
+
+    foreach ($possiblePaths as $realPath) {
+        if (file_exists($realPath)) {
+            $mime = mime_content_type($realPath) ?: 'application/octet-stream';
+            header("Content-Type: $mime");
+            readfile($realPath);
+            exit;
+        }
+    }
+}
+
+// Trik tambahan jika dipanggil lewat /storage/...
+if (strpos($uri, '/storage/') === 0) {
+    $storagePath = substr($uri, strlen('/storage/'));
+    $possiblePaths = [
+        __DIR__ . '/storage/app/public/' . $storagePath,
+        __DIR__ . '/public/storage/app/' . $storagePath,
+        __DIR__ . '/system/storage/app/public/' . $storagePath,
+    ];
+
+    foreach ($possiblePaths as $realPath) {
+        if (file_exists($realPath)) {
+            $mime = mime_content_type($realPath) ?: 'application/octet-stream';
+            header("Content-Type: $mime");
+            readfile($realPath);
+            exit;
+        }
+    }
+}
+
+// Jika URI bukan '/' dan merupakan path file statis yang valid di root
+if ($uri !== '/' && file_exists(__DIR__ . $uri)) {
     return false;
 }
 
-require_once __DIR__.'/../index.php';
+require_once __DIR__.'/index.php';
