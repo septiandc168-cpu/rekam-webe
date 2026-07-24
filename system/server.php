@@ -9,11 +9,12 @@ $uri = urldecode(
 if (strpos($uri, '/public/storage/app/') === 0) {
     $storagePath = substr($uri, strlen('/public/storage/app/'));
     
-    // Cek beberapa kemungkinan lokasi file karena struktur folder yang tidak biasa
+    // Cek SEMUA kemungkinan lokasi file karena struktur folder yang sangat tidak standar
     $possiblePaths = [
-        __DIR__ . '/storage/app/public/' . $storagePath,        // Standard Laravel
+        __DIR__ . '/system/public/storage/app/' . $storagePath, // Tempat public_path() framework
         __DIR__ . '/public/storage/app/' . $storagePath,        // Folder statis luar
-        __DIR__ . '/system/storage/app/public/' . $storagePath, // Di dalam folder system
+        __DIR__ . '/system/storage/app/public/' . $storagePath, // Standard Laravel fallback
+        __DIR__ . '/storage/app/public/' . $storagePath,        // Standard Laravel fallback 2
     ];
 
     foreach ($possiblePaths as $realPath) {
@@ -30,6 +31,7 @@ if (strpos($uri, '/public/storage/app/') === 0) {
 if (strpos($uri, '/storage/') === 0) {
     $storagePath = substr($uri, strlen('/storage/'));
     $possiblePaths = [
+        __DIR__ . '/system/public/storage/app/' . $storagePath,
         __DIR__ . '/storage/app/public/' . $storagePath,
         __DIR__ . '/public/storage/app/' . $storagePath,
         __DIR__ . '/system/storage/app/public/' . $storagePath,
