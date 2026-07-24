@@ -19,7 +19,7 @@ Route::fallback(function () {
 Route::middleware('isSupervisor')->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::post('users', [UserController::class, 'store'])->name('users.store');
-    Route::delete('users/{id}/destroy', [UserController::class, 'destroy'])->name('users.destroy');
+    // Route::delete('users/{id}/destroy', [UserController::class, 'destroy'])->name('users.destroy');
     Route::post('users/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
 });
 
