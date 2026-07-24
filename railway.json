@@ -10,8 +10,6 @@
     "buildCommand": "cd system && composer install --no-dev --optimize-autoloader && php artisan config:cache && php artisan route:cache"
   },
   "deploy": {
-    "startCommand": "cd system && php -S 0.0.0.0:$PORT server.php"
+    "startCommand": "php -S 0.0.0.0:$PORT server.php"
   }
 }
-
-
