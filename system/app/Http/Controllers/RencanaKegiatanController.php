@@ -297,7 +297,7 @@ class RencanaKegiatanController extends Controller
             'foto' => !empty($fotoPaths) ? $fotoPaths : null,
             'dokumen' => !empty($dokumenPaths) ? $dokumenPaths : null,
             'anggaran_kegiatan' => $anggaranKegiatanPath ?: null,
-            'status' => 'diajukan',
+            'status' => $request->input('action') === 'draft' ? 'draft' : 'diajukan',
         ];
 
         $rencanaKegiatan = RencanaKegiatan::create($data);
