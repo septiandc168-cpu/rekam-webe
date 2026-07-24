@@ -35,7 +35,7 @@
         /* Left Side (Image & Branding) */
         .split-left {
             flex: 1;
-            background: url('{{ asset('public/adminlte/dist/img/background_login1.jpg') }}') no-repeat center center;
+            background: url('/public/adminlte/dist/img/background_login1.jpg') no-repeat center center;
             background-size: cover;
             position: relative;
             display: flex;

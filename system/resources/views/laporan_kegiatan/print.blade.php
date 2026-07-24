@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <!-- Watermark Logo -->
         <div class="watermark-container">
-            <img src="{{ asset('public/adminlte/dist/img/logo_webe.png') }}" class="watermark-logo" alt="Watermark Logo">
+            <img src="/public/adminlte/dist/img/logo_webe.png" class="watermark-logo" alt="Watermark Logo">
         </div>
         
         <!-- Header Print (menggunakan CSS @page) -->
@@ -40,7 +40,7 @@
         <div class="kop-surat mb-4">
             <div class="d-flex align-items-center">
                 <div class="logo-kiri">
-                    <img src="{{ asset('public/adminlte/dist/img/logo_webe.png') }}" alt="Logo" style="width: 100px;">
+                    <img src="/public/adminlte/dist/img/logo_webe.png" alt="Logo" style="width: 100px;">
                 </div>
                 <div class="teks-tengah text-center flex-grow-1">
                     <h2 class="fw-bold mb-1" style="font-size: 24px; color: black; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</h2>

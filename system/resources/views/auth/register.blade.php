@@ -15,22 +15,22 @@
     <meta name="author" content="CodedThemes">
 
     <!-- [Favicon] icon -->
-    <link rel="icon" href="{{ asset('template/dist') }}/assets/images/favicon.svg" type="image/x-icon">
+    <link rel="icon" href="/public/template/dist/assets/images/favicon.svg" type="image/x-icon">
     <!-- [Google Font] Family -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
         id="main-font-link">
     <!-- [Tabler Icons] https://tablericons.com -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/fonts/tabler-icons.min.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/fonts/tabler-icons.min.css">
     <!-- [Feather Icons] https://feathericons.com -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/fonts/feather.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/fonts/feather.css">
     <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/fonts/fontawesome.css">
     <!-- [Material Icons] https://fonts.google.com/icons -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/fonts/material.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/fonts/material.css">
     <!-- [Template CSS Files] -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/css/style.css" id="main-style-link">
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/css/style-preset.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/css/style.css" id="main-style-link">
+    <link rel="stylesheet" href="/public/template/dist/assets/css/style-preset.css">
     @vite(['resources/js/app.js'])
 
 </head>
@@ -50,7 +50,7 @@
         <div class="auth-wrapper v3">
             <div class="auth-form">
                 <div class="auth-header">
-                    <a href="#"><img src="{{ asset('template/dist') }}/assets/images/logo-dark.svg"
+                    <a href="#"><img src="/public/template/dist/assets/images/logo-dark.svg"
                             alt="img"></a>
                 </div>
                 <div class="card my-5">
@@ -125,12 +125,12 @@
     </div>
     <!-- [ Main Content ] end -->
     <!-- Required Js -->
-    <script src="{{ asset('template/dist') }}/assets/js/plugins/popper.min.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/plugins/simplebar.min.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/plugins/bootstrap.min.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/fonts/custom-font.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/pcoded.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/plugins/feather.min.js"></script>
+    <script src="/public/template/dist/assets/js/plugins/popper.min.js"></script>
+    <script src="/public/template/dist/assets/js/plugins/simplebar.min.js"></script>
+    <script src="/public/template/dist/assets/js/plugins/bootstrap.min.js"></script>
+    <script src="/public/template/dist/assets/js/fonts/custom-font.js"></script>
+    <script src="/public/template/dist/assets/js/pcoded.js"></script>
+    <script src="/public/template/dist/assets/js/plugins/feather.min.js"></script>
 
 
 
@@ -221,11 +221,11 @@
                                 <div class="theme-color themepreset-color theme-layout">
                                     <a href="#!" class="active" onclick="layout_change('light')"
                                         data-value="false"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/default.svg"
+                                                src="/public/template/dist/assets/images/customization/default.svg"
                                                 alt="img"></span><span>Light</span></a>
                                     <a href="#!" class="" onclick="layout_change('dark')"
                                         data-value="true"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/dark.svg"
+                                                src="/public/template/dist/assets/images/customization/dark.svg"
                                                 alt="img"></span><span>Dark</span></a>
                                 </div>
                             </div>
@@ -250,31 +250,31 @@
                             <div class="pct-content">
                                 <div class="theme-color preset-color">
                                     <a href="#!" class="active" data-value="preset-1"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/theme-color.svg"
+                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
                                                 alt="img"></span><span>Theme 1</span></a>
                                     <a href="#!" class="" data-value="preset-2"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/theme-color.svg"
+                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
                                                 alt="img"></span><span>Theme 2</span></a>
                                     <a href="#!" class="" data-value="preset-3"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/theme-color.svg"
+                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
                                                 alt="img"></span><span>Theme 3</span></a>
                                     <a href="#!" class="" data-value="preset-4"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/theme-color.svg"
+                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
                                                 alt="img"></span><span>Theme 4</span></a>
                                     <a href="#!" class="" data-value="preset-5"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/theme-color.svg"
+                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
                                                 alt="img"></span><span>Theme 5</span></a>
                                     <a href="#!" class="" data-value="preset-6"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/theme-color.svg"
+                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
                                                 alt="img"></span><span>Theme 6</span></a>
                                     <a href="#!" class="" data-value="preset-7"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/theme-color.svg"
+                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
                                                 alt="img"></span><span>Theme 7</span></a>
                                     <a href="#!" class="" data-value="preset-8"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/theme-color.svg"
+                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
                                                 alt="img"></span><span>Theme 8</span></a>
                                     <a href="#!" class="" data-value="preset-9"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/theme-color.svg"
+                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
                                                 alt="img"></span><span>Theme 9</span></a>
                                 </div>
                             </div>
@@ -300,11 +300,11 @@
                                 <div class="theme-color themepreset-color boxwidthpreset theme-container">
                                     <a href="#!" class="active" onclick="change_box_container('false')"
                                         data-value="false"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/default.svg"
+                                                src="/public/template/dist/assets/images/customization/default.svg"
                                                 alt="img"></span><span>Fluid</span></a>
                                     <a href="#!" class="" onclick="change_box_container('true')"
                                         data-value="true"><span><img
-                                                src="{{ asset('template/dist') }}/assets/images/customization/container.svg"
+                                                src="/public/template/dist/assets/images/customization/container.svg"
                                                 alt="img"></span><span>Container</span></a>
                                 </div>
                             </div>

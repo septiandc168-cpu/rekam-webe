@@ -15,27 +15,27 @@
     <meta name="author" content="CodedThemes">
 
     <!-- [Favicon] icon -->
-    <link rel="icon" href="{{ asset('template/dist') }}/assets/images/favicon.svg" type="image/x-icon">
+    <link rel="icon" href="/public/template/dist/assets/images/favicon.svg" type="image/x-icon">
     <!-- [Google Font] Family -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
         id="main-font-link">
     <!-- [Tabler Icons] https://tablericons.com -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/fonts/tabler-icons.min.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/fonts/tabler-icons.min.css">
     <!-- [Feather Icons] https://feathericons.com -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/fonts/feather.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/fonts/feather.css">
     <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/fonts/fontawesome.css">
     <!-- [Material Icons] https://fonts.google.com/icons -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/fonts/material.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/fonts/material.css">
     <!-- [Template CSS Files] -->
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/css/style.css" id="main-style-link">
-    <link rel="stylesheet" href="{{ asset('template/dist') }}/assets/css/style-preset.css">
+    <link rel="stylesheet" href="/public/template/dist/assets/css/style.css" id="main-style-link">
+    <link rel="stylesheet" href="/public/template/dist/assets/css/style-preset.css">
     @vite(['resources/js/app,js'])
 
     <style>
         .auth-main {
-            background-image: url("{{ asset('images/background_login.jpg') }}");
+            background-image: url("/public/images/background_login.jpg");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -82,11 +82,11 @@
     <!-- [ Pre-loader ] End -->
 
     <div class="auth-main"
-        style="background-image: url('{{ asset('template/dist/assets/images/background_login2.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        style="background-image: url('/public/template/dist/assets/images/background_login2.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <div class="auth-wrapper v3">
             <div class="auth-form">
                 <div class="auth-header">
-                    {{-- <a href="#"><img src="{{ asset('template/dist') }}/assets/images/logo-dark.svg"
+                    {{-- <a href="#"><img src="/public/template/dist/assets/images/logo-dark.svg"
                             alt="img"></a> --}}
                 </div>
                 <div class="card my-5">
@@ -141,12 +141,12 @@
     </div>
     <!-- [ Main Content ] end -->
     <!-- Required Js -->
-    <script src="{{ asset('template/dist') }}/assets/js/plugins/popper.min.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/plugins/simplebar.min.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/plugins/bootstrap.min.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/fonts/custom-font.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/pcoded.js"></script>
-    <script src="{{ asset('template/dist') }}/assets/js/plugins/feather.min.js"></script>
+    <script src="/public/template/dist/assets/js/plugins/popper.min.js"></script>
+    <script src="/public/template/dist/assets/js/plugins/simplebar.min.js"></script>
+    <script src="/public/template/dist/assets/js/plugins/bootstrap.min.js"></script>
+    <script src="/public/template/dist/assets/js/fonts/custom-font.js"></script>
+    <script src="/public/template/dist/assets/js/pcoded.js"></script>
+    <script src="/public/template/dist/assets/js/plugins/feather.min.js"></script>
 
 
 

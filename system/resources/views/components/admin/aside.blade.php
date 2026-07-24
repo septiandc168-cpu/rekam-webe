@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-dark-secondary elevation-4" style="background-color: #001f3f !important;">
     <!-- Brand Logo -->
     <div class="brand-link text-center">
-        <!-- <img src="{{ asset('public/adminlte/dist/img/logo_webe.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+        <!-- <img src="/public/adminlte/dist/img/logo_webe.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8"> -->
         <span class="brand-text font-weight-light-active"><b>Rekam WeBe</b></span>
     </div>

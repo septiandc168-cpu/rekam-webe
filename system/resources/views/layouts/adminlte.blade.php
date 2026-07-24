@@ -11,7 +11,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <title>Rekam WeBe</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('public/logo_webe.png') }}">
+    <link rel="icon" type="image/png" href="/public/logo_webe.png">
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
