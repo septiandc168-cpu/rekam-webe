@@ -12,6 +12,6 @@
   "deploy": {
     "startCommand": "cd system && php -S 0.0.0.0:$PORT server.php",
     "healthcheckPath": "/",
-    "healthcheckTimeout": 100
+    "healthcheckTimeout": 300
   }
 }
