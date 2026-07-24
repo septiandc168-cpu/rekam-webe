@@ -13,10 +13,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/public/adminlte/plugins/fontawesome-free/css/all.min.css">
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url('public/adminlte') }}/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/public/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/public/adminlte/dist/css/adminlte.min.css">
 
     <style>
         body, html {
@@ -287,8 +287,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ url('public/adminlte') }}/plugins/jquery/jquery.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/adminlte/plugins/jquery/jquery.min.js"></script>
+    <script src="/public/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     
     <!-- Toggle Password Visibility JS -->
     <script>

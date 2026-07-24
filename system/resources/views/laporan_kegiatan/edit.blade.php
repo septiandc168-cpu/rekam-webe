@@ -332,7 +332,7 @@
     @endpush
 
     @push('scripts')
-        <script src="{{ url('public/adminlte') }}/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+        <script src="/public/adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 bsCustomFileInput.init();

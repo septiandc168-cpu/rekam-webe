@@ -17,17 +17,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/public/adminlte/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{ url('public/adminlte') }}/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/public/adminlte/dist/css/adminlte.min.css">
     <!-- DataTables -->
-    <link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/public/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet"
-        href="{{ url('public/adminlte') }}/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+        href="/public/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet"
-        href="{{ url('public/adminlte') }}/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+        href="/public/adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <!-- summernote -->
-    <link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/summernote/summernote-bs4.min.css">
+    <link rel="stylesheet" href="/public/adminlte/plugins/summernote/summernote-bs4.min.css">
     @stack('styles')
     @stack('css')
     @stack('js')
@@ -243,26 +243,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- REQUIRED SCRIPTS -->
 
     <!-- jQuery -->
-    <script src="{{ url('public/adminlte') }}/plugins/jquery/jquery.min.js"></script>
+    <script src="/public/adminlte/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="{{ url('public/adminlte') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="{{ url('public/adminlte') }}/dist/js/adminlte.min.js"></script>
+    <script src="/public/adminlte/dist/js/adminlte.min.js"></script>
     <!-- DataTables  & Plugins -->
-    <script src="{{ url('public/adminlte') }}/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/jszip/jszip.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="{{ url('public/adminlte') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="/public/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/public/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/public/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/public/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/public/adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/public/adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="/public/adminlte/plugins/jszip/jszip.min.js"></script>
+    <script src="/public/adminlte/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="/public/adminlte/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="/public/adminlte/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="/public/adminlte/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="/public/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <!-- Summernote -->
-    <script src="{{ url('public/adminlte') }}/plugins/summernote/summernote-bs4.min.js"></script>
+    <script src="/public/adminlte/plugins/summernote/summernote-bs4.min.js"></script>
     <script>
         $(function() {
             // Summernote
@@ -344,7 +344,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
     </script>
     @stack('scripts')
-    <script src="{{ url('public/adminlte') }}/plugins/sweetalert2/sweetalert2.all.js"></script>
+    <script src="/public/adminlte/plugins/sweetalert2/sweetalert2.all.js"></script>
     @include('sweetalert::alert')
     
     <script>
