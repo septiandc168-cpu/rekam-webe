@@ -193,7 +193,7 @@
                                 @endphp
                                 @if($anggaranPath)
                                     <div class="mb-2">
-                                        <a href="{{ Storage::disk('public')->url($anggaranPath) }}" target="_blank" class="badge bg-navy text-white p-2"><i class="fas fa-file-download mr-1"></i> Lihat File Saat Ini</a>
+                                        <a href="/public/storage/app/{{ $anggaranPath }}" target="_blank" class="badge bg-navy text-white p-2"><i class="fas fa-file-download mr-1"></i> Lihat File Saat Ini</a>
                                     </div>
                                 @endif
                             @endif
@@ -223,8 +223,8 @@
                                             @php $fotoPath = is_array($foto) ? ($foto['path'] ?? '') : $foto; @endphp
                                             @if($fotoPath)
                                                 <div class="position-relative mr-2 mb-2 existing-foto-item">
-                                                    <a href="{{ Storage::disk('public')->url($fotoPath) }}" target="_blank">
-                                                        <img src="{{ Storage::disk('public')->url($fotoPath) }}" style="width:100px; height:100px; object-fit:cover; border-radius:8px;" class="border shadow-sm">
+                                                    <a href="/public/storage/app/{{ $fotoPath }}" target="_blank">
+                                                        <img src="/public/storage/app/{{ $fotoPath }}" style="width:100px; height:100px; object-fit:cover; border-radius:8px;" class="border shadow-sm">
                                                     </a>
                                                     <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-foto"
                                                             data-path="{{ $fotoPath }}"
@@ -257,7 +257,7 @@
                                             @php $dokPath = is_array($dok) ? ($dok['path'] ?? '') : $dok; @endphp
                                             @if($dokPath)
                                                 <div class="d-inline-block position-relative mr-2 mb-2 existing-dokumen-item">
-                                                    <a href="{{ Storage::disk('public')->url($dokPath) }}" target="_blank" class="badge bg-navy text-white p-2"><i class="fas fa-file-download mr-1"></i> Dokumen {{ $idx + 1 }}</a>
+                                                    <a href="/public/storage/app/{{ $dokPath }}" target="_blank" class="badge bg-navy text-white p-2"><i class="fas fa-file-download mr-1"></i> Dokumen {{ $idx + 1 }}</a>
                                                     <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
                                                             data-path="{{ $dokPath }}"
                                                             style="top:-5px; right:-5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"

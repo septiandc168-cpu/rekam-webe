@@ -21,8 +21,8 @@ class RencanaKegiatanController extends Controller
      */
     private function notifySupervisors($notification)
     {
-        $supervisors = User::whereHas('role', function($query) {
-            $query->where('role_name', 'supervisor');
+        $supervisors = User::whereHas('role', function ($query) {
+            $query->where('role_name', 'admin');
         })->get();
 
         foreach ($supervisors as $supervisor) {

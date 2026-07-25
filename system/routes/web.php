@@ -39,6 +39,11 @@ Route::middleware('auth')->group(function () {
         ->middleware('isAdmin')
         ->name('rencana_kegiatan.store');
 
+    // Export route must be registered before the dynamic {rencana_kegiatan} route.
+    Route::get('/rencana_kegiatan/export/excel', [App\Http\Controllers\RencanaKegiatanController::class, 'exportExcel'])
+        ->middleware('isSupervisor')
+        ->name('rencana_kegiatan.export.excel');
+
     // Routes that need authorization checks (show, update, destroy)
     Route::get('/rencana_kegiatan/{rencana_kegiatan}', [App\Http\Controllers\RencanaKegiatanController::class, 'show'])->name('rencana_kegiatan.show');
     Route::get('/rencana_kegiatan/{rencana_kegiatan}/edit', [App\Http\Controllers\RencanaKegiatanController::class, 'edit'])->name('rencana_kegiatan.edit');
@@ -55,11 +60,7 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/rencana_kegiatan/{rencana_kegiatan}', [App\Http\Controllers\RencanaKegiatanController::class, 'destroy'])->name('rencana_kegiatan.destroy');
 
-    // Export Excel & PDF routes (supervisor only)
-    Route::get('/rencana_kegiatan/export/excel', [App\Http\Controllers\RencanaKegiatanController::class, 'exportExcel'])
-        ->middleware('isSupervisor')
-        ->name('rencana_kegiatan.export.excel');
-        
+    // Export PDF route
     Route::get('/rencana_kegiatan/{rencana_kegiatan}/export/pdf', [App\Http\Controllers\RencanaKegiatanController::class, 'exportPdf'])
         ->name('rencana_kegiatan.export.pdf');
 });
