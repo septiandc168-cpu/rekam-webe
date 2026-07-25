@@ -40,8 +40,10 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => public_path('storage/app'),
-            'url' => env('APP_URL') . '/storage/app',
+            // Laravel lives in /system while the actual web root is one level above it.
+            // UPLOADS_PATH can point to a Railway Volume (for example: /data/uploads).
+            'root' => env('UPLOADS_PATH', dirname(base_path()) . '/public/storage/app'),
+            'url' => rtrim(env('APP_URL', ''), '/') . '/public/storage/app',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
