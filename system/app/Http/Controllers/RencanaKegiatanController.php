@@ -656,9 +656,11 @@ class RencanaKegiatanController extends Controller
             $this->notifySupervisors($notification);
         }
 
-        $message = $isSupervisor
-            ? 'Rencana kegiatan berhasil diperbarui!'
-            : 'Rencana kegiatan berhasil direvisi dan diajukan ulang!';
+        $message = match(true) {
+            $request->input('action') === 'draft' => 'Draft rencana kegiatan berhasil diperbarui!',
+            $isSupervisor => 'Rencana kegiatan berhasil diperbarui!',
+            default => 'Rencana kegiatan berhasil direvisi dan diajukan ulang!'
+        };
 
         toast($message, 'success');
         return redirect()->route('rencana_kegiatan.index');
