@@ -207,9 +207,9 @@
                                                     </a>
                                                     <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-foto"
                                                             data-path="{{ $path }}"
-                                                            style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; line-height:20px; text-align:center; z-index:10;"
+                                                            style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
                                                             title="Hapus foto ini">
-                                                        <i class="fas fa-times" style="font-size:10px;"></i>
+                                                        <i class="fas fa-times" style="font-size:11px; margin:auto;"></i>
                                                     </button>
                                                 </div>
                                             @endforeach
@@ -238,9 +238,9 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
                                                          data-path="{{ $path }}" data-type="dokumen"
-                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; line-height:20px; text-align:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="font-size:11px;"></i>
+                                                     <i class="fas fa-times text-white" style="font-size:11px; margin:auto;"></i>
                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
@@ -268,9 +268,9 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
                                                          data-path="{{ $path }}" data-type="dokumen"
-                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; line-height:20px; text-align:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="font-size:11px;"></i>
+                                                     <i class="fas fa-times text-white" style="font-size:11px; margin:auto;"></i>
                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
@@ -300,9 +300,9 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
                                                          data-path="{{ $path }}" data-type="dokumen"
-                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; line-height:20px; text-align:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="font-size:11px;"></i>
+                                                     <i class="fas fa-times text-white" style="font-size:11px; margin:auto;"></i>
                                                  </button>
                                                 <i class="fas fa-file-powerpoint text-warning"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
@@ -331,9 +331,9 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
                                                          data-path="{{ $path }}" data-type="dokumen"
-                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; line-height:20px; text-align:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="font-size:11px;"></i>
+                                                     <i class="fas fa-times text-white" style="font-size:11px; margin:auto;"></i>
                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
