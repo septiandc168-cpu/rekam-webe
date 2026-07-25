@@ -281,7 +281,7 @@
                     <div class="card-footer bg-white clearfix">
                         <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
                         <div class="float-right d-flex">
-                            @if (in_array($rencana_kegiatan->status, [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]))
+                            @if (in_array($rencana_kegiatan->status, ['draft', 'revisi']))
                                 <button type="submit" name="action" value="draft" class="btn btn-secondary text-white mr-2"><i class="fas fa-save mr-1"></i> Simpan Draft</button>
                                 <button type="submit" name="action" value="diajukan" class="btn bg-navy text-white"><i class="fas fa-paper-plane mr-1"></i> Kirim Rencana</button>
                             @else
