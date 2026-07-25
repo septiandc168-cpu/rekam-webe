@@ -50,17 +50,17 @@
                     <div class="progress position-absolute" style="height: 4px; top: 20px; left: 15%; right: 15%; z-index: 1;">
                         <div class="progress-bar bg-primary" id="wizard-progress" role="progressbar" style="width: 0%;"></div>
                     </div>
-                    
+
                     <div class="step-indicator text-center position-relative active" style="z-index: 2; width: 33%;" id="indicator-1">
                         <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
                         <span class="fw-bold text-primary d-block step-text">Realisasi Kegiatan</span>
                     </div>
-                    
+
                     <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%;" id="indicator-2">
                         <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
                         <span class="fw-bold text-muted d-block step-text">Evaluasi</span>
                     </div>
-                    
+
                     <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%;" id="indicator-3">
                         <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">3</div>
                         <span class="fw-bold text-muted d-block step-text">Lampiran Bukti</span>
@@ -201,10 +201,16 @@
                                         <div class="d-flex flex-wrap gap-2">
                                             @foreach($fotos as $foto)
                                                 @php $path = is_array($foto) ? $foto['path'] : $foto; @endphp
-                                                <div class="preview-img-wrapper" style="margin:0;">
+                                                <div class="position-relative preview-img-wrapper existing-foto-item" style="margin:0;">
                                                     <a href="/public/storage/app/{{ $path }}" target="_blank">
                                                         <img src="/public/storage/app/{{ $path }}" style="max-width: 100px; height: 75px;">
                                                     </a>
+                                                    <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-foto"
+                                                            data-path="{{ $path }}"
+                                                            style="top:-5px; right:-5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                            title="Hapus foto ini">
+                                                        <i class="fas fa-times" style="font-size:10px;"></i>
+                                                    </button>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -218,7 +224,7 @@
                                 <small class="text-muted">Maksimal 10 foto (JPG/PNG), Max 3MB/foto.</small>
                                 <div id="preview-foto_kegiatan" class="d-flex flex-wrap gap-2 mt-2"></div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-4">
                                 @php $daftar_hadir = !empty($laporanKegiatan->daftar_hadir) ? (is_string($laporanKegiatan->daftar_hadir) ? json_decode($laporanKegiatan->daftar_hadir, true) : $laporanKegiatan->daftar_hadir) : []; @endphp
                                 @if(is_array($daftar_hadir) && count($daftar_hadir) > 0)
@@ -229,7 +235,13 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="preview-file-item bg-white">
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-4">
+                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
+                                                        data-path="{{ $path }}" data-type="dokumen"
+                                                        style="top:5px; right:5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                        title="Hapus dokumen ini">
+                                                    <i class="fas fa-times" style="font-size:10px;"></i>
+                                                </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
@@ -253,7 +265,13 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="preview-file-item bg-white">
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-4">
+                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
+                                                        data-path="{{ $path }}" data-type="dokumen"
+                                                        style="top:5px; right:5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                        title="Hapus dokumen ini">
+                                                    <i class="fas fa-times" style="font-size:10px;"></i>
+                                                </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
@@ -268,7 +286,7 @@
                                 <div id="preview-notulen" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
 
-                            
+
                             <div class="col-md-6 mb-4">
                                 @php $materi = !empty($laporanKegiatan->materi) ? (is_string($laporanKegiatan->materi) ? json_decode($laporanKegiatan->materi, true) : $laporanKegiatan->materi) : []; @endphp
                                 @if(is_array($materi) && count($materi) > 0)
@@ -279,7 +297,13 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="preview-file-item bg-white">
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-4">
+                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
+                                                        data-path="{{ $path }}" data-type="dokumen"
+                                                        style="top:5px; right:5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                        title="Hapus dokumen ini">
+                                                    <i class="fas fa-times" style="font-size:10px;"></i>
+                                                </button>
                                                 <i class="fas fa-file-powerpoint text-warning"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
@@ -293,7 +317,7 @@
                                 <small class="text-muted">Maksimal 10 file (PDF/PPT/DOC), Max 3MB/file.</small>
                                 <div id="preview-materi" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-4">
                                 @php $berita_acara = !empty($laporanKegiatan->berita_acara) ? (is_string($laporanKegiatan->berita_acara) ? json_decode($laporanKegiatan->berita_acara, true) : $laporanKegiatan->berita_acara) : []; @endphp
                                 @if(is_array($berita_acara) && count($berita_acara) > 0)
@@ -304,7 +328,13 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="preview-file-item bg-white">
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-4">
+                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
+                                                        data-path="{{ $path }}" data-type="dokumen"
+                                                        style="top:5px; right:5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                        title="Hapus dokumen ini">
+                                                    <i class="fas fa-times" style="font-size:10px;"></i>
+                                                </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
@@ -322,8 +352,8 @@
                     </div>
                     <div class="card-footer bg-white clearfix">
                         <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
-                        
-                        
+
+
                         <div class="float-right">
                             @if($laporanKegiatan->status === 'draft' || $laporanKegiatan->status === 'revisi')
                                 <button type="submit" name="action" value="draft" class="btn btn-secondary text-white mr-2">
@@ -378,7 +408,7 @@
                         let indicator = $('#indicator-' + i);
                         let circle = indicator.find('.step-circle');
                         let text = indicator.find('.step-text');
-                        
+
                         if (i < stepIndex) {
                             circle.removeClass('bg-secondary bg-primary text-muted').addClass('bg-success text-white');
                             circle.html('<i class="fas fa-check"></i>');
@@ -396,19 +426,19 @@
 
                     let progressPercent = ((stepIndex - 1) / (totalSteps - 1)) * 100;
                     $('#wizard-progress').css('width', progressPercent + '%');
-                    
+
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
 
                 $('.btn-next').click(function() {
                     let nextStepId = $(this).data('next');
                     let nextIndex = parseInt(nextStepId.split('-')[1]);
-                    
+
                     // Simple Frontend Validation on current step before moving
                     let currentStep = $(this).closest('.wizard-step');
                     let requiredInputs = currentStep.find('input[required], select[required], textarea[required]');
                     let isValid = true;
-                    
+
                     requiredInputs.each(function() {
                         if (!this.checkValidity()) {
                             isValid = false;
@@ -435,11 +465,11 @@
                 function createImagePreview(input, previewContainer) {
                     const files = input.files;
                     previewContainer.innerHTML = '';
-                    
+
                     for (let i = 0; i < files.length; i++) {
                         const file = files[i];
                         if (!file.type.startsWith('image/')) continue;
-                        
+
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             const wrapper = document.createElement('div');
@@ -456,17 +486,17 @@
                 function createFilePreview(input, previewContainer) {
                     const files = input.files;
                     previewContainer.innerHTML = '';
-                    
+
                     for (let i = 0; i < files.length; i++) {
                         const file = files[i];
                         const div = document.createElement('div');
                         div.className = 'preview-file-item';
-                        
+
                         let icon = 'fa-file-alt';
                         if(file.name.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
                         else if(file.name.endsWith('.doc') || file.name.endsWith('.docx')) icon = 'fa-file-word text-primary';
                         else if(file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) icon = 'fa-file-excel text-success';
-                        
+
                         div.innerHTML = `
                             <i class="fas ${icon}"></i>
                             <span class="text-truncate" style="max-width: 85%;" title="${file.name}">${file.name}</span>
@@ -487,6 +517,47 @@
             });
 
             // Wait for jQuery & Initialize Summernote
+
+                $('.btn-delete-existing-foto').click(function(e) {
+                    e.preventDefault();
+                    if(confirm('Hapus foto ini? File akan terhapus saat Anda menekan tombol simpan.')) {
+                        const path = $(this).data('path');
+                        // Insert hidden input
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'remove_foto_kegiatan[]',
+                            value: path
+                        }).appendTo('form');
+
+                        $(this).closest('.existing-foto-item').fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                    }
+                });
+
+                $('.btn-delete-existing-dokumen').click(function(e) {
+                    e.preventDefault();
+                    if(confirm('Hapus dokumen ini? File akan terhapus saat Anda menekan tombol simpan.')) {
+                        const path = $(this).data('path');
+                        // Determine which type of document based on parent wrapper context or just map it
+                        // For simplicity, we just use a generic matcher based on folder path
+                        let inputName = 'remove_daftar_hadir[]';
+                        if(path.includes('notulen')) inputName = 'remove_notulen[]';
+                        else if(path.includes('materi')) inputName = 'remove_materi[]';
+                        else if(path.includes('berita_acara')) inputName = 'remove_berita_acara[]';
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: inputName,
+                            value: path
+                        }).appendTo('form');
+
+                        $(this).closest('.existing-dokumen-item').fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                    }
+                });
+
             function waitForJQuery() {
                 if (typeof $ !== 'undefined') {
                     $.getScript('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js', function() {
