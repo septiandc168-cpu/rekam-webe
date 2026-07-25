@@ -2,7 +2,7 @@
 @section('content_title', 'Dashboard')
 
 @push('styles')
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.css" />
 <style>
     /* FullCalendar custom event styling */
     .fc-event {
@@ -285,7 +285,7 @@
     <!-- Leaflet MarkerCluster JS -->
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <!-- Leaflet Geocoder JS -->
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -522,6 +522,8 @@
 
                 // Setup Kontrol Pencarian dengan Rekomendasi (Geocoder)
                 var geocoderControl = L.Control.geocoder({
+                    geocoder: L.Control.Geocoder.nominatim(),
+                    geocoder: L.Control.Geocoder.nominatim(),
                     defaultMarkGeocode: false,
                     placeholder: "Cari kegiatan, lokasi, desa...",
                     geocoder: L.Control.Geocoder.nominatim({

@@ -641,7 +641,7 @@
 
     @push('styles')
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.css" />
         <style>
             #map-create {
                 background: #f7fafc;
@@ -656,7 +656,7 @@
 
     @push('scripts')
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+        <script src="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // 1. Inisialisasi Peta
@@ -709,6 +709,7 @@
 
                 // 3. Inisialisasi Kotak Pencarian (Geocoder)
                 L.Control.geocoder({
+                    geocoder: L.Control.Geocoder.nominatim(),
                     defaultMarkGeocode: false,
                     placeholder: "Cari nama jalan, desa, kota...",
                 })
