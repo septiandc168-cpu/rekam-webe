@@ -25,19 +25,19 @@ class LaporanKegiatanRequest extends FormRequest
             // Informasi Pelaksanaan
             'realisasi_tanggal_mulai' => 'required|date',
             'realisasi_tanggal_selesai' => 'required|date|after_or_equal:realisasi_tanggal_mulai',
-            'rangkaian_kegiatan' => 'required|string|min:20',
-            'realisasi_peserta' => 'required|integer|min:0',
-            'profil_peserta' => 'required|string|min:10',
+            'rangkaian_kegiatan' => 'required|string',
+            'realisasi_peserta' => 'required|integer',
+            'profil_peserta' => 'required|string',
 
             // Hasil dan Output
-            'hasil_dicapai' => 'required|string|min:20',
-            'output_nyata' => 'required|string|min:20',
-            'dampak_awal' => 'required|string|min:20',
+            'hasil_dicapai' => 'required|string',
+            'output_nyata' => 'required|string',
+            'dampak_awal' => 'required|string',
 
             // Kendala dan Evaluasi
-            'kendala' => 'nullable|string|min:10',
-            'solusi' => 'nullable|string|min:10',
-            'evaluasi_rekomendasi' => 'nullable|string|min:10',
+            'kendala' => 'nullable|string',
+            'solusi' => 'nullable|string',
+            'evaluasi_rekomendasi' => 'nullable|string',
 
             // Dokumentasi
             'foto_kegiatan' => 'nullable|array',
@@ -99,25 +99,17 @@ class LaporanKegiatanRequest extends FormRequest
             'realisasi_tanggal_selesai.date' => 'Realisasi tanggal selesai harus berupa tanggal yang valid.',
             'realisasi_tanggal_selesai.after_or_equal' => 'Realisasi tanggal selesai tidak boleh lebih awal dari tanggal mulai.',
             'rangkaian_kegiatan.required' => 'Rangkaian kegiatan wajib diisi.',
-            'rangkaian_kegiatan.min' => 'Rangkaian kegiatan minimal 20 karakter.',
             'realisasi_peserta.required' => 'Realisasi jumlah peserta wajib diisi.',
             'realisasi_peserta.integer' => 'Realisasi jumlah peserta harus berupa angka.',
             'realisasi_peserta.min' => 'Realisasi jumlah peserta tidak boleh kurang dari 0.',
             'profil_peserta.required' => 'Profil peserta wajib diisi.',
-            'profil_peserta.min' => 'Profil peserta minimal 10 karakter.',
 
             // Hasil dan Output
             'hasil_dicapai.required' => 'Hasil yang dicapai wajib diisi.',
-            'hasil_dicapai.min' => 'Hasil yang dicapai minimal 20 karakter.',
             'output_nyata.required' => 'Output nyata wajib diisi.',
-            'output_nyata.min' => 'Output nyata minimal 20 karakter.',
             'dampak_awal.required' => 'Dampak awal yang terlihat wajib diisi.',
-            'dampak_awal.min' => 'Dampak awal minimal 20 karakter.',
 
             // Kendala dan Evaluasi
-            'kendala.min' => 'Kendala minimal 10 karakter.',
-            'solusi.min' => 'Solusi minimal 10 karakter.',
-            'evaluasi_rekomendasi.min' => 'Evaluasi dan rekomendasi minimal 10 karakter.',
 
             // Dokumentasi
             'foto_kegiatan.*.image' => 'Foto kegiatan harus berupa gambar.',

@@ -445,6 +445,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
             });
         }
     </script>
+
+    <!-- Auto-hide alerts after 10 seconds -->
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.alert').not('.alert-important').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }, 10000);
+        });
+    </script>
+
 </body>
 
 </html>
