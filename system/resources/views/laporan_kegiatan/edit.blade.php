@@ -239,7 +239,7 @@
                                     <label class="custom-file-label" for="daftarHadirInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
                                 <small class="text-muted">Maksimal 10 file (PDF/DOC/XLS), Max 3MB/file.</small>
-                                <div id="preview-daftar-hadir" class="d-flex flex-column gap-1 mt-2"></div>
+                                <div id="preview-daftar_hadir" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
                             
                             <div class="col-md-6 mb-4">
@@ -287,7 +287,7 @@
                                     <label class="custom-file-label" for="beritaAcaraInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
                                 <small class="text-muted">Maksimal 10 file (PDF/DOC), Max 3MB/file.</small>
-                                <div id="preview-berita-acara" class="d-flex flex-column gap-1 mt-2"></div>
+                                <div id="preview-berita_acara" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
                         </div>
                     </div>
@@ -452,7 +452,7 @@
                 });
 
                 $('.custom-doc-input').on('change', function() {
-                    let targetId = $(this).attr('name').replace('[]', '').replace('_', '-');
+                    let targetId = $(this).attr('name').replace('[]', '');
                     createFilePreview(this, document.getElementById('preview-' + targetId));
                 });
             });
