@@ -210,7 +210,7 @@
                                         </div>
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Update Foto Kegiatan</label>
+                                <label class="form-label fw-bold mt-2">Foto Kegiatan</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="foto_kegiatan[]" class="custom-file-input custom-img-input" id="fotoInput" accept="image/jpeg,image/jpg,image/png" multiple>
                                     <label class="custom-file-label" for="fotoInput">Biarkan kosong jika tidak diubah...</label>
@@ -235,7 +235,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Update Daftar Hadir</label>
+                                <label class="form-label fw-bold mt-2">Daftar Hadir</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="daftar_hadir[]" class="custom-file-input custom-doc-input" id="daftarHadirInput" accept=".pdf,.doc,.docx,.xls,.xlsx" multiple>
                                     <label class="custom-file-label" for="daftarHadirInput">Biarkan kosong jika tidak diubah...</label>
@@ -259,7 +259,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Update Notulen</label>
+                                <label class="form-label fw-bold mt-2">Notulen</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="notulen[]" class="custom-file-input custom-doc-input" id="notulenInput" accept=".pdf,.doc,.docx" multiple>
                                     <label class="custom-file-label" for="notulenInput">Biarkan kosong jika tidak diubah...</label>
@@ -285,7 +285,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Update Materi</label>
+                                <label class="form-label fw-bold mt-2">Materi</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="materi[]" class="custom-file-input custom-doc-input" id="materiInput" accept=".pdf,.ppt,.pptx,.doc,.docx" multiple>
                                     <label class="custom-file-label" for="materiInput">Biarkan kosong jika tidak diubah...</label>
@@ -310,7 +310,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Update Berita Acara</label>
+                                <label class="form-label fw-bold mt-2">Berita Acara</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="berita_acara[]" class="custom-file-input custom-doc-input" id="beritaAcaraInput" accept=".pdf,.doc,.docx" multiple>
                                     <label class="custom-file-label" for="beritaAcaraInput">Biarkan kosong jika tidak diubah...</label>
