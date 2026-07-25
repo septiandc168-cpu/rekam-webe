@@ -10,6 +10,6 @@
     "buildCommand": "cd system && composer install --no-dev --optimize-autoloader && npm install && npm run build && php artisan config:cache && php artisan route:cache"
   },
   "deploy": {
-    "startCommand": "mkdir -p \"${UPLOADS_PATH:-public/storage/app}\" && php -S 0.0.0.0:$PORT server.php"
+    "startCommand": "mkdir -p \"${UPLOADS_PATH:-public/storage/app}\" && php -c system/php.ini -S 0.0.0.0:$PORT server.php"
   }
 }
