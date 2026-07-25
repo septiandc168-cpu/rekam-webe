@@ -225,7 +225,7 @@
                                     <div class="mb-2">
                                         <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
                                         @foreach($daftar_hadir as $file)
-                                            @php 
+                                            @php
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
@@ -243,6 +243,31 @@
                                 <small class="text-muted">Maksimal 10 file (PDF/DOC/XLS), Max 3MB/file.</small>
                                 <div id="preview-daftar_hadir" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
+                            <div class="col-md-6 mb-4">
+                                @php $notulen = !empty($laporanKegiatan->notulen) ? (is_string($laporanKegiatan->notulen) ? json_decode($laporanKegiatan->notulen, true) : $laporanKegiatan->notulen) : []; @endphp
+                                @if(is_array($notulen) && count($notulen) > 0)
+                                    <div class="mb-2">
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
+                                        @foreach($notulen as $file)
+                                            @php
+                                                $path = is_array($file) ? $file['path'] : $file;
+                                                $name = is_array($file) ? $file['original_name'] : basename($file);
+                                            @endphp
+                                            <div class="preview-file-item bg-white">
+                                                <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                                <label class="form-label fw-bold mt-2">Update Notulen</label>
+                                <div class="custom-file mb-1">
+                                    <input type="file" name="notulen[]" class="custom-file-input custom-doc-input" id="notulenInput" accept=".pdf,.doc,.docx" multiple>
+                                    <label class="custom-file-label" for="notulenInput">Biarkan kosong jika tidak diubah...</label>
+                                </div>
+                                <small class="text-muted">Maksimal 10 file (PDF/DOC), Max 3MB/file.</small>
+                                <div id="preview-notulen" class="d-flex flex-column gap-1 mt-2"></div>
+                            </div>
+
                             
                             <div class="col-md-6 mb-4">
                                 @php $materi = !empty($laporanKegiatan->materi) ? (is_string($laporanKegiatan->materi) ? json_decode($laporanKegiatan->materi, true) : $laporanKegiatan->materi) : []; @endphp
@@ -250,7 +275,7 @@
                                     <div class="mb-2">
                                         <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
                                         @foreach($materi as $file)
-                                            @php 
+                                            @php
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
@@ -275,7 +300,7 @@
                                     <div class="mb-2">
                                         <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
                                         @foreach($berita_acara as $file)
-                                            @php 
+                                            @php
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
