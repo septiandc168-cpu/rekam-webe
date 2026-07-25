@@ -238,7 +238,7 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
                                                         data-path="{{ $path }}" data-type="dokumen"
-                                                        style="top:-5px; right:-5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                        style="top:50%; right:8px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
                                                         title="Hapus dokumen ini">
                                                     <i class="fas fa-times" style="font-size:10px;"></i>
                                                 </button>
@@ -268,7 +268,7 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
                                                         data-path="{{ $path }}" data-type="dokumen"
-                                                        style="top:-5px; right:-5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                        style="top:50%; right:8px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
                                                         title="Hapus dokumen ini">
                                                     <i class="fas fa-times" style="font-size:10px;"></i>
                                                 </button>
@@ -300,7 +300,7 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
                                                         data-path="{{ $path }}" data-type="dokumen"
-                                                        style="top:-5px; right:-5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                        style="top:50%; right:8px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
                                                         title="Hapus dokumen ini">
                                                     <i class="fas fa-times" style="font-size:10px;"></i>
                                                 </button>
@@ -331,7 +331,7 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
                                                         data-path="{{ $path }}" data-type="dokumen"
-                                                        style="top:-5px; right:-5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                        style="top:50%; right:8px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
                                                         title="Hapus dokumen ini">
                                                     <i class="fas fa-times" style="font-size:10px;"></i>
                                                 </button>
