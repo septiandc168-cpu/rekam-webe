@@ -709,7 +709,7 @@
 
                 // 3. Inisialisasi Kotak Pencarian (Geocoder)
                 L.Control.geocoder({
-                    geocoder: L.Control.Geocoder.nominatim(),
+                    geocoder: L.Control.Geocoder.arcgis(),
                     defaultMarkGeocode: false,
                     placeholder: "Cari nama jalan, desa, kota...",
                 })

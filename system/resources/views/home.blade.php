@@ -522,8 +522,8 @@
 
                 // Setup Kontrol Pencarian dengan Rekomendasi (Geocoder)
                 var geocoderControl = L.Control.geocoder({
-                    geocoder: L.Control.Geocoder.nominatim(),
-                    geocoder: L.Control.Geocoder.nominatim(),
+                    geocoder: L.Control.Geocoder.arcgis(),
+                    geocoder: L.Control.Geocoder.arcgis(),
                     defaultMarkGeocode: false,
                     placeholder: "Cari kegiatan, lokasi, desa...",
                     geocoder: L.Control.Geocoder.nominatim({
