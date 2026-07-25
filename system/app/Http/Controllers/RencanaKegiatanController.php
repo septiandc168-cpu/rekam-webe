@@ -295,10 +295,15 @@ class RencanaKegiatanController extends Controller
             'estimasi_peserta' => $validated['estimasi_peserta'] ?? null,
             'rincian_kebutuhan' => $validated['rincian_kebutuhan'] ?? null,
             'foto' => !empty($fotoPaths) ? $fotoPaths : null,
-            'dokumen' => !empty($dokumenPaths) ? $dokumenPaths : null,
-            'anggaran_kegiatan' => $anggaranKegiatanPath ?: null,
+            'dokumen' => !empty($dokumenPaths) ? $dokumenPaths : null,            'anggaran_kegiatan' => $anggaranKegiatanPath ?: null,
             'status' => $request->input('action') === 'draft' ? 'draft' : 'diajukan',
         ];
+
+        // Ensure proper status if action dictates otherwise or user is supervisor overriding
+        if ($isSupervisor && isset($validated['status'])) {
+            $data['status'] = $validated['status'];
+            $data['keterangan_status'] = $validated['keterangan_status'] ?? null;
+        }
 
         $rencanaKegiatan = RencanaKegiatan::create($data);
 
@@ -630,8 +635,7 @@ class RencanaKegiatanController extends Controller
                 'penanggung_jawab' => $validated['penanggung_jawab'] ?? null,
                 'kelompok' => $validated['kelompok'] ?? null,
                 'estimasi_peserta' => $validated['estimasi_peserta'] ?? null,
-                'rincian_kebutuhan' => $validated['rincian_kebutuhan'] ?? null,
-                'status' => RencanaKegiatan::STATUS_DIAJUKAN, // Reset to diajukan for admin revisi
+                'rincian_kebutuhan' => $validated['rincian_kebutuhan'] ?? null,                'status' => $request->input('action') === 'draft' ? 'draft' : ($request->input('action') === 'diajukan' ? 'diajukan' : $rencana_kegiatan->status),
                 'keterangan_status' => null, // Clear keterangan
                 'foto' => !empty($finalFoto) ? array_values($finalFoto) : null,
                 'dokumen' => !empty($finalDokumen) ? array_values($finalDokumen) : null,
