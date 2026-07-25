@@ -283,7 +283,7 @@
                                         @endphp
                                         <div class="doc-item">
                                             <div class="doc-image-container">
-                                                <img src="/public/storage/app/{{ $filePath }}"
+                                                <img src="{{ asset('public/storage/app/' . $filePath) }}"
                                                     class="doc-image"
                                                     alt="{{ $fileName }}">
                                             </div>

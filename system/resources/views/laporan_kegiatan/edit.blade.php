@@ -201,8 +201,8 @@
                                             @foreach($laporanKegiatan->foto_kegiatan as $foto)
                                                 @php $path = is_array($foto) ? $foto['path'] : $foto; @endphp
                                                 <div class="preview-img-wrapper" style="margin:0;">
-                                                    <a href="/public/storage/app/{{ $path }}" target="_blank">
-                                                        <img src="/public/storage/app/{{ $path }}" style="max-width: 100px; height: 75px;">
+                                                    <a href="{{ asset('public/storage/app/' . $path) }}" target="_blank">
+                                                        <img src="{{ asset('public/storage/app/' . $path) }}" style="max-width: 100px; height: 75px;">
                                                     </a>
                                                 </div>
                                             @endforeach
@@ -228,7 +228,7 @@
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
                                             <div class="preview-file-item bg-white">
-                                                <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                                <i class="fas fa-file-pdf text-danger"></i> <a href="{{ asset('public/storage/app/' . $path) }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
                                     </div>
@@ -252,7 +252,7 @@
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
                                             <div class="preview-file-item bg-white">
-                                                <i class="fas fa-file-powerpoint text-warning"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                                <i class="fas fa-file-powerpoint text-warning"></i> <a href="{{ asset('public/storage/app/' . $path) }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
                                     </div>
@@ -276,7 +276,7 @@
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
                                             <div class="preview-file-item bg-white">
-                                                <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                                <i class="fas fa-file-pdf text-danger"></i> <a href="{{ asset('public/storage/app/' . $path) }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
                                     </div>

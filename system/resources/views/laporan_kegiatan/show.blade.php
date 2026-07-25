@@ -431,8 +431,8 @@
                                     $filePath = is_array($foto) ? $foto['path'] : $foto;
                                 @endphp
                                 <div class="col-6 mb-2 px-2">
-                                    <a href="/public/storage/app/{{ $filePath }}" target="_blank">
-                                        <img src="/public/storage/app/{{ $filePath }}" class="gallery-img border shadow-sm" style="height: 120px; width: 100%; object-fit: cover;">
+                                    <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank">
+                                        <img src="{{ asset('public/storage/app/' . $filePath) }}" class="gallery-img border shadow-sm" style="height: 120px; width: 100%; object-fit: cover;">
                                     </a>
                                 </div>
                             @endforeach

@@ -499,7 +499,7 @@
                                         }
                                     @endphp
                                     <div class="col-6 col-sm-4 col-md-4 col-lg-3 mb-3">
-                                        <img src="/public/storage/app/{{ $fotoPath }}" class="gallery-img border shadow-sm" alt="{{ $fotoName }}" data-toggle="modal" data-target="#imageModal{{ $index }}" style="height: 180px; width: 100%; object-fit: cover;">
+                                        <img src="{{ asset('public/storage/app/' . $fotoPath) }}" class="gallery-img border shadow-sm" alt="{{ $fotoName }}" data-toggle="modal" data-target="#imageModal{{ $index }}" style="height: 180px; width: 100%; object-fit: cover;">
                                     </div>
 
                                     <!-- Modal for Image -->
@@ -513,7 +513,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body text-center p-0 bg-dark">
-                                                    <img src="/public/storage/app/{{ $fotoPath }}" class="img-fluid" style="max-height: 80vh;" alt="{{ $fotoName }}">
+                                                    <img src="{{ asset('public/storage/app/' . $fotoPath) }}" class="img-fluid" style="max-height: 80vh;" alt="{{ $fotoName }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -562,7 +562,7 @@
                             <i class="fas fa-file-excel mr-2" style="font-size:1.4rem; color:#001f3f;"></i>
                             <span class="text-truncate font-weight-bold" style="font-size:0.82rem;" title="{{ $anggaranName }}">{{ $anggaranName }}</span>
                         </div>
-                        <a href="/public/storage/app/{{ $anggaranPath }}" target="_blank" class="btn btn-sm bg-navy text-white btn-block">
+                        <a href="{{ asset('public/storage/app/' . $anggaranPath) }}" target="_blank" class="btn btn-sm bg-navy text-white btn-block">
                             <i class="fas fa-download mr-1"></i> Unduh Anggaran
                         </a>
                     </div>
@@ -592,7 +592,7 @@
                                         $fileName = basename($file);
                                     }
                                 @endphp
-                                <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                <a href="{{ asset('public/storage/app/' . $filePath) }}" target="_blank"
                                    class="btn btn-sm bg-navy text-white btn-block text-left mb-1 text-truncate"
                                    title="{{ $fileName }}" style="font-size:0.78rem;">
                                     <i class="fas fa-file-pdf mr-1"></i> {{ $fileName }}
