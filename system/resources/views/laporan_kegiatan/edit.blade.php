@@ -205,11 +205,11 @@
                                                     <a href="/public/storage/app/{{ $path }}" target="_blank">
                                                         <img src="/public/storage/app/{{ $path }}" style="max-width: 100px; height: 75px;">
                                                     </a>
-                                                    <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-foto"
+                                                    <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-foto"
                                                             data-path="{{ $path }}"
-                                                            style="top:-5px; right:-5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                            style="top:-8px; right:-8px; border-radius:50%; width:24px; height:24px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                             title="Hapus foto ini">
-                                                        <i class="fas fa-times" style="font-size:10px;"></i>
+                                                        <i class="fas fa-times text-white" style="font-size:12px;"></i>
                                                     </button>
                                                 </div>
                                             @endforeach
@@ -235,14 +235,16 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-4">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
-                                                        data-path="{{ $path }}" data-type="dokumen"
-                                                        style="top:5px; right:5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
-                                                        title="Hapus dokumen ini">
-                                                    <i class="fas fa-times" style="font-size:10px;"></i>
-                                                </button>
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item d-flex justify-content-between align-items-center" style="padding-right:8px;">
+                                                <div class="d-flex align-items-center overflow-hidden">
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-existing-dokumen ml-2"
+                                                        data-path="{{ $path }}" data-type="dokumen"
+                                                        style="border-radius:4px; padding:2px 6px; flex-shrink:0;"
+                                                        title="Hapus dokumen ini">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
                                             </div>
                                         @endforeach
                                     </div>
@@ -265,14 +267,16 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-4">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
-                                                        data-path="{{ $path }}" data-type="dokumen"
-                                                        style="top:5px; right:5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
-                                                        title="Hapus dokumen ini">
-                                                    <i class="fas fa-times" style="font-size:10px;"></i>
-                                                </button>
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item d-flex justify-content-between align-items-center" style="padding-right:8px;">
+                                                <div class="d-flex align-items-center overflow-hidden">
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-existing-dokumen ml-2"
+                                                        data-path="{{ $path }}" data-type="dokumen"
+                                                        style="border-radius:4px; padding:2px 6px; flex-shrink:0;"
+                                                        title="Hapus dokumen ini">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
                                             </div>
                                         @endforeach
                                     </div>
@@ -297,14 +301,16 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-4">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
-                                                        data-path="{{ $path }}" data-type="dokumen"
-                                                        style="top:5px; right:5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
-                                                        title="Hapus dokumen ini">
-                                                    <i class="fas fa-times" style="font-size:10px;"></i>
-                                                </button>
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item d-flex justify-content-between align-items-center" style="padding-right:8px;">
+                                                <div class="d-flex align-items-center overflow-hidden">
                                                 <i class="fas fa-file-powerpoint text-warning"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-existing-dokumen ml-2"
+                                                        data-path="{{ $path }}" data-type="dokumen"
+                                                        style="border-radius:4px; padding:2px 6px; flex-shrink:0;"
+                                                        title="Hapus dokumen ini">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
                                             </div>
                                         @endforeach
                                     </div>
@@ -328,14 +334,16 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-4">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-dokumen"
-                                                        data-path="{{ $path }}" data-type="dokumen"
-                                                        style="top:5px; right:5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
-                                                        title="Hapus dokumen ini">
-                                                    <i class="fas fa-times" style="font-size:10px;"></i>
-                                                </button>
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item d-flex justify-content-between align-items-center" style="padding-right:8px;">
+                                                <div class="d-flex align-items-center overflow-hidden">
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-existing-dokumen ml-2"
+                                                        data-path="{{ $path }}" data-type="dokumen"
+                                                        style="border-radius:4px; padding:2px 6px; flex-shrink:0;"
+                                                        title="Hapus dokumen ini">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
                                             </div>
                                         @endforeach
                                     </div>
