@@ -146,8 +146,7 @@ class RencanaKegiatanController extends Controller
                 'keterangan_status' => 'required_if:status,disetujui,ditolak|string',
                 'foto' => 'nullable|array',
                 'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
-                'dokumen' => 'nullable|array',
-                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
+                'dokumen' => 'nullable|array',                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
                 'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
             ];
 
@@ -187,8 +186,7 @@ class RencanaKegiatanController extends Controller
                 'rincian_kebutuhan' => 'nullable|string',
                 'foto' => 'nullable|array',
                 'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
-                'dokumen' => 'nullable|array',
-                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
+                'dokumen' => 'nullable|array',                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
                 'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
             ];
 
@@ -418,7 +416,7 @@ class RencanaKegiatanController extends Controller
                 'remove_foto.*' => 'string',
                 'remove_dokumen' => 'nullable|array',
                 'remove_dokumen.*' => 'string',
-                'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+                'anggaran_kegiatan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
                 'remove_anggaran_kegiatan' => 'nullable|string',
             ];
 
