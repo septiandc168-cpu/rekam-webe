@@ -198,7 +198,7 @@
                                     <div class="mb-2">
                                         <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-camera text-primary mr-1"></i> Foto saat ini:</p>
                                         <div class="d-flex flex-wrap gap-2">
-                                            @foreach($laporanKegiatan->foto_kegiatan as $foto)
+                                            @foreach($fotos as $foto)
                                                 @php $path = is_array($foto) ? $foto['path'] : $foto; @endphp
                                                 <div class="preview-img-wrapper" style="margin:0;">
                                                     <a href="/public/storage/app/{{ $path }}" target="_blank">
@@ -222,7 +222,7 @@
                                 @if(!empty($laporanKegiatan->daftar_hadir))
                                     <div class="mb-2">
                                         <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
-                                        @foreach($laporanKegiatan->daftar_hadir as $file)
+                                        @foreach($daftar_hadir as $file)
                                             @php 
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
@@ -246,7 +246,7 @@
                                 @if(!empty($laporanKegiatan->materi))
                                     <div class="mb-2">
                                         <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
-                                        @foreach($laporanKegiatan->materi as $file)
+                                        @foreach($materi as $file)
                                             @php 
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
@@ -270,7 +270,7 @@
                                 @if(!empty($laporanKegiatan->berita_acara))
                                     <div class="mb-2">
                                         <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
-                                        @foreach($laporanKegiatan->berita_acara as $file)
+                                        @foreach($berita_acara as $file)
                                             @php 
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
