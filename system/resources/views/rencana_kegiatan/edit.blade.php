@@ -600,7 +600,7 @@
                                     ['color', ['color']],
                                     ['para', ['ul', 'ol', 'paragraph']]
                                 ],
-                                height: 100
+                                height: 120
                             });
                             console.log('Summernote deskripsi initialized');
 
@@ -613,7 +613,7 @@
                                     ['color', ['color']],
                                     ['para', ['ul', 'ol', 'paragraph']]
                                 ],
-                                height: 80
+                                height: 120
                             });
                             console.log('Summernote tujuan initialized');
                             
