@@ -37,375 +37,296 @@
 
 
         <!-- Kop Surat -->
-        <table class="kop-surat mb-4" style="width: 100%; border-bottom: 3px solid black; margin-bottom: 10px;">
+        <table class="kop-surat mb-4" style="width: 100%; border-bottom: 3px solid black; margin-bottom: 5px;">
             <tr>
-                <td style="width: 15%; text-align: left; vertical-align: middle; padding-bottom: 10px;">
-                    <img src="/public/adminlte/dist/img/logo_webe.png" alt="Logo" style="width: 100px;">
+                <td style="width: 15%; text-align: left; vertical-align: middle; padding-bottom: 5px;">
+                    <img src="/public/adminlte/dist/img/logo_webe.png" alt="Logo" style="width: 90px;">
                 </td>
-                <td style="width: 85%; text-align: center; vertical-align: middle; padding-bottom: 10px;">
+                <td style="width: 85%; text-align: center; vertical-align: middle; padding-bottom: 5px;">
                     <div style="font-family: 'Times New Roman', Times, serif; font-size: 16pt; font-weight: bold; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</div>
                     <div style="font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: bold; margin-bottom: 5px;">REKAM WEBE - SISTEM PELAPORAN KEGIATAN</div>
                     <div style="font-family: 'Times New Roman', Times, serif; font-size: 11pt;">
-                        Jl. RM Sudiono No.49A, Ketapang, Kalimantan Barat<br>
-                        Email: yayasanwebe@gmail.com | Telp/WA: +62 813 6022 733
+                        Jl. R.M. Sudiono No. 49A, Ketapang, Kalimantan Barat<br>
+                        Email: yayasanwebe@gmail.com | Telp/WA: +62 813-6022-733
                     </div>
                 </td>
             </tr>
         </table>
-        <div style="border-top: 1px solid black; margin-top: -8px; margin-bottom: 20px;"></div>
+        <div style="border-top: 1px solid black; margin-top: -3px; margin-bottom: 20px;"></div>
 
         <!-- Judul Surat -->
         <div class="print-title-section mb-4 text-center">
-            <h3 style="font-family: 'Times New Roman', Times, serif; text-decoration: underline; font-weight: bold; font-size: 14pt; margin-bottom: 5px; text-transform: uppercase;">LAPORAN PELAKSANAAN KEGIATAN</h3>
-            <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; text-transform: uppercase;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</div>
+            <h3 style="font-family: 'Times New Roman', Times, serif; text-decoration: underline; font-weight: bold; font-size: 14pt; margin-bottom: 2px; text-transform: uppercase;">LAPORAN PELAKSANAAN KEGIATAN</h3>
+            <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; text-transform: uppercase;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</div>
         </div>
 
         @if(!$laporanKegiatan->isDarurat())
         <!-- Informasi Rencana Kegiatan -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            Informasi Rencana Kegiatan
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <table class="table table-sm table-borderless">
-                                    <tr>
-                                        <td width="200" class="label-field"><strong>Nama Kegiatan</strong></td><td width="20">:</td>
-                                        <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-field"><strong>Jenis Kegiatan</strong></td><td width="20">:</td>
-                                        <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-field"><strong>Tujuan</strong></td><td width="20">:</td>
-                                        <td class="value-field">{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) ?: '-' !!}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-field"><strong>Penanggung Jawab</strong></td><td width="20">:</td>
-                                        <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-field"><strong>Kelompok</strong></td><td width="20">:</td>
-                                        <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label-field"><strong>Tanggal Laporan</strong></td><td width="20">:</td>
-                                        <td class="value-field">{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <table class="table table-sm table-borderless" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <tr>
+                        <td width="220" class="label-field"><strong>Nama Kegiatan</strong></td><td width="20">:</td>
+                        <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Jenis Kegiatan</strong></td><td width="20">:</td>
+                        <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Tujuan</strong></td><td width="20">:</td>
+                        <td class="value-field">{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) ?: '-' !!}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Penanggung Jawab</strong></td><td width="20">:</td>
+                        <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Kelompok / Instansi</strong></td><td width="20">:</td>
+                        <td class="value-field">{{ $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Tanggal Laporan</strong></td><td width="20">:</td>
+                        <td class="value-field">{{ \Carbon\Carbon::parse($laporanKegiatan->created_at)->translatedFormat('d F Y') }}</td>
+                    </tr>
+                </table>
             </div>
         </div>
-        @endif
 
         <!-- Detail Pelaksanaan Kegiatan -->
+        <h5 class="mb-2" style="font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 12pt; margin-top: 15px;">
+            A. Detail Pelaksanaan Kegiatan
+        </h5>
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
-                            <i class="fas fa-tasks mr-1"></i>
-                            Detail Pelaksanaan Kegiatan
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td width="200" class="label-field"><strong>Tanggal Pelaksanaan</strong></td><td width="20">:</td>
-                                <td class="value-field">
-                                    {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
-                                    @if ($laporanKegiatan->isDarurat() ? ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai) : ($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai))
-                                        s/d {{ \Carbon\Carbon::parse($laporanKegiatan->isDarurat() ? $laporanKegiatan->realisasi_tanggal_selesai : $laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d F Y') }}
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="label-field"><strong>Realisasi Tanggal Pelaksanaan</strong></td><td width="20">:</td>
-                                <td class="value-field">
-                                    {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
-                                    @if ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
-                                        s/d {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->translatedFormat('d F Y') }}
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="label-field"><strong>Lokasi</strong></td><td width="20">:</td>
-                                <td class="value-field">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</td>
-                            </tr>
-                            <tr>
-                                <td class="label-field"><strong>Waktu Pelaksanaan</strong></td><td width="20">:</td>
-                                <td class="value-field">
-                                    @if ($laporanKegiatan->isDarurat())
-                                        Menyesuaikan
-                                    @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai && $laporanKegiatan->rencanaKegiatan->waktu_selesai)
-                                        {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_selesai)->format('H:i') }}
-                                    @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai)
-                                        {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }}
-                                    @else
-                                        Belum ditentukan
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="label-field"><strong>Rangkaian Kegiatan</strong></td><td width="20">:</td>
-                                <td class="value-field">{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
-                            </tr>
-                            <tr>
-                                <td class="label-field"><strong>Target Peserta</strong></td><td width="20">:</td>
-                                <td class="value-field">{{ $laporanKegiatan->isDarurat() ? '-' : ($laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-') }} orang</td>
-                            </tr>
-                            <tr>
-                                <td class="label-field"><strong>Realisasi Peserta</strong></td><td width="20">:</td>
-                                <td class="value-field">{{ $laporanKegiatan->realisasi_peserta }} orang</td>
-                            </tr>
-                            <tr>
-                                <td class="label-field"><strong>Profil Peserta</strong></td><td width="20">:</td>
-                                <td class="value-field">{!! $laporanKegiatan->profil_peserta !!}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+                <table class="table table-sm table-borderless" style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td width="220" class="label-field"><strong>Tanggal Pelaksanaan</strong></td><td width="20">:</td>
+                        <td class="value-field">
+                            {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
+                            @if ($laporanKegiatan->isDarurat() ? ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai) : ($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai))
+                                s/d {{ \Carbon\Carbon::parse($laporanKegiatan->isDarurat() ? $laporanKegiatan->realisasi_tanggal_selesai : $laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d F Y') }}
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Realisasi Pelaksanaan</strong></td><td width="20">:</td>
+                        <td class="value-field">
+                            {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
+                            @if ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
+                                s/d {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->translatedFormat('d F Y') }}
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Lokasi</strong></td><td width="20">:</td>
+                        <td class="value-field">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Waktu Pelaksanaan</strong></td><td width="20">:</td>
+                        <td class="value-field">
+                            @if ($laporanKegiatan->isDarurat())
+                                Menyesuaikan
+                            @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai && $laporanKegiatan->rencanaKegiatan->waktu_selesai)
+                                {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_selesai)->format('H:i') }} WIB
+                            @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai)
+                                {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }} WIB
+                            @else
+                                Belum ditentukan
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Rangkaian Kegiatan</strong></td><td width="20">:</td>
+                        <td class="value-field">{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Target Peserta</strong></td><td width="20">:</td>
+                        <td class="value-field">{{ $laporanKegiatan->isDarurat() ? '-' : ($laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-') }} orang</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Realisasi Peserta</strong></td><td width="20">:</td>
+                        <td class="value-field">{{ $laporanKegiatan->realisasi_peserta }} orang</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Profil Peserta</strong></td><td width="20">:</td>
+                        <td class="value-field">{!! $laporanKegiatan->profil_peserta !!}</td>
+                    </tr>
+                </table>
             </div>
         </div>
 
         <!-- Hasil dan Output Kegiatan -->
+        <h5 class="mb-2" style="font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 12pt; margin-top: 20px;">
+            B. Hasil dan Output Kegiatan
+        </h5>
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
-                            <i class="fas fa-chart-line mr-1"></i>
-                            Hasil dan Output Kegiatan
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <h6 class="section-title"><i class="fas fa-check-circle mr-2"></i>Hasil yang Dicapai</h6>
-                            <div class="content-box">
-                                {!! $laporanKegiatan->hasil_dicapai !!}
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6 class="section-title"><i class="fas fa-box mr-2"></i>Output Nyata</h6>
-                            <div class="content-box">
-                                {!! $laporanKegiatan->output_nyata !!}
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6 class="section-title"><i class="fas fa-leaf mr-2"></i>Dampak Awal yang Terlihat</h6>
-                            <div class="content-box">
-                                {!! $laporanKegiatan->dampak_awal !!}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <table class="table table-sm table-borderless" style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td width="220" class="label-field"><strong>Hasil yang Dicapai</strong></td><td width="20">:</td>
+                        <td class="value-field">{!! $laporanKegiatan->hasil_dicapai !!}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Output Nyata</strong></td><td width="20">:</td>
+                        <td class="value-field">{!! $laporanKegiatan->output_nyata !!}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-field"><strong>Dampak Awal</strong></td><td width="20">:</td>
+                        <td class="value-field">{!! $laporanKegiatan->dampak_awal !!}</td>
+                    </tr>
+                </table>
             </div>
         </div>
 
         <!-- Kendala dan Evaluasi -->
+        @if($laporanKegiatan->kendala || $laporanKegiatan->solusi || $laporanKegiatan->evaluasi_rekomendasi)
+        <h5 class="mb-2" style="font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 12pt; margin-top: 20px;">
+            C. Kendala dan Evaluasi
+        </h5>
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
-                            <i class="fas fa-exclamation-triangle mr-1"></i>
-                            Kendala dan Evaluasi
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        @if($laporanKegiatan->kendala)
-                            <div class="mb-4">
-                                <h6 class="section-title"><i class="fas fa-exclamation-circle mr-2"></i>Kendala yang Dihadapi</h6>
-                                <div class="content-box">
-                                    {!! $laporanKegiatan->kendala !!}
-                                </div>
-                            </div>
-                        @endif
-
-                        @if($laporanKegiatan->solusi)
-                            <div class="mb-4">
-                                <h6 class="section-title"><i class="fas fa-lightbulb mr-2"></i>Solusi yang Dilakukan</h6>
-                                <div class="content-box">
-                                    {!! $laporanKegiatan->solusi !!}
-                                </div>
-                            </div>
-                        @endif
-
-                        @if($laporanKegiatan->evaluasi_rekomendasi)
-                            <div class="mb-4">
-                                <h6 class="section-title"><i class="fas fa-clipboard-check mr-2"></i>Evaluasi dan Rekomendasi</h6>
-                                <div class="content-box">
-                                    {!! $laporanKegiatan->evaluasi_rekomendasi !!}
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                </div>
+                <table class="table table-sm table-borderless" style="width: 100%; border-collapse: collapse;">
+                    @if($laporanKegiatan->kendala)
+                    <tr>
+                        <td width="220" class="label-field"><strong>Kendala</strong></td><td width="20">:</td>
+                        <td class="value-field">{!! $laporanKegiatan->kendala !!}</td>
+                    </tr>
+                    @endif
+                    @if($laporanKegiatan->solusi)
+                    <tr>
+                        <td width="220" class="label-field"><strong>Solusi</strong></td><td width="20">:</td>
+                        <td class="value-field">{!! $laporanKegiatan->solusi !!}</td>
+                    </tr>
+                    @endif
+                    @if($laporanKegiatan->evaluasi_rekomendasi)
+                    <tr>
+                        <td width="220" class="label-field"><strong>Evaluasi & Rekomendasi</strong></td><td width="20">:</td>
+                        <td class="value-field">{!! $laporanKegiatan->evaluasi_rekomendasi !!}</td>
+                    </tr>
+                    @endif
+                </table>
             </div>
         </div>
+        @endif
 
         <!-- Dokumentasi Kegiatan -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
-                            <i class="fas fa-file-upload mr-1"></i>
-                            Dokumentasi Kegiatan
-                        </h5>
-                    </div>
-                    <div class="card-body">
+        <h5 class="mb-2 page-break-before" style="font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 12pt;">
+            D. Lampiran Bukti Kegiatan
+        </h5>
                         <!-- Foto Kegiatan -->
                         @if (!empty($laporanKegiatan->foto_kegiatan))
                             <div class="mb-4">
-                                <h6 class="section-title"><i class="fas fa-images mr-2"></i>Foto Kegiatan</h6>
-                                <div class="documentation-grid">
-                                    @foreach ($laporanKegiatan->foto_kegiatan as $index => $foto_kegiatan)
-                                        @php
-                                            // Handle both old format (string) and new format (array)
-                                            $filePath = is_array($foto_kegiatan) ? $foto_kegiatan['path'] : $foto_kegiatan;
-                                            $fileName = is_array($foto_kegiatan) ? $foto_kegiatan['original_name'] : basename($foto_kegiatan);
-                                        @endphp
-                                        <div class="doc-item">
-                                            <div class="doc-image-container">
-                                                <img src="/public/storage/app/{{ $filePath }}"
-                                                    class="doc-image"
-                                                    alt="{{ $fileName }}">
-                                            </div>
-                                            <div class="doc-caption">
-                                                {{ $fileName }}
-                                            </div>
+                                <!-- Foto Kegiatan -->
+                                @if (!empty($laporanKegiatan->foto_kegiatan))
+                                    <div class="mb-4">
+                                        <h6 class="section-title"><i class="fas fa-camera mr-2"></i>Foto Kegiatan</h6>
+                                        <div class="documentation-grid">
+                                            @foreach ($laporanKegiatan->foto_kegiatan as $index => $foto)
+                                                @php
+                                                    $fotoPath = is_array($foto) ? $foto['path'] : $foto;
+                                                    $fotoName = is_array($foto) ? $foto['original_name'] : basename($fotoPath);
+                                                @endphp
+                                                <div class="doc-item">
+                                                    <div class="doc-image-container">
+                                                        <img src="/public/storage/app/{{ $fotoPath }}"
+                                                            class="doc-image"
+                                                            alt="{{ $fotoName }}">
+                                                    </div>
+                                                    <p class="text-muted small mb-0">{{ $fotoName }}</p>
+                                                </div>
+                                            @endforeach
                                         </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
+                                    </div>
+                                @endif
 
-                        <!-- Daftar Hadir -->
-                        @if (!empty($laporanKegiatan->daftar_hadir))
-                            <div class="mb-4 page-break-before">
-                                <h6 class="section-title"><i class="fas fa-users mr-2"></i>Daftar Hadir</h6>
-                                <div class="file-list">
-                                    @foreach ($laporanKegiatan->daftar_hadir as $index => $daftar_hadir)
-                                        @php
-                                            // Handle both old format (string) and new format (array)
-                                            $filePath = is_array($daftar_hadir) ? $daftar_hadir['path'] : $daftar_hadir;
-                                            $fileName = is_array($daftar_hadir) ? $daftar_hadir['original_name'] : basename($daftar_hadir);
-                                        @endphp
-                                        <div class="file-item">
-                                             <i class="fas fa-file-alt mr-2"></i>
-                                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
-                                         </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
+                                <!-- Daftar Hadir -->
+                                @if (!empty($laporanKegiatan->daftar_hadir))
+                                    <div class="mb-4">
+                                        <h6 class="section-title"><i class="fas fa-users mr-2"></i>Daftar Hadir</h6>
+                                        <div class="file-list">
+                                            @foreach ($laporanKegiatan->daftar_hadir as $index => $daftar_hadir)
+                                                @php
+                                                    // Handle both old format (string) and new format (array)
+                                                    $filePath = is_array($daftar_hadir) ? $daftar_hadir['path'] : $daftar_hadir;
+                                                    $fileName = is_array($daftar_hadir) ? $daftar_hadir['original_name'] : basename($daftar_hadir);
+                                                @endphp
+                                                <div class="file-item">
+                                                     <i class="fas fa-file-alt mr-2"></i>
+                                                     <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                                 </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
 
-                        <!-- Notulen -->
-                        @if (!empty($laporanKegiatan->notulen))
-                            <div class="mb-4">
-                                <h6 class="section-title"><i class="fas fa-file-alt mr-2"></i>Notulen</h6>
-                                <div class="file-list">
-                                    @foreach ($laporanKegiatan->notulen as $index => $notulen)
-                                        @php
-                                            // Handle both old format (string) and new format (array)
-                                            $filePath = is_array($notulen) ? $notulen['path'] : $notulen;
-                                            $fileName = is_array($notulen) ? $notulen['original_name'] : basename($notulen);
-                                        @endphp
-                                        <div class="file-item">
-                                             <i class="fas fa-file-alt mr-2"></i>
-                                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
-                                         </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
+                                <!-- Notulen -->
+                                @if (!empty($laporanKegiatan->notulen))
+                                    <div class="mb-4">
+                                        <h6 class="section-title"><i class="fas fa-file-signature mr-2"></i>Notulen</h6>
+                                        <div class="file-list">
+                                            @foreach ($laporanKegiatan->notulen as $index => $notulen)
+                                                @php
+                                                    // Handle both old format (string) and new format (array)
+                                                    $filePath = is_array($notulen) ? $notulen['path'] : $notulen;
+                                                    $fileName = is_array($notulen) ? $notulen['original_name'] : basename($notulen);
+                                                @endphp
+                                                <div class="file-item">
+                                                     <i class="fas fa-file-alt mr-2"></i>
+                                                     <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                                 </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
 
-                        <!-- Materi -->
-                        @if (!empty($laporanKegiatan->materi))
-                            <div class="mb-4">
-                                <h6 class="section-title"><i class="fas fa-book mr-2"></i>Materi</h6>
-                                <div class="file-list">
-                                    @foreach ($laporanKegiatan->materi as $index => $materi)
-                                        @php
-                                            // Handle both old format (string) and new format (array)
-                                            $filePath = is_array($materi) ? $materi['path'] : $materi;
-                                            $fileName = is_array($materi) ? $materi['original_name'] : basename($materi);
-                                        @endphp
-                                        <div class="file-item">
-                                             <i class="fas fa-file-alt mr-2"></i>
-                                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
-                                         </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
+                                <!-- Materi -->
+                                @if (!empty($laporanKegiatan->materi))
+                                    <div class="mb-4">
+                                        <h6 class="section-title"><i class="fas fa-book mr-2"></i>Materi</h6>
+                                        <div class="file-list">
+                                            @foreach ($laporanKegiatan->materi as $index => $materi)
+                                                @php
+                                                    // Handle both old format (string) and new format (array)
+                                                    $filePath = is_array($materi) ? $materi['path'] : $materi;
+                                                    $fileName = is_array($materi) ? $materi['original_name'] : basename($materi);
+                                                @endphp
+                                                <div class="file-item">
+                                                     <i class="fas fa-file-alt mr-2"></i>
+                                                     <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                                 </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
 
-                        <!-- Berita Acara -->
-                        @if (!empty($laporanKegiatan->berita_acara))
-                            <div class="mb-4">
-                                <h6 class="section-title"><i class="fas fa-file-contract mr-2"></i>Berita Acara</h6>
-                                <div class="file-list">
-                                    @foreach ($laporanKegiatan->berita_acara as $index => $berita_acara)
-                                        @php
-                                            // Handle both old format (string) and new format (array)
-                                            $filePath = is_array($berita_acara) ? $berita_acara['path'] : $berita_acara;
-                                            $fileName = is_array($berita_acara) ? $berita_acara['original_name'] : basename($berita_acara);
-                                        @endphp
-                                        <div class="file-item">
-                                             <i class="fas fa-file-alt mr-2"></i>
-                                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
-                                         </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
+                                <!-- Berita Acara -->
+                                @if (!empty($laporanKegiatan->berita_acara))
+                                    <div class="mb-4">
+                                        <h6 class="section-title"><i class="fas fa-file-contract mr-2"></i>Berita Acara</h6>
+                                        <div class="file-list">
+                                            @foreach ($laporanKegiatan->berita_acara as $index => $berita_acara)
+                                                @php
+                                                    // Handle both old format (string) and new format (array)
+                                                    $filePath = is_array($berita_acara) ? $berita_acara['path'] : $berita_acara;
+                                                    $fileName = is_array($berita_acara) ? $berita_acara['original_name'] : basename($berita_acara);
+                                                @endphp
+                                                <div class="file-item">
+                                                     <i class="fas fa-file-alt mr-2"></i>
+                                                     <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                                 </div>
+                                                 @endforeach
+                                                 </div>
+                                                 </div>
+                                                 @endif
 
+                                                 </div>
+                                                 </div>
+                                                 </div>
+                                                 </div>
 
-
-
-        <!-- Kolom Tanda Tangan -->
-        <div class="signature-block no-break mt-5">
-            <div style="float: right; width: 300px; text-align: center;">
-                <div style="margin-bottom: 70px;">
-                    Ketapang, {{ $tanggalIndo }}<br>
-                    Penanggung Jawab Kegiatan
-                </div>
-                <div style="font-weight: bold; text-decoration: underline; text-transform: uppercase;">
-                    {{ $laporanKegiatan->isDarurat() ? auth()->user()->name : ($laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: auth()->user()->name) }}
-                </div>
-            </div>
-            <div style="clear: both;"></div>
-        </div>
-        <!-- <div class="web-footer no-print mt-5">
-            <div class="col-12 text-center">
-                <hr>
-                <p class="text-muted">
-                    <small>
-                        Dicetak oleh: {{ auth()->user()->name }}<br>
-                        Rekam WeBe
-                    </small>
-                </p>
-            </div>
-        </div> -->
-    </div>
-
+                                                 </div>
+@endsection
     <style>
         /* Watermark Styles */
         .watermark-container {
