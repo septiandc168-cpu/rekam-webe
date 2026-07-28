@@ -545,7 +545,25 @@
 
         @media print {
             /* Show watermark during print */
+            .watermark-container {
+                display: block !important;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+            }
 
+            .watermark-logo {
+                width: 350px !important;
+                opacity: 0.15 !important;
+                mix-blend-mode: multiply !important;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
 
             /* Ensure content is above watermark */
             .container-fluid {
