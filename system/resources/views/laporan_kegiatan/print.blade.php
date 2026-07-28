@@ -37,23 +37,22 @@
 
         
         <!-- Kop Surat -->
-        <div class="kop-surat mb-4" style="text-align: center; position: relative;">
-            <div style="display: flex; align-items: center; justify-content: center;">
-                <!-- Menggeser posisi logo agar posisinya absolut di kiri sehingga teks benar-benar rata tengah -->
-                <div class="logo-kiri" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+        <table class="kop-surat mb-4" style="width: 100%; border-bottom: 4px double black; margin-bottom: 20px;">
+            <tr>
+                <td style="width: 120px; text-align: left; vertical-align: middle;">
                     <img src="/public/adminlte/dist/img/logo_webe.png" alt="Logo" style="width: 100px;">
-                </div>
-                <div class="teks-tengah text-center" style="flex-grow: 1;">
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
                     <h2 class="fw-bold mb-1" style="font-family: 'Times New Roman', Times, serif; font-size: 24px; color: black; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</h2>
                     <h4 class="mb-1" style="font-family: 'Times New Roman', Times, serif; font-size: 16px; color: black; margin-bottom: 2px;">REKAM WEBE - SISTEM PELAPORAN KEGIATAN</h4>
                     <p class="mb-0" style="font-family: 'Times New Roman', Times, serif; font-size: 12px; color: black;">
                         JL RM Sudiono, No.49A, Ketapang, Kalimantan Barat<br>
                         Email: yayasanwebe@gmail.com | Telp/WA: +62 813 6022 733
                     </p>
-                </div>
-            </div>
-            <hr class="garis-kop">
-        </div>
+                </td>
+                <td style="width: 120px;"></td> <!-- Ruang kosong penyeimbang -->
+            </tr>
+        </table>
 
         <!-- Judul untuk Print -->
         <div class="print-title-section mb-4 text-center">
@@ -486,17 +485,14 @@
         }
 
         .content-box {
-            padding: 15px !important;
-            background-color: #f8f9fa !important;
-            border: 1px solid #dee2e6 !important;
-            border-radius: 6px !important;
+            padding: 0 !important;
+            background-color: transparent !important;
+            border: none !important;
             margin-bottom: 15px !important;
             text-align: justify !important;
             line-height: 1.6 !important;
             word-wrap: break-word !important;
-            overflow-wrap: break-word !important;
-            hyphens: auto !important;
-            font-family: 'Times New Roman', Times, serif;
+            font-family: \'Times New Roman\', Times, serif;
             font-size: 11pt;
         }
         
@@ -670,19 +666,16 @@
             }
 
             .content-box {
-                padding: 15px !important;
-                background-color: #f8f9fa !important;
-                border: 1px solid #dee2e6 !important;
-                border-radius: 6px !important;
-                margin-bottom: 15px !important;
-                text-align: justify !important;
-                line-height: 1.6 !important;
-                word-wrap: break-word !important;
-                overflow-wrap: break-word !important;
-                hyphens: auto !important;
-                font-family: 'Times New Roman', Times, serif;
-                font-size: 11pt;
-            }
+            padding: 0 !important;
+            background-color: transparent !important;
+            border: none !important;
+            margin-bottom: 15px !important;
+            text-align: justify !important;
+            line-height: 1.6 !important;
+            word-wrap: break-word !important;
+            font-family: \'Times New Roman\', Times, serif;
+            font-size: 11pt;
+        }
             }
             
             .page-break-before {
