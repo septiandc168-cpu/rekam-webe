@@ -378,18 +378,7 @@
         </div>
 
         
-        <!-- Kolom Tanda Tangan -->
-        <div class="signature-block no-break mt-5">
-            <div class="float-right text-center" style="width: 300px; padding-right: 20px;">
-                <p class="mb-5" style="color: black;">
-                    Ketapang, {{ $tanggalIndo }}<br>
-                    Penanggung Jawab Kegiatan
-                </p>
-                <br><br><br>
-                <p class="mb-0 fw-bold" style="color: black;">{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '........................................' }}</p>
-            </div>
-            <div class="clearfix"></div>
-        </div>
+
 
         <!-- Footer Web (tidak muncul saat print) -->
         <!-- <div class="web-footer no-print mt-5">
