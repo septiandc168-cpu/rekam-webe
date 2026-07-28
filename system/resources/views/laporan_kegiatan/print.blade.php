@@ -2,10 +2,7 @@
 
 @section('content')
     <div class="container-fluid">
-        <!-- Watermark Logo -->
-        <div class="watermark-container">
-            <img src="/public/adminlte/dist/img/logo_webe.png" class="watermark-logo" alt="Watermark Logo">
-        </div>
+        <!-- Watermark dihapus sesuai request -->
         
         <!-- Header Print (menggunakan CSS @page) -->
         @php
@@ -389,7 +386,7 @@
                     Penanggung Jawab Kegiatan
                 </p>
                 <br><br><br>
-                <p class="mb-0 fw-bold" style="text-decoration: underline; color: black;">{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '........................................' }}</p>
+                <p class="mb-0 fw-bold" style="color: black;">{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '........................................' }}</p>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -409,31 +406,7 @@
     </div>
 
     <style>
-        /* Watermark Styles */
-        .watermark-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            display: none;
-            overflow: hidden;
-        }
-        
-        .watermark-logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 400px;
-            height: auto;
-            opacity: 0.08;
-            mix-blend-mode: multiply;
-            max-width: 80%;
-            max-height: 80vh;
-        }
+
         
         /* Base styles for both print and screen */
 
@@ -549,25 +522,7 @@
 
         @media print {
             /* Show watermark during print */
-            .watermark-container {
-                display: block !important;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: -1;
-            }
-            
-            .watermark-logo {
-                width: 350px !important;
-                opacity: 0.15 !important;
-                mix-blend-mode: multiply !important;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
+
 
             /* Ensure content is above watermark */
             .container-fluid {
