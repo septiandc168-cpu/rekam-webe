@@ -29,23 +29,24 @@
         <!-- Header Web (tidak muncul saat print) -->
         <div class="web-header no-print mb-4">
             <div class="col-12 text-center">
-                <h2 class="text-dark">LAPORAN KEGIATAN</h2>
-                <h3>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h3>
+                <h2 class="text-dark" style="font-family: 'Times New Roman', Times, serif; font-weight: bold;">LAPORAN KEGIATAN</h2>
+                <h3 style="font-family: 'Times New Roman', Times, serif;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h3>
                 <p class="text-muted">Tanggal Cetak: {{ $tanggalIndo }}</p>
             </div>
         </div>
 
         
         <!-- Kop Surat -->
-        <div class="kop-surat mb-4">
-            <div class="d-flex align-items-center">
-                <div class="logo-kiri">
+        <div class="kop-surat mb-4" style="text-align: center; position: relative;">
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <!-- Menggeser posisi logo agar posisinya absolut di kiri sehingga teks benar-benar rata tengah -->
+                <div class="logo-kiri" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
                     <img src="/public/adminlte/dist/img/logo_webe.png" alt="Logo" style="width: 100px;">
                 </div>
-                <div class="teks-tengah text-center flex-grow-1">
-                    <h2 class="fw-bold mb-1" style="font-size: 24px; color: black; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</h2>
-                    <h4 class="mb-1" style="font-size: 16px; color: black; margin-bottom: 2px;">REKAM WEBE - SISTEM PELAPORAN KEGIATAN</h4>
-                    <p class="mb-0" style="font-size: 12px; color: black;">
+                <div class="teks-tengah text-center" style="flex-grow: 1;">
+                    <h2 class="fw-bold mb-1" style="font-family: 'Times New Roman', Times, serif; font-size: 24px; color: black; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</h2>
+                    <h4 class="mb-1" style="font-family: 'Times New Roman', Times, serif; font-size: 16px; color: black; margin-bottom: 2px;">REKAM WEBE - SISTEM PELAPORAN KEGIATAN</h4>
+                    <p class="mb-0" style="font-family: 'Times New Roman', Times, serif; font-size: 12px; color: black;">
                         JL RM Sudiono, No.49A, Ketapang, Kalimantan Barat<br>
                         Email: yayasanwebe@gmail.com | Telp/WA: +62 813 6022 733
                     </p>
@@ -53,11 +54,11 @@
             </div>
             <hr class="garis-kop">
         </div>
-        
+
         <!-- Judul untuk Print -->
         <div class="print-title-section mb-4 text-center">
-            <h3 style="text-decoration: underline; font-weight: bold; font-size: 18px; margin-bottom: 5px;">LAPORAN KEGIATAN</h3>
-            <h4 style="font-size: 14px; font-weight: normal;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h4>
+            <h3 style="font-family: 'Times New Roman', Times, serif; text-decoration: underline; font-weight: bold; font-size: 18px; margin-bottom: 5px;">LAPORAN KEGIATAN</h3>
+            <h4 style="font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: normal;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h4>
             @if($laporanKegiatan->isDarurat())
                 <span class="badge bg-info mt-1"><i class="fas fa-exclamation-triangle mr-1"></i> Laporan Tanggap Darurat</span>
             @endif
@@ -69,7 +70,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0">
+                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
                             <i class="fas fa-info-circle mr-1"></i>
                             Informasi Rencana Kegiatan
                         </h5>
@@ -116,7 +117,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0">
+                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
                             <i class="fas fa-tasks mr-1"></i>
                             Detail Pelaksanaan Kegiatan
                         </h5>
@@ -186,7 +187,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0">
+                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
                             <i class="fas fa-chart-line mr-1"></i>
                             Hasil dan Output Kegiatan
                         </h5>
@@ -222,7 +223,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0">
+                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
                             <i class="fas fa-exclamation-triangle mr-1"></i>
                             Kendala dan Evaluasi
                         </h5>
@@ -264,7 +265,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-navy text-white">
-                        <h5 class="mb-0">
+                        <h5 class="mb-0" style="font-family: \'Times New Roman\', Times, serif; font-weight: bold; font-size: 12pt;">
                             <i class="fas fa-file-upload mr-1"></i>
                             Dokumentasi Kegiatan
                         </h5>
@@ -472,16 +473,18 @@
             hyphens: auto !important;
             line-height: 1.5 !important;
         }
-        
-        .section-title {
-            font-weight: bold !important;
-            font-size: 12pt !important;
-            color: #2c3e50 !important;
-            margin-bottom: 12px !important;
-            border-bottom: 2px solid #dee2e6 !important;
-            padding-bottom: 6px !important;
+        .table-borderless td {
+            border: none !important;
+            padding: 4px 8px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
         }
-        
+
+        .table-borderless td:first-child {
+            font-weight: bold;
+            width: 150px;
+        }
+
         .content-box {
             padding: 15px !important;
             background-color: #f8f9fa !important;
@@ -493,6 +496,8 @@
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
             hyphens: auto !important;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
         }
         
         .page-break-before {
@@ -652,28 +657,32 @@
                 hyphens: auto !important;
                 line-height: 1.5 !important;
             }
-            
-            .section-title {
-                font-weight: bold !important;
-                font-size: 12pt !important;
-                color: black !important;
-                margin-bottom: 12px !important;
-                border-bottom: none !important;
-                padding-bottom: 6px !important;
+            .table-borderless td {
+                border: none !important;
+                padding: 4px 8px;
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 11pt;
             }
-            
+
+            .table-borderless td:first-child {
+                font-weight: bold;
+                width: 150px;
+            }
+
             .content-box {
                 padding: 15px !important;
-                background-color: transparent !important;
-                border: none !important;
-                border-radius: 0 !important;
+                background-color: #f8f9fa !important;
+                border: 1px solid #dee2e6 !important;
+                border-radius: 6px !important;
                 margin-bottom: 15px !important;
                 text-align: justify !important;
                 line-height: 1.6 !important;
                 word-wrap: break-word !important;
                 overflow-wrap: break-word !important;
                 hyphens: auto !important;
-                page-break-inside: avoid;
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 11pt;
+            }
             }
             
             .page-break-before {
