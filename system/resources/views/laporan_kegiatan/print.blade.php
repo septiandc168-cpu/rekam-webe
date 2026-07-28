@@ -446,33 +446,34 @@
         .label-field {
             font-weight: bold !important;
             vertical-align: top !important;
-            padding: 8px 12px !important;
+            padding: 0px 4px !important;
             background-color: #f8f9fa !important;
             border: 1px solid #dee2e6 !important;
             width: 180px !important;
         }
 
         .value-field {
-            padding: 8px 12px !important;
+            padding: 0px 4px !important;
             vertical-align: top !important;
             border: 1px solid #dee2e6 !important;
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
             hyphens: auto !important;
-            line-height: 1.5 !important;
+            line-height: 1.2 !important;
         }
 
         .value-field p, .value-field ul, .value-field ol {
             margin: 0 !important;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
+            padding: 0 !important;
+            line-height: 1.2 !important;
         }
         .table-borderless td {
             border: none !important;
-            padding: 2px 4px; /* Mengurangi padding agar spasi antar baris tidak terlalu jauh */
+            padding: 0px 4px; /* Sangat rapat */
             font-family: 'Times New Roman', Times, serif;
             font-size: 11pt;
             vertical-align: top;
+            line-height: 1.2 !important;
         }
 
         .table-borderless td:first-child {
@@ -486,7 +487,7 @@
             border: none !important;
             margin-bottom: 15px !important;
             text-align: justify !important;
-            line-height: 1.6 !important;
+            line-height: 1.2 !important;
             word-wrap: break-word !important;
             font-family: \'Times New Roman\', Times, serif;
             font-size: 11pt;
@@ -624,7 +625,7 @@
 
             .table-borderless td {
                 border: none !important;
-                padding: 8px 12px !important;
+                padding: 0px 4px !important;
             }
 
             .table-borderless tr {
@@ -634,27 +635,33 @@
             .label-field {
                 font-weight: bold !important;
                 vertical-align: top !important;
-                padding: 8px 12px !important;
+                padding: 0px 4px !important;
                 background-color: transparent !important;
                 border: none !important;
                 width: 180px !important;
             }
 
             .value-field {
-                padding: 8px 12px !important;
+                padding: 0px 4px !important;
                 vertical-align: top !important;
                 border: none !important;
                 word-wrap: break-word !important;
                 overflow-wrap: break-word !important;
                 hyphens: auto !important;
-                line-height: 1.5 !important;
+                line-height: 1.2 !important;
+            }
+            .value-field p, .value-field ul, .value-field ol {
+                margin: 0 !important;
+                padding: 0 !important;
+                line-height: 1.2 !important;
             }
             .table-borderless td {
                 border: none !important;
-                padding: 2px 4px; /* Mengurangi padding agar spasi antar baris tidak terlalu jauh */
+                padding: 0px 4px; /* Sangat rapat */
                 font-family: 'Times New Roman', Times, serif;
                 font-size: 11pt;
                 vertical-align: top;
+                line-height: 1.2 !important;
             }
 
             .table-borderless td:first-child {
@@ -668,7 +675,7 @@
             border: none !important;
             margin-bottom: 15px !important;
             text-align: justify !important;
-            line-height: 1.6 !important;
+            line-height: 1.2 !important;
             word-wrap: break-word !important;
             font-family: \'Times New Roman\', Times, serif;
             font-size: 11pt;
