@@ -8,9 +8,13 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles, WithColumnWidths
 {
     protected $tahun;
     protected $bulan;
@@ -95,8 +99,69 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
 
     public function styles(Worksheet $sheet)
     {
+        $lastRow = $sheet->getHighestRow();
+        $lastColumn = $sheet->getHighestColumn();
+        $range = 'A1:' . $lastColumn . $lastRow;
+
+        // Gaya default seluruh tabel (Font: Times New Roman, ukuran 12)
+        $sheet->getStyle($range)->applyFromArray([
+            'font' => [
+                'name' => 'Times New Roman',
+                'size' => 12,
+            ],
+            'alignment' => [
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true, // Mengaktifkan text-wrap agar tidak terpotong
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'FF000000'], // Hitam solid
+                ],
+            ],
+        ]);
+
+        // Merapikan posisi tengah (center) pada kolom tertentu (No, Tanggal, Status)
+        $sheet->getStyle('A1:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('E1:F' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('I1:J' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        // Gaya khusus baris Header (Baris 1)
+        $sheet->getStyle('A1:' . $lastColumn . '1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'color' => ['argb' => 'FFFFFFFF'], // Teks putih
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FF001f3f'], // Warna dasar bg-navy (Biru dongker) khas AdminLTE
+            ],
+        ]);
+        
+        // Membekukan Header agar tidak ikut ter-scroll
+        $sheet->freezePane('A2');
+
+        return [];
+    }
+
+    public function columnWidths(): array
+    {
         return [
-            1    => ['font' => ['bold' => true]],
+            'A' => 6,   // No
+            'B' => 35,  // Nama Kegiatan
+            'C' => 20,  // Jenis Kegiatan
+            'D' => 25,  // Desa/Lokasi
+            'E' => 15,  // Tgl Mulai
+            'F' => 15,  // Tgl Selesai
+            'G' => 20,  // Penanggung Jawab
+            'H' => 25,  // Kelompok/Komunitas
+            'I' => 15,  // Estimasi Peserta
+            'J' => 15,  // Status
+            'K' => 25,  // Penyusun
         ];
     }
 }
