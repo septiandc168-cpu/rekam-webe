@@ -9,10 +9,12 @@
         @yield('print-styles')
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
             margin: 0;
             padding: 20px;
             background: white;
+            color: black;
         }
 
         .container-fluid {
