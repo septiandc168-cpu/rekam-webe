@@ -3,12 +3,12 @@
 @section('content')
     <div class="container-fluid">
         <!-- Watermark dihapus sesuai request -->
-        
+
         <!-- Header Print (menggunakan CSS @page) -->
         @php
     $bulan = [
         'January' => 'Januari',
-        'February' => 'Februari', 
+        'February' => 'Februari',
         'March' => 'Maret',
         'April' => 'April',
         'May' => 'Mei',
@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        
+
         <!-- Kop Surat -->
         <table class="kop-surat mb-4" style="width: 100%; border-bottom: 4px double black; margin-bottom: 20px;">
             <tr>
@@ -377,7 +377,7 @@
             </div>
         </div>
 
-        
+
 
 
         <!-- Footer Web (tidak muncul saat print) -->
@@ -396,7 +396,7 @@
 
     <style>
 
-        
+
         /* Base styles for both print and screen */
 
         .garis-kop {
@@ -405,7 +405,7 @@
             margin-top: 10px;
             margin-bottom: 20px;
         }
-        
+
         .no-break {
             page-break-inside: avoid;
         }
@@ -424,7 +424,7 @@
             border: 1px solid #dee2e6 !important;
             width: 180px !important;
         }
-        
+
         .value-field {
             padding: 8px 12px !important;
             vertical-align: top !important;
@@ -433,6 +433,12 @@
             overflow-wrap: break-word !important;
             hyphens: auto !important;
             line-height: 1.5 !important;
+        }
+
+        .value-field p, .value-field ul, .value-field ol {
+            margin: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
         }
         .table-borderless td {
             border: none !important;
@@ -458,13 +464,13 @@
             font-family: \'Times New Roman\', Times, serif;
             font-size: 11pt;
         }
-        
+
         .page-break-before {
             page-break-before: always !important;
         }
-        
-                
-        
+
+
+
         .documentation-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -478,11 +484,11 @@
             margin-bottom: 20px;
         }
 
-        
+
         .doc-image-container {
             margin-bottom: 8px;
         }
-        
+
         .doc-image {
             max-width: 100%;
             height: 180px;
@@ -490,7 +496,7 @@
             border: 1px solid #dee2e6;
             border-radius: 4px;
         }
-        
+
         .doc-caption {
             font-size: 11pt;
             color: black;
@@ -588,7 +594,7 @@
                 border: none !important;
                 width: 180px !important;
             }
-            
+
             .value-field {
                 padding: 8px 12px !important;
                 vertical-align: top !important;
@@ -623,13 +629,13 @@
             font-size: 11pt;
         }
             }
-            
+
             .page-break-before {
                 page-break-before: always !important;
             }
-            
-                        
-            
+
+
+
         .documentation-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -643,18 +649,18 @@
             margin-bottom: 20px;
         }
 
-            
+
             .doc-image-container {
                 margin-bottom: 8px;
             }
-            
+
             .doc-image {
                 max-width: 100%;
                 height: 150px;
                 object-fit: cover;
                 border: none;
             }
-            
+
             .doc-caption {
                 font-size: 10pt;
                 color: black;
@@ -694,7 +700,7 @@
             *[class*="text-"] {
                 color: black !important;
             }
-            
+
             /* Force all card header text to be black */
             .card-header *,
             .card-header h5,
@@ -725,7 +731,7 @@
                     color: black !important;
                     border: 2px solid black !important;
                 }
-                
+
                 /* Force all text in card headers to be black */
                 .card-header *,
                 .card-header h5,
@@ -735,7 +741,7 @@
                 .text-white {
                     color: black !important;
                 }
-                
+
                 .section-title {
                     border-bottom: none !important;
                 }
@@ -806,7 +812,7 @@
             .print-title-section {
                 display: none !important;
             }
-            
+
             .card {
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
