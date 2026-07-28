@@ -37,30 +37,27 @@
 
 
         <!-- Kop Surat -->
-        <table class="kop-surat mb-4" style="width: 100%; border-bottom: 4px double black; margin-bottom: 20px;">
+        <table class="kop-surat mb-4" style="width: 100%; border-bottom: 3px solid black; margin-bottom: 10px;">
             <tr>
-                <td style="width: 120px; text-align: left; vertical-align: middle;">
+                <td style="width: 15%; text-align: left; vertical-align: middle; padding-bottom: 10px;">
                     <img src="/public/adminlte/dist/img/logo_webe.png" alt="Logo" style="width: 100px;">
                 </td>
-                <td style="text-align: center; vertical-align: middle;">
-                    <h2 class="fw-bold mb-1" style="font-family: 'Times New Roman', Times, serif; font-size: 24px; color: black; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</h2>
-                    <h4 class="mb-1" style="font-family: 'Times New Roman', Times, serif; font-size: 16px; color: black; margin-bottom: 2px;">REKAM WEBE - SISTEM PELAPORAN KEGIATAN</h4>
-                    <p class="mb-0" style="font-family: 'Times New Roman', Times, serif; font-size: 12px; color: black;">
-                        JL RM Sudiono, No.49A, Ketapang, Kalimantan Barat<br>
+                <td style="width: 85%; text-align: center; vertical-align: middle; padding-bottom: 10px;">
+                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 16pt; font-weight: bold; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</div>
+                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: bold; margin-bottom: 5px;">REKAM WEBE - SISTEM PELAPORAN KEGIATAN</div>
+                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 11pt;">
+                        Jl. RM Sudiono No.49A, Ketapang, Kalimantan Barat<br>
                         Email: yayasanwebe@gmail.com | Telp/WA: +62 813 6022 733
-                    </p>
+                    </div>
                 </td>
-                <td style="width: 120px;"></td> <!-- Ruang kosong penyeimbang -->
             </tr>
         </table>
+        <div style="border-top: 1px solid black; margin-top: -8px; margin-bottom: 20px;"></div>
 
-        <!-- Judul untuk Print -->
+        <!-- Judul Surat -->
         <div class="print-title-section mb-4 text-center">
-            <h3 style="font-family: 'Times New Roman', Times, serif; text-decoration: underline; font-weight: bold; font-size: 18px; margin-bottom: 5px;">LAPORAN KEGIATAN</h3>
-            <h4 style="font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: normal;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h4>
-            @if($laporanKegiatan->isDarurat())
-                <span class="badge bg-info mt-1"><i class="fas fa-exclamation-triangle mr-1"></i> Laporan Tanggap Darurat</span>
-            @endif
+            <h3 style="font-family: 'Times New Roman', Times, serif; text-decoration: underline; font-weight: bold; font-size: 14pt; margin-bottom: 5px; text-transform: uppercase;">LAPORAN PELAKSANAAN KEGIATAN</h3>
+            <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; text-transform: uppercase;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</div>
         </div>
 
         @if(!$laporanKegiatan->isDarurat())
@@ -383,7 +380,19 @@
 
 
 
-        <!-- Footer Web (tidak muncul saat print) -->
+        <!-- Kolom Tanda Tangan -->
+        <div class="signature-block no-break mt-5">
+            <div style="float: right; width: 300px; text-align: center;">
+                <div style="margin-bottom: 70px;">
+                    Ketapang, {{ $tanggalIndo }}<br>
+                    Penanggung Jawab Kegiatan
+                </div>
+                <div style="font-weight: bold; text-decoration: underline; text-transform: uppercase;">
+                    {{ $laporanKegiatan->isDarurat() ? auth()->user()->name : ($laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: auth()->user()->name) }}
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
         <!-- <div class="web-footer no-print mt-5">
             <div class="col-12 text-center">
                 <hr>
