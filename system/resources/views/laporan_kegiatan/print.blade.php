@@ -2,7 +2,10 @@
 
 @section('content')
     <div class="container-fluid">
-        <!-- Watermark dihapus sesuai request -->
+        <!-- Watermark Logo -->
+        <div class="watermark-container">
+            <img src="/public/adminlte/dist/img/logo_webe.png" class="watermark-logo" alt="Watermark Logo">
+        </div>
 
         <!-- Header Print (menggunakan CSS @page) -->
         @php
@@ -395,9 +398,33 @@
     </div>
 
     <style>
+        /* Watermark Styles */
+        .watermark-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            display: none;
+            overflow: hidden;
+        }
 
+        .watermark-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: auto;
+            opacity: 0.08;
+            mix-blend-mode: multiply;
+            max-width: 80%;
+            max-height: 80vh;
+        }
 
-        /* Base styles for both print and screen */
+/* Base styles for both print and screen */
 
         .garis-kop {
             border: none;
