@@ -822,12 +822,5 @@
         }
     </style>
 
-    <script>
-        window.onload = function() {
-            // Auto print
-            setTimeout(function() {
-                window.print();
-            }, 500);
-        };
-    </script>
+    <!-- Auto-print script removed from here as it is now handled by iframe in parent window -->
 @endsection

@@ -25,7 +25,7 @@
             border-radius: 50%;
             margin-right: 15px;
         }
-        
+
         .gallery-img-wrapper {
             overflow: hidden;
             border-radius: 4px;
@@ -42,7 +42,7 @@
         .gallery-img-wrapper:hover .gallery-img {
             transform: scale(1.1);
         }
-        
+
         /* Timeline Tracker CSS */
         .timeline-tracker {
             display: flex;
@@ -149,7 +149,7 @@
                 {{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}
             </h4>
         </div>
-        
+
         <div class="d-flex align-items-center flex-wrap flex-shrink-0">
             @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN && auth()->user()->role->role_name === 'admin')
                 <!-- Tombol Terima & Finalisasi -->
@@ -160,7 +160,7 @@
                         <i class="fas fa-check-circle mr-1"></i> Terima & Finalisasi
                     </button>
                 </form>
-                
+
                 <!-- Tombol Buka Modal Revisi -->
                 <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark" data-toggle="modal" data-target="#modal-revisi">
                     <i class="fas fa-edit mr-1"></i> Minta Revisi
@@ -169,9 +169,9 @@
 
             @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_FINAL)
                 @can('print', $laporanKegiatan)
-                    <a href="{{ route('laporan_kegiatan.print', $laporanKegiatan) }}" class="btn btn-sm btn-outline-primary mr-2" target="_blank">
+                    <button type="button" onclick="printLaporan('{{ route('laporan_kegiatan.print', $laporanKegiatan) }}')" class="btn btn-sm btn-outline-primary mr-2">
                         <i class="fas fa-print mr-1"></i> Cetak Laporan
-                    </a>
+                    </button>
                 @endcan
             @endif
 
@@ -194,7 +194,7 @@
                     </form>
                 @endcan
             @endif
-            
+
             <a href="{{ route('laporan_kegiatan.index') }}" class="btn btn-secondary text-white btn-sm">
                 <i class="fas fa-arrow-left mr-1"></i> Kembali
             </a>
@@ -417,7 +417,7 @@
 
         <!-- Kolom Kanan: Dokumen & Foto -->
         <div class="col-md-4">
-            
+
             <!-- Foto Kegiatan -->
             <div class="card shadow-sm mb-3">
                 <div class="card-header bg-white py-2 px-3">
@@ -461,10 +461,10 @@
                             }
                             return $html;
                         };
-                        
+
                         $hasFiles = !empty($laporanKegiatan->daftar_hadir) || !empty($laporanKegiatan->notulen) || !empty($laporanKegiatan->materi) || !empty($laporanKegiatan->berita_acara);
                     @endphp
-                    
+
                     @if($hasFiles)
                         {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
                         {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
@@ -536,4 +536,30 @@
 </script>
 @endpush
 
+    @push('scripts')
+        <script>
+            function printLaporan(url) {
+                // Membuka URL print di iframe tersembunyi
+                let iframe = document.createElement('iframe');
+                iframe.style.position = 'absolute';
+                iframe.style.width = '0px';
+                iframe.style.height = '0px';
+                iframe.style.border = 'none';
+                iframe.src = url;
+
+                document.body.appendChild(iframe);
+
+                // Memastikan iframe sudah ter-load sebelum memicu print
+                iframe.onload = function() {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+
+                    // Menghapus iframe setelah beberapa saat (memberi waktu jendela print tertutup)
+                    setTimeout(function() {
+                        document.body.removeChild(iframe);
+                    }, 5000);
+                };
+            }
+        </script>
+    @endpush
 @endsection
