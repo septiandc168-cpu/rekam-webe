@@ -13,6 +13,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Carbon\Carbon;
 use RealRashid\SweetAlert\Facades\Alert;
 use RealRashid\SweetAlert\Toaster;
+use App\Exports\RencanaKegiatanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RencanaKegiatanController extends Controller
 {
@@ -988,79 +990,9 @@ class RencanaKegiatanController extends Controller
         $status = $request->status;
         $userId = $request->user_id;
 
-        // Query data
-        $query = RencanaKegiatan::with('user');
+        $fileName = 'Rekap_Rencana_Kegiatan_' . date('Ymd_His') . '.xlsx';
 
-        if ($tahun) {
-            $query->whereYear('tanggal_mulai', $tahun);
-        }
-        if ($bulan) {
-            $query->whereMonth('tanggal_mulai', $bulan);
-        }
-        if ($userId) {
-            $query->where('user_id', $userId);
-        }
-        if ($status) {
-            $query->where('status', $status);
-        }
-
-        // Filter berdasarkan user jika ada (hanya supervisor yang bisa filter per user)
-        if ($userId) {
-            $query->where('user_id', $userId);
-        }
-
-        // Filter berdasarkan status jika ada
-        if ($status) {
-            $query->where('status', $status);
-        }
-
-        $rencanaKegiatans = $query->orderBy('tanggal_mulai', 'asc')->get();
-
-        // Header CSV
-        $headers = [
-            'No',
-            'Nama Kegiatan',
-            'Tanggal Mulai',
-            'Tanggal Selesai',
-            'Status',
-            'User',
-        ];
-
-        $callback = function() use ($rencanaKegiatans, $headers) {
-            $file = fopen('php://output', 'w');
-            
-            // Add BOM for UTF-8
-            fwrite($file, "\xEF\xBB\xBF");
-            
-            // Write header
-            fputcsv($file, $headers);
-            
-            // Write data
-            $rowNumber = 0;
-            foreach ($rencanaKegiatans as $rencana) {
-                $rowNumber++;
-                
-                $rowData = [
-                    $rowNumber,
-                    $rencana->nama_kegiatan,
-                    $rencana->tanggal_mulai ? $rencana->tanggal_mulai->format('d/m/Y') : '',
-                    $rencana->tanggal_selesai ? $rencana->tanggal_selesai->format('d/m/Y') : '',
-                    $this->formatStatus($rencana->status),
-                    $rencana->user ? $rencana->user->name : 'Tidak diketahui',
-                ];
-                
-                fputcsv($file, $rowData);
-            }
-            
-            fclose($file);
-        };
-
-        $fileName = 'rencana_kegiatan.csv';
-
-        return response()->stream($callback, 200, [
-            'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-        ]);
+        return Excel::download(new RencanaKegiatanExport($tahun, $bulan, $status, $userId), $fileName);
     }
 
     /**
