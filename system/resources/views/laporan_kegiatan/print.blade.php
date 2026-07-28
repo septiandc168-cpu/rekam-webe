@@ -305,9 +305,9 @@
                                             $fileName = is_array($daftar_hadir) ? $daftar_hadir['original_name'] : basename($daftar_hadir);
                                         @endphp
                                         <div class="file-item">
-                                            <i class="fas fa-file-alt mr-2"></i>
-                                            {{ $fileName }}
-                                        </div>
+                                             <i class="fas fa-file-alt mr-2"></i>
+                                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                         </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -325,9 +325,9 @@
                                             $fileName = is_array($notulen) ? $notulen['original_name'] : basename($notulen);
                                         @endphp
                                         <div class="file-item">
-                                            <i class="fas fa-file-alt mr-2"></i>
-                                            {{ $fileName }}
-                                        </div>
+                                             <i class="fas fa-file-alt mr-2"></i>
+                                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                         </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -345,9 +345,9 @@
                                             $fileName = is_array($materi) ? $materi['original_name'] : basename($materi);
                                         @endphp
                                         <div class="file-item">
-                                            <i class="fas fa-file-alt mr-2"></i>
-                                            {{ $fileName }}
-                                        </div>
+                                             <i class="fas fa-file-alt mr-2"></i>
+                                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                         </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -365,9 +365,9 @@
                                             $fileName = is_array($berita_acara) ? $berita_acara['original_name'] : basename($berita_acara);
                                         @endphp
                                         <div class="file-item">
-                                            <i class="fas fa-file-alt mr-2"></i>
-                                            {{ $fileName }}
-                                        </div>
+                                             <i class="fas fa-file-alt mr-2"></i>
+                                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                         </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -436,9 +436,10 @@
         }
         .table-borderless td {
             border: none !important;
-            padding: 4px 8px;
+            padding: 2px 4px; /* Mengurangi padding agar spasi antar baris tidak terlalu jauh */
             font-family: 'Times New Roman', Times, serif;
             font-size: 11pt;
+            vertical-align: top;
         }
 
         .table-borderless td:first-child {
@@ -599,9 +600,10 @@
             }
             .table-borderless td {
                 border: none !important;
-                padding: 4px 8px;
+                padding: 2px 4px; /* Mengurangi padding agar spasi antar baris tidak terlalu jauh */
                 font-family: 'Times New Roman', Times, serif;
                 font-size: 11pt;
+                vertical-align: top;
             }
 
             .table-borderless td:first-child {
