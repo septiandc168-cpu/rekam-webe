@@ -101,7 +101,7 @@
             <div class="col-12">
                 <table class="table table-sm table-borderless" style="width: 100%; border-collapse: collapse;">
                     <tr>
-                        <td width="220" class="label-field"><strong>Tanggal Pelaksanaan</strong></td><td width="20">:</td>
+                        <td class="label-field" style="font-weight: bold; width: 220px;"><strong>Tanggal Pelaksanaan</strong></td><td width="20">:</td>
                         <td class="value-field">
                             {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
                             @if ($laporanKegiatan->isDarurat() ? ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai) : ($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai))
@@ -164,7 +164,7 @@
             <div class="col-12">
                 <table class="table table-sm table-borderless" style="width: 100%; border-collapse: collapse;">
                     <tr>
-                        <td width="220" class="label-field"><strong>Hasil yang Dicapai</strong></td><td width="20">:</td>
+                        <td class="label-field" style="font-weight: bold; width: 220px;"><strong>Hasil yang Dicapai</strong></td><td width="20">:</td>
                         <td class="value-field">{!! $laporanKegiatan->hasil_dicapai !!}</td>
                     </tr>
                     <tr>
@@ -189,19 +189,19 @@
                 <table class="table table-sm table-borderless" style="width: 100%; border-collapse: collapse;">
                     @if($laporanKegiatan->kendala)
                     <tr>
-                        <td width="220" class="label-field"><strong>Kendala</strong></td><td width="20">:</td>
+                        <td class="label-field" style="font-weight: bold; width: 220px;"><strong>Kendala</strong></td><td width="20">:</td>
                         <td class="value-field">{!! $laporanKegiatan->kendala !!}</td>
                     </tr>
                     @endif
                     @if($laporanKegiatan->solusi)
                     <tr>
-                        <td width="220" class="label-field"><strong>Solusi</strong></td><td width="20">:</td>
+                        <td class="label-field" style="font-weight: bold; width: 220px;"><strong>Solusi</strong></td><td width="20">:</td>
                         <td class="value-field">{!! $laporanKegiatan->solusi !!}</td>
                     </tr>
                     @endif
                     @if($laporanKegiatan->evaluasi_rekomendasi)
                     <tr>
-                        <td width="220" class="label-field"><strong>Evaluasi & Rekomendasi</strong></td><td width="20">:</td>
+                        <td class="label-field" style="font-weight: bold; width: 220px;"><strong>Evaluasi & Rekomendasi</strong></td><td width="20">:</td>
                         <td class="value-field">{!! $laporanKegiatan->evaluasi_rekomendasi !!}</td>
                     </tr>
                     @endif
@@ -327,8 +327,8 @@
 
                                                  </div>
 @endsection
+
     <style>
-        /* Watermark Styles */
         .watermark-container {
             position: fixed;
             top: 0;
@@ -409,7 +409,7 @@
 
         .table-borderless td:first-child {
             font-weight: bold;
-            width: 150px;
+            width: 220px;
         }
 
         .content-box {
@@ -598,7 +598,7 @@
 
             .table-borderless td:first-child {
                 font-weight: bold;
-                width: 150px;
+                width: 220px;
             }
 
             .content-box {
