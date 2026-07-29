@@ -385,9 +385,10 @@
         .value-field {
             padding: 0px 4px !important;
             vertical-align: top !important;
-            border: 1px solid #dee2e6 !important;
+            border: none !important;
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
+            word-break: break-word !important;
             hyphens: auto !important;
             line-height: 1.2 !important;
         }
@@ -577,6 +578,7 @@
                 border: none !important;
                 word-wrap: break-word !important;
                 overflow-wrap: break-word !important;
+                word-break: break-word !important;
                 hyphens: auto !important;
                 line-height: 1.2 !important;
             }
