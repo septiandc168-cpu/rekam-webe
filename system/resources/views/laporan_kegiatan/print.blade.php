@@ -321,7 +321,7 @@
             transform: translate(-50%, -50%);
             width: 400px;
             height: auto;
-            opacity: 0.08;
+            opacity: 0.03;
             mix-blend-mode: multiply;
             max-width: 80%;
             max-height: 80vh;
