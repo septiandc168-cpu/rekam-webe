@@ -285,7 +285,7 @@
 
 
     </div>
-@endsection
+
     <style>
         /* Watermark Styles */
         .watermark-container {
