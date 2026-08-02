@@ -62,40 +62,54 @@
 
         @if(!$laporanKegiatan->isDarurat())
         <!-- Informasi Rencana Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 5px; margin-top: 15px;">Informasi Rencana Kegiatan</div>
-        <table class="table-borderless mb-3" style="width: 100%; border-collapse: collapse;">
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 20px;">Informasi Rencana Kegiatan</div>
+        <table class="table-borderless mb-4" style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td style="width: 220px; padding-left: 20px;">Nama Kegiatan</td><td style="width: 20px;">:</td>
+                <td style="width: 40px; padding-left: 30px;"></td>
+                <td style="width: 200px;">Nama Kegiatan</td>
+                <td style="width: 15px; text-align: center;">:</td>
                 <td>{!! $laporanKegiatan->rencanaKegiatan->nama_kegiatan !!}</td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Jenis Kegiatan</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Jenis Kegiatan</td>
+                <td style="text-align: center;">:</td>
                 <td>{!! $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() !!}</td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Tujuan</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Tujuan</td>
+                <td style="text-align: center;">:</td>
                 <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) ?: '-' !!}</td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Penanggung Jawab</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Penanggung Jawab</td>
+                <td style="text-align: center;">:</td>
                 <td>{!! $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' !!}</td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Kelompok</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Kelompok</td>
+                <td style="text-align: center;">:</td>
                 <td>{!! $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' !!}</td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Tanggal Laporan</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Tanggal Laporan</td>
+                <td style="text-align: center;">:</td>
                 <td>{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
             </tr>
         </table>
         @endif
 
         <!-- Detail Pelaksanaan Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 5px; margin-top: 10px;">Detail Pelaksanaan Kegiatan</div>
-        <table class="table-borderless mb-3" style="width: 100%; border-collapse: collapse;">
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 15px;">Detail Pelaksanaan Kegiatan</div>
+        <table class="table-borderless mb-4" style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td style="width: 220px; padding-left: 20px;">Tanggal Pelaksanaan</td><td style="width: 20px;">:</td>
+                <td style="width: 40px; padding-left: 30px;"></td>
+                <td style="width: 200px;">Tanggal Pelaksanaan</td>
+                <td style="width: 15px; text-align: center;">:</td>
                 <td>
                     {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
                     @if ($laporanKegiatan->isDarurat() ? ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai) : ($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai))
@@ -104,7 +118,9 @@
                 </td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Realisasi Tanggal Pelaksanaan</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Realisasi Tanggal Pelaksanaan</td>
+                <td style="text-align: center;">:</td>
                 <td>
                     {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
                     @if ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
@@ -113,11 +129,15 @@
                 </td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Lokasi</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Lokasi</td>
+                <td style="text-align: center;">:</td>
                 <td>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Waktu Pelaksanaan</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Waktu Pelaksanaan</td>
+                <td style="text-align: center;">:</td>
                 <td>
                     @if ($laporanKegiatan->isDarurat())
                         Menyesuaikan
@@ -131,67 +151,75 @@
                 </td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Rangkaian Kegiatan</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Rangkaian Kegiatan</td>
+                <td style="text-align: center;">:</td>
                 <td>{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Target Peserta</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Target Peserta</td>
+                <td style="text-align: center;">:</td>
                 <td>{{ $laporanKegiatan->isDarurat() ? '-' : ($laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-') }} orang</td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Realisasi Peserta</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Realisasi Peserta</td>
+                <td style="text-align: center;">:</td>
                 <td>{{ $laporanKegiatan->realisasi_peserta }} orang</td>
             </tr>
             <tr>
-                <td style="padding-left: 20px;">Profil Peserta</td><td>:</td>
+                <td style="padding-left: 30px;"></td>
+                <td>Profil Peserta</td>
+                <td style="text-align: center;">:</td>
                 <td>{!! $laporanKegiatan->profil_peserta !!}</td>
             </tr>
         </table>
 
         <!-- Hasil dan Output Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px;">Hasil dan Output Kegiatan</div>
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">Hasil dan Output Kegiatan</div>
 
-        <div style="margin-bottom: 10px;">
-            <div style="font-weight: bold; margin-bottom: 3px;">Hasil yang Dicapai</div>
+        <div style="margin-bottom: 15px;">
+            <div style="font-weight: bold; margin-bottom: 5px;">Hasil yang Dicapai</div>
             <div>{!! $laporanKegiatan->hasil_dicapai !!}</div>
         </div>
 
-        <div style="margin-bottom: 10px;">
-            <div style="font-weight: bold; margin-bottom: 3px;">Output Nyata</div>
+        <div style="margin-bottom: 15px;">
+            <div style="font-weight: bold; margin-bottom: 5px;">Output Nyata</div>
             <div>{!! $laporanKegiatan->output_nyata !!}</div>
         </div>
 
-        <div style="margin-bottom: 10px;">
-            <div style="font-weight: bold; margin-bottom: 3px;">Dampak Awal yang Terlihat</div>
+        <div style="margin-bottom: 15px;">
+            <div style="font-weight: bold; margin-bottom: 5px;">Dampak Awal yang Terlihat</div>
             <div>{!! $laporanKegiatan->dampak_awal !!}</div>
         </div>
 
         <!-- Kendala dan Evaluasi -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px;">Kendala dan Evaluasi</div>
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">Kendala dan Evaluasi</div>
         
         @if($laporanKegiatan->kendala)
-            <div style="margin-bottom: 10px;">
-                <div style="font-weight: bold; margin-bottom: 3px;">Kendala yang Dihadapi</div>
+            <div style="margin-bottom: 15px;">
+                <div style="font-weight: bold; margin-bottom: 5px;">Kendala yang Dihadapi</div>
                 <div>{!! $laporanKegiatan->kendala !!}</div>
             </div>
         @endif
 
         @if($laporanKegiatan->solusi)
-            <div style="margin-bottom: 10px;">
-                <div style="font-weight: bold; margin-bottom: 3px;">Solusi yang Dilakukan</div>
+            <div style="margin-bottom: 15px;">
+                <div style="font-weight: bold; margin-bottom: 5px;">Solusi yang Dilakukan</div>
                 <div>{!! $laporanKegiatan->solusi !!}</div>
             </div>
         @endif
 
         @if($laporanKegiatan->evaluasi_rekomendasi)
-            <div style="margin-bottom: 10px;">
-                <div style="font-weight: bold; margin-bottom: 3px;">Evaluasi dan Rekomendasi</div>
+            <div style="margin-bottom: 15px;">
+                <div style="font-weight: bold; margin-bottom: 5px;">Evaluasi dan Rekomendasi</div>
                 <div>{!! $laporanKegiatan->evaluasi_rekomendasi !!}</div>
             </div>
         @endif
 
         <!-- Dokumentasi Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px;">Dokumentasi Kegiatan</div>
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">Dokumentasi Kegiatan</div>
 
         @if (!empty($laporanKegiatan->foto_kegiatan))
             <div style="margin-bottom: 10px;">
