@@ -368,7 +368,17 @@
         .value-field p, .value-field ul, .value-field ol {
             margin: 0 !important;
             padding: 0 !important;
-            line-height: 1.2 !important;
+            line-height: 1.4 !important;
+        }
+
+        .value-field ol {
+            padding-left: 20px !important;
+            margin-top: 5px !important;
+        }
+
+        .value-field li {
+            margin-bottom: 3px !important;
+            padding-left: 5px !important;
         }
         .table-borderless td {
             border: none !important;
@@ -556,7 +566,17 @@
             .value-field p, .value-field ul, .value-field ol {
                 margin: 0 !important;
                 padding: 0 !important;
-                line-height: 1.2 !important;
+                line-height: 1.4 !important;
+            }
+
+            .value-field ol {
+                padding-left: 20px !important;
+                margin-top: 5px !important;
+            }
+
+            .value-field li {
+                margin-bottom: 3px !important;
+                padding-left: 5px !important;
             }
             .table-borderless td {
                 border: none !important;
