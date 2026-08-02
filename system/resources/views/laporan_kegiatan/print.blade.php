@@ -65,33 +65,27 @@
         <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 5px; margin-top: 15px;">Informasi Rencana Kegiatan</div>
         <table class="table-borderless mb-3" style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td style="width: 30px;"></td>
-                <td style="width: 220px;">Nama Kegiatan</td><td style="width: 20px;">:</td>
+                <td style="width: 220px; padding-left: 20px;">Nama Kegiatan</td><td style="width: 20px;">:</td>
                 <td>{!! $laporanKegiatan->rencanaKegiatan->nama_kegiatan !!}</td>
             </tr>
             <tr>
-                <td></td>
-                <td>Jenis Kegiatan</td><td>:</td>
+                <td style="padding-left: 20px;">Jenis Kegiatan</td><td>:</td>
                 <td>{!! $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() !!}</td>
             </tr>
             <tr>
-                <td></td>
-                <td>Tujuan</td><td>:</td>
+                <td style="padding-left: 20px;">Tujuan</td><td>:</td>
                 <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) ?: '-' !!}</td>
             </tr>
             <tr>
-                <td></td>
-                <td>Penanggung Jawab</td><td>:</td>
+                <td style="padding-left: 20px;">Penanggung Jawab</td><td>:</td>
                 <td>{!! $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' !!}</td>
             </tr>
             <tr>
-                <td></td>
-                <td>Kelompok</td><td>:</td>
+                <td style="padding-left: 20px;">Kelompok</td><td>:</td>
                 <td>{!! $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' !!}</td>
             </tr>
             <tr>
-                <td></td>
-                <td>Tanggal Laporan</td><td>:</td>
+                <td style="padding-left: 20px;">Tanggal Laporan</td><td>:</td>
                 <td>{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
             </tr>
         </table>
@@ -101,8 +95,7 @@
         <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 5px; margin-top: 10px;">Detail Pelaksanaan Kegiatan</div>
         <table class="table-borderless mb-3" style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td style="width: 30px;"></td>
-                <td style="width: 220px;">Tanggal Pelaksanaan</td><td style="width: 20px;">:</td>
+                <td style="width: 220px; padding-left: 20px;">Tanggal Pelaksanaan</td><td style="width: 20px;">:</td>
                 <td>
                     {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
                     @if ($laporanKegiatan->isDarurat() ? ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai) : ($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai))
@@ -111,8 +104,7 @@
                 </td>
             </tr>
             <tr>
-                <td></td>
-                <td>Realisasi Tanggal Pelaksanaan</td><td>:</td>
+                <td style="padding-left: 20px;">Realisasi Tanggal Pelaksanaan</td><td>:</td>
                 <td>
                     {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
                     @if ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
@@ -121,13 +113,11 @@
                 </td>
             </tr>
             <tr>
-                <td></td>
-                <td>Lokasi</td><td>:</td>
+                <td style="padding-left: 20px;">Lokasi</td><td>:</td>
                 <td>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</td>
             </tr>
             <tr>
-                <td></td>
-                <td>Waktu Pelaksanaan</td><td>:</td>
+                <td style="padding-left: 20px;">Waktu Pelaksanaan</td><td>:</td>
                 <td>
                     @if ($laporanKegiatan->isDarurat())
                         Menyesuaikan
@@ -141,23 +131,19 @@
                 </td>
             </tr>
             <tr>
-                <td></td>
-                <td>Rangkaian Kegiatan</td><td>:</td>
+                <td style="padding-left: 20px;">Rangkaian Kegiatan</td><td>:</td>
                 <td>{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
             </tr>
             <tr>
-                <td></td>
-                <td>Target Peserta</td><td>:</td>
+                <td style="padding-left: 20px;">Target Peserta</td><td>:</td>
                 <td>{{ $laporanKegiatan->isDarurat() ? '-' : ($laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-') }} orang</td>
             </tr>
             <tr>
-                <td></td>
-                <td>Realisasi Peserta</td><td>:</td>
+                <td style="padding-left: 20px;">Realisasi Peserta</td><td>:</td>
                 <td>{{ $laporanKegiatan->realisasi_peserta }} orang</td>
             </tr>
             <tr>
-                <td></td>
-                <td>Profil Peserta</td><td>:</td>
+                <td style="padding-left: 20px;">Profil Peserta</td><td>:</td>
                 <td>{!! $laporanKegiatan->profil_peserta !!}</td>
             </tr>
         </table>
@@ -298,32 +284,8 @@
 
 
 
-        <!-- Kolom Tanda Tangan -->
-        <div class="signature-block no-break mt-5">
-            <div style="float: right; width: 300px; text-align: center;">
-                <div style="margin-bottom: 70px;">
-                    Ketapang, {{ $tanggalIndo }}<br>
-                    Penanggung Jawab Kegiatan
-                </div>
-                <div style="font-weight: bold; text-decoration: underline; text-transform: uppercase;">
-                    {{ $laporanKegiatan->isDarurat() ? auth()->user()->name : ($laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: auth()->user()->name) }}
-                </div>
-            </div>
-            <div style="clear: both;"></div>
-        </div>
-        <!-- <div class="web-footer no-print mt-5">
-            <div class="col-12 text-center">
-                <hr>
-                <p class="text-muted">
-                    <small>
-                        Dicetak oleh: {{ auth()->user()->name }}<br>
-                        Rekam WeBe
-                    </small>
-                </p>
-            </div>
-        </div> -->
     </div>
-
+@endsection
     <style>
         /* Watermark Styles */
         .watermark-container {
