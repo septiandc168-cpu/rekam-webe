@@ -62,29 +62,35 @@
 
         @if(!$laporanKegiatan->isDarurat())
         <!-- Informasi Rencana Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px;">Informasi Rencana Kegiatan</div>
-        <table class="table-borderless mb-4" style="width: 100%;">
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 5px; margin-top: 15px;">Informasi Rencana Kegiatan</div>
+        <table class="table-borderless mb-3" style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td style="width: 250px;">Nama Kegiatan</td><td style="width: 20px;">:</td>
-                <td>{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</td>
+                <td style="width: 30px;"></td>
+                <td style="width: 220px;">Nama Kegiatan</td><td style="width: 20px;">:</td>
+                <td>{!! $laporanKegiatan->rencanaKegiatan->nama_kegiatan !!}</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Jenis Kegiatan</td><td>:</td>
-                <td>{{ $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() }}</td>
+                <td>{!! $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() !!}</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Tujuan</td><td>:</td>
                 <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) ?: '-' !!}</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Penanggung Jawab</td><td>:</td>
-                <td>{{ $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' }}</td>
+                <td>{!! $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' !!}</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Kelompok</td><td>:</td>
-                <td>{{ $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' }}</td>
+                <td>{!! $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' !!}</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Tanggal Laporan</td><td>:</td>
                 <td>{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
             </tr>
@@ -92,10 +98,11 @@
         @endif
 
         <!-- Detail Pelaksanaan Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 10px;">Detail Pelaksanaan Kegiatan</div>
-        <table class="table-borderless mb-4" style="width: 100%;">
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 5px; margin-top: 10px;">Detail Pelaksanaan Kegiatan</div>
+        <table class="table-borderless mb-3" style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td style="width: 250px;">Tanggal Pelaksanaan</td><td style="width: 20px;">:</td>
+                <td style="width: 30px;"></td>
+                <td style="width: 220px;">Tanggal Pelaksanaan</td><td style="width: 20px;">:</td>
                 <td>
                     {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
                     @if ($laporanKegiatan->isDarurat() ? ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai) : ($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai))
@@ -104,6 +111,7 @@
                 </td>
             </tr>
             <tr>
+                <td></td>
                 <td>Realisasi Tanggal Pelaksanaan</td><td>:</td>
                 <td>
                     {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
@@ -113,10 +121,12 @@
                 </td>
             </tr>
             <tr>
+                <td></td>
                 <td>Lokasi</td><td>:</td>
                 <td>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Waktu Pelaksanaan</td><td>:</td>
                 <td>
                     @if ($laporanKegiatan->isDarurat())
@@ -131,71 +141,75 @@
                 </td>
             </tr>
             <tr>
+                <td></td>
                 <td>Rangkaian Kegiatan</td><td>:</td>
                 <td>{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Target Peserta</td><td>:</td>
                 <td>{{ $laporanKegiatan->isDarurat() ? '-' : ($laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-') }} orang</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Realisasi Peserta</td><td>:</td>
                 <td>{{ $laporanKegiatan->realisasi_peserta }} orang</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Profil Peserta</td><td>:</td>
                 <td>{!! $laporanKegiatan->profil_peserta !!}</td>
             </tr>
         </table>
 
         <!-- Hasil dan Output Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 15px; margin-top: 20px;">Hasil dan Output Kegiatan</div>
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px;">Hasil dan Output Kegiatan</div>
 
-        <div style="margin-bottom: 15px;">
-            <div style="font-weight: bold; margin-bottom: 5px;">Hasil yang Dicapai</div>
-            <div class="content-box">{!! $laporanKegiatan->hasil_dicapai !!}</div>
+        <div style="margin-bottom: 10px;">
+            <div style="font-weight: bold; margin-bottom: 3px;">Hasil yang Dicapai</div>
+            <div>{!! $laporanKegiatan->hasil_dicapai !!}</div>
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <div style="font-weight: bold; margin-bottom: 5px;">Output Nyata</div>
-            <div class="content-box">{!! $laporanKegiatan->output_nyata !!}</div>
+        <div style="margin-bottom: 10px;">
+            <div style="font-weight: bold; margin-bottom: 3px;">Output Nyata</div>
+            <div>{!! $laporanKegiatan->output_nyata !!}</div>
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <div style="font-weight: bold; margin-bottom: 5px;">Dampak Awal yang Terlihat</div>
-            <div class="content-box">{!! $laporanKegiatan->dampak_awal !!}</div>
+        <div style="margin-bottom: 10px;">
+            <div style="font-weight: bold; margin-bottom: 3px;">Dampak Awal yang Terlihat</div>
+            <div>{!! $laporanKegiatan->dampak_awal !!}</div>
         </div>
 
         <!-- Kendala dan Evaluasi -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 15px; margin-top: 20px;">Kendala dan Evaluasi</div>
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px;">Kendala dan Evaluasi</div>
         
         @if($laporanKegiatan->kendala)
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Kendala yang Dihadapi</div>
-                <div class="content-box">{!! $laporanKegiatan->kendala !!}</div>
+            <div style="margin-bottom: 10px;">
+                <div style="font-weight: bold; margin-bottom: 3px;">Kendala yang Dihadapi</div>
+                <div>{!! $laporanKegiatan->kendala !!}</div>
             </div>
         @endif
 
         @if($laporanKegiatan->solusi)
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Solusi yang Dilakukan</div>
-                <div class="content-box">{!! $laporanKegiatan->solusi !!}</div>
+            <div style="margin-bottom: 10px;">
+                <div style="font-weight: bold; margin-bottom: 3px;">Solusi yang Dilakukan</div>
+                <div>{!! $laporanKegiatan->solusi !!}</div>
             </div>
         @endif
 
         @if($laporanKegiatan->evaluasi_rekomendasi)
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Evaluasi dan Rekomendasi</div>
-                <div class="content-box">{!! $laporanKegiatan->evaluasi_rekomendasi !!}</div>
+            <div style="margin-bottom: 10px;">
+                <div style="font-weight: bold; margin-bottom: 3px;">Evaluasi dan Rekomendasi</div>
+                <div>{!! $laporanKegiatan->evaluasi_rekomendasi !!}</div>
             </div>
         @endif
 
         <!-- Dokumentasi Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 15px; margin-top: 20px;">Dokumentasi Kegiatan</div>
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px;">Dokumentasi Kegiatan</div>
 
         @if (!empty($laporanKegiatan->foto_kegiatan))
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Foto Kegiatan</div>
+            <div style="margin-bottom: 10px;">
+                <div style="font-weight: bold; margin-bottom: 3px;">Foto Kegiatan</div>
                 <div class="documentation-grid">
                     @foreach ($laporanKegiatan->foto_kegiatan as $index => $foto_kegiatan)
                         @php
@@ -214,15 +228,15 @@
         @endif
 
         @if (!empty($laporanKegiatan->daftar_hadir))
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Daftar Hadir</div>
+            <div style="margin-bottom: 10px;">
+                <div style="font-weight: bold; margin-bottom: 3px;">Daftar Hadir</div>
                 <div class="file-list">
                     @foreach ($laporanKegiatan->daftar_hadir as $index => $daftar_hadir)
                         @php
                             $filePath = is_array($daftar_hadir) ? $daftar_hadir['path'] : $daftar_hadir;
                             $fileName = is_array($daftar_hadir) ? $daftar_hadir['original_name'] : basename($daftar_hadir);
                         @endphp
-                        <div class="file-item" style="border: none; padding: 2px 0px; background-color: transparent;">
+                        <div style="padding: 2px 0px;">
                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
                         </div>
                     @endforeach
@@ -231,15 +245,15 @@
         @endif
 
         @if (!empty($laporanKegiatan->notulen))
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Notulen</div>
+            <div style="margin-bottom: 10px;">
+                <div style="font-weight: bold; margin-bottom: 3px;">Notulen</div>
                 <div class="file-list">
                     @foreach ($laporanKegiatan->notulen as $index => $notulen)
                         @php
                             $filePath = is_array($notulen) ? $notulen['path'] : $notulen;
                             $fileName = is_array($notulen) ? $notulen['original_name'] : basename($notulen);
                         @endphp
-                        <div class="file-item" style="border: none; padding: 2px 0px; background-color: transparent;">
+                        <div style="padding: 2px 0px;">
                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
                         </div>
                     @endforeach
@@ -248,15 +262,15 @@
         @endif
 
         @if (!empty($laporanKegiatan->materi))
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Materi</div>
+            <div style="margin-bottom: 10px;">
+                <div style="font-weight: bold; margin-bottom: 3px;">Materi</div>
                 <div class="file-list">
                     @foreach ($laporanKegiatan->materi as $index => $materi)
                         @php
                             $filePath = is_array($materi) ? $materi['path'] : $materi;
                             $fileName = is_array($materi) ? $materi['original_name'] : basename($materi);
                         @endphp
-                        <div class="file-item" style="border: none; padding: 2px 0px; background-color: transparent;">
+                        <div style="padding: 2px 0px;">
                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
                         </div>
                     @endforeach
@@ -265,15 +279,15 @@
         @endif
 
         @if (!empty($laporanKegiatan->berita_acara))
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Berita Acara</div>
+            <div style="margin-bottom: 10px;">
+                <div style="font-weight: bold; margin-bottom: 3px;">Berita Acara</div>
                 <div class="file-list">
                     @foreach ($laporanKegiatan->berita_acara as $index => $berita_acara)
                         @php
                             $filePath = is_array($berita_acara) ? $berita_acara['path'] : $berita_acara;
                             $fileName = is_array($berita_acara) ? $berita_acara['original_name'] : basename($berita_acara);
                         @endphp
-                        <div class="file-item" style="border: none; padding: 2px 0px; background-color: transparent;">
+                        <div style="padding: 2px 0px;">
                             <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
                         </div>
                     @endforeach
