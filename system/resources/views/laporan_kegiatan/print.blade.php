@@ -372,13 +372,34 @@
         }
 
         .value-field ol {
-            padding-left: 20px !important;
+            padding-left: 25px !important;
             margin-top: 5px !important;
+            margin-left: 0 !important;
+            list-style-position: outside !important;
+        }
+
+        .value-field ul {
+            padding-left: 25px !important;
+            margin-top: 5px !important;
+            margin-left: 0 !important;
+            list-style-position: outside !important;
         }
 
         .value-field li {
-            margin-bottom: 3px !important;
-            padding-left: 5px !important;
+            margin-bottom: 4px !important;
+            padding-left: 0 !important;
+            margin-left: 0 !important;
+        }
+        
+        /* Override any Summernote inline styles */
+        td.value-field ol, td.value-field ul {
+            padding-left: 25px !important;
+            margin-left: 0 !important;
+        }
+        
+        td.value-field li {
+            margin-left: 0 !important;
+            padding-left: 0 !important;
         }
         .table-borderless td {
             border: none !important;
