@@ -112,7 +112,7 @@
         }
 
         .table-borderless td:first-child {
-            font-weight: bold;
+            font-weight: normal;
             width: 150px;
         }
 
