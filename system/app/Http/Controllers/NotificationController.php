@@ -17,7 +17,9 @@ class NotificationController extends Controller
         // Get all notifications for the user, ordered by latest first
         $notifications = $user->notifications()
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->latest()
+            ->take(10)
+            ->get();
 
         // Konfigurasi SweetAlert untuk delete dengan warna danger
         $confirm = [

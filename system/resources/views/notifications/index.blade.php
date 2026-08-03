@@ -122,10 +122,6 @@
                             </div>
                         @endforeach
                         </div>
-
-                        <div class="mt-3">
-                            {{ $notifications->links() }}
-                        </div>
                     @else
                         <div class="text-center py-5">
                             <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
@@ -203,36 +199,6 @@
             color: #212529;
             font-size: 10px;
             padding: 3px 6px;
-        }
-
-        /* Fix pagination styling */
-        .pagination {
-            margin: 0 !important;
-        }
-
-        .pagination .page-link {
-            font-size: 14px !important;
-            padding: 0.5rem 0.75rem !important;
-        }
-
-        .pagination svg {
-            width: 20px !important;
-            height: 20px !important;
-            max-width: 20px !important;
-            max-height: 20px !important;
-            display: inline-block !important;
-            vertical-align: middle !important;
-        }
-
-        /* Extra aggressive fix for standalone SVG */
-        svg {
-            max-width: 100%;
-            max-height: 24px;
-        }
-
-        /* Hide oversized pagination arrows if CSS fails */
-        .pagination ~ svg {
-            display: none !important;
         }
     </style>
 @endpush
