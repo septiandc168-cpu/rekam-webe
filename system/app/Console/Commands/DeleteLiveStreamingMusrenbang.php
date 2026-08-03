@@ -52,6 +52,26 @@ class DeleteLiveStreamingMusrenbang extends Command
         }
 
         $this->newLine();
+
+        // Delete related notifications
+        $notifCount = DB::table('notifications')
+            ->where('data', 'LIKE', '%Live Streaming Musrenbang%')
+            ->count();
+        
+        if ($notifCount > 0) {
+            $this->warn("Found {$notifCount} related notifications");
+            
+            if ($this->confirm('Delete these notifications?', true)) {
+                $deleted = DB::table('notifications')
+                    ->where('data', 'LIKE', '%Live Streaming Musrenbang%')
+                    ->delete();
+                $this->info("✓ Deleted {$deleted} notifications");
+            }
+        } else {
+            $this->info('No related notifications found');
+        }
+
+        $this->newLine();
         $this->info('Deletion completed!');
 
         return 0;
