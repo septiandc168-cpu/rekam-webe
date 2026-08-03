@@ -204,5 +204,22 @@
             font-size: 10px;
             padding: 3px 6px;
         }
+
+        /* Fix pagination styling */
+        .pagination {
+            margin: 0 !important;
+        }
+
+        .pagination .page-link {
+            font-size: 14px !important;
+            padding: 0.5rem 0.75rem !important;
+        }
+
+        .pagination svg {
+            width: 20px !important;
+            height: 20px !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+        }
     </style>
 @endpush
