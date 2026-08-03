@@ -69,7 +69,7 @@ class NotificationController extends Controller
         // Redirect based on notification type
         if ($notificationType === 'laporan_kegiatan' && $laporanUuid) {
             // Check if laporan exists
-            $laporan = \App\Models\LaporanKegiatan::find($laporanUuid);
+            $laporan = \App\Models\LaporanKegiatan::where('uuid', $laporanUuid)->first();
             if (!$laporan) {
                 \Log::error('Laporan not found with UUID', ['uuid' => $laporanUuid]);
                 return redirect()->back()->with('error', 'Laporan tidak ditemukan.');
@@ -81,7 +81,7 @@ class NotificationController extends Controller
             return redirect()->route('laporan_kegiatan.show', ['laporan_kegiatan' => $laporanUuid]);
         } elseif ($kegiatanUuid) {
             // Check if kegiatan exists
-            $kegiatan = \App\Models\RencanaKegiatan::find($kegiatanUuid);
+            $kegiatan = \App\Models\RencanaKegiatan::where('uuid', $kegiatanUuid)->first();
             if (!$kegiatan) {
                 \Log::error('Kegiatan not found with UUID', ['uuid' => $kegiatanUuid]);
                 return redirect()->back()->with('error', 'Kegiatan tidak ditemukan.');
