@@ -34,11 +34,11 @@ class DeleteSpecificRecords extends Command
                 $this->warn("Found Rencana Kegiatan: {$rencana->nama_kegiatan}");
                 
                 // Delete related Laporan Kegiatan
-                $laporanCount = LaporanKegiatan::where('rencana_kegiatan_uuid', $rencanaUuid)->count();
+                $laporanCount = LaporanKegiatan::where('rencana_kegiatan_id', $rencanaUuid)->count();
                 if ($laporanCount > 0) {
                     $this->info("  - Found {$laporanCount} related Laporan Kegiatan");
                     if ($this->confirm("    Delete these Laporan?", true)) {
-                        LaporanKegiatan::where('rencana_kegiatan_uuid', $rencanaUuid)->delete();
+                        LaporanKegiatan::where('rencana_kegiatan_id', $rencanaUuid)->delete();
                         $this->info("    ✓ Deleted {$laporanCount} Laporan");
                     }
                 }
