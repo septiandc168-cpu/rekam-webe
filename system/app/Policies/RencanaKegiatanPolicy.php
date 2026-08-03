@@ -22,12 +22,12 @@ class RencanaKegiatanPolicy
      */
     public function view(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        // Supervisor can view any rencana kegiatan
+        // Admin can view rencana kegiatan except draft/revisi
         if ($user->role->role_name === 'admin') {
-            return true;
+            return !in_array($rencanaKegiatan->status, [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]);
         }
 
-        // Admin can only view their own rencana kegiatan
+        // Anggota can only view their own rencana kegiatan
         if ($user->role->role_name === 'anggota') {
             if ($rencanaKegiatan->user_id === $user->id) {
                 return true;
