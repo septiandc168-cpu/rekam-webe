@@ -307,8 +307,8 @@ class RencanaKegiatanController extends Controller
 
         $rencanaKegiatan = RencanaKegiatan::create($data);
 
-        // Kirim notifikasi ke supervisor jika admin yang menambahkan
-        if ($isAdmin) {
+        // Kirim notifikasi ke admin jika anggota yang menambahkan
+        if ($user->role->role_name === 'anggota') {
             $notification = new KegiatanActivityNotification(
                 $rencanaKegiatan->uuid,
                 $rencanaKegiatan->nama_kegiatan,
