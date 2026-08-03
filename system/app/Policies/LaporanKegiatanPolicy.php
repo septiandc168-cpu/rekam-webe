@@ -22,12 +22,12 @@ class LaporanKegiatanPolicy
      */
     public function view(User $user, LaporanKegiatan $laporanKegiatan): bool
     {
-        // Supervisor can view any laporan
+        // Admin can view laporan except draft/revisi
         if ($user->role->role_name === 'admin') {
-            return true;
+            return !in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DRAFT, \App\Models\LaporanKegiatan::STATUS_REVISI]);
         }
 
-        // Admin can only view their own laporan
+        // Anggota can only view their own laporan
         if ($user->role->role_name === 'anggota') {
             if ($laporanKegiatan->user_id === $user->id) {
                 return true;
