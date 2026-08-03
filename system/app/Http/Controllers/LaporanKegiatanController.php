@@ -298,7 +298,7 @@ class LaporanKegiatanController extends Controller
             $notification = new LaporanActivityNotification(
                 $laporan->uuid,
                 $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
-                null,
+                $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($request->judul_kegiatan ?? 'Laporan Darurat'),
                 $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($request->judul_kegiatan ?? 'Laporan Darurat'),
                 'diajukan',
                 $user->name,
@@ -631,7 +631,7 @@ class LaporanKegiatanController extends Controller
             $notification = new LaporanActivityNotification(
                 $laporanKegiatan->uuid,
                 $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
-                null,
+                $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Darurat'),
                 $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Darurat'),
                 'diajukan',
                 $user->name,
@@ -722,7 +722,7 @@ class LaporanKegiatanController extends Controller
             $notification = new LaporanActivityNotification(
                 $laporanUuid,
                 $rencanaUuid,
-                null,
+                $rencanaNama,
                 $rencanaNama,
                 'dihapus',
                 $user->name,
