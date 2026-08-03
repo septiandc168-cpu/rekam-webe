@@ -13,11 +13,13 @@ class KegiatanActivityNotification extends Notification
     public $user_name;
     public $keterangan;
     public $created_at;
+    public $jenis_kegiatan;
+    public $tanggal_kegiatan;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($kegiatanUuid, $judul_kegiatan, $aksi, $user_name, $keterangan = null, $created_at = null)
+    public function __construct($kegiatanUuid, $judul_kegiatan, $aksi, $user_name, $keterangan = null, $created_at = null, $jenis_kegiatan = null, $tanggal_kegiatan = null)
     {
         $this->id_kegiatan = $kegiatanUuid;
         $this->judul_kegiatan = $judul_kegiatan;
@@ -25,6 +27,8 @@ class KegiatanActivityNotification extends Notification
         $this->user_name = $user_name;
         $this->keterangan = $keterangan;
         $this->created_at = $created_at ?? now();
+        $this->jenis_kegiatan = $jenis_kegiatan;
+        $this->tanggal_kegiatan = $tanggal_kegiatan;
     }
 
     /**
