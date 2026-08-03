@@ -39,12 +39,9 @@ class LaporanKegiatanController extends Controller
         
         // Filter data berdasarkan peran
         if ($isSupervisor) {
-            // Supervisor melihat semua data KECUALI draft milik orang lain
+            // Admin melihat semua data kecuali draft/revisi
             $query = LaporanKegiatan::with('rencanaKegiatan', 'user')
-                ->where(function($q) use ($user) {
-                    $q->whereNotIn('status', ['draft'])
-                      ->orWhere('user_id', $user->id);
-                });
+                ->whereNotIn('status', [LaporanKegiatan::STATUS_DRAFT, LaporanKegiatan::STATUS_REVISI]);
                 
             // Apply filters if provided
             if ($request->filled('status')) {
