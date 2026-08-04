@@ -77,15 +77,11 @@ class HomeController extends Controller
         }
         $rencanaTerbaru = $rencanaQuery->take(5)->get();
 
-        // === Map Data (Semua kegiatan yang punya lat/lng) ===
+        // === Map Data (Hanya kegiatan yang punya lat/lng dan berstatus disetujui atau selesai) ===
         $mapQuery = RencanaKegiatan::with('user')->select('id', 'user_id', 'uuid', 'nama_kegiatan', 'lat', 'lng', 'status', 'desa', 'tanggal_mulai', 'penanggung_jawab')
-            ->whereNotNull('lat')->whereNotNull('lng');
-        if (!$isAdmin) {
-            $mapQuery->where(function($q) use ($user) {
-                $q->where('user_id', $user->id)
-                  ->orWhereNotIn('status', [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]);
-            });
-        }
+            ->whereNotNull('lat')
+            ->whereNotNull('lng')
+            ->whereIn('status', [RencanaKegiatan::STATUS_DISETUJUI, RencanaKegiatan::STATUS_SELESAI]);
         $mapData = $mapQuery->get()->map(function($item) {
             $formattedDate = $item->tanggal_mulai ? \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d F Y') : '-';
             $person = $item->penanggung_jawab ?? ($item->user ? $item->user->name : 'Unknown');
