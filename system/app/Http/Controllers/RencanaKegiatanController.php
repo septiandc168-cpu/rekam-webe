@@ -71,9 +71,10 @@ class RencanaKegiatanController extends Controller
                 $query->where('role_name', 'anggota');
             })->orderBy('name')->get();
         } else {
-            // Anggota hanya melihat datanya sendiri
+            // Anggota hanya melihat datanya sendiri, kecuali yang berstatus disetujui dan selesai
             $query = RencanaKegiatan::with('laporanKegiatan', 'user')
-                ->where('user_id', $user->id);
+                ->where('user_id', $user->id)
+                ->whereNotIn('status', [RencanaKegiatan::STATUS_DISETUJUI, RencanaKegiatan::STATUS_SELESAI]);
             
             // Apply filters if provided
             if ($request->filled('status')) {

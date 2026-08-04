@@ -33,10 +33,16 @@
                                    value="{{ request('tahun') }}" min="2020" max="2030" style="min-width: 80px;">
                             <select name="status" class="form-control mr-2 rounded" style="min-width: 130px;">
                                 <option value="">Semua Status</option>
+                                <option value="draft" {{ (request('status') == 'draft') ? 'selected' : '' }}>Draft</option>
                                 <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
-                                <option value="disetujui" {{ (request('status') == 'disetujui') ? 'selected' : '' }}>Disetujui</option>
+                                @if(auth()->user()->role->role_name === 'admin')
+                                    <option value="disetujui" {{ (request('status') == 'disetujui') ? 'selected' : '' }}>Disetujui</option>
+                                @endif
+                                <option value="revisi" {{ (request('status') == 'revisi') ? 'selected' : '' }}>Revisi</option>
                                 <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
-                                <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
+                                @if(auth()->user()->role->role_name === 'admin')
+                                    <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
+                                @endif
                             </select>
                             @if(auth()->user()->role->role_name === 'admin')
                                 <select name="user_id" class="form-control mr-2 rounded" style="min-width: 150px;">
@@ -80,10 +86,16 @@
                                 <div class="col-6 mt-2">
                                     <select name="status" class="form-control form-control-sm rounded">
                                         <option value="">Status</option>
+                                        <option value="draft" {{ (request('status') == 'draft') ? 'selected' : '' }}>Draft</option>
                                         <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
-                                        <option value="disetujui" {{ (request('status') == 'disetujui') ? 'selected' : '' }}>Disetujui</option>
+                                        @if(auth()->user()->role->role_name === 'admin')
+                                            <option value="disetujui" {{ (request('status') == 'disetujui') ? 'selected' : '' }}>Disetujui</option>
+                                        @endif
+                                        <option value="revisi" {{ (request('status') == 'revisi') ? 'selected' : '' }}>Revisi</option>
                                         <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
-                                        <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
+                                        @if(auth()->user()->role->role_name === 'admin')
+                                            <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
+                                        @endif
                                     </select>
                                 </div>
                                 @if(auth()->user()->role->role_name === 'admin')
