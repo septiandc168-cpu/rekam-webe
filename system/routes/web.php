@@ -80,6 +80,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/laporan_kegiatan/{id}/terima', [App\Http\Controllers\LaporanKegiatanController::class, 'terimaLaporan'])->name('laporan_kegiatan.terima');
     Route::put('/laporan_kegiatan/{id}/revisi', [App\Http\Controllers\LaporanKegiatanController::class, 'revisiLaporan'])->name('laporan_kegiatan.revisi');
 
+    // Member Action Routes for Laporan Kegiatan
+    Route::put('/laporan_kegiatan/{id}/ajukan', [App\Http\Controllers\LaporanKegiatanController::class, 'ajukanLaporan'])->name('laporan_kegiatan.ajukan');
+
     // Resource routes for show, edit, update, destroy (with UUID)
     Route::resource('laporan_kegiatan', App\Http\Controllers\LaporanKegiatanController::class)->except(['index', 'create', 'store']);
 

@@ -826,4 +826,39 @@ class LaporanKegiatanController extends Controller
         toast('Permintaan revisi berhasil dikirim ke anggota.', 'success');
         return redirect()->back();
     }
+
+    /**
+     * Anggota action: Ajukan Laporan Kegiatan (Direct)
+     */
+    public function ajukanLaporan(Request $request, $id)
+    {
+        $laporanKegiatan = LaporanKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        
+        // Authorization check: User can only submit their own draft/revisi
+        if ($laporanKegiatan->user_id !== auth()->id() || !in_array($laporanKegiatan->status, [LaporanKegiatan::STATUS_DRAFT, LaporanKegiatan::STATUS_REVISI])) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $laporanKegiatan->update([
+            'status' => LaporanKegiatan::STATUS_DIAJUKAN,
+            'catatan_evaluasi' => null // Reset catatan evaluasi
+        ]);
+        
+        // Send notification to supervisors
+        $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
+        $notification = new LaporanActivityNotification(
+            $laporanKegiatan->uuid,
+            $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
+            null,
+            $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Darurat'),
+            'diajukan',
+            auth()->user()->name,
+            null,
+            now()
+        );
+        $this->notifySupervisors($notification);
+        
+        toast('Laporan kegiatan berhasil diajukan!', 'success');
+        return redirect()->back();
+    }
 }
