@@ -125,8 +125,42 @@ class RencanaKegiatanController extends Controller
         $isSupervisor = $user->role->role_name === 'supervisor';
         $isAdmin = $user->role->role_name === 'admin';
 
-        // Different validation rules based on role
-        if ($isSupervisor) {
+        $isDraft = $request->input('action') === 'draft';
+
+        // Different validation rules based on role and action
+        if ($isDraft) {
+            $rules = [
+                'nama_kegiatan' => 'required|string|max:255',
+                'jenis_kegiatan' => 'nullable|string',
+                'jenis_kegiatan_lainnya' => 'nullable|string',
+                'deskripsi' => 'nullable|string',
+                'tujuan' => 'nullable|string',
+                'lat' => 'nullable|numeric',
+                'lng' => 'nullable|numeric',
+                'desa' => 'nullable|string',
+                'tanggal_mulai' => 'nullable|date',
+                'tanggal_selesai' => 'nullable|date',
+                'waktu_mulai' => 'nullable|date_format:H:i',
+                'waktu_selesai' => 'nullable|date_format:H:i',
+                'penanggung_jawab' => 'nullable|string',
+                'kelompok' => 'nullable|string',
+                'estimasi_peserta' => 'nullable|integer',
+                'rincian_kebutuhan' => 'nullable|string',
+                'foto' => 'nullable|array',
+                'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
+                'dokumen' => 'nullable|array',
+                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
+                'anggaran_kegiatan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+            ];
+
+            $messages = [
+                'nama_kegiatan.required' => 'Nama kegiatan wajib diisi untuk menyimpan draft.',
+                'foto.*.image' => 'File foto harus berupa gambar.',
+                'foto.*.max' => 'Ukuran foto maksimal 4MB.',
+                'dokumen.*.max' => 'Ukuran dokumen maksimal 5MB.',
+                'anggaran_kegiatan.max' => 'Ukuran file anggaran maksimal 5MB.',
+            ];
+        } elseif ($isSupervisor) {
             // Supervisor can change status and must provide keterangan for approve/reject
             $rules = [
                 'nama_kegiatan' => 'required|string',
@@ -149,7 +183,8 @@ class RencanaKegiatanController extends Controller
                 'keterangan_status' => 'required_if:status,disetujui,ditolak|string',
                 'foto' => 'nullable|array',
                 'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
-                'dokumen' => 'nullable|array',                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
+                'dokumen' => 'nullable|array',
+                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
                 'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
             ];
 
@@ -189,7 +224,8 @@ class RencanaKegiatanController extends Controller
                 'rincian_kebutuhan' => 'nullable|string',
                 'foto' => 'nullable|array',
                 'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
-                'dokumen' => 'nullable|array',                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
+                'dokumen' => 'nullable|array',
+                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
                 'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
             ];
 
@@ -308,8 +344,8 @@ class RencanaKegiatanController extends Controller
 
         $rencanaKegiatan = RencanaKegiatan::create($data);
 
-        // Kirim notifikasi ke admin jika anggota yang menambahkan
-        if ($user->role->role_name === 'anggota') {
+        // Kirim notifikasi ke admin jika anggota yang menambahkan dan bukan draft
+        if ($user->role->role_name === 'anggota' && $data['status'] !== 'draft') {
             $notification = new KegiatanActivityNotification(
                 $rencanaKegiatan->uuid,
                 $rencanaKegiatan->nama_kegiatan,
@@ -321,8 +357,11 @@ class RencanaKegiatanController extends Controller
             $this->notifySupervisors($notification);
         }
 
-        // Alert::success('Berhasil', 'Rencana kegiatan berhasil disimpan!');
-        toast('Rencana kegiatan berhasil disimpan!', 'success');
+        if ($data['status'] === 'draft') {
+            toast('Rencana kegiatan berhasil disimpan sebagai draft!', 'success');
+        } else {
+            toast('Rencana kegiatan berhasil disimpan dan diajukan!', 'success');
+        }
         return redirect()->route('rencana_kegiatan.index');
     }
 
@@ -379,6 +418,8 @@ class RencanaKegiatanController extends Controller
         $isAdmin = $user->role->role_name === 'anggota';
         Log::info('RencanaKegiatanController@update called', ['id' => $rencana_kegiatan->id, 'input' => $request->all()]);
 
+        $isDraft = $request->input('action') === 'draft';
+
         // Different validation rules based on role
         if ($isSupervisor) {
             // Supervisor hanya bisa ubah status dan keterangan
@@ -391,6 +432,43 @@ class RencanaKegiatanController extends Controller
                 'status.required' => 'Status wajib dipilih.',
                 'status.in' => 'Status tidak valid.',
                 'keterangan_status.required_if' => 'Keterangan status wajib diisi saat menyetujui, merevisi, atau menolak.',
+            ];
+        } elseif ($isDraft) {
+            $rules = [
+                'nama_kegiatan' => 'required|string|max:255',
+                'jenis_kegiatan' => 'nullable|string',
+                'jenis_kegiatan_lainnya' => 'nullable|string',
+                'deskripsi' => 'nullable|string',
+                'tujuan' => 'nullable|string',
+                'lat' => 'nullable|numeric',
+                'lng' => 'nullable|numeric',
+                'desa' => 'nullable|string',
+                'tanggal_mulai' => 'nullable|date',
+                'tanggal_selesai' => 'nullable|date',
+                'waktu_mulai' => 'nullable|date_format:H:i',
+                'waktu_selesai' => 'nullable|date_format:H:i',
+                'penanggung_jawab' => 'nullable|string',
+                'kelompok' => 'nullable|string',
+                'estimasi_peserta' => 'nullable|integer',
+                'rincian_kebutuhan' => 'nullable|string',
+                'foto' => 'nullable|array',
+                'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
+                'dokumen' => 'nullable|array',
+                'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
+                'remove_foto' => 'nullable|array',
+                'remove_foto.*' => 'string',
+                'remove_dokumen' => 'nullable|array',
+                'remove_dokumen.*' => 'string',
+                'anggaran_kegiatan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+                'remove_anggaran_kegiatan' => 'nullable|string',
+            ];
+
+            $messages = [
+                'nama_kegiatan.required' => 'Nama kegiatan wajib diisi.',
+                'foto.*.image' => 'File foto harus berupa gambar.',
+                'foto.*.max' => 'Ukuran foto maksimal 4MB.',
+                'dokumen.*.max' => 'Ukuran dokumen maksimal 5MB.',
+                'anggaran_kegiatan.max' => 'Ukuran file anggaran maksimal 5MB.',
             ];
         } else {
             // Admin cannot change status and no keterangan field
@@ -646,8 +724,8 @@ class RencanaKegiatanController extends Controller
 
         $rencana_kegiatan->update($data);
 
-        // Kirim notifikasi ke supervisor jika admin yang mengedit
-        if ($isAdmin) {
+        // Kirim notifikasi ke supervisor jika anggota yang mengedit dan bukan draft
+        if ($isAdmin && ($data['status'] ?? null) !== 'draft') {
             $notification = new KegiatanActivityNotification(
                 $rencana_kegiatan->uuid,
                 $rencana_kegiatan->nama_kegiatan,

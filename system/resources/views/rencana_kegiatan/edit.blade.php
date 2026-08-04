@@ -12,6 +12,7 @@
             enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            <input type="hidden" name="action" id="form-action" value="{{ in_array($rencana_kegiatan->status, ['draft', 'revisi']) ? 'diajukan' : 'simpan' }}">
             <!-- ALERT ERROR VALIDASI -->
             @if($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -108,7 +109,12 @@
                     </div>
                     <div class="card-footer bg-white clearfix">
                         <a href="{{ route('rencana_kegiatan.show', $rencana_kegiatan) }}" class="btn btn-secondary text-white float-left"><i class="fas fa-times mr-1"></i> Batal</a>
-                        <button type="button" class="btn bg-navy text-white btn-next float-right" data-next="step-2">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        <div class="float-right d-flex">
+                            @if (in_array($rencana_kegiatan->status, ['draft', 'revisi']))
+                                <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft"><i class="fas fa-save mr-1"></i> Simpan Draft</button>
+                            @endif
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -167,7 +173,12 @@
                     </div>
                     <div class="card-footer bg-white clearfix">
                         <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-1"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
-                        <button type="button" class="btn bg-navy text-white btn-next float-right" data-next="step-3">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        <div class="float-right d-flex">
+                            @if (in_array($rencana_kegiatan->status, ['draft', 'revisi']))
+                                <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft"><i class="fas fa-save mr-1"></i> Simpan Draft</button>
+                            @endif
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-3">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -729,75 +740,9 @@
                     if(window.map) window.map.invalidateSize(); 
                 }, 250);
             });
-            // client-side date check with optional auto-swap for create form
+            // --- LOGIKA MULTI-STEP WIZARD & SUBMIT ---
             document.addEventListener('DOMContentLoaded', function() {
                 const form = document.getElementById('rencana-kegiatan-form');
-                if (!form) return;
-
-                form.addEventListener('submit', function(e) {
-                    // Check if coordinates are filled
-                    const latEl = document.querySelector('input[name="lat"]');
-                    const lngEl = document.querySelector('input[name="lng"]');
-                    const lat = latEl ? latEl.value : '';
-                    const lng = lngEl ? lngEl.value : '';
-
-                    if (!lat || !lng) {
-                        e.preventDefault();
-                        alert(
-                            'Silakan pilih lokasi pada peta terlebih dahulu dengan mengklik pada area peta.'
-                        );
-                        return false;
-                    }
-
-                    // Date validation
-                    const startEl = document.querySelector('input[name="tanggal_mulai"]');
-                    const endEl = document.querySelector('input[name="tanggal_selesai"]');
-                    const s = startEl ? startEl.value : '';
-                    const t = endEl ? endEl.value : '';
-                    if (s && t) {
-                        const sd = new Date(s);
-                        const ed = new Date(t);
-                        if (ed < sd) {
-                            e.preventDefault();
-                            if (confirm('Tanggal selesai lebih awal dari tanggal mulai. Tukar otomatis?')) {
-                                startEl.value = t;
-                                endEl.value = s;
-                                form.submit();
-                            } else {
-                                alert('Silakan koreksi tanggal sebelum mengirim.');
-                            }
-                        }
-                    }
-                });
-            });
-        </script>
-        <script>
-            // --- LOGIKA TOGGLE JENIS KEGIATAN LAINNYA ---
-            document.addEventListener('DOMContentLoaded', function() {
-                const jenisKegiatanSelect = document.querySelector('select[name="jenis_kegiatan"]');
-                if (jenisKegiatanSelect) {
-                    jenisKegiatanSelect.addEventListener('change', function() {
-                        const jenisKegiatanLainnyaRow = document.getElementById('jenis_kegiatan_lainnya_row');
-                        const jenisKegiatanLainnyaInput = document.querySelector('input[name="jenis_kegiatan_lainnya"]');
-                        
-                        if (this.value === 'lainnya') {
-                            jenisKegiatanLainnyaRow.style.display = 'block';
-                            jenisKegiatanLainnyaInput.required = true;
-                        } else {
-                            jenisKegiatanLainnyaRow.style.display = 'none';
-                            jenisKegiatanLainnyaInput.required = false;
-                            jenisKegiatanLainnyaInput.value = '';
-                        }
-                    });
-                    // Trigger sekali untuk inisialisasi status required
-                    if (jenisKegiatanSelect.value === 'lainnya') {
-                        document.querySelector('input[name="jenis_kegiatan_lainnya"]').required = true;
-                    }
-                }
-            });
-
-            // --- LOGIKA MULTI-STEP WIZARD ---
-            document.addEventListener('DOMContentLoaded', function() {
                 const steps = ['step-1', 'step-2', 'step-3'];
                 let currentStepIndex = 0;
                 
@@ -805,6 +750,7 @@
                 const progressBar = document.getElementById('wizard-progress');
                 
                 function showStep(index) {
+                    currentStepIndex = index;
                     // Hide all steps
                     steps.forEach(step => {
                         const el = document.getElementById(step);
@@ -852,6 +798,28 @@
                     }
                 }
                 
+                // Event Listener Tombol "Simpan Draft" di semua bagian
+                document.querySelectorAll('.btn-save-draft').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const namaKegiatanInput = document.querySelector('input[name="nama_kegiatan"]');
+                        const namaKegiatan = namaKegiatanInput ? namaKegiatanInput.value.trim() : '';
+                        if (!namaKegiatan) {
+                            alert('Mohon isi Nama Kegiatan terlebih dahulu untuk menyimpan sebagai draft.');
+                            showStep(0);
+                            if (namaKegiatanInput) namaKegiatanInput.focus();
+                            return false;
+                        }
+
+                        const actionInput = document.getElementById('form-action');
+                        if (actionInput) actionInput.value = 'draft';
+                        if (form) {
+                            form.noValidate = true;
+                            form.submit();
+                        }
+                    });
+                });
+
                 // Event Listener Tombol "Selanjutnya"
                 document.querySelectorAll('.btn-next').forEach(btn => {
                     btn.addEventListener('click', function() {
@@ -927,6 +895,53 @@
                         // Reset tanggal selesai jika tanggalnya lebih kecil dari tanggal mulai yang baru
                         if (tglSelesai.value && tglSelesai.value < this.value) {
                             tglSelesai.value = this.value; 
+                        }
+                    });
+                }
+
+                // Handle Form Submit
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        const actionVal = document.getElementById('form-action').value;
+                        if (actionVal === 'draft') {
+                            return true;
+                        }
+
+                        // Check if coordinates are filled
+                        const latEl = document.querySelector('input[name="lat"]');
+                        const lngEl = document.querySelector('input[name="lng"]');
+                        const lat = latEl ? latEl.value : '';
+                        const lng = lngEl ? lngEl.value : '';
+
+                        if (!lat || !lng) {
+                            e.preventDefault();
+                            alert(
+                                'Silakan pilih lokasi pada peta terlebih dahulu dengan mengklik pada area peta.'
+                            );
+                            showStep(1);
+                            return false;
+                        }
+
+                        // Date validation
+                        const startEl = document.querySelector('input[name="tanggal_mulai"]');
+                        const endEl = document.querySelector('input[name="tanggal_selesai"]');
+                        const s = startEl ? startEl.value : '';
+                        const t = endEl ? endEl.value : '';
+                        if (s && t) {
+                            const sd = new Date(s);
+                            const ed = new Date(t);
+                            if (ed < sd) {
+                                e.preventDefault();
+                                if (confirm('Tanggal selesai lebih awal dari tanggal mulai. Tukar otomatis?')) {
+                                    startEl.value = t;
+                                    endEl.value = s;
+                                    form.submit();
+                                } else {
+                                    alert('Silakan koreksi tanggal sebelum mengirim.');
+                                    showStep(1);
+                                }
+                                return false;
+                            }
                         }
                     });
                 }
