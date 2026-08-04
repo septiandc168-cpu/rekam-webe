@@ -72,6 +72,7 @@
         <form id="laporan-kegiatan-form" action="{{ route('laporan_kegiatan.update', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            <input type="hidden" name="action" id="form-action" value="{{ in_array($laporanKegiatan->status, ['draft', 'revisi']) ? 'diajukan' : 'update' }}">
 
             <!-- STEP 1: Realisasi Kegiatan -->
             <div class="wizard-step" id="step-1">
@@ -147,7 +148,14 @@
                     </div>
                     <div class="card-footer bg-white clearfix">
                         <a href="{{ route('laporan_kegiatan.show', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}" class="btn btn-secondary text-white float-left"><i class="fas fa-arrow-left mr-1"></i> Kembali</a>
-                        <button type="button" class="btn bg-navy text-white btn-next float-right" data-next="step-2">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        <div class="float-right d-flex">
+                            @if(in_array($laporanKegiatan->status, ['draft', 'revisi']))
+                                <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
+                                    <i class="fas fa-save mr-1"></i> Simpan Draft
+                                </button>
+                            @endif
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -178,7 +186,14 @@
                     </div>
                     <div class="card-footer bg-white clearfix">
                         <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-1"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
-                        <button type="button" class="btn bg-navy text-white btn-next float-right" data-next="step-3">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        <div class="float-right d-flex">
+                            @if(in_array($laporanKegiatan->status, ['draft', 'revisi']))
+                                <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
+                                    <i class="fas fa-save mr-1"></i> Simpan Draft
+                                </button>
+                            @endif
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-3">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -354,9 +369,9 @@
                         <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
 
 
-                        <div class="float-right">
+                        <div class="float-right d-flex">
                             @if($laporanKegiatan->status === 'draft' || $laporanKegiatan->status === 'revisi')
-                                <button type="submit" name="action" value="draft" class="btn btn-secondary text-white mr-2">
+                                <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
                                     <i class="fas fa-save mr-1"></i> Simpan Draft
                                 </button>
                                 <button type="submit" name="action" value="diajukan" class="btn bg-navy text-white">
@@ -450,6 +465,25 @@
                     if (isValid) {
                         currentStepIndex = nextIndex;
                         showStep(currentStepIndex);
+                    }
+                });
+
+                $('.btn-save-draft').click(function(e) {
+                    e.preventDefault();
+                    let form = document.getElementById('laporan-kegiatan-form');
+                    let judulInput = document.querySelector('input[name="judul_kegiatan"]');
+                    
+                    if (judulInput && !judulInput.value.trim()) {
+                        alert('Mohon isi Judul Kegiatan terlebih dahulu untuk menyimpan sebagai draft.');
+                        showStep(1);
+                        judulInput.focus();
+                        return false;
+                    }
+
+                    $('#form-action').val('draft');
+                    if (form) {
+                        form.noValidate = true;
+                        form.submit();
                     }
                 });
 

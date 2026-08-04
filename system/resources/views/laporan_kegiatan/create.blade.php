@@ -74,6 +74,7 @@
 
         <form id="laporan-kegiatan-form" action="{{ route('laporan_kegiatan.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="action" id="form-action" value="diajukan">
             @if(isset($isLaporanLangsung) && $isLaporanLangsung)
                 <input type="hidden" name="is_laporan_langsung" value="1">
             @else
@@ -154,7 +155,12 @@
                     </div>
                     <div class="card-footer bg-white clearfix">
                         <a href="{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? route('laporan_kegiatan.index') : route('rencana_kegiatan.show', $rencanaKegiatan?->uuid ?? $rencanaKegiatan?->id) }}" class="btn btn-secondary text-white float-left"><i class="fas fa-arrow-left mr-1"></i> Kembali</a>
-                        <button type="button" class="btn bg-navy text-white btn-next float-right" data-next="step-2">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        <div class="float-right d-flex">
+                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
+                                <i class="fas fa-save mr-1"></i> Simpan Draft
+                            </button>
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -185,7 +191,12 @@
                     </div>
                     <div class="card-footer bg-white clearfix">
                         <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-1"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
-                        <button type="button" class="btn bg-navy text-white btn-next float-right" data-next="step-3">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        <div class="float-right d-flex">
+                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
+                                <i class="fas fa-save mr-1"></i> Simpan Draft
+                            </button>
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-3">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -254,9 +265,9 @@
                     <div class="card-footer bg-white clearfix">
                         <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
                         
-                        <div class="float-right">
-                            <button type="submit" name="action" value="draft" class="btn btn-secondary text-white mr-2">
-                                <i class="fas fa-save mr-1"></i> Simpan sebagai Draft
+                        <div class="float-right d-flex">
+                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
+                                <i class="fas fa-save mr-1"></i> Simpan Draft
                             </button>
                             <button type="submit" name="action" value="diajukan" class="btn bg-navy text-white">
                                 <i class="fas fa-paper-plane mr-1"></i> Kirim Laporan ke Admin
@@ -343,6 +354,25 @@
                     if (isValid) {
                         currentStepIndex = nextIndex;
                         showStep(currentStepIndex);
+                    }
+                });
+
+                $('.btn-save-draft').click(function(e) {
+                    e.preventDefault();
+                    let form = document.getElementById('laporan-kegiatan-form');
+                    let judulInput = document.querySelector('input[name="judul_kegiatan"]');
+                    
+                    if (judulInput && !judulInput.value.trim()) {
+                        alert('Mohon isi Judul Kegiatan terlebih dahulu untuk menyimpan sebagai draft.');
+                        showStep(1);
+                        judulInput.focus();
+                        return false;
+                    }
+
+                    $('#form-action').val('draft');
+                    if (form) {
+                        form.noValidate = true;
+                        form.submit();
                     }
                 });
 

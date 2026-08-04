@@ -21,6 +21,70 @@ class LaporanKegiatanRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isDraft = $this->input('action') === 'draft';
+
+        if ($isDraft) {
+            $rules = [
+                // Informasi Pelaksanaan - all nullable for draft
+                'realisasi_tanggal_mulai' => 'nullable|date',
+                'realisasi_tanggal_selesai' => 'nullable|date|after_or_equal:realisasi_tanggal_mulai',
+                'rangkaian_kegiatan' => 'nullable|string',
+                'realisasi_peserta' => 'nullable|integer',
+                'profil_peserta' => 'nullable|string',
+
+                // Hasil dan Output - all nullable for draft
+                'hasil_dicapai' => 'nullable|string',
+                'output_nyata' => 'nullable|string',
+                'dampak_awal' => 'nullable|string',
+
+                // Kendala dan Evaluasi
+                'kendala' => 'nullable|string',
+                'solusi' => 'nullable|string',
+                'evaluasi_rekomendasi' => 'nullable|string',
+
+                // Dokumentasi
+                'foto_kegiatan' => 'nullable|array',
+                'foto_kegiatan.*' => 'nullable|image|mimes:jpg,jpeg,png|max:3072',
+                'daftar_hadir' => 'nullable|array',
+                'daftar_hadir.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:3072',
+                'notulen' => 'nullable|array',
+                'notulen.*' => 'nullable|file|mimes:pdf,doc,docx|max:3072',
+                'materi' => 'nullable|array',
+                'materi.*' => 'nullable|file|mimes:pdf,ppt,pptx,doc,docx|max:3072',
+                'berita_acara' => 'nullable|array',
+                'berita_acara.*' => 'nullable|file|mimes:pdf,doc,docx|max:3072',
+
+                // Remove files (for edit)
+                'remove_foto_kegiatan' => 'nullable|array',
+                'remove_foto_kegiatan.*' => 'string',
+                'remove_daftar_hadir' => 'nullable|array',
+                'remove_daftar_hadir.*' => 'string',
+                'remove_notulen' => 'nullable|array',
+                'remove_notulen.*' => 'string',
+                'remove_materi' => 'nullable|array',
+                'remove_materi.*' => 'string',
+                'remove_berita_acara' => 'nullable|array',
+                'remove_berita_acara.*' => 'string',
+            ];
+
+            if ($this->isMethod('POST')) {
+                if ($this->has('is_laporan_langsung') && $this->is_laporan_langsung == '1') {
+                    $rules['rencana_kegiatan_id'] = 'nullable';
+                    $rules['judul_kegiatan'] = 'required|string|max:255';
+                    $rules['lokasi_kegiatan'] = 'nullable|string|max:255';
+                } else {
+                    $rules['rencana_kegiatan_id'] = 'required|exists:rencana_kegiatans,uuid';
+                }
+            }
+
+            if (in_array($this->method(), ['PUT', 'PATCH']) && $this->route('laporan_kegiatan') && $this->route('laporan_kegiatan')->isDarurat()) {
+                $rules['judul_kegiatan'] = 'required|string|max:255';
+                $rules['lokasi_kegiatan'] = 'nullable|string|max:255';
+            }
+
+            return $rules;
+        }
+
         $rules = [
             // Informasi Pelaksanaan
             'realisasi_tanggal_mulai' => 'required|date',
