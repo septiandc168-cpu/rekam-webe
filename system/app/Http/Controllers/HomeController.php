@@ -77,11 +77,11 @@ class HomeController extends Controller
         }
         $rencanaTerbaru = $rencanaQuery->take(5)->get();
 
-        // === Map Data (Hanya kegiatan yang punya lat/lng dan berstatus disetujui atau selesai) ===
+        // === Map Data (Hanya kegiatan yang punya lat/lng dan berstatus disetujui) ===
         $mapQuery = RencanaKegiatan::with('user')->select('id', 'user_id', 'uuid', 'nama_kegiatan', 'lat', 'lng', 'status', 'desa', 'tanggal_mulai', 'penanggung_jawab')
             ->whereNotNull('lat')
             ->whereNotNull('lng')
-            ->whereIn('status', [RencanaKegiatan::STATUS_DISETUJUI, RencanaKegiatan::STATUS_SELESAI]);
+            ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
         $mapData = $mapQuery->get()->map(function($item) {
             $formattedDate = $item->tanggal_mulai ? \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d F Y') : '-';
             $person = $item->penanggung_jawab ?? ($item->user ? $item->user->name : 'Unknown');
