@@ -85,6 +85,15 @@
                         </a>
                     </li>
                 @endif
+                <li class="nav-item">
+                    <a href="{{ route('history_realisasi.index') }}"
+                        class="nav-link {{ request()->routeIs('history_realisasi.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-history"></i>
+                        <p>
+                            History Realisasi
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

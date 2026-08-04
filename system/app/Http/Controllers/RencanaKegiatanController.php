@@ -116,6 +116,67 @@ class RencanaKegiatanController extends Controller
         return view('rencana_kegiatan.create');
     }
 
+    /**
+     * History Realisasi Kegiatan: semua rencana berstatus selesai beserta laporannya.
+     */
+    public function historyRealisasi(Request $request)
+    {
+        $user        = auth()->user();
+        $isSupervisor = $user->role->role_name === 'admin';
+
+        $query = RencanaKegiatan::with(['laporanKegiatan', 'user'])
+            ->where('status', RencanaKegiatan::STATUS_SELESAI);
+
+        // Scope anggota ke data milik sendiri
+        if (!$isSupervisor) {
+            $query->where('user_id', $user->id);
+        }
+
+        // Filters
+        if ($request->filled('bulan')) {
+            $query->whereMonth('tanggal_mulai', $request->bulan);
+        }
+        if ($request->filled('tahun')) {
+            $query->whereYear('tanggal_mulai', $request->tahun);
+        }
+        if ($request->filled('jenis')) {
+            $query->where('jenis_kegiatan', $request->jenis);
+        }
+        if ($request->filled('user_id') && $isSupervisor) {
+            $query->where('user_id', $request->user_id);
+        }
+        if ($request->filled('status_laporan')) {
+            if ($request->status_laporan === 'none') {
+                $query->doesntHave('laporanKegiatan');
+            } else {
+                $query->whereHas('laporanKegiatan', function ($q) use ($request) {
+                    $q->where('status', $request->status_laporan);
+                });
+            }
+        }
+
+        $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->get();
+
+        // Stats
+        $totalSelesai       = $rencanaKegiatans->count();
+        $totalDenganLaporan = $rencanaKegiatans->filter(fn($r) => $r->laporanKegiatan && $r->laporanKegiatan->status === 'final')->count();
+        $totalTanpaLaporan  = $rencanaKegiatans->filter(fn($r) => !$r->laporanKegiatan)->count();
+
+        // User list for filter (admin only)
+        $users = $isSupervisor
+            ? \App\Models\User::whereHas('role', fn($q) => $q->where('role_name', 'anggota'))->orderBy('name')->get()
+            : collect();
+
+        return view('history_realisasi.index', compact(
+            'rencanaKegiatans',
+            'users',
+            'totalSelesai',
+            'totalDenganLaporan',
+            'totalTanpaLaporan'
+        ));
+    }
+
+
     public function store(Request $request)
     {
         // Check authorization

@@ -63,6 +63,9 @@ Route::middleware('auth')->group(function () {
     // Export PDF route
     Route::get('/rencana_kegiatan/{rencana_kegiatan}/export/pdf', [App\Http\Controllers\RencanaKegiatanController::class, 'exportPdf'])
         ->name('rencana_kegiatan.export.pdf');
+
+    // History Realisasi Kegiatan
+    Route::get('/history-realisasi', [App\Http\Controllers\RencanaKegiatanController::class, 'historyRealisasi'])->name('history_realisasi.index');
 });
 
 // Laporan Kegiatan Routes
