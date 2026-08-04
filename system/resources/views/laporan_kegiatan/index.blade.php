@@ -23,26 +23,24 @@
 
     {{-- === SEKSI: Rencana Kegiatan Disetujui yang Siap Dibuatkan Laporan (Hanya Anggota) === --}}
     @if(isset($rencanaDisetujui) && $rencanaDisetujui->count() > 0)
-    <div class="card shadow-sm mb-4" style="border: 2px solid #22c55e; border-radius: 10px; overflow: hidden;">
-        <div class="card-header d-flex align-items-center justify-content-between py-2 px-3"
-             style="background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);">
+    <div class="card shadow-sm elevation-1 text-sm mb-4">
+        <div class="card-header bg-white d-flex align-items-center justify-content-between py-2 px-3">
             <div class="d-flex align-items-center">
-                <i class="fas fa-clipboard-check text-white mr-2"></i>
-                <h6 class="mb-0 text-white fw-bold" style="font-size: 0.9rem;">
-                    Rencana Kegiatan Siap Laporan
-                    <span class="badge badge-light text-success ml-1" style="font-size: 0.78rem;">
+                <h6 class="card-title fw-bold text-dark mt-1 mb-0" style="font-size: 0.95rem;">
+                    <i class="fas fa-clipboard-check text-navy mr-1"></i> Rencana Kegiatan Siap Laporan
+                    <span class="badge bg-navy text-white ml-1" style="font-size: 0.78rem;">
                         {{ $rencanaDisetujui->count() }}
                     </span>
                 </h6>
             </div>
-            <small class="text-white d-none d-md-block" style="opacity:0.85; font-size:0.78rem;">
+            <small class="text-muted d-none d-md-block" style="font-size: 0.78rem;">
                 <i class="fas fa-info-circle mr-1"></i> Rencana kegiatan yang sudah disetujui dan belum ada laporannya
             </small>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover table-borderless mb-0 text-sm align-middle">
-                    <thead style="background:#f0fdf4;">
+                    <thead class="bg-navy text-white text-nowrap">
                         <tr>
                             <th class="align-middle text-center pl-3" style="width:40px;">No</th>
                             <th class="align-middle" style="width:30%;">Nama Kegiatan</th>
@@ -92,7 +90,7 @@
                             </td>
                             <td class="align-middle text-center">
                                 <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana->uuid]) }}"
-                                   class="btn btn-sm btn-success shadow-sm"
+                                   class="btn btn-sm bg-navy text-white shadow-sm"
                                    title="Buat Laporan untuk Kegiatan Ini">
                                     <i class="fas fa-file-alt mr-1"></i> Buat Laporan
                                 </a>
