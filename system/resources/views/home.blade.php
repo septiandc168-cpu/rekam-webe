@@ -238,8 +238,27 @@
                     </div>
                 </div>
             </div>
+        <!-- Modal Detail Kalender Kegiatan -->
+        <div class="modal fade" id="modal-detail-kalender" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-navy text-white py-2 px-3">
+                        <h6 class="modal-title font-weight-bold mb-0" id="kalender-modal-title" style="font-size: 0.95rem;">
+                            <i class="fas fa-calendar-day mr-2"></i> Informasi Kegiatan
+                        </h6>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body bg-light p-3" id="kalender-modal-body" style="max-height: 70vh; overflow-y: auto;">
+                        <!-- Content injected via JS -->
+                    </div>
+                    <div class="modal-footer bg-white py-2 px-3">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
 
     </div>
 @endsection
@@ -359,58 +378,43 @@
                 },
                 events: '{{ route("dashboard.events") }}',
                 eventClick: function(info) {
-                    window.location.href = info.event.url;
+                    info.jsEvent.preventDefault();
+                    var props = info.event.extendedProps;
+                    if (!props || !props.items || props.items.length === 0) return false;
+
+                    $('#kalender-modal-title').html('<i class="fas fa-calendar-day mr-2"></i> Kegiatan Tanggal ' + props.date_formatted);
+                    
+                    var html = '';
+                    props.items.forEach(function(item, idx) {
+                        html += '<div class="card mb-3 shadow-sm border-0" style="border-left: 4px solid #16a34a !important; border-radius: 8px; overflow: hidden;">';
+                        html += '  <div class="card-body p-3 bg-white">';
+                        html += '    <div class="d-flex justify-content-between align-items-start mb-2">';
+                        html += '      <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">' + item.nama_kegiatan + '</h6>';
+                        html += '      <span class="badge bg-success text-white px-2 py-1" style="font-size: 0.72rem; font-weight: 600;">Disetujui</span>';
+                        html += '    </div>';
+                        html += '    <div class="row text-muted text-sm mt-2 g-2">';
+                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-user text-navy mr-1"></i> PJ: <strong>' + item.penanggung_jawab + '</strong></div>';
+                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-map-marker-alt text-danger mr-1"></i> Lokasi: <strong>' + item.desa + '</strong></div>';
+                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-tag text-info mr-1"></i> Jenis: <strong>' + item.jenis + '</strong></div>';
+                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-calendar-alt text-primary mr-1"></i> Tanggal: <strong>' + item.tanggal_mulai + (item.tanggal_mulai !== item.tanggal_selesai ? ' - ' + item.tanggal_selesai : '') + '</strong></div>';
+                        html += '    </div>';
+                        html += '    <div class="text-right mt-2 pt-2 border-top">';
+                        html += '      <a href="' + item.url + '" class="btn btn-sm bg-navy text-white shadow-sm"><i class="fas fa-external-link-alt mr-1"></i> Lihat Detail Rencana</a>';
+                        html += '    </div>';
+                        html += '  </div>';
+                        html += '</div>';
+                    });
+
+                    $('#kalender-modal-body').html(html);
+                    $('#modal-detail-kalender').modal('show');
                     return false;
                 },
                 eventDidMount: function(info) {
                     info.el.style.cursor = 'pointer';
-                    
-                    // Jangan tampilkan tooltip di tampilan list, karena nama sudah terlihat jelas
-                    if (info.view.type === 'listWeek' || info.view.type === 'listDay' || info.view.type === 'listMonth') {
-                        // Apply soft background and text colors to the row
-                        var tds = info.el.querySelectorAll('td');
-                        tds.forEach(function(td) {
-                            td.style.setProperty('background-color', info.event.backgroundColor, 'important');
-                        });
-                        
-                        var titleLink = info.el.querySelector('.fc-list-event-title a');
-                        if (titleLink) {
-                            titleLink.style.setProperty('color', info.event.textColor, 'important');
-                            titleLink.style.setProperty('font-weight', '600', 'important');
-                        }
-                        
-                        var timeEl = info.el.querySelector('.fc-list-event-time');
-                        if (timeEl) {
-                            timeEl.style.setProperty('color', info.event.textColor, 'important');
-                        }
-                        return;
-                    }
-                    
-                    // Gunakan Bootstrap Tooltip untuk memunculkan pop-up saat hover
-                    var isBootstrapTooltip = typeof $.fn.bootstrapTooltip === 'function';
-                    if (window.jQuery && (isBootstrapTooltip || $.fn.tooltip)) {
-                        var tooltipContent = '<strong>' + (info.event.extendedProps.nama_kegiatan || info.event.title) + '</strong>';
-                        if (info.event.extendedProps && info.event.extendedProps.description) {
-                            tooltipContent += '<br/><small>' + info.event.extendedProps.description + '</small>';
-                        }
-                        
-                        var el = $(info.el);
-                        var tooltipOpts = {
-                            title: tooltipContent,
-                            html: true,
-                            placement: 'top',
-                            trigger: 'hover',
-                            container: 'body'
-                        };
-                        
-                        if (isBootstrapTooltip) {
-                            el.bootstrapTooltip(tooltipOpts);
-                        } else {
-                            el.tooltip(tooltipOpts);
-                        }
-                    } else {
-                        // Fallback title native
-                        info.el.setAttribute('title', info.event.title);
+                    var props = info.event.extendedProps;
+                    if (props && props.items) {
+                        var titles = props.items.map(function(it) { return '• ' + it.nama_kegiatan; }).join('\n');
+                        info.el.setAttribute('title', props.count + ' Rencana Kegiatan Disetujui:\n' + titles);
                     }
                 },
                 displayEventTime: false,

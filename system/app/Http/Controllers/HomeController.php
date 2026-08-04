@@ -119,81 +119,61 @@ class HomeController extends Controller
      */
     public function events()
     {
-        $user = auth()->user();
-        
-        // Filter data berdasarkan role
-        if ($user->role->role_name === 'admin') {
-            // Supervisor melihat semua kegiatan kecuali draft
-            $rencanaKegiatan = RencanaKegiatan::where('status', '!=', RencanaKegiatan::STATUS_DRAFT)->get();
-        } else {
-            // Anggota melihat kegiatannya sendiri (termasuk draft) ATAU data anggota lain (kecuali draft & revisi)
-            $rencanaKegiatan = RencanaKegiatan::with('user')->where(function($q) use ($user) {
-                    $q->where('user_id', $user->id)
-                      ->orWhereNotIn('status', [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]);
-                })
-                ->get();
+        // Kalender hanya menampilkan rencana kegiatan berstatus DISETUJUI untuk Admin dan Anggota
+        $rencanaKegiatan = RencanaKegiatan::with('user')
+            ->where('status', RencanaKegiatan::STATUS_DISETUJUI)
+            ->get();
+
+        $dateGrouped = [];
+
+        foreach ($rencanaKegiatan as $rencana) {
+            $startDate = \Carbon\Carbon::parse($rencana->tanggal_mulai);
+            $endDate   = \Carbon\Carbon::parse($rencana->tanggal_selesai);
+
+            $formattedMulai   = $startDate->translatedFormat('d M Y');
+            $formattedSelesai = $endDate->translatedFormat('d M Y');
+
+            $currentDate = $startDate->copy();
+            while ($currentDate->lte($endDate)) {
+                $dateStr = $currentDate->format('Y-m-d');
+
+                if (!isset($dateGrouped[$dateStr])) {
+                    $dateGrouped[$dateStr] = [];
+                }
+
+                $dateGrouped[$dateStr][] = [
+                    'uuid'            => $rencana->uuid,
+                    'nama_kegiatan'   => $rencana->nama_kegiatan,
+                    'penanggung_jawab'=> $rencana->penanggung_jawab ?? ($rencana->user ? $rencana->user->name : '-'),
+                    'desa'            => $rencana->desa ?? '-',
+                    'jenis'           => $rencana->getJenisKegiatanLabel(),
+                    'tanggal_mulai'   => $formattedMulai,
+                    'tanggal_selesai' => $formattedSelesai,
+                    'estimasi_peserta'=> $rencana->estimasi_peserta ?? '-',
+                    'url'             => route('rencana_kegiatan.show', $rencana->uuid),
+                ];
+
+                $currentDate->addDay();
+            }
         }
 
         $events = [];
-        
-        foreach ($rencanaKegiatan as $rencana) {
-            // Tentukan warna berdasarkan status
-            $backgroundColor = $this->getStatusColor($rencana->status);
-            $textColor = $this->getStatusTextColor($rencana->status);
-            $borderColor = $textColor; // Border color matches text color
-            
-            // Gunakan Carbon untuk parsing yang benar
-            $startDate = \Carbon\Carbon::parse($rencana->tanggal_mulai);
-            $endDate = \Carbon\Carbon::parse($rencana->tanggal_selesai);
-            
-            // Jika ada waktu_mulai dan waktu_selesai, buat event per hari
-            if ($rencana->waktu_mulai && $rencana->waktu_selesai) {
-                $startTime = \Carbon\Carbon::parse($rencana->waktu_mulai)->format('H:i');
-                $endTime = \Carbon\Carbon::parse($rencana->waktu_selesai)->format('H:i');
-                
-                // Buat event untuk setiap hari dalam rentang tanggal
-                $currentDate = $startDate->copy();
-                while ($currentDate->lte($endDate)) {
-                    $dateStr = $currentDate->format('Y-m-d');
-                    $startDateTime = $dateStr . 'T' . $startTime . ':00';
-                    $endDateTime = $dateStr . 'T' . $endTime . ':00';
-                    
-                    $events[] = [
-                        'id' => $rencana->uuid . '_' . $dateStr, // Tambahkan suffix unik per hari
-                        'title' => ucwords(str_replace('_', ' ', $rencana->status)),
-                        'start' => $startDateTime,
-                        'end' => $endDateTime,
-                        'url' => route('rencana_kegiatan.show', $rencana->uuid),
-                        'backgroundColor' => $backgroundColor,
-                        'borderColor' => $borderColor,
-                        'textColor' => $textColor,
-                        'allDay' => false,
-                        'extendedProps' => [
-                            'nama_kegiatan' => $rencana->nama_kegiatan,
-                            'description' => $rencana->deskripsi ?? ''
-                        ]
-                    ];
-                    
-                    $currentDate->addDay();
-                }
-            } else {
-                // Jika tidak ada waktu, buat all-day event untuk rentang tanggal
-                $events[] = [
-                    'id' => $rencana->uuid,
-                    'title' => ucwords(str_replace('_', ' ', $rencana->status)),
-                    'start' => $startDate->format('Y-m-d'),
-                    'end' => $endDate->format('Y-m-d'),
-                    'url' => route('rencana_kegiatan.show', $rencana->uuid),
-                    'backgroundColor' => $backgroundColor,
-                    'borderColor' => $borderColor,
-                    'textColor' => $textColor,
-                    'allDay' => true,
-                    'extendedProps' => [
-                        'nama_kegiatan' => $rencana->nama_kegiatan,
-                        'description' => $rencana->deskripsi ?? ''
-                    ]
-                ];
-            }
+        foreach ($dateGrouped as $dateStr => $items) {
+            $count = count($items);
+            $events[] = [
+                'id'              => 'date_' . $dateStr,
+                'title'           => $count . ' Kegiatan',
+                'start'           => $dateStr,
+                'allDay'          => true,
+                'backgroundColor' => '#def7ec',
+                'borderColor'     => '#03543f',
+                'textColor'       => '#03543f',
+                'extendedProps'   => [
+                    'count'          => $count,
+                    'date_formatted' => \Carbon\Carbon::parse($dateStr)->translatedFormat('d F Y'),
+                    'items'          => $items,
+                ]
+            ];
         }
 
         return response()->json($events);
