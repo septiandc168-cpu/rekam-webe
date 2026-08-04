@@ -21,6 +21,91 @@
         </div>
     @endif
 
+    {{-- === SEKSI: Rencana Kegiatan Disetujui yang Siap Dibuatkan Laporan (Hanya Anggota) === --}}
+    @if(isset($rencanaDisetujui) && $rencanaDisetujui->count() > 0)
+    <div class="card shadow-sm mb-4" style="border: 2px solid #22c55e; border-radius: 10px; overflow: hidden;">
+        <div class="card-header d-flex align-items-center justify-content-between py-2 px-3"
+             style="background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-clipboard-check text-white mr-2"></i>
+                <h6 class="mb-0 text-white fw-bold" style="font-size: 0.9rem;">
+                    Rencana Kegiatan Siap Laporan
+                    <span class="badge badge-light text-success ml-1" style="font-size: 0.78rem;">
+                        {{ $rencanaDisetujui->count() }}
+                    </span>
+                </h6>
+            </div>
+            <small class="text-white d-none d-md-block" style="opacity:0.85; font-size:0.78rem;">
+                <i class="fas fa-info-circle mr-1"></i> Rencana kegiatan yang sudah disetujui dan belum ada laporannya
+            </small>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-borderless mb-0 text-sm align-middle">
+                    <thead style="background:#f0fdf4;">
+                        <tr>
+                            <th class="align-middle text-center pl-3" style="width:40px;">No</th>
+                            <th class="align-middle" style="width:30%;">Nama Kegiatan</th>
+                            <th class="align-middle d-none d-md-table-cell" style="width:15%;">Jenis</th>
+                            <th class="align-middle d-none d-lg-table-cell" style="width:20%;">Lokasi</th>
+                            <th class="align-middle d-none d-md-table-cell" style="width:15%;">Tanggal Pelaksanaan</th>
+                            <th class="align-middle text-center" style="width:130px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($rencanaDisetujui as $idx => $rencana)
+                        <tr>
+                            <td class="align-middle text-center pl-3">{{ $idx + 1 }}</td>
+                            <td class="align-middle">
+                                <div class="fw-bold text-dark text-wrap"
+                                     style="max-width:260px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"
+                                     title="{{ $rencana->nama_kegiatan }}">
+                                    {{ $rencana->nama_kegiatan }}
+                                </div>
+                                @if($rencana->penanggung_jawab)
+                                    <small class="text-muted"><i class="fas fa-user mr-1"></i>{{ $rencana->penanggung_jawab }}</small>
+                                @endif
+                            </td>
+                            <td class="align-middle d-none d-md-table-cell">
+                                @php
+                                    $jenisStyles = [
+                                        'konservasi'       => 'background:#d1fae5; color:#065f46;',
+                                        'edukasi'          => 'background:#dbeafe; color:#1e40af;',
+                                        'usaha masyarakat' => 'background:#fef3c7; color:#92400e;',
+                                    ];
+                                    $jenisStyle = $jenisStyles[$rencana->jenis_kegiatan] ?? 'background:#f3e8ff; color:#6b21a8;';
+                                @endphp
+                                <span style="{{ $jenisStyle }} padding:2px 9px; border-radius:20px; font-size:0.73rem; font-weight:600;">
+                                    {{ $rencana->getJenisKegiatanLabel() }}
+                                </span>
+                            </td>
+                            <td class="align-middle text-muted d-none d-lg-table-cell" style="font-size:0.82rem;">
+                                <i class="fas fa-map-marker-alt mr-1 text-muted"></i>
+                                {{ Str::limit($rencana->desa ?? '-', 35) }}
+                            </td>
+                            <td class="align-middle d-none d-md-table-cell" style="font-size:0.82rem; white-space:nowrap;">
+                                <i class="fas fa-calendar-alt mr-1 text-muted"></i>
+                                {{ \Carbon\Carbon::parse($rencana->tanggal_mulai)->translatedFormat('d M Y') }}
+                                @if($rencana->tanggal_selesai && $rencana->tanggal_mulai != $rencana->tanggal_selesai)
+                                    <br><span class="text-muted">&ndash; {{ \Carbon\Carbon::parse($rencana->tanggal_selesai)->translatedFormat('d M Y') }}</span>
+                                @endif
+                            </td>
+                            <td class="align-middle text-center">
+                                <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana->uuid]) }}"
+                                   class="btn btn-sm btn-success shadow-sm"
+                                   title="Buat Laporan untuk Kegiatan Ini">
+                                    <i class="fas fa-file-alt mr-1"></i> Buat Laporan
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div class="card shadow-sm elevation-1 text-sm">
         <div class="card-header bg-white">
             <h6 class="card-title fw-bold text-dark mt-1 mb-0" style="font-size: 0.95rem;">Data Laporan Kegiatan</h6>
