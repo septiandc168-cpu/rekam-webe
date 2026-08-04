@@ -238,7 +238,9 @@
 
             @php
                 $backRoute = route('rencana_kegiatan.index');
-                if (auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id != auth()->id()) {
+                if (in_array($rencana_kegiatan->status, ['selesai', 'draft']) || request('from') === 'history') {
+                    $backRoute = route('history_realisasi.index');
+                } elseif (auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id != auth()->id()) {
                     // Jika anggota melihat dokumen milik orang lain (dari dashboard), kembalikan ke dashboard
                     $backRoute = route('home');
                 }

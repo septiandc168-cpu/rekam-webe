@@ -65,9 +65,19 @@
                         </a>
                     </li>
                 @endif
+                @php
+                    $isRencanaShow = request()->routeIs('rencana_kegiatan.show');
+                    $rencanaStatus = isset($rencana_kegiatan) ? $rencana_kegiatan->status : null;
+                    
+                    $isHistoryActive = request()->routeIs('history_realisasi.*') || 
+                        ($isRencanaShow && in_array($rencanaStatus, ['selesai', 'draft'])) || 
+                        request('from') === 'history';
+
+                    $isRencanaActive = request()->routeIs('rencana_kegiatan.*') && !$isHistoryActive;
+                @endphp
                 <li class="nav-item">
                     <a href="{{ route('rencana_kegiatan.index') }}"
-                        class="nav-link {{ request()->routeIs('rencana_kegiatan.*') ? 'active' : '' }}">
+                        class="nav-link {{ $isRencanaActive ? 'active' : '' }}">
                         <i class="nav-icon fas fa-calendar"></i>
                         <p>
                             Rencana Kegiatan
@@ -87,7 +97,7 @@
                 @endif
                 <li class="nav-item">
                     <a href="{{ route('history_realisasi.index') }}"
-                        class="nav-link {{ request()->routeIs('history_realisasi.*') ? 'active' : '' }}">
+                        class="nav-link {{ $isHistoryActive ? 'active' : '' }}">
                         <i class="nav-icon fas fa-history"></i>
                         <p>
                             History Realisasi

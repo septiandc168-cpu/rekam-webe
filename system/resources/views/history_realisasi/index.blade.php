@@ -334,7 +334,7 @@
                         {{-- Card Footer --}}
                         <div class="card-footer bg-white border-top-0 pt-0 pb-3 px-3">
                             <div class="d-flex" style="gap:8px;">
-                                <a href="{{ route('rencana_kegiatan.show', $rencana->uuid ?? $rencana->id) }}"
+                                <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'history']) }}"
                                    class="btn btn-sm bg-navy text-white flex-fill shadow-sm">
                                     <i class="fas fa-calendar-check mr-1"></i> Lihat Rencana
                                 </a>
