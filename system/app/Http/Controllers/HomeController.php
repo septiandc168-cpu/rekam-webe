@@ -56,32 +56,13 @@ class HomeController extends Controller
             $month = $now->copy()->subMonths($i);
             $chartLabels[] = $month->translatedFormat('M Y');
 
-            $year  = $month->year;
-            $mNum  = $month->month;
+            $queryDisetujui = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
+                ->whereMonth('tanggal_mulai', $month->month)
+                ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
 
-            $queryDisetujui = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DISETUJUI)
-                ->where(function($q) use ($year, $mNum) {
-                    $q->where(function($sub) use ($year, $mNum) {
-                        $sub->whereYear('tanggal_mulai', $year)
-                            ->whereMonth('tanggal_mulai', $mNum);
-                    })->orWhere(function($sub) use ($year, $mNum) {
-                        $sub->whereNull('tanggal_mulai')
-                            ->whereYear('created_at', $year)
-                            ->whereMonth('created_at', $mNum);
-                    });
-                });
-
-            $querySelesai = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_SELESAI)
-                ->where(function($q) use ($year, $mNum) {
-                    $q->where(function($sub) use ($year, $mNum) {
-                        $sub->whereYear('tanggal_mulai', $year)
-                            ->whereMonth('tanggal_mulai', $mNum);
-                    })->orWhere(function($sub) use ($year, $mNum) {
-                        $sub->whereNull('tanggal_mulai')
-                            ->whereYear('created_at', $year)
-                            ->whereMonth('created_at', $mNum);
-                    });
-                });
+            $querySelesai = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
+                ->whereMonth('tanggal_mulai', $month->month)
+                ->where('status', RencanaKegiatan::STATUS_SELESAI);
 
             if (!$isAdmin) {
                 $queryDisetujui->where('user_id', $user->id);
