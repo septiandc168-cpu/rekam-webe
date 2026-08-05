@@ -150,6 +150,24 @@
             </h4>
         </div>
 
+        @php
+            $missingFieldsShow = [];
+            if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DRAFT && auth()->user()->role->role_name === 'anggota' && $laporanKegiatan->user_id == auth()->id()) {
+                if ($laporanKegiatan->isDarurat()) {
+                    if (empty(trim($laporanKegiatan->judul_kegiatan ?? ''))) $missingFieldsShow[] = 'Judul Kegiatan';
+                    if (empty(trim($laporanKegiatan->lokasi_kegiatan ?? ''))) $missingFieldsShow[] = 'Lokasi Kegiatan';
+                }
+                if (empty($laporanKegiatan->realisasi_tanggal_mulai)) $missingFieldsShow[] = 'Realisasi Tanggal Mulai';
+                if (empty($laporanKegiatan->realisasi_tanggal_selesai)) $missingFieldsShow[] = 'Realisasi Tanggal Selesai';
+                if (empty(trim(strip_tags($laporanKegiatan->rangkaian_kegiatan ?? '')))) $missingFieldsShow[] = 'Rangkaian Kegiatan';
+                if (empty($laporanKegiatan->realisasi_peserta)) $missingFieldsShow[] = 'Realisasi Jumlah Peserta';
+                if (empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? '')))) $missingFieldsShow[] = 'Profil Peserta';
+                if (empty(trim(strip_tags($laporanKegiatan->hasil_dicapai ?? '')))) $missingFieldsShow[] = 'Hasil yang Dicapai';
+                if (empty(trim(strip_tags($laporanKegiatan->output_nyata ?? '')))) $missingFieldsShow[] = 'Output Nyata';
+                if (empty(trim(strip_tags($laporanKegiatan->dampak_awal ?? '')))) $missingFieldsShow[] = 'Dampak Awal';
+            }
+        @endphp
+
         <div class="d-flex align-items-center flex-wrap flex-shrink-0">
             @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN && auth()->user()->role->role_name === 'admin')
                 <!-- Tombol Terima & Finalisasi -->
@@ -177,13 +195,19 @@
 
             @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DRAFT)
                 @can('update', $laporanKegiatan)
-                    <form action="{{ route('laporan_kegiatan.ajukan', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}" method="POST" class="d-inline mr-2">
-                        @csrf
-                        @method('PUT')
-                        <button type="submit" class="btn bg-navy text-white btn-sm shadow-sm fw-bold">
+                    @if(empty($missingFieldsShow))
+                        <form action="{{ route('laporan_kegiatan.ajukan', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}" method="POST" class="d-inline mr-2">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn bg-navy text-white btn-sm shadow-sm fw-bold">
+                                <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
+                            </button>
+                        </form>
+                    @else
+                        <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Draft Belum Lengkap!', text: 'Laporan kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', timer: 15000, timerProgressBar: true, confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
                             <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
                         </button>
-                    </form>
+                    @endif
                 @endcan
             @endif
 
@@ -212,6 +236,52 @@
             </a>
         </div>
     </div>
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle mr-2"></i> {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
+    @if(!empty($missingFieldsShow))
+        <div class="alert alert-warning border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: #fff8e6; border-left: 4px solid #ffc107 !important;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="top: 10px; right: 15px; opacity: 0.7;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="d-flex align-items-start pr-4">
+                <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center mr-3 mt-1" style="width: 36px; height: 36px; flex-shrink: 0;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                        <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">Draft Belum Lengkap</h6>
+                        <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFieldsShow) }} Data Wajib Belum Terisi</span>
+                    </div>
+                    <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
+                        Lengkapi data laporan kegiatan ini agar dapat diajukan ke supervisor. 
+                        <a href="javascript:void(0);" onclick="toggleMissingFieldsLaporan(event)" class="text-primary font-weight-bold ml-1" style="text-decoration: underline;">
+                            <i class="fas fa-chevron-down mr-1" id="icon-missing-chevron-lap"></i><span id="text-missing-toggle-lap">Lihat Selengkapnya</span>
+                        </a>
+                    </p>
+                    <div class="mt-2" id="collapseMissingFieldsLap" style="display: none;">
+                        <div class="p-2 rounded bg-white border" style="border-color: #ffe8a1 !important;">
+                            <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">Daftar Kolom Wajib yang Belum Terisi:</strong>
+                            <div class="d-flex flex-wrap" style="gap: 6px;">
+                                @foreach($missingFieldsShow as $mf)
+                                    <span class="badge bg-light text-dark border p-1" style="font-size: 0.78rem;">
+                                        <i class="fas fa-exclamation-circle text-warning mr-1"></i> {{ $mf }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <!-- Visual Progress Tracker -->
     @php
@@ -550,6 +620,28 @@
 
     @push('scripts')
         <script>
+            function toggleMissingFieldsLaporan(event) {
+                if (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                var detailEl = document.getElementById('collapseMissingFieldsLap');
+                var chevron = document.getElementById('icon-missing-chevron-lap');
+                var textEl = document.getElementById('text-missing-toggle-lap');
+
+                if (!detailEl) return;
+
+                if (detailEl.style.display === 'none' || detailEl.style.display === '') {
+                    detailEl.style.display = 'block';
+                    if (chevron) chevron.className = 'fas fa-chevron-up mr-1';
+                    if (textEl) textEl.textContent = 'Sembunyikan';
+                } else {
+                    detailEl.style.display = 'none';
+                    if (chevron) chevron.className = 'fas fa-chevron-down mr-1';
+                    if (textEl) textEl.textContent = 'Lihat Selengkapnya';
+                }
+            }
+
             function printLaporan(url) {
                 // Membuka URL print di iframe tersembunyi
                 let iframe = document.createElement('iframe');

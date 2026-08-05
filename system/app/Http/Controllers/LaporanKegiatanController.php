@@ -837,6 +837,49 @@ class LaporanKegiatanController extends Controller
     }
 
     /**
+     * Helper to get list of missing mandatory fields for a LaporanKegiatan.
+     */
+    private function getMissingFields(LaporanKegiatan $laporan): array
+    {
+        $missing = [];
+
+        if ($laporan->isDarurat()) {
+            if (empty(trim($laporan->judul_kegiatan ?? ''))) {
+                $missing[] = 'Judul Kegiatan';
+            }
+            if (empty(trim($laporan->lokasi_kegiatan ?? ''))) {
+                $missing[] = 'Lokasi Kegiatan';
+            }
+        }
+        if (empty($laporan->realisasi_tanggal_mulai)) {
+            $missing[] = 'Realisasi Tanggal Mulai';
+        }
+        if (empty($laporan->realisasi_tanggal_selesai)) {
+            $missing[] = 'Realisasi Tanggal Selesai';
+        }
+        if (empty(trim(strip_tags($laporan->rangkaian_kegiatan ?? '')))) {
+            $missing[] = 'Rangkaian Kegiatan';
+        }
+        if (empty($laporan->realisasi_peserta)) {
+            $missing[] = 'Realisasi Jumlah Peserta';
+        }
+        if (empty(trim(strip_tags($laporan->profil_peserta ?? '')))) {
+            $missing[] = 'Profil Peserta';
+        }
+        if (empty(trim(strip_tags($laporan->hasil_dicapai ?? '')))) {
+            $missing[] = 'Hasil yang Dicapai';
+        }
+        if (empty(trim(strip_tags($laporan->output_nyata ?? '')))) {
+            $missing[] = 'Output Nyata';
+        }
+        if (empty(trim(strip_tags($laporan->dampak_awal ?? '')))) {
+            $missing[] = 'Dampak Awal';
+        }
+
+        return $missing;
+    }
+
+    /**
      * Anggota action: Ajukan Laporan Kegiatan (Direct)
      */
     public function ajukanLaporan(Request $request, $id)
@@ -846,6 +889,14 @@ class LaporanKegiatanController extends Controller
         // Authorization check: User can only submit their own draft/revisi
         if ($laporanKegiatan->user_id !== auth()->id() || !in_array($laporanKegiatan->status, [LaporanKegiatan::STATUS_DRAFT, LaporanKegiatan::STATUS_REVISI])) {
             abort(403, 'Unauthorized action.');
+        }
+
+        // Validate required fields before submitting draft
+        $missingFields = $this->getMissingFields($laporanKegiatan);
+        if (!empty($missingFields)) {
+            $pesan = 'Laporan kegiatan tidak dapat diajukan karena data wajib berikut belum terisi: ' . implode(', ', $missingFields) . '.';
+            toast($pesan, 'error');
+            return redirect()->back()->with('error', $pesan);
         }
 
         $laporanKegiatan->update([
