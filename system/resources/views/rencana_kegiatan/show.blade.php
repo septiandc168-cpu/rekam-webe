@@ -324,11 +324,11 @@
                     </div>
                     <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
                         Lengkapi data rencana kegiatan ini agar dapat diajukan ke supervisor. 
-                        <a href="#collapseMissingFields" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseMissingFields" class="text-primary font-weight-bold ml-1" style="text-decoration: underline;">
-                            <i class="fas fa-chevron-down mr-1"></i>Lihat Selengkapnya
+                        <a href="javascript:void(0);" onclick="toggleMissingFields(event)" class="text-primary font-weight-bold ml-1" style="text-decoration: underline;">
+                            <i class="fas fa-chevron-down mr-1" id="icon-missing-chevron"></i><span id="text-missing-toggle">Lihat Selengkapnya</span>
                         </a>
                     </p>
-                    <div class="collapse mt-2" id="collapseMissingFields">
+                    <div class="mt-2" id="collapseMissingFields" style="display: none;">
                         <div class="p-2 rounded bg-white border" style="border-color: #ffe8a1 !important;">
                             <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">Daftar Kolom Wajib yang Belum Terisi:</strong>
                             <div class="d-flex flex-wrap" style="gap: 6px;">
@@ -764,6 +764,28 @@
 @push('scripts')
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        function toggleMissingFields(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            var detailEl = document.getElementById('collapseMissingFields');
+            var chevron = document.getElementById('icon-missing-chevron');
+            var textEl = document.getElementById('text-missing-toggle');
+
+            if (!detailEl) return;
+
+            if (detailEl.style.display === 'none' || detailEl.style.display === '') {
+                detailEl.style.display = 'block';
+                if (chevron) chevron.className = 'fas fa-chevron-up mr-1';
+                if (textEl) textEl.textContent = 'Sembunyikan';
+            } else {
+                detailEl.style.display = 'none';
+                if (chevron) chevron.className = 'fas fa-chevron-down mr-1';
+                if (textEl) textEl.textContent = 'Lihat Selengkapnya';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Ambil koordinat dari PHP
             const lat = {{ $rencana_kegiatan->lat ?: -0.0227 }};
