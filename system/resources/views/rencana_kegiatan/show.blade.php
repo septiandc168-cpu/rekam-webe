@@ -309,7 +309,7 @@
     @endphp
 
     @if(!empty($missingFieldsShow))
-        <div class="alert alert-warning border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: #fff8e6; border-left: 4px solid #ffc107 !important;">
+        <div class="alert alert-warning alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: #fff8e6; border-left: 4px solid #ffc107 !important;">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="top: 10px; right: 15px; opacity: 0.7;">
                 <span aria-hidden="true">&times;</span>
             </button>
