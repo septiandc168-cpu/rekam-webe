@@ -334,24 +334,128 @@
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
 
+                function validateLaporanStep(stepIndex) {
+                    let missing = [];
+                    let firstInvalidEl = null;
+
+                    $('.is-invalid').removeClass('is-invalid');
+
+                    if (stepIndex === 1) { // Step 1: Realisasi Kegiatan
+                        let isDarurat = $('select[name="is_laporan_langsung"]').val() === '1' || $('input[name="is_laporan_langsung"]').val() === '1';
+                        if (isDarurat) {
+                            let judul = $('input[name="judul_kegiatan"]').val();
+                            if (!judul || !judul.trim()) {
+                                missing.push("Judul Kegiatan");
+                                if (!firstInvalidEl) firstInvalidEl = $('input[name="judul_kegiatan"]');
+                                $('input[name="judul_kegiatan"]').addClass('is-invalid');
+                            }
+                            let lokasi = $('input[name="lokasi_kegiatan"]').val();
+                            if (!lokasi || !lokasi.trim()) {
+                                missing.push("Lokasi Kegiatan");
+                                if (!firstInvalidEl) firstInvalidEl = $('input[name="lokasi_kegiatan"]');
+                                $('input[name="lokasi_kegiatan"]').addClass('is-invalid');
+                            }
+                        }
+
+                        let rMulai = $('input[name="realisasi_tanggal_mulai"]').val();
+                        if (!rMulai) {
+                            missing.push("Realisasi Tanggal Mulai");
+                            if (!firstInvalidEl) firstInvalidEl = $('input[name="realisasi_tanggal_mulai"]');
+                            $('input[name="realisasi_tanggal_mulai"]').addClass('is-invalid');
+                        }
+
+                        let rSelesai = $('input[name="realisasi_tanggal_selesai"]').val();
+                        if (!rSelesai) {
+                            missing.push("Realisasi Tanggal Selesai");
+                            if (!firstInvalidEl) firstInvalidEl = $('input[name="realisasi_tanggal_selesai"]');
+                            $('input[name="realisasi_tanggal_selesai"]').addClass('is-invalid');
+                        }
+
+                        let rangkText = $('textarea[name="rangkaian_kegiatan"]').length && $('textarea[name="rangkaian_kegiatan"]').hasClass('summernote-editor') ? $('textarea[name="rangkaian_kegiatan"]').summernote('code').replace(/<[^>]*>/g, '').trim() : $('textarea[name="rangkaian_kegiatan"]').val();
+                        if (!rangkText) {
+                            missing.push("Rangkaian Kegiatan");
+                            if (!firstInvalidEl) firstInvalidEl = $('textarea[name="rangkaian_kegiatan"]').next();
+                        }
+
+                        let rPeserta = $('input[name="realisasi_peserta"]').val();
+                        if (!rPeserta || parseInt(rPeserta) < 0 || isNaN(parseInt(rPeserta))) {
+                            missing.push("Realisasi Jumlah Peserta");
+                            if (!firstInvalidEl) firstInvalidEl = $('input[name="realisasi_peserta"]');
+                            $('input[name="realisasi_peserta"]').addClass('is-invalid');
+                        }
+
+                        let profText = $('textarea[name="profil_peserta"]').length && $('textarea[name="profil_peserta"]').hasClass('summernote-editor') ? $('textarea[name="profil_peserta"]').summernote('code').replace(/<[^>]*>/g, '').trim() : $('textarea[name="profil_peserta"]').val();
+                        if (!profText) {
+                            missing.push("Profil Peserta");
+                            if (!firstInvalidEl) firstInvalidEl = $('textarea[name="profil_peserta"]').next();
+                        }
+
+                        let hasilText = $('textarea[name="hasil_dicapai"]').length && $('textarea[name="hasil_dicapai"]').hasClass('summernote-editor') ? $('textarea[name="hasil_dicapai"]').summernote('code').replace(/<[^>]*>/g, '').trim() : $('textarea[name="hasil_dicapai"]').val();
+                        if (!hasilText) {
+                            missing.push("Hasil yang Dicapai");
+                            if (!firstInvalidEl) firstInvalidEl = $('textarea[name="hasil_dicapai"]').next();
+                        }
+
+                        let outText = $('textarea[name="output_nyata"]').length && $('textarea[name="output_nyata"]').hasClass('summernote-editor') ? $('textarea[name="output_nyata"]').summernote('code').replace(/<[^>]*>/g, '').trim() : $('textarea[name="output_nyata"]').val();
+                        if (!outText) {
+                            missing.push("Output Nyata");
+                            if (!firstInvalidEl) firstInvalidEl = $('textarea[name="output_nyata"]').next();
+                        }
+
+                        let dampText = $('textarea[name="dampak_awal"]').length && $('textarea[name="dampak_awal"]').hasClass('summernote-editor') ? $('textarea[name="dampak_awal"]').summernote('code').replace(/<[^>]*>/g, '').trim() : $('textarea[name="dampak_awal"]').val();
+                        if (!dampText) {
+                            missing.push("Dampak Awal");
+                            if (!firstInvalidEl) firstInvalidEl = $('textarea[name="dampak_awal"]').next();
+                        }
+                    } else if (stepIndex === 2) { // Step 2: Kendala & Evaluasi
+                        let kenText = $('textarea[name="kendala"]').length && $('textarea[name="kendala"]').hasClass('summernote-editor') ? $('textarea[name="kendala"]').summernote('code').replace(/<[^>]*>/g, '').trim() : $('textarea[name="kendala"]').val();
+                        if (!kenText) {
+                            missing.push("Kendala yang Dihadapi");
+                            if (!firstInvalidEl) firstInvalidEl = $('textarea[name="kendala"]').next();
+                        }
+
+                        let solText = $('textarea[name="solusi"]').length && $('textarea[name="solusi"]').hasClass('summernote-editor') ? $('textarea[name="solusi"]').summernote('code').replace(/<[^>]*>/g, '').trim() : $('textarea[name="solusi"]').val();
+                        if (!solText) {
+                            missing.push("Solusi yang Dilakukan");
+                            if (!firstInvalidEl) firstInvalidEl = $('textarea[name="solusi"]').next();
+                        }
+
+                        let evText = $('textarea[name="evaluasi_rekomendasi"]').length && $('textarea[name="evaluasi_rekomendasi"]').hasClass('summernote-editor') ? $('textarea[name="evaluasi_rekomendasi"]').summernote('code').replace(/<[^>]*>/g, '').trim() : $('textarea[name="evaluasi_rekomendasi"]').val();
+                        if (!evText) {
+                            missing.push("Catatan Evaluasi & Rekomendasi");
+                            if (!firstInvalidEl) firstInvalidEl = $('textarea[name="evaluasi_rekomendasi"]').next();
+                        }
+                    }
+
+                    if (missing.length > 0) {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Data Isian Belum Lengkap!',
+                                html: '<div class="text-left"><p class="mb-2">Mohon lengkapi data isian wajib berikut sebelum melanjutkan:</p><ul class="text-danger font-weight-bold pl-3 mb-0" style="list-style-type: disc;">' + missing.map(function(i){ return '<li>' + i + '</li>'; }).join('') + '</ul></div>',
+                                confirmButtonText: 'Lengkapi Sekarang',
+                                confirmButtonColor: '#001f3f'
+                            });
+                        } else {
+                            alert("Mohon lengkapi data isian wajib berikut:\n" + missing.map(function(i){ return '• ' + i; }).join('\n'));
+                        }
+
+                        if (firstInvalidEl && firstInvalidEl.length) {
+                            $('html, body').animate({
+                                scrollTop: firstInvalidEl.offset().top - 120
+                            }, 400);
+                        }
+                        return false;
+                    }
+
+                    return true;
+                }
+
                 $('.btn-next').click(function() {
                     let nextStepId = $(this).data('next');
                     let nextIndex = parseInt(nextStepId.split('-')[1]);
                     
-                    // Simple Frontend Validation on current step before moving
-                    let currentStep = $(this).closest('.wizard-step');
-                    let requiredInputs = currentStep.find('input[required], select[required], textarea[required]');
-                    let isValid = true;
-                    
-                    requiredInputs.each(function() {
-                        if (!this.checkValidity()) {
-                            isValid = false;
-                            this.reportValidity();
-                            return false; // break loop
-                        }
-                    });
-
-                    if (isValid) {
+                    if (validateLaporanStep(currentStepIndex)) {
                         currentStepIndex = nextIndex;
                         showStep(currentStepIndex);
                     }
