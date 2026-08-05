@@ -171,15 +171,15 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Kendala yang Dihadapi</label>
+                                <label class="form-label">Kendala yang Dihadapi <span class="text-danger">*</span></label>
                                 <textarea name="kendala" class="form-control summernote-editor" rows="4" placeholder="Contoh: Cuaca buruk sempat menunda penanaman selama 2 jam...">{!! old('kendala', $laporanKegiatan->kendala) !!}</textarea>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Solusi yang Dilakukan</label>
+                                <label class="form-label">Solusi yang Dilakukan <span class="text-danger">*</span></label>
                                 <textarea name="solusi" class="form-control summernote-editor" rows="4" placeholder="Contoh: Memindahkan area tanam sementara ke sisi timur pantai...">{!! old('solusi', $laporanKegiatan->solusi) !!}</textarea>
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Catatan Evaluasi & Rekomendasi</label>
+                                <label class="form-label">Catatan Evaluasi & Rekomendasi <span class="text-danger">*</span></label>
                                 <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="4" placeholder="Contoh: Ke depannya perlu persiapan terpal untuk antisipasi hujan...">{!! old('evaluasi_rekomendasi', $laporanKegiatan->evaluasi_rekomendasi) !!}</textarea>
                             </div>
                         </div>

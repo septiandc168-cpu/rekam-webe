@@ -875,6 +875,15 @@ class LaporanKegiatanController extends Controller
         if (empty(trim(strip_tags($laporan->dampak_awal ?? '')))) {
             $missing[] = 'Dampak Awal';
         }
+        if (empty(trim(strip_tags($laporan->kendala ?? '')))) {
+            $missing[] = 'Kendala yang Dihadapi';
+        }
+        if (empty(trim(strip_tags($laporan->solusi ?? '')))) {
+            $missing[] = 'Solusi yang Dilakukan';
+        }
+        if (empty(trim(strip_tags($laporan->evaluasi_rekomendasi ?? '')))) {
+            $missing[] = 'Catatan Evaluasi & Rekomendasi';
+        }
 
         return $missing;
     }

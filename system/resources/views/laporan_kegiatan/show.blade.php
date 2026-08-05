@@ -165,6 +165,9 @@
                 if (empty(trim(strip_tags($laporanKegiatan->hasil_dicapai ?? '')))) $missingFieldsShow[] = 'Hasil yang Dicapai';
                 if (empty(trim(strip_tags($laporanKegiatan->output_nyata ?? '')))) $missingFieldsShow[] = 'Output Nyata';
                 if (empty(trim(strip_tags($laporanKegiatan->dampak_awal ?? '')))) $missingFieldsShow[] = 'Dampak Awal';
+                if (empty(trim(strip_tags($laporanKegiatan->kendala ?? '')))) $missingFieldsShow[] = 'Kendala yang Dihadapi';
+                if (empty(trim(strip_tags($laporanKegiatan->solusi ?? '')))) $missingFieldsShow[] = 'Solusi yang Dilakukan';
+                if (empty(trim(strip_tags($laporanKegiatan->evaluasi_rekomendasi ?? '')))) $missingFieldsShow[] = 'Catatan Evaluasi & Rekomendasi';
             }
         @endphp
 

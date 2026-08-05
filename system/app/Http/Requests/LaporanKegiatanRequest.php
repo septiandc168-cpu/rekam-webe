@@ -99,9 +99,9 @@ class LaporanKegiatanRequest extends FormRequest
             'dampak_awal' => 'required|string',
 
             // Kendala dan Evaluasi
-            'kendala' => 'nullable|string',
-            'solusi' => 'nullable|string',
-            'evaluasi_rekomendasi' => 'nullable|string',
+            'kendala' => 'required|string',
+            'solusi' => 'required|string',
+            'evaluasi_rekomendasi' => 'required|string',
 
             // Dokumentasi
             'foto_kegiatan' => 'nullable|array',
@@ -174,6 +174,9 @@ class LaporanKegiatanRequest extends FormRequest
             'dampak_awal.required' => 'Dampak awal yang terlihat wajib diisi.',
 
             // Kendala dan Evaluasi
+            'kendala.required' => 'Kendala yang dihadapi wajib diisi.',
+            'solusi.required' => 'Solusi yang dilakukan wajib diisi.',
+            'evaluasi_rekomendasi.required' => 'Catatan evaluasi & rekomendasi wajib diisi.',
 
             // Dokumentasi
             'foto_kegiatan.*.image' => 'Foto kegiatan harus berupa gambar.',
