@@ -69,11 +69,15 @@
                     $isRencanaShow = request()->routeIs('rencana_kegiatan.show');
                     $rencanaStatus = isset($rencana_kegiatan) ? $rencana_kegiatan->status : null;
                     
+                    $isLaporanActive = request()->routeIs('laporan_kegiatan.*') ||
+                        ($isRencanaShow && $rencanaStatus === 'disetujui') ||
+                        request('from') === 'laporan';
+
                     $isHistoryActive = request()->routeIs('history_realisasi.*') || 
                         ($isRencanaShow && in_array($rencanaStatus, ['selesai', 'draft'])) || 
                         request('from') === 'history';
 
-                    $isRencanaActive = request()->routeIs('rencana_kegiatan.*') && !$isHistoryActive;
+                    $isRencanaActive = request()->routeIs('rencana_kegiatan.*') && !$isHistoryActive && !$isLaporanActive;
                 @endphp
                 <li class="nav-item">
                     <a href="{{ route('rencana_kegiatan.index') }}"
@@ -87,7 +91,7 @@
                 @if (in_array(Auth::user()->role->role_name, ['anggota', 'admin']))
                     <li class="nav-item">
                         <a href="{{ route('laporan_kegiatan.index') }}"
-                            class="nav-link {{ request()->routeIs('laporan_kegiatan.*') ? 'active' : '' }}">
+                            class="nav-link {{ $isLaporanActive ? 'active' : '' }}">
                             <i class="nav-icon fas fa-file-alt"></i>
                             <p>
                                 Laporan Kegiatan

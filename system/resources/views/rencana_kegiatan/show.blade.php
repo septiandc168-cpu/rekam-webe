@@ -212,13 +212,9 @@
                 @endif
             @endif
             
-            {{-- Tombol Buat/Lihat Laporan Kegiatan (Khusus Anggota) --}}
+            {{-- Tombol Lihat Laporan Kegiatan (Khusus Anggota jika sudah ada laporan) --}}
             @if(auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id())
-                @if($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DISETUJUI && !$rencana_kegiatan->hasLaporan())
-                    <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana_kegiatan->uuid ?? $rencana_kegiatan->id]) }}" class="btn btn-success btn-sm mr-2 shadow-sm fw-bold">
-                        <i class="fas fa-file-signature mr-1"></i> Buat Laporan Kegiatan
-                    </a>
-                @elseif($rencana_kegiatan->hasLaporan() && $rencana_kegiatan->laporanKegiatan)
+                @if($rencana_kegiatan->hasLaporan() && $rencana_kegiatan->laporanKegiatan)
                     <a href="{{ route('laporan_kegiatan.show', $rencana_kegiatan->laporanKegiatan->uuid ?? $rencana_kegiatan->laporanKegiatan->id) }}" class="btn btn-sm btn-info mr-2 shadow-sm fw-bold text-white">
                         <i class="fas fa-file-alt mr-1"></i> Lihat Laporan Kegiatan
                         @php
@@ -238,7 +234,9 @@
 
             @php
                 $backRoute = route('rencana_kegiatan.index');
-                if (in_array($rencana_kegiatan->status, ['selesai', 'draft']) || request('from') === 'history') {
+                if ($rencana_kegiatan->status === 'disetujui' || request('from') === 'laporan') {
+                    $backRoute = route('laporan_kegiatan.index');
+                } elseif (in_array($rencana_kegiatan->status, ['selesai', 'draft']) || request('from') === 'history') {
                     $backRoute = route('history_realisasi.index');
                 } elseif (auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id != auth()->id()) {
                     // Jika anggota melihat dokumen milik orang lain (dari dashboard), kembalikan ke dashboard
