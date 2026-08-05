@@ -194,20 +194,20 @@
                             <!-- Grand Total Banner -->
                             <div class="p-3 mb-3 rounded d-flex align-items-center justify-content-between" style="background-color: #eef2ff; border: 1px solid #c7d2fe;">
                                 <div>
-                                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-calculator text-primary mr-2"></i>Jumlah Pengajuan</h6>
-                                    <small class="text-muted">Total otomatis terhitung dari perincian pengajuan di bawah</small>
+                                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-calculator text-navy mr-2"></i>Jumlah Kebutuhan</h6>
+                                    <small class="text-muted">Total otomatis terhitung dari perincian kebutuhan di bawah</small>
                                 </div>
-                                <h4 class="mb-0 fw-bold text-primary" id="display-grand-total">Rp 0</h4>
+                                <h4 class="mb-0 fw-bold text-navy" id="display-grand-total">Rp 0</h4>
                             </div>
 
-                            <label class="form-label fw-bold text-dark mb-2">Perincian Pengajuan <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold text-dark mb-2">Perincian Kebutuhan <span class="text-danger">*</span></label>
                             
                             <div class="table-responsive">
                                 <table class="table table-bordered align-middle text-sm" id="table-rincian-pengajuan">
-                                    <thead class="bg-primary text-white">
+                                    <thead class="bg-navy text-white">
                                         <tr>
                                             <th class="text-center align-middle" style="width: 40px;">No</th>
-                                            <th class="align-middle" style="min-width: 200px;">Objek Pengajuan</th>
+                                            <th class="align-middle" style="min-width: 200px;">Objek Kebutuhan</th>
                                             <th class="align-middle" style="width: 140px;">Jumlah</th>
                                             <th class="align-middle" style="width: 160px;">Harga Satuan (Rp)</th>
                                             <th class="align-middle" style="width: 160px;">Subtotal (Rp)</th>
@@ -221,7 +221,7 @@
                                 </table>
                             </div>
 
-                            <button type="button" class="btn btn-success btn-sm font-weight-bold shadow-sm" id="btn-tambah-baris-rincian">
+                            <button type="button" class="btn bg-navy text-white btn-sm font-weight-bold shadow-sm" id="btn-tambah-baris-rincian">
                                 <i class="fas fa-plus mr-1"></i> Tambah Baris
                             </button>
 
@@ -1088,12 +1088,12 @@
                     
                     var html = '<tr class="rincian-row">' +
                         '<td class="text-center align-middle rincian-no text-muted fw-bold">' + rowCount + '</td>' +
-                        '<td><input type="text" class="form-control form-control-sm rincian-objek" placeholder="Objek pengajuan / nama barang" value="' + (data.objek || '').replace(/"/g, '&quot;') + '"></td>' +
+                        '<td><input type="text" class="form-control form-control-sm rincian-objek" placeholder="Objek kebutuhan / nama barang" value="' + (data.objek || '').replace(/"/g, '&quot;') + '"></td>' +
                         '<td><input type="text" class="form-control form-control-sm rincian-jumlah" placeholder="Contoh: 1 orang" value="' + (data.jumlah || '').replace(/"/g, '&quot;') + '"></td>' +
                         '<td><input type="number" min="0" class="form-control form-control-sm rincian-harga" placeholder="0" value="' + (data.harga_satuan !== '' && data.harga_satuan !== undefined ? data.harga_satuan : '') + '"></td>' +
                         '<td><input type="text" class="form-control form-control-sm rincian-subtotal bg-light" readonly placeholder="Rp 0"></td>' +
                         '<td><input type="text" class="form-control form-control-sm rincian-keterangan" placeholder="Keterangan (opsional)" value="' + (data.keterangan || '').replace(/"/g, '&quot;') + '"></td>' +
-                        '<td class="text-center align-middle"><button type="button" class="btn btn-sm btn-outline-danger btn-remove-rincian" style="padding: 2px 8px;"><i class="fas fa-times"></i></button></td>' +
+                        '<td class="text-center align-middle"><button type="button" class="btn btn-sm btn-danger rounded-circle btn-remove-rincian shadow-sm" style="width: 24px; height: 24px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Hapus Baris"><i class="fas fa-times" style="font-size: 11px;"></i></button></td>' +
                         '</tr>';
                         
                     $('#tbody-rincian-pengajuan').append(html);

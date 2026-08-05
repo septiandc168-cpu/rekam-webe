@@ -567,7 +567,7 @@
                                                 <thead class="bg-navy text-white">
                                                     <tr>
                                                         <th class="text-center align-middle" style="width: 40px;">No</th>
-                                                        <th class="align-middle">Objek Pengajuan</th>
+                                                        <th class="align-middle">Objek Kebutuhan</th>
                                                         <th class="align-middle" style="width: 120px;">Jumlah</th>
                                                         <th class="align-middle" style="width: 150px;">Harga Satuan</th>
                                                         <th class="align-middle" style="width: 150px;">Subtotal</th>
@@ -581,15 +581,15 @@
                                                             <td class="align-middle fw-bold text-dark">{{ $item['objek'] ?? '-' }}</td>
                                                             <td class="align-middle">{{ $item['jumlah'] ?? '-' }}</td>
                                                             <td class="align-middle">Rp {{ number_format($item['harga_satuan'] ?? 0, 0, ',', '.') }}</td>
-                                                            <td class="align-middle fw-bold text-primary">Rp {{ number_format($item['subtotal'] ?? 0, 0, ',', '.') }}</td>
+                                                            <td class="align-middle fw-bold text-navy">Rp {{ number_format($item['subtotal'] ?? 0, 0, ',', '.') }}</td>
                                                             <td class="align-middle text-muted">{{ $item['keterangan'] ?? '-' }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
                                                 <tfoot class="bg-light">
                                                     <tr>
-                                                        <td colspan="4" class="text-right font-weight-bold text-dark align-middle">Grand Total Pengajuan:</td>
-                                                        <td colspan="2" class="font-weight-bold text-primary h6 mb-0 align-middle">Rp {{ number_format($rencana_kegiatan->grand_total_rincian, 0, ',', '.') }}</td>
+                                                        <td colspan="4" class="text-right font-weight-bold text-dark align-middle">Grand Total Kebutuhan:</td>
+                                                        <td colspan="2" class="font-weight-bold text-navy h6 mb-0 align-middle">Rp {{ number_format($rencana_kegiatan->grand_total_rincian, 0, ',', '.') }}</td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
