@@ -559,8 +559,44 @@
                                 </div>
                             </div>
                             <div id="collapseLogistik" class="collapse" aria-labelledby="headLogistik" data-parent="#accordionRencana">
-                                <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                    {!! $rencana_kegiatan->rincian_kebutuhan !!}
+                                <div class="card-body p-3" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                    @php $itemsRincian = $rencana_kegiatan->rincian_kebutuhan_items; @endphp
+                                    @if(is_array($itemsRincian) && count($itemsRincian) > 0)
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered bg-white text-sm mb-0">
+                                                <thead class="bg-navy text-white">
+                                                    <tr>
+                                                        <th class="text-center align-middle" style="width: 40px;">No</th>
+                                                        <th class="align-middle">Objek Pengajuan</th>
+                                                        <th class="align-middle" style="width: 120px;">Jumlah</th>
+                                                        <th class="align-middle" style="width: 150px;">Harga Satuan</th>
+                                                        <th class="align-middle" style="width: 150px;">Subtotal</th>
+                                                        <th class="align-middle">Keterangan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($itemsRincian as $idx => $item)
+                                                        <tr>
+                                                            <td class="text-center align-middle text-muted">{{ $idx + 1 }}</td>
+                                                            <td class="align-middle fw-bold text-dark">{{ $item['objek'] ?? '-' }}</td>
+                                                            <td class="align-middle">{{ $item['jumlah'] ?? '-' }}</td>
+                                                            <td class="align-middle">Rp {{ number_format($item['harga_satuan'] ?? 0, 0, ',', '.') }}</td>
+                                                            <td class="align-middle fw-bold text-primary">Rp {{ number_format($item['subtotal'] ?? 0, 0, ',', '.') }}</td>
+                                                            <td class="align-middle text-muted">{{ $item['keterangan'] ?? '-' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                                <tfoot class="bg-light">
+                                                    <tr>
+                                                        <td colspan="4" class="text-right font-weight-bold text-dark align-middle">Grand Total Pengajuan:</td>
+                                                        <td colspan="2" class="font-weight-bold text-primary h6 mb-0 align-middle">Rp {{ number_format($rencana_kegiatan->grand_total_rincian, 0, ',', '.') }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    @else
+                                        {!! $rencana_kegiatan->rincian_kebutuhan !!}
+                                    @endif
                                 </div>
                             </div>
                         </div>

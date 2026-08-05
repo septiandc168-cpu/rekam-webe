@@ -169,6 +169,37 @@ class RencanaKegiatan extends Model
         return LaporanKegiatan::canCreateFor($this);
     }
 
+    /**
+     * Decode JSON rincian_kebutuhan or return null if legacy string
+     */
+    public function getRincianKebutuhanItemsAttribute(): ?array
+    {
+        if (empty($this->rincian_kebutuhan)) {
+            return [];
+        }
+        $decoded = json_decode($this->rincian_kebutuhan, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+        return null;
+    }
+
+    /**
+     * Get calculated grand total of rincian items if JSON, or 0
+     */
+    public function getGrandTotalRincianAttribute(): float
+    {
+        $items = $this->rincian_kebutuhan_items;
+        if (!is_array($items)) {
+            return 0;
+        }
+        $total = 0;
+        foreach ($items as $item) {
+            $total += (float) ($item['subtotal'] ?? 0);
+        }
+        return $total;
+    }
+
     protected static function boot()
     {
         parent::boot();
