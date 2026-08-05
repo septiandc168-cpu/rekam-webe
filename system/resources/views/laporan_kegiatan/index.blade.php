@@ -37,9 +37,9 @@
                 <i class="fas fa-info-circle mr-1"></i> Rencana kegiatan yang sudah disetujui dan belum ada laporannya
             </small>
         </div>
-        <div class="card-body p-0">
+        <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover table-borderless mb-0 text-sm align-middle w-100">
+                <table class="table table-hover table-borderless mb-0 text-sm align-middle w-100" id="table-rencana-disetujui">
                     <thead class="bg-navy text-white text-nowrap">
                         <tr>
                             <th class="align-middle text-center" style="width: 50px;">No</th>
@@ -338,3 +338,40 @@
 
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(function() {
+        if ($('#table-rencana-disetujui').length) {
+            $('#table-rencana-disetujui').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "language": {
+                    "search": "Cari:",
+                    "lengthMenu": "Tampilkan _MENU_ data",
+                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+                    "infoFiltered": "(difilter dari _MAX_ total data)",
+                    "zeroRecords": "Tidak ada data yang ditemukan",
+                    "emptyTable": "Tidak ada data tersedia",
+                    "paginate": {
+                        "first": "Pertama",
+                        "last": "Terakhir",
+                        "next": "Selanjutnya",
+                        "previous": "Sebelumnya"
+                    },
+                    "aria": {
+                        "sortAscending": ": aktifkan untuk mengurutkan kolom secara ascending",
+                        "sortDescending": ": aktifkan untuk mengurutkan kolom secara descending"
+                    }
+                }
+            });
+        }
+    });
+</script>
+@endpush
