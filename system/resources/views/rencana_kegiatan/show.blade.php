@@ -183,17 +183,45 @@
                 </a>
             @endif
 
+            @php
+                $missingFieldsShow = [];
+                if ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DRAFT && auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id()) {
+                    if (empty(trim($rencana_kegiatan->nama_kegiatan ?? ''))) $missingFieldsShow[] = 'Nama Kegiatan';
+                    if (empty(trim($rencana_kegiatan->jenis_kegiatan ?? ''))) $missingFieldsShow[] = 'Jenis Kegiatan';
+                    elseif ($rencana_kegiatan->jenis_kegiatan === 'lainnya' && empty(trim($rencana_kegiatan->jenis_kegiatan_lainnya ?? ''))) $missingFieldsShow[] = 'Deskripsi Jenis Kegiatan Lainnya';
+                    if (empty(trim(strip_tags($rencana_kegiatan->deskripsi ?? '')))) $missingFieldsShow[] = 'Deskripsi Kegiatan';
+                    if (empty(trim(strip_tags($rencana_kegiatan->tujuan ?? '')))) $missingFieldsShow[] = 'Tujuan Kegiatan';
+                    if (empty(trim($rencana_kegiatan->penanggung_jawab ?? ''))) $missingFieldsShow[] = 'Penanggung Jawab';
+                    if (empty(trim($rencana_kegiatan->kelompok ?? ''))) $missingFieldsShow[] = 'Kelompok / Komunitas Pelaksana';
+                    if (empty($rencana_kegiatan->estimasi_peserta)) $missingFieldsShow[] = 'Estimasi Jumlah Peserta';
+                    if (empty($rencana_kegiatan->tanggal_mulai)) $missingFieldsShow[] = 'Tanggal Mulai';
+                    if (empty($rencana_kegiatan->tanggal_selesai)) $missingFieldsShow[] = 'Tanggal Selesai';
+                    if (empty($rencana_kegiatan->waktu_mulai)) $missingFieldsShow[] = 'Waktu Mulai';
+                    if (empty($rencana_kegiatan->waktu_selesai)) $missingFieldsShow[] = 'Waktu Selesai';
+                    if (empty(trim($rencana_kegiatan->desa ?? ''))) $missingFieldsShow[] = 'Desa / Wilayah';
+                    if (empty($rencana_kegiatan->lat) || empty($rencana_kegiatan->lng)) $missingFieldsShow[] = 'Koordinat Lokasi (Peta)';
+                    if (empty(trim(strip_tags($rencana_kegiatan->rincian_kebutuhan ?? '')))) $missingFieldsShow[] = 'Rincian Kebutuhan';
+                    if (empty($rencana_kegiatan->anggaran_kegiatan)) $missingFieldsShow[] = 'File Anggaran Kegiatan';
+                }
+            @endphp
+
             @if(auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id())
                 @if ($rencana_kegiatan->user_id == auth()->id())
                     @if (in_array($rencana_kegiatan->status, [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]))
                         @if ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DRAFT)
-                            <form action="{{ route('rencana_kegiatan.ajukan', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn bg-navy text-white btn-sm shadow-sm fw-bold">
+                            @if(empty($missingFieldsShow))
+                                <form action="{{ route('rencana_kegiatan.ajukan', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn bg-navy text-white btn-sm shadow-sm fw-bold">
+                                        <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
+                                    </button>
+                                </form>
+                            @else
+                                <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Draft Belum Lengkap!', text: 'Rencana kegiatan ini belum dapat diajukan karena ada data wajib yang belum terisi: {{ implode(', ', $missingFieldsShow) }}.'})">
                                     <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
                                 </button>
-                            </form>
+                            @endif
                         @endif
                         <a href="{{ route('rencana_kegiatan.edit', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" class="btn btn-warning btn-sm mr-2 shadow-sm text-dark">
                             <i class="fas fa-edit mr-1"></i> Edit Rencana
@@ -248,6 +276,54 @@
             </a>
         </div>
     </div>
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle mr-2"></i> {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
+    @php
+        $missingFieldsShow = [];
+        if ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DRAFT && auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id()) {
+            if (empty(trim($rencana_kegiatan->nama_kegiatan ?? ''))) $missingFieldsShow[] = 'Nama Kegiatan';
+            if (empty(trim($rencana_kegiatan->jenis_kegiatan ?? ''))) $missingFieldsShow[] = 'Jenis Kegiatan';
+            elseif ($rencana_kegiatan->jenis_kegiatan === 'lainnya' && empty(trim($rencana_kegiatan->jenis_kegiatan_lainnya ?? ''))) $missingFieldsShow[] = 'Deskripsi Jenis Kegiatan Lainnya';
+            if (empty(trim(strip_tags($rencana_kegiatan->deskripsi ?? '')))) $missingFieldsShow[] = 'Deskripsi Kegiatan';
+            if (empty(trim(strip_tags($rencana_kegiatan->tujuan ?? '')))) $missingFieldsShow[] = 'Tujuan Kegiatan';
+            if (empty(trim($rencana_kegiatan->penanggung_jawab ?? ''))) $missingFieldsShow[] = 'Penanggung Jawab';
+            if (empty(trim($rencana_kegiatan->kelompok ?? ''))) $missingFieldsShow[] = 'Kelompok / Komunitas Pelaksana';
+            if (empty($rencana_kegiatan->estimasi_peserta)) $missingFieldsShow[] = 'Estimasi Jumlah Peserta';
+            if (empty($rencana_kegiatan->tanggal_mulai)) $missingFieldsShow[] = 'Tanggal Mulai';
+            if (empty($rencana_kegiatan->tanggal_selesai)) $missingFieldsShow[] = 'Tanggal Selesai';
+            if (empty($rencana_kegiatan->waktu_mulai)) $missingFieldsShow[] = 'Waktu Mulai';
+            if (empty($rencana_kegiatan->waktu_selesai)) $missingFieldsShow[] = 'Waktu Selesai';
+            if (empty(trim($rencana_kegiatan->desa ?? ''))) $missingFieldsShow[] = 'Desa / Wilayah';
+            if (empty($rencana_kegiatan->lat) || empty($rencana_kegiatan->lng)) $missingFieldsShow[] = 'Koordinat Lokasi (Peta)';
+            if (empty(trim(strip_tags($rencana_kegiatan->rincian_kebutuhan ?? '')))) $missingFieldsShow[] = 'Rincian Kebutuhan';
+            if (empty($rencana_kegiatan->anggaran_kegiatan)) $missingFieldsShow[] = 'File Anggaran Kegiatan';
+        }
+    @endphp
+
+    @if(!empty($missingFieldsShow))
+        <div class="alert alert-warning border-left-warning shadow-sm mb-4" role="alert">
+            <h6 class="font-weight-bold mb-1 text-dark"><i class="fas fa-exclamation-triangle mr-2 text-warning"></i> Draft Belum Lengkap!</h6>
+            <p class="mb-1 text-dark" style="font-size: 0.88rem;">Rencana kegiatan ini masih berstatus draft dan belum dapat diajukan karena data wajib berikut belum terisi:</p>
+            <div class="d-flex flex-wrap my-2" style="gap: 5px;">
+                @foreach($missingFieldsShow as $mf)
+                    <span class="badge bg-warning text-dark font-weight-bold p-2" style="font-size: 0.78rem;"><i class="fas fa-exclamation-circle mr-1"></i> {{ $mf }}</span>
+                @endforeach
+            </div>
+            <div class="mt-2">
+                <a href="{{ route('rencana_kegiatan.edit', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" class="btn btn-sm btn-warning text-dark font-weight-bold shadow-sm">
+                    <i class="fas fa-edit mr-1"></i> Edit & Lengkapi Data Sekarang
+                </a>
+            </div>
+        </div>
+    @endif
 
     @if(!empty($rencana_kegiatan->keterangan_status))
         @php

@@ -266,24 +266,24 @@ class RencanaKegiatanController extends Controller
                 'anggaran_kegiatan.required' => 'Anggaran kegiatan wajib diunggah.',
             ];
         } else {
-            // Admin cannot change status and no keterangan field
+            // Anggota submitting non-draft: All required fields must be present
             $rules = [
-                'nama_kegiatan' => 'required|string',
+                'nama_kegiatan' => 'required|string|max:255',
                 'jenis_kegiatan' => 'required|string',
                 'jenis_kegiatan_lainnya' => 'required_if:jenis_kegiatan,lainnya|nullable|string',
-                'deskripsi' => 'nullable|string',
-                'tujuan' => 'nullable|string',
+                'deskripsi' => 'required|string',
+                'tujuan' => 'required|string',
                 'lat' => 'required|numeric',
                 'lng' => 'required|numeric',
-                'desa' => 'nullable|string',
-                'tanggal_mulai' => 'nullable|date',
-                'tanggal_selesai' => 'nullable|date',
-                'waktu_mulai' => 'nullable|date_format:H:i',
-                'waktu_selesai' => 'nullable|date_format:H:i',
-                'penanggung_jawab' => 'nullable|string',
-                'kelompok' => 'nullable|string',
-                'estimasi_peserta' => 'nullable|integer',
-                'rincian_kebutuhan' => 'nullable|string',
+                'desa' => 'required|string',
+                'tanggal_mulai' => 'required|date',
+                'tanggal_selesai' => 'required|date',
+                'waktu_mulai' => 'required|date_format:H:i',
+                'waktu_selesai' => 'required|date_format:H:i',
+                'penanggung_jawab' => 'required|string',
+                'kelompok' => 'required|string',
+                'estimasi_peserta' => 'required|integer|min:1',
+                'rincian_kebutuhan' => 'required|string',
                 'foto' => 'nullable|array',
                 'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
                 'dokumen' => 'nullable|array',
@@ -295,12 +295,19 @@ class RencanaKegiatanController extends Controller
                 'nama_kegiatan.required' => 'Nama kegiatan wajib diisi.',
                 'jenis_kegiatan.required' => 'Jenis kegiatan wajib dipilih.',
                 'jenis_kegiatan_lainnya.required_if' => 'Deskripsi jenis kegiatan lainnya wajib diisi saat memilih "Lainnya".',
+                'deskripsi.required' => 'Deskripsi kegiatan wajib diisi.',
+                'tujuan.required' => 'Tujuan kegiatan wajib diisi.',
                 'lat.required' => 'Latitude lokasi wajib diisi.',
                 'lng.required' => 'Longitude lokasi wajib diisi.',
-                'tanggal_mulai.date' => 'Format tanggal mulai tidak valid.',
-                'tanggal_selesai.date' => 'Format tanggal selesai tidak valid.',
-                'waktu_mulai.date_format' => 'Format waktu mulai tidak valid (HH:MM).',
-                'waktu_selesai.date_format' => 'Format waktu selesai tidak valid (HH:MM).',
+                'desa.required' => 'Desa / Wilayah lokasi wajib diisi.',
+                'tanggal_mulai.required' => 'Tanggal mulai wajib diisi.',
+                'tanggal_selesai.required' => 'Tanggal selesai wajib diisi.',
+                'waktu_mulai.required' => 'Waktu mulai wajib diisi.',
+                'waktu_selesai.required' => 'Waktu selesai wajib diisi.',
+                'penanggung_jawab.required' => 'Penanggung jawab wajib diisi.',
+                'kelompok.required' => 'Kelompok / komunitas pelaksana wajib diisi.',
+                'estimasi_peserta.required' => 'Estimasi jumlah peserta wajib diisi.',
+                'rincian_kebutuhan.required' => 'Rincian kebutuhan wajib diisi.',
                 'anggaran_kegiatan.required' => 'Anggaran kegiatan wajib diunggah.',
             ];
         }
@@ -533,24 +540,26 @@ class RencanaKegiatanController extends Controller
                 'anggaran_kegiatan.max' => 'Ukuran file anggaran maksimal 5MB.',
             ];
         } else {
-            // Admin cannot change status and no keterangan field
+            // Anggota updating/submitting non-draft: All required fields must be present
+            $hasExistingAnggaran = !empty($rencana_kegiatan->anggaran_kegiatan) && !$request->input('remove_anggaran_kegiatan');
+
             $rules = [
-                'nama_kegiatan' => 'required|string',
+                'nama_kegiatan' => 'required|string|max:255',
                 'jenis_kegiatan' => 'required|string',
                 'jenis_kegiatan_lainnya' => 'required_if:jenis_kegiatan,lainnya|nullable|string',
-                'deskripsi' => 'nullable|string',
-                'tujuan' => 'nullable|string',
+                'deskripsi' => 'required|string',
+                'tujuan' => 'required|string',
                 'lat' => 'required|numeric',
                 'lng' => 'required|numeric',
-                'desa' => 'nullable|string',
-                'tanggal_mulai' => 'nullable|date',
-                'tanggal_selesai' => 'nullable|date',
-                'waktu_mulai' => 'nullable|date_format:H:i',
-                'waktu_selesai' => 'nullable|date_format:H:i',
-                'penanggung_jawab' => 'nullable|string',
-                'kelompok' => 'nullable|string',
-                'estimasi_peserta' => 'nullable|integer',
-                'rincian_kebutuhan' => 'nullable|string',
+                'desa' => 'required|string',
+                'tanggal_mulai' => 'required|date',
+                'tanggal_selesai' => 'required|date',
+                'waktu_mulai' => 'required|date_format:H:i',
+                'waktu_selesai' => 'required|date_format:H:i',
+                'penanggung_jawab' => 'required|string',
+                'kelompok' => 'required|string',
+                'estimasi_peserta' => 'required|integer|min:1',
+                'rincian_kebutuhan' => 'required|string',
                 'foto' => 'nullable|array',
                 'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
                 'dokumen' => 'nullable|array',
@@ -559,7 +568,7 @@ class RencanaKegiatanController extends Controller
                 'remove_foto.*' => 'string',
                 'remove_dokumen' => 'nullable|array',
                 'remove_dokumen.*' => 'string',
-                'anggaran_kegiatan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+                'anggaran_kegiatan' => $hasExistingAnggaran ? 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120' : 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
                 'remove_anggaran_kegiatan' => 'nullable|string',
             ];
 
@@ -567,13 +576,20 @@ class RencanaKegiatanController extends Controller
                 'nama_kegiatan.required' => 'Nama kegiatan wajib diisi.',
                 'jenis_kegiatan.required' => 'Jenis kegiatan wajib dipilih.',
                 'jenis_kegiatan_lainnya.required_if' => 'Deskripsi jenis kegiatan lainnya wajib diisi saat memilih "Lainnya".',
+                'deskripsi.required' => 'Deskripsi kegiatan wajib diisi.',
+                'tujuan.required' => 'Tujuan kegiatan wajib diisi.',
                 'lat.required' => 'Latitude lokasi wajib diisi.',
                 'lng.required' => 'Longitude lokasi wajib diisi.',
-                'tanggal_mulai.date' => 'Format tanggal mulai tidak valid.',
-                'tanggal_selesai.date' => 'Format tanggal selesai tidak valid.',
-                'waktu_mulai.date_format' => 'Format waktu mulai tidak valid (HH:MM).',
-                'waktu_selesai.date_format' => 'Format waktu selesai tidak valid (HH:MM).',
-                'anggaran_kegiatan.required' => 'Anggaran kegiatan wajib diunggah.',
+                'desa.required' => 'Desa / Wilayah lokasi wajib diisi.',
+                'tanggal_mulai.required' => 'Tanggal mulai wajib diisi.',
+                'tanggal_selesai.required' => 'Tanggal selesai wajib diisi.',
+                'waktu_mulai.required' => 'Waktu mulai wajib diisi.',
+                'waktu_selesai.required' => 'Waktu selesai wajib diisi.',
+                'penanggung_jawab.required' => 'Penanggung jawab wajib diisi.',
+                'kelompok.required' => 'Kelompok / komunitas pelaksana wajib diisi.',
+                'estimasi_peserta.required' => 'Estimasi jumlah peserta wajib diisi.',
+                'rincian_kebutuhan.required' => 'Rincian kebutuhan wajib diisi.',
+                'anggaran_kegiatan.required' => 'File anggaran kegiatan wajib diunggah.',
             ];
         }
 
@@ -1163,6 +1179,64 @@ class RencanaKegiatanController extends Controller
     }
 
     /**
+     * Helper to get list of missing mandatory fields for a RencanaKegiatan.
+     */
+    private function getMissingFields(RencanaKegiatan $rencana): array
+    {
+        $missing = [];
+
+        if (empty(trim($rencana->nama_kegiatan ?? ''))) {
+            $missing[] = 'Nama Kegiatan';
+        }
+        if (empty(trim($rencana->jenis_kegiatan ?? ''))) {
+            $missing[] = 'Jenis Kegiatan';
+        } elseif ($rencana->jenis_kegiatan === 'lainnya' && empty(trim($rencana->jenis_kegiatan_lainnya ?? ''))) {
+            $missing[] = 'Deskripsi Jenis Kegiatan Lainnya';
+        }
+        if (empty(trim(strip_tags($rencana->deskripsi ?? '')))) {
+            $missing[] = 'Deskripsi Kegiatan';
+        }
+        if (empty(trim(strip_tags($rencana->tujuan ?? '')))) {
+            $missing[] = 'Tujuan Kegiatan';
+        }
+        if (empty(trim($rencana->penanggung_jawab ?? ''))) {
+            $missing[] = 'Penanggung Jawab';
+        }
+        if (empty(trim($rencana->kelompok ?? ''))) {
+            $missing[] = 'Kelompok / Komunitas Pelaksana';
+        }
+        if (empty($rencana->estimasi_peserta)) {
+            $missing[] = 'Estimasi Jumlah Peserta';
+        }
+        if (empty($rencana->tanggal_mulai)) {
+            $missing[] = 'Tanggal Mulai';
+        }
+        if (empty($rencana->tanggal_selesai)) {
+            $missing[] = 'Tanggal Selesai';
+        }
+        if (empty($rencana->waktu_mulai)) {
+            $missing[] = 'Waktu Mulai';
+        }
+        if (empty($rencana->waktu_selesai)) {
+            $missing[] = 'Waktu Selesai';
+        }
+        if (empty(trim($rencana->desa ?? ''))) {
+            $missing[] = 'Desa / Wilayah';
+        }
+        if (empty($rencana->lat) || empty($rencana->lng)) {
+            $missing[] = 'Koordinat Lokasi (Peta)';
+        }
+        if (empty(trim(strip_tags($rencana->rincian_kebutuhan ?? '')))) {
+            $missing[] = 'Rincian Kebutuhan';
+        }
+        if (empty($rencana->anggaran_kegiatan)) {
+            $missing[] = 'File Anggaran Kegiatan';
+        }
+
+        return $missing;
+    }
+
+    /**
      * Anggota action: Ajukan Rencana Kegiatan (Direct)
      */
     public function ajukanRencana(Request $request, $id)
@@ -1172,6 +1246,14 @@ class RencanaKegiatanController extends Controller
         // Authorization check: User can only submit their own draft/revisi
         if ($rencanaKegiatan->user_id !== auth()->id() || !in_array($rencanaKegiatan->status, [RencanaKegiatan::STATUS_DRAFT, RencanaKegiatan::STATUS_REVISI])) {
             abort(403, 'Unauthorized action.');
+        }
+
+        // Validate required fields before submitting draft
+        $missingFields = $this->getMissingFields($rencanaKegiatan);
+        if (!empty($missingFields)) {
+            $pesan = 'Rencana kegiatan tidak dapat diajukan karena data wajib berikut belum terisi: ' . implode(', ', $missingFields) . '.';
+            toast($pesan, 'error');
+            return redirect()->back()->with('error', $pesan);
         }
 
         $rencanaKegiatan->update([
