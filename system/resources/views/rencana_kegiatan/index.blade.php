@@ -381,7 +381,7 @@
                         }
                     });
                 }
-            }));
+            });
         </script>
     @endpush
 @endsection

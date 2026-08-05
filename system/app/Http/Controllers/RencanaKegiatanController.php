@@ -184,8 +184,8 @@ class RencanaKegiatanController extends Controller
         $this->authorize('create', RencanaKegiatan::class);
         
         $user = auth()->user();
-        $isSupervisor = $user->role->role_name === 'supervisor';
-        $isAdmin = $user->role->role_name === 'admin';
+        $isAnggota = $user->role->role_name === 'anggota';
+        $isAdmin   = $user->role->role_name === 'admin';
 
         $isDraft = $request->input('action') === 'draft';
 
@@ -222,8 +222,8 @@ class RencanaKegiatanController extends Controller
                 'dokumen.*.max' => 'Ukuran dokumen maksimal 5MB.',
                 'anggaran_kegiatan.max' => 'Ukuran file anggaran maksimal 5MB.',
             ];
-        } elseif ($isSupervisor) {
-            // Supervisor can change status and must provide keterangan for approve/reject
+        } elseif ($isAdmin) {
+            // Admin can change status and must provide keterangan for approve/reject
             $rules = [
                 'nama_kegiatan' => 'required|string',
                 'jenis_kegiatan' => 'required|string',
@@ -405,8 +405,8 @@ class RencanaKegiatanController extends Controller
             'status' => $request->input('action') === 'draft' ? 'draft' : 'diajukan',
         ];
 
-        // Ensure proper status if action dictates otherwise or user is supervisor overriding
-        if ($isSupervisor && isset($validated['status'])) {
+        // Ensure proper status if action dictates otherwise or user is admin overriding
+        if ($isAdmin && isset($validated['status'])) {
             $data['status'] = $validated['status'];
             $data['keterangan_status'] = $validated['keterangan_status'] ?? null;
         }
@@ -440,7 +440,7 @@ class RencanaKegiatanController extends Controller
     public function frontIndex()
     {
         $user = auth()->user();
-        $isSupervisor = $user ? $user->role->role_name === 'supervisor' : false;
+        $isSupervisor = $user ? $user->role->role_name === 'admin' : false;
         
         // Filter data berdasarkan peran untuk public map view
         if ($isSupervisor) {
@@ -483,15 +483,15 @@ class RencanaKegiatanController extends Controller
         $this->authorize('update', $rencana_kegiatan);
 
         $user = auth()->user();
-        $isSupervisor = $user->role->role_name === 'admin';
-        $isAdmin = $user->role->role_name === 'anggota';
+        $isAnggota = $user->role->role_name === 'anggota';
+        $isAdmin   = $user->role->role_name === 'admin';
         Log::info('RencanaKegiatanController@update called', ['id' => $rencana_kegiatan->id, 'input' => $request->all()]);
 
         $isDraft = $request->input('action') === 'draft';
 
         // Different validation rules based on role
-        if ($isSupervisor) {
-            // Supervisor hanya bisa ubah status dan keterangan
+        if ($isAdmin) {
+            // Admin hanya bisa ubah status dan keterangan
             $rules = [
                 'status' => 'required|in:diajukan,disetujui,revisi,ditolak,selesai',
                 'keterangan_status' => 'required_if:status,disetujui,revisi,ditolak|string',
@@ -768,8 +768,8 @@ class RencanaKegiatanController extends Controller
 
 
         // Prepare update data based on role
-        if ($isSupervisor) {
-            // Supervisor hanya bisa update status dan keterangan_status
+        if ($isAdmin) {
+            // Admin hanya bisa update status dan keterangan_status
             $data = [
                 'status' => $validated['status'],
                 'keterangan_status' => $validated['keterangan_status'] ?? null,
@@ -802,8 +802,8 @@ class RencanaKegiatanController extends Controller
 
         $rencana_kegiatan->update($data);
 
-        // Kirim notifikasi ke supervisor jika anggota yang mengedit dan bukan draft
-        if ($isAdmin && ($data['status'] ?? null) !== 'draft') {
+        // Kirim notifikasi ke admin jika anggota yang mengedit dan bukan draft
+        if ($isAnggota && ($data['status'] ?? null) !== 'draft') {
             $notification = new KegiatanActivityNotification(
                 $rencana_kegiatan->uuid,
                 $rencana_kegiatan->nama_kegiatan,
@@ -981,26 +981,8 @@ class RencanaKegiatanController extends Controller
         return redirect()->back();
     }
 
-    public function verifikasiLaporan(Request $request, RencanaKegiatan $rencana_kegiatan)
-    {
-        // Hanya supervisor yang bisa update status
-        $this->authorize('updateStatus', $rencana_kegiatan);
-
-        // Pastikan status saat ini memang sedang menunggu verifikasi
-        if ($rencana_kegiatan->status !== RencanaKegiatan::STATUS_MENUNGGU_VERIFIKASI) {
-            toast('Status tidak valid untuk diverifikasi.', 'error');
-            return redirect()->back();
-        }
-
-        $rencana_kegiatan->update([
-            'status' => RencanaKegiatan::STATUS_SELESAI,
-            'keterangan_status' => 'Laporan telah diverifikasi dan disetujui.',
-            'updated_at' => now()
-        ]);
-
-        toast('Laporan berhasil diverifikasi! Status kegiatan menjadi Selesai.', 'success');
-        return redirect()->back();
-    }
+    // Method verifikasiLaporan dihapus (dead code — tidak memiliki route yang terdaftar
+    // dan menggunakan STATUS_MENUNGGU_VERIFIKASI yang tidak terdefinisi di model).
 
     public function destroy(RencanaKegiatan $rencana_kegiatan)
     {

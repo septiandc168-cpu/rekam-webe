@@ -160,7 +160,7 @@ class LaporanKegiatanController extends Controller
         $this->authorize('create', LaporanKegiatan::class);
         
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'anggota';
+        $isAnggota = $user->role->role_name === 'anggota';
         $isLaporanLangsung = $request->input('is_laporan_langsung') == '1';
         $rencanaKegiatan = null;
 
@@ -285,7 +285,7 @@ class LaporanKegiatanController extends Controller
             'realisasi_tanggal_mulai' => $request->realisasi_tanggal_mulai,
             'realisasi_tanggal_selesai' => $request->realisasi_tanggal_selesai,
             'rangkaian_kegiatan' => $request->rangkaian_kegiatan,
-            'target_peserta' => $rencanaKegiatan ? $rencanaKegiatan->target_peserta : 0,
+            'target_peserta' => $rencanaKegiatan ? $rencanaKegiatan->estimasi_peserta : 0,
             'realisasi_peserta' => $request->realisasi_peserta,
             'profil_peserta' => $request->profil_peserta,
             'hasil_dicapai' => $request->hasil_dicapai,
@@ -303,7 +303,7 @@ class LaporanKegiatanController extends Controller
         ]);
 
         // Kirim notifikasi ke admin jika anggota yang mengajukan
-        if ($isAdmin && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
+        if ($isAnggota && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
             $notification = new LaporanActivityNotification(
                 $laporan->uuid,
                 $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
@@ -379,7 +379,7 @@ class LaporanKegiatanController extends Controller
             abort(403, 'Dokumen terkunci dan tidak dapat diperbarui.');
         }
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'anggota';
+        $isAnggota = $user->role->role_name === 'anggota';
 
         // Handle file removals
         $currentFotoKegiatan = $laporanKegiatan->foto_kegiatan ?? [];
@@ -635,7 +635,7 @@ class LaporanKegiatanController extends Controller
         $laporanKegiatan->update($updateData);
 
         // Kirim notifikasi ke admin jika anggota yang mengajukan ulang
-        if ($isAdmin && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
+        if ($isAnggota && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
             $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
             $notification = new LaporanActivityNotification(
                 $laporanKegiatan->uuid,
@@ -680,7 +680,7 @@ class LaporanKegiatanController extends Controller
             abort(403, 'Dokumen terkunci dan tidak dapat dihapus.');
         }
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'anggota';
+        $isAnggota = $user->role->role_name === 'anggota';
 
         // Simpan data untuk notifikasi sebelum dihapus
         $laporanUuid = $laporanKegiatan->uuid;
@@ -726,8 +726,8 @@ class LaporanKegiatanController extends Controller
 
         $laporanKegiatan->delete();
 
-        // Kirim notifikasi ke supervisor jika admin yang menghapus
-        if ($isAdmin) {
+        // Kirim notifikasi ke admin jika anggota yang menghapus
+        if ($isAnggota) {
             $notification = new LaporanActivityNotification(
                 $laporanUuid,
                 $rencanaUuid,
