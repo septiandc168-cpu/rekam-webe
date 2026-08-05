@@ -219,12 +219,12 @@
                             <textarea name="rincian_kebutuhan" id="hidden-rincian-kebutuhan" class="d-none">{!! old('rincian_kebutuhan') !!}</textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">File Anggaran Kegiatan <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold">File Anggaran Kegiatan (Opsional)</label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
-                                <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran...</label>
+                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                                <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran (jika ada)...</label>
                             </div>
-                            <small class="text-muted">Unggah proposal/RAB. Ukuran maksimal 5MB (PDF/DOC/XLS).</small>
+                            <small class="text-muted">Unggah proposal/RAB jika ada. Ukuran maksimal 5MB (PDF/DOC/XLS).</small>
                         </div>
                     </div>
                 </div>

@@ -304,7 +304,6 @@
             if (empty(trim($rencana_kegiatan->desa ?? ''))) $missingFieldsShow[] = 'Desa / Wilayah';
             if (empty($rencana_kegiatan->lat) || empty($rencana_kegiatan->lng)) $missingFieldsShow[] = 'Koordinat Lokasi (Peta)';
             if (empty(trim(strip_tags($rencana_kegiatan->rincian_kebutuhan ?? '')))) $missingFieldsShow[] = 'Rincian Kebutuhan';
-            if (empty($rencana_kegiatan->anggaran_kegiatan)) $missingFieldsShow[] = 'File Anggaran Kegiatan';
         }
     @endphp
 
