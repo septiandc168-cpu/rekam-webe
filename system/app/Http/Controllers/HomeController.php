@@ -32,17 +32,17 @@ class HomeController extends Controller
 
         // === Widget Counts ===
         if ($isAdmin) {
-            $totalRencana = RencanaKegiatan::count();
-            $totalDiajukan = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
-            $totalDisetujui = RencanaKegiatan::whereIn('status', [RencanaKegiatan::STATUS_DISETUJUI, RencanaKegiatan::STATUS_SELESAI])->count();
-            $totalLaporan = LaporanKegiatan::count();
-            $totalUsers = User::count();
+            $totalRencana   = RencanaKegiatan::count();
+            $totalDiajukan  = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
+            $totalDisetujui = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DISETUJUI)->count();
+            $totalLaporan   = LaporanKegiatan::count();
+            $totalUsers     = User::count();
         } else {
-            $totalRencana = RencanaKegiatan::where('user_id', $user->id)->count();
-            $totalDiajukan = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
-            $totalDisetujui = RencanaKegiatan::where('user_id', $user->id)->whereIn('status', [RencanaKegiatan::STATUS_DISETUJUI, RencanaKegiatan::STATUS_SELESAI])->count();
-            $totalLaporan = LaporanKegiatan::where('user_id', $user->id)->count();
-            $totalUsers = 0;
+            $totalRencana   = RencanaKegiatan::where('user_id', $user->id)->count();
+            $totalDiajukan  = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
+            $totalDisetujui = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DISETUJUI)->count();
+            $totalLaporan   = LaporanKegiatan::where('user_id', $user->id)->count();
+            $totalUsers     = 0;
         }
 
         // === Chart Data: Kegiatan per bulan (12 bulan terakhir berdasarkan tanggal_mulai) ===
@@ -56,13 +56,32 @@ class HomeController extends Controller
             $month = $now->copy()->subMonths($i);
             $chartLabels[] = $month->translatedFormat('M Y');
 
-            $queryDisetujui = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
-                ->whereMonth('tanggal_mulai', $month->month)
-                ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
+            $year  = $month->year;
+            $mNum  = $month->month;
 
-            $querySelesai = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
-                ->whereMonth('tanggal_mulai', $month->month)
-                ->where('status', RencanaKegiatan::STATUS_SELESAI);
+            $queryDisetujui = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DISETUJUI)
+                ->where(function($q) use ($year, $mNum) {
+                    $q->where(function($sub) use ($year, $mNum) {
+                        $sub->whereYear('tanggal_mulai', $year)
+                            ->whereMonth('tanggal_mulai', $mNum);
+                    })->orWhere(function($sub) use ($year, $mNum) {
+                        $sub->whereNull('tanggal_mulai')
+                            ->whereYear('created_at', $year)
+                            ->whereMonth('created_at', $mNum);
+                    });
+                });
+
+            $querySelesai = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_SELESAI)
+                ->where(function($q) use ($year, $mNum) {
+                    $q->where(function($sub) use ($year, $mNum) {
+                        $sub->whereYear('tanggal_mulai', $year)
+                            ->whereMonth('tanggal_mulai', $mNum);
+                    })->orWhere(function($sub) use ($year, $mNum) {
+                        $sub->whereNull('tanggal_mulai')
+                            ->whereYear('created_at', $year)
+                            ->whereMonth('created_at', $mNum);
+                    });
+                });
 
             if (!$isAdmin) {
                 $queryDisetujui->where('user_id', $user->id);

@@ -126,7 +126,7 @@
                     <div class="icon">
                         <i class="fas fa-check-circle" style="color: #28a745; opacity: 0.15;"></i>
                     </div>
-                    <a href="{{ route('rencana_kegiatan.index') }}?filter_status=disetujui" class="small-box-footer bg-light text-dark" style="position: absolute; bottom: 0; width: 100%;">
+                    <a href="{{ $isAdmin ? route('rencana_kegiatan.index').'?filter_status=disetujui' : route('laporan_kegiatan.index') }}" class="small-box-footer bg-light text-dark" style="position: absolute; bottom: 0; width: 100%;">
                         Lihat Detail <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
