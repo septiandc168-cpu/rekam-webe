@@ -39,68 +39,68 @@
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover table-borderless mb-0 text-sm align-middle">
+                <table class="table table-hover table-borderless mb-0 text-sm align-middle w-100">
                     <thead class="bg-navy text-white text-nowrap">
                         <tr>
-                            <th class="align-middle text-center pl-3" style="width:40px;">No</th>
-                            <th class="align-middle" style="width:30%;">Nama Kegiatan</th>
-                            <th class="align-middle d-none d-md-table-cell" style="width:15%;">Jenis</th>
-                            <th class="align-middle d-none d-lg-table-cell" style="width:20%;">Lokasi</th>
-                            <th class="align-middle d-none d-md-table-cell" style="width:15%;">Tanggal Pelaksanaan</th>
-                            <th class="align-middle text-center" style="width:220px;">Aksi</th>
+                            <th class="align-middle text-center" style="width: 50px;">No</th>
+                            <th class="align-middle text-center" style="width: 140px;">Aksi</th>
+                            <th class="align-middle" style="width: 30%;">Nama Kegiatan</th>
+                            <th class="align-middle text-nowrap" style="width: 20%;">Tanggal Pelaksanaan</th>
+                            <th class="align-middle" style="width: 20%;">Penanggung Jawab</th>
+                            <th class="align-middle" style="width: 20%;">Lokasi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($rencanaDisetujui as $idx => $rencana)
-                        <tr>
-                            <td class="align-middle text-center pl-3">{{ $idx + 1 }}</td>
-                            <td class="align-middle">
-                                <div class="fw-bold text-dark text-wrap"
-                                     style="max-width:260px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"
-                                     title="{{ $rencana->nama_kegiatan }}">
-                                    {{ $rencana->nama_kegiatan }}
-                                </div>
-                                @if($rencana->penanggung_jawab)
-                                    <small class="text-muted"><i class="fas fa-user mr-1"></i>{{ $rencana->penanggung_jawab }}</small>
-                                @endif
-                            </td>
-                            <td class="align-middle d-none d-md-table-cell">
-                                @php
-                                    $jenisStyles = [
-                                        'konservasi'       => 'background:#d1fae5; color:#065f46;',
-                                        'edukasi'          => 'background:#dbeafe; color:#1e40af;',
-                                        'usaha masyarakat' => 'background:#fef3c7; color:#92400e;',
-                                    ];
-                                    $jenisStyle = $jenisStyles[$rencana->jenis_kegiatan] ?? 'background:#f3e8ff; color:#6b21a8;';
-                                @endphp
-                                <span style="{{ $jenisStyle }} padding:2px 9px; border-radius:20px; font-size:0.73rem; font-weight:600;">
-                                    {{ $rencana->getJenisKegiatanLabel() }}
-                                </span>
-                            </td>
-                            <td class="align-middle text-muted d-none d-lg-table-cell" style="font-size:0.82rem;">
-                                <i class="fas fa-map-marker-alt mr-1 text-muted"></i>
-                                {{ Str::limit($rencana->desa ?? '-', 35) }}
-                            </td>
-                            <td class="align-middle d-none d-md-table-cell" style="font-size:0.82rem; white-space:nowrap;">
-                                <i class="fas fa-calendar-alt mr-1 text-muted"></i>
-                                {{ \Carbon\Carbon::parse($rencana->tanggal_mulai)->translatedFormat('d M Y') }}
-                                @if($rencana->tanggal_selesai && $rencana->tanggal_mulai != $rencana->tanggal_selesai)
-                                    <br><span class="text-muted">&ndash; {{ \Carbon\Carbon::parse($rencana->tanggal_selesai)->translatedFormat('d M Y') }}</span>
-                                @endif
-                            </td>
+                        <tr class="border-bottom">
+                            <td class="align-middle text-center text-muted">{{ $idx + 1 }}</td>
                             <td class="align-middle text-center">
-                                <div class="d-inline-flex align-items-center" style="gap:5px;">
-                                    <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'laporan']) }}"
-                                       class="btn btn-sm btn-info text-white shadow-sm"
+                                <div class="d-inline-flex align-items-center" style="gap:6px;">
+                                    <a class="btn btn-sm bg-navy text-white shadow-sm rounded"
+                                       style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
+                                       href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'laporan']) }}"
                                        title="Lihat Detail Rencana Kegiatan">
-                                        <i class="fas fa-info-circle mr-1"></i> Detail
+                                        <i class="fas fa-info" style="font-size: 12px;"></i>
                                     </a>
                                     <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana->uuid]) }}"
-                                       class="btn btn-sm bg-navy text-white shadow-sm"
+                                       class="btn btn-sm btn-success shadow-sm"
                                        title="Buat Laporan untuk Kegiatan Ini">
                                         <i class="fas fa-file-alt mr-1"></i> Buat Laporan
                                     </a>
                                 </div>
+                            </td>
+                            <td class="align-middle py-3">
+                                <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'laporan']) }}"
+                                   class="text-dark text-wrap d-block"
+                                   style="max-width: 300px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-decoration: none;"
+                                   title="{{ $rencana->nama_kegiatan }}">
+                                    <strong>{{ $rencana->nama_kegiatan }}</strong>
+                                </a>
+                                <small class="text-muted text-truncate d-block" style="max-width: 250px;" title="{{ $rencana->getJenisKegiatanLabel() }}">
+                                    <i class="fas fa-tags mr-1"></i> {{ $rencana->getJenisKegiatanLabel() }}
+                                </small>
+                            </td>
+                            <td class="align-middle text-nowrap">
+                                @if ($rencana->tanggal_mulai)
+                                    <span class="text-dark"><i class="far fa-calendar-alt mr-1 text-muted"></i> {{ \Carbon\Carbon::parse($rencana->tanggal_mulai)->translatedFormat('d M Y') }}</span>
+                                    @if ($rencana->tanggal_selesai && $rencana->tanggal_selesai != $rencana->tanggal_mulai)
+                                        <br><small class="text-muted">s/d {{ \Carbon\Carbon::parse($rencana->tanggal_selesai)->translatedFormat('d M Y') }}</small>
+                                    @endif
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
+                            <td class="align-middle">
+                                <div class="d-flex align-items-center">
+                                    <span class="text-dark text-truncate" style="max-width: 170px;" title="{{ $rencana->penanggung_jawab ?? ($rencana->user->name ?? '-') }}">
+                                        {{ $rencana->penanggung_jawab ?? ($rencana->user->name ?? '-') }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <span class="text-muted text-truncate d-block" style="max-width: 180px;" title="{{ $rencana->desa ?? '-' }}">
+                                    {{ $rencana->desa ?? '-' }}
+                                </span>
                             </td>
                         </tr>
                         @endforeach
