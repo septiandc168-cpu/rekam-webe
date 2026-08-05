@@ -16,16 +16,18 @@ Route::fallback(function () {
     return view('404');
 });
 
-Route::middleware('isSupervisor')->group(function () {
+Route::middleware(['auth', 'isSupervisor'])->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::post('users', [UserController::class, 'store'])->name('users.store');
     // Route::delete('users/{id}/destroy', [UserController::class, 'destroy'])->name('users.destroy');
     Route::post('users/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+    Route::post('user-update-role', [UserController::class, 'updateRole'])->name('users.update-role');
 });
 
-Route::post('users/ganti-password', [UserController::class, 'gantiPassword'])->name('users.ganti-password');
-Route::resource('users', UserController::class)->middleware('isSupervisor');
-Route::post('user-update-role', [UserController::class, 'updateRole'])->name('users.update-role');
+Route::middleware('auth')->group(function () {
+    Route::post('users/ganti-password', [UserController::class, 'gantiPassword'])->name('users.ganti-password');
+    Route::resource('users', UserController::class)->middleware('isSupervisor');
+});
 
 // Public/front map (full-screen map with markers)
 Route::get('/front_rencana_kegiatan', [App\Http\Controllers\RencanaKegiatanController::class, 'frontIndex'])->name('rencana_kegiatan.front');
@@ -80,7 +82,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/laporan_kegiatan', [App\Http\Controllers\LaporanKegiatanController::class, 'store'])->name('laporan_kegiatan.store');
     });
 
-    // Route untuk aksi verifikasi laporan oleh supervisor
+    // Route aksi terima/revisi laporan oleh admin
     Route::put('/laporan_kegiatan/{id}/terima', [App\Http\Controllers\LaporanKegiatanController::class, 'terimaLaporan'])->name('laporan_kegiatan.terima');
     Route::put('/laporan_kegiatan/{id}/revisi', [App\Http\Controllers\LaporanKegiatanController::class, 'revisiLaporan'])->name('laporan_kegiatan.revisi');
 
@@ -90,10 +92,10 @@ Route::middleware('auth')->group(function () {
     // Resource routes for show, edit, update, destroy (with UUID)
     Route::resource('laporan_kegiatan', App\Http\Controllers\LaporanKegiatanController::class)->except(['index', 'create', 'store']);
 
-    // Both admin and supervisor can view index
+    // Admin dan anggota bisa melihat index laporan
     Route::get('/laporan_kegiatan', [App\Http\Controllers\LaporanKegiatanController::class, 'index'])->name('laporan_kegiatan.index');
 
-    // Print route (both admin and supervisor)
+    // Cetak laporan (admin dan anggota)
     Route::get('/laporan_kegiatan/{laporanKegiatan}/print', [App\Http\Controllers\LaporanKegiatanController::class, 'print'])->name('laporan_kegiatan.print');
 });
 

@@ -16,16 +16,16 @@ use Illuminate\Validation\ValidationException;
 class LaporanKegiatanController extends Controller
 {
     /**
-     * Helper function to send notifications to all supervisors
+     * Helper: kirim notifikasi ke semua user ber-role admin
      */
-    private function notifySupervisors($notification)
+    private function notifyAdmins($notification)
     {
-        $supervisors = User::whereHas('role', function($query) {
+        $admins = User::whereHas('role', function($query) {
             $query->where('role_name', 'admin');
         })->get();
 
-        foreach ($supervisors as $supervisor) {
-            $supervisor->notify($notification);
+        foreach ($admins as $admin) {
+            $admin->notify($notification);
         }
     }
 
@@ -35,10 +35,10 @@ class LaporanKegiatanController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $isSupervisor = $user->role->role_name === 'admin';
+        $isAdmin = $user->role->role_name === 'admin';
         
         // Filter data berdasarkan peran
-        if ($isSupervisor) {
+        if ($isAdmin) {
             // Admin melihat semua data kecuali draft
             $query = LaporanKegiatan::with('rencanaKegiatan', 'user')
                 ->where('status', '!=', LaporanKegiatan::STATUS_DRAFT);
@@ -100,7 +100,7 @@ class LaporanKegiatanController extends Controller
         // === Rencana Kegiatan Disetujui yang belum ada laporannya ===
         // Hanya untuk anggota: rencana milik sendiri yang berstatus disetujui dan belum ada laporan
         $rencanaDisetujui = collect();
-        if (!$isSupervisor) {
+        if (!$isAdmin) {
             $rencanaDisetujui = RencanaKegiatan::with('user')
                 ->where('user_id', $user->id)
                 ->where('status', RencanaKegiatan::STATUS_DISETUJUI)
@@ -314,7 +314,7 @@ class LaporanKegiatanController extends Controller
                 null,
                 now()
             );
-            $this->notifySupervisors($notification);
+            $this->notifyAdmins($notification);
         }
 
         $message = $status === \App\Models\LaporanKegiatan::STATUS_DRAFT 
@@ -647,7 +647,7 @@ class LaporanKegiatanController extends Controller
                 null,
                 now()
             );
-            $this->notifySupervisors($notification);
+            $this->notifyAdmins($notification);
         }
 
         $message = match(true) {
@@ -738,7 +738,7 @@ class LaporanKegiatanController extends Controller
                 null,
                 now()
             );
-            $this->notifySupervisors($notification);
+            $this->notifyAdmins($notification);
         }
 
         toast('Laporan kegiatan berhasil dihapus.', 'success');
@@ -764,6 +764,12 @@ class LaporanKegiatanController extends Controller
         }
 
         $laporan = LaporanKegiatan::with('rencanaKegiatan')->where('uuid', $id)->firstOrFail();
+
+        // Validasi transisi status: hanya laporan berstatus 'diajukan' yang bisa diterima
+        if ($laporan->status !== LaporanKegiatan::STATUS_DIAJUKAN) {
+            toast('Laporan tidak dapat diterima karena statusnya bukan "Diajukan".', 'error');
+            return redirect()->back();
+        }
         
         try {
             DB::transaction(function () use ($laporan) {
@@ -913,7 +919,7 @@ class LaporanKegiatanController extends Controller
             'catatan_evaluasi' => null // Reset catatan evaluasi
         ]);
         
-        // Send notification to supervisors
+        // Kirim notifikasi ke admin
         $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
         $notification = new LaporanActivityNotification(
             $laporanKegiatan->uuid,
@@ -925,7 +931,7 @@ class LaporanKegiatanController extends Controller
             null,
             now()
         );
-        $this->notifySupervisors($notification);
+        $this->notifyAdmins($notification);
         
         toast('Laporan kegiatan berhasil diajukan!', 'success');
         return redirect()->back();

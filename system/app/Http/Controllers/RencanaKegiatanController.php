@@ -19,23 +19,23 @@ use Maatwebsite\Excel\Facades\Excel;
 class RencanaKegiatanController extends Controller
 {
     /**
-     * Helper function to send notifications to all supervisors
+     * Helper: kirim notifikasi ke semua user ber-role admin
      */
-    private function notifySupervisors($notification)
+    private function notifyAdmins($notification)
     {
-        $supervisors = User::whereHas('role', function ($query) {
+        $admins = User::whereHas('role', function ($query) {
             $query->where('role_name', 'admin');
         })->get();
 
-        foreach ($supervisors as $supervisor) {
-            $supervisor->notify($notification);
+        foreach ($admins as $admin) {
+            $admin->notify($notification);
         }
     }
 
     public function index(Request $request)
     {
         $user = auth()->user();
-        $isSupervisor = $user->role->role_name === 'admin';
+        $isAdmin = $user->role->role_name === 'admin';
         
         // Handle filter_status parameter from dashboard
         $filterStatus = $request->get('filter_status');
@@ -45,7 +45,7 @@ class RencanaKegiatanController extends Controller
         }
         
         // Filter data berdasarkan peran
-        if ($isSupervisor) {
+        if ($isAdmin) {
             // Admin melihat semua data kecuali draft
             $query = RencanaKegiatan::with('laporanKegiatan', 'user')
                 ->where('status', '!=', RencanaKegiatan::STATUS_DRAFT);
@@ -123,13 +123,13 @@ class RencanaKegiatanController extends Controller
     public function historyRealisasi(Request $request)
     {
         $user        = auth()->user();
-        $isSupervisor = $user->role->role_name === 'admin';
+        $isAdmin = $user->role->role_name === 'admin';
 
         $query = RencanaKegiatan::with(['laporanKegiatan', 'user'])
             ->where('status', RencanaKegiatan::STATUS_SELESAI);
 
         // Scope anggota ke data milik sendiri
-        if (!$isSupervisor) {
+        if (!$isAdmin) {
             $query->where('user_id', $user->id);
         }
 
@@ -143,7 +143,7 @@ class RencanaKegiatanController extends Controller
         if ($request->filled('jenis')) {
             $query->where('jenis_kegiatan', $request->jenis);
         }
-        if ($request->filled('user_id') && $isSupervisor) {
+        if ($request->filled('user_id') && $isAdmin) {
             $query->where('user_id', $request->user_id);
         }
         if ($request->filled('status_laporan')) {
@@ -164,7 +164,7 @@ class RencanaKegiatanController extends Controller
         $totalTanpaLaporan  = $rencanaKegiatans->filter(fn($r) => !$r->laporanKegiatan)->count();
 
         // User list for filter (admin only)
-        $users = $isSupervisor
+        $users = $isAdmin
             ? \App\Models\User::whereHas('role', fn($q) => $q->where('role_name', 'anggota'))->orderBy('name')->get()
             : collect();
 
@@ -423,7 +423,7 @@ class RencanaKegiatanController extends Controller
                 null,
                 now()
             );
-            $this->notifySupervisors($notification);
+            $this->notifyAdmins($notification);
         }
 
         if ($data['status'] === 'draft') {
@@ -440,11 +440,11 @@ class RencanaKegiatanController extends Controller
     public function frontIndex()
     {
         $user = auth()->user();
-        $isSupervisor = $user ? $user->role->role_name === 'admin' : false;
+        $isAdmin = $user ? $user->role->role_name === 'admin' : false;
         
         // Filter data berdasarkan peran untuk public map view
-        if ($isSupervisor) {
-            // Supervisor melihat semua data
+        if ($isAdmin) {
+            // Admin melihat semua data
             $rencanaKegiatans = RencanaKegiatan::whereNotNull('lat')->whereNotNull('lng')->get();
         } elseif ($user) {
             // Admin hanya melihat datanya sendiri
@@ -812,12 +812,12 @@ class RencanaKegiatanController extends Controller
                 null,
                 now()
             );
-            $this->notifySupervisors($notification);
+            $this->notifyAdmins($notification);
         }
 
         $message = match(true) {
             $request->input('action') === 'draft' => 'Draft rencana kegiatan berhasil diperbarui!',
-            $isSupervisor => 'Rencana kegiatan berhasil diperbarui!',
+            $isAdmin => 'Rencana kegiatan berhasil diperbarui!',
             default => 'Rencana kegiatan berhasil direvisi dan diajukan ulang!'
         };
 
@@ -826,17 +826,17 @@ class RencanaKegiatanController extends Controller
     }
 
     /**
-     * Update status rencana kegiatan (supervisor only)
+     * Update status rencana kegiatan (admin only)
      */
     public function updateStatus(Request $request, RencanaKegiatan $rencana_kegiatan)
     {
-        // Check authorization - hanya supervisor yang bisa update status
+        // Check authorization - hanya admin yang bisa update status
         $this->authorize('updateStatus', $rencana_kegiatan);
 
         $user = auth()->user();
-        $isSupervisor = $user->role->role_name === 'admin';
+        $isAdmin = $user->role->role_name === 'admin';
 
-        if (!$isSupervisor) {
+        if (!$isAdmin) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -890,6 +890,15 @@ class RencanaKegiatanController extends Controller
         $rencana = RencanaKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
         $this->authorize('updateStatus', $rencana);
 
+        // Validasi transisi status: hanya rencana berstatus 'diajukan' yang bisa disetujui
+        if (!in_array($rencana->status, [
+            RencanaKegiatan::STATUS_DIAJUKAN,
+            RencanaKegiatan::STATUS_REVISI,
+        ])) {
+            toast('Rencana kegiatan tidak dapat disetujui karena statusnya bukan "Diajukan" atau "Revisi".', 'error');
+            return redirect()->back();
+        }
+
         $rencana->update([
             'status' => RencanaKegiatan::STATUS_DISETUJUI,
             'keterangan_status' => null, // Bersihkan keterangan karena sudah disetujui
@@ -924,6 +933,14 @@ class RencanaKegiatanController extends Controller
             'keterangan_status.required' => 'Catatan revisi wajib diisi.',
         ]);
 
+        // Validasi transisi status: hanya rencana berstatus 'diajukan' yang bisa direvisi
+        if (!in_array($rencana->status, [
+            RencanaKegiatan::STATUS_DIAJUKAN,
+        ])) {
+            toast('Rencana kegiatan tidak dapat direvisi karena statusnya bukan "Diajukan".', 'error');
+            return redirect()->back();
+        }
+
         $rencana->update([
             'status' => RencanaKegiatan::STATUS_REVISI,
             'keterangan_status' => $request->keterangan_status,
@@ -957,6 +974,14 @@ class RencanaKegiatanController extends Controller
         ], [
             'keterangan_status.required' => 'Alasan penolakan wajib diisi.',
         ]);
+
+        // Validasi transisi status: hanya rencana berstatus 'diajukan' yang bisa ditolak
+        if (!in_array($rencana->status, [
+            RencanaKegiatan::STATUS_DIAJUKAN,
+        ])) {
+            toast('Rencana kegiatan tidak dapat ditolak karena statusnya bukan "Diajukan".', 'error');
+            return redirect()->back();
+        }
 
         $rencana->update([
             'status' => RencanaKegiatan::STATUS_DITOLAK,
@@ -1080,7 +1105,7 @@ class RencanaKegiatanController extends Controller
 
         $rencana_kegiatan->delete();
 
-        // Kirim notifikasi ke supervisor jika admin yang menghapus
+        // Kirim notifikasi ke admin jika anggota yang menghapus
         if ($isAdmin) {
             $notification = new KegiatanActivityNotification(
                 $kegiatanUuid,
@@ -1090,7 +1115,7 @@ class RencanaKegiatanController extends Controller
                 null,
                 now()
             );
-            $this->notifySupervisors($notification);
+            $this->notifyAdmins($notification);
         }
 
         // Alert::success('Berhasil', 'Rencana kegiatan berhasil dihapus.');
@@ -1099,7 +1124,7 @@ class RencanaKegiatanController extends Controller
     }
 
     /**
-     * Export rekap kegiatan to CSV (Supervisor only).
+     * Export rekap kegiatan ke Excel (Admin only).
      */
     public function exportExcel(Request $request)
     {
@@ -1252,7 +1277,7 @@ class RencanaKegiatanController extends Controller
             null,
             now()
         );
-        $this->notifySupervisors($notification);
+        $this->notifyAdmins($notification);
         
         toast('Rencana kegiatan berhasil diajukan!', 'success');
         return redirect()->back();

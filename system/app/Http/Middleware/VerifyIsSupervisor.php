@@ -8,6 +8,10 @@ use App\Models\Role;
 use RealRashid\SweetAlert\Facades\Alert;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Middleware untuk memverifikasi bahwa user adalah admin.
+ * (Nama kelas dipertahankan agar tidak perlu mengubah registrasi di bootstrap/app.php)
+ */
 class VerifyIsSupervisor
 {
     /**
@@ -18,9 +22,9 @@ class VerifyIsSupervisor
     public function handle(Request $request, Closure $next): Response
     {
         $role_id = $request->user()->role_id;
-        $superVisorId = Role::where('role_name', 'admin')->first()->id;
+        $adminRoleId = Role::where('role_name', 'admin')->first()->id;
 
-        if ($role_id != $superVisorId) {
+        if ($role_id != $adminRoleId) {
             Alert::error('Gagal', 'Anda tidak memiliki akses ke halaman ini');
             return redirect()->route('home');
         }

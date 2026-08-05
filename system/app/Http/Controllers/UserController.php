@@ -77,13 +77,13 @@ class UserController extends Controller
             'email.unique' => 'Email sudah digunakan',
         ]);
 
-        $newRequest = $request->all();
+        $safeData = $request->only(['name', 'email', 'no_hp', 'jabatan', 'unit', 'nip', 'role_id']);
 
         if (!$id) {
-            $newRequest['password'] = Hash::make('12345678');
+            $safeData['password'] = Hash::make('12345678');
         }
 
-        User::updateOrCreate(['id' => $id], $newRequest);
+        User::updateOrCreate(['id' => $id], $safeData);
         toast('Data user berhasil disimpan!', 'success');
         return Redirect::route('users.index');
     }
