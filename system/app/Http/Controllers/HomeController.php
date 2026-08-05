@@ -80,10 +80,7 @@ class HomeController extends Controller
         // === Tabel: 5 Rencana Terbaru ===
         $rencanaQuery = RencanaKegiatan::with('user')->latest();
         if (!$isAdmin) {
-            $rencanaQuery->where(function($q) use ($user) {
-                $q->where('user_id', $user->id)
-                  ->orWhereNotIn('status', [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]);
-            });
+            $rencanaQuery->where('user_id', $user->id);
         }
         $rencanaTerbaru = $rencanaQuery->take(5)->get();
 
@@ -92,6 +89,11 @@ class HomeController extends Controller
             ->whereNotNull('lat')
             ->whereNotNull('lng')
             ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
+        
+        if (!$isAdmin) {
+            $mapQuery->where('user_id', $user->id);
+        }
+
         $mapData = $mapQuery->get()->map(function($item) {
             $formattedDate = $item->tanggal_mulai ? \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d F Y') : '-';
             $person = $item->penanggung_jawab ?? ($item->user ? $item->user->name : 'Unknown');
@@ -131,10 +133,18 @@ class HomeController extends Controller
      */
     public function events()
     {
-        // Kalender hanya menampilkan rencana kegiatan berstatus DISETUJUI untuk Admin dan Anggota
-        $rencanaKegiatan = RencanaKegiatan::with('user')
-            ->where('status', RencanaKegiatan::STATUS_DISETUJUI)
-            ->get();
+        $user = auth()->user();
+        $isAdmin = $user && $user->role && $user->role->role_name === 'admin';
+
+        // Kalender hanya menampilkan rencana kegiatan berstatus DISETUJUI (scoped by user for anggota)
+        $query = RencanaKegiatan::with('user')
+            ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
+
+        if (!$isAdmin) {
+            $query->where('user_id', $user->id);
+        }
+
+        $rencanaKegiatan = $query->get();
 
         $dateGrouped = [];
 
