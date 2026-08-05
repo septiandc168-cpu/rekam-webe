@@ -261,7 +261,7 @@
                         <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFieldsShow) }} Data Wajib Belum Terisi</span>
                     </div>
                     <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
-                        Lengkapi data laporan kegiatan ini agar dapat diajukan ke supervisor. 
+                        Lengkapi data laporan kegiatan ini agar dapat diajukan ke admin. 
                         <a href="javascript:void(0);" onclick="toggleMissingFieldsLaporan(event)" class="text-primary font-weight-bold ml-1" style="text-decoration: underline;">
                             <i class="fas fa-chevron-down mr-1" id="icon-missing-chevron-lap"></i><span id="text-missing-toggle-lap">Lihat Selengkapnya</span>
                         </a>
