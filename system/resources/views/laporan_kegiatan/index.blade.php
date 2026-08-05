@@ -21,13 +21,13 @@
         </div>
     @endif
 
-    {{-- === SEKSI: Rencana Kegiatan Disetujui yang Siap Dibuatkan Laporan (Hanya Anggota) === --}}
+    {{-- === SEKSI: Rencana Kegiatan Disetujui (Hanya Anggota) === --}}
     @if(isset($rencanaDisetujui) && $rencanaDisetujui->count() > 0)
     <div class="card shadow-sm elevation-1 text-sm mb-4">
         <div class="card-header bg-white d-flex align-items-center justify-content-between py-2 px-3">
             <div class="d-flex align-items-center">
                 <h6 class="card-title fw-bold text-dark mt-1 mb-0" style="font-size: 0.95rem;">
-                    <i class="fas fa-clipboard-check text-navy mr-1"></i> Rencana Kegiatan Siap Laporan
+                    <i class="fas fa-clipboard-check text-navy mr-1"></i> Rencana Kegiatan Disetujui
                     <span class="badge bg-navy text-white ml-1" style="font-size: 0.78rem;">
                         {{ $rencanaDisetujui->count() }}
                     </span>
@@ -43,27 +43,28 @@
                     <thead class="bg-navy text-white text-nowrap">
                         <tr>
                             <th class="align-middle text-center" style="width: 50px;">No</th>
-                            <th class="align-middle text-center" style="width: 140px;">Aksi</th>
-                            <th class="align-middle" style="width: 30%;">Nama Kegiatan</th>
+                            <th class="align-middle text-center" style="width: 180px;">Aksi</th>
+                            <th class="align-middle" style="width: 35%;">Nama Kegiatan</th>
                             <th class="align-middle text-nowrap" style="width: 20%;">Tanggal Pelaksanaan</th>
                             <th class="align-middle" style="width: 20%;">Penanggung Jawab</th>
-                            <th class="align-middle" style="width: 20%;">Lokasi</th>
+                            <th class="align-middle text-center" style="width: 120px;">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($rencanaDisetujui as $idx => $rencana)
                         <tr class="border-bottom">
                             <td class="align-middle text-center text-muted">{{ $idx + 1 }}</td>
-                            <td class="align-middle text-center">
+                            <td class="align-middle text-center text-nowrap">
                                 <div class="d-inline-flex align-items-center" style="gap:6px;">
-                                    <a class="btn btn-sm bg-navy text-white shadow-sm rounded"
+                                    <a class="btn btn-sm bg-navy text-white shadow-sm rounded flex-shrink-0"
                                        style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
                                        href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'laporan']) }}"
                                        title="Lihat Detail Rencana Kegiatan">
                                         <i class="fas fa-info" style="font-size: 12px;"></i>
                                     </a>
                                     <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana->uuid]) }}"
-                                       class="btn btn-sm btn-success shadow-sm"
+                                       class="btn btn-sm bg-navy text-white shadow-sm text-nowrap"
+                                       style="white-space: nowrap;"
                                        title="Buat Laporan untuk Kegiatan Ini">
                                         <i class="fas fa-file-alt mr-1"></i> Buat Laporan
                                     </a>
@@ -97,10 +98,8 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="align-middle">
-                                <span class="text-muted text-truncate d-block" style="max-width: 180px;" title="{{ $rencana->desa ?? '-' }}">
-                                    {{ $rencana->desa ?? '-' }}
-                                </span>
+                            <td class="align-middle text-center">
+                                {!! $rencana->status_badge !!}
                             </td>
                         </tr>
                         @endforeach
