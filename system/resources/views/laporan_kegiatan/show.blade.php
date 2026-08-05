@@ -204,7 +204,7 @@
                             </button>
                         </form>
                     @else
-                        <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Draft Belum Lengkap!', text: 'Laporan kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', timer: 15000, timerProgressBar: true, confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
+                        <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Draft Belum Lengkap!', text: 'Laporan kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
                             <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
                         </button>
                     @endif
