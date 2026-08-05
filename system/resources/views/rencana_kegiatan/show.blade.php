@@ -218,7 +218,7 @@
                                     </button>
                                 </form>
                             @else
-                                <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Draft Belum Lengkap!', text: 'Rencana kegiatan ini belum dapat diajukan karena ada data wajib yang belum terisi: {{ implode(', ', $missingFieldsShow) }}.'})">
+                                <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Draft Belum Lengkap!', text: 'Rencana kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', timer: 15000, timerProgressBar: true, confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
                                     <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
                                 </button>
                             @endif
@@ -309,22 +309,38 @@
     @endphp
 
     @if(!empty($missingFieldsShow))
-        <div class="alert alert-warning border-0 shadow-sm mb-4 p-3 rounded" style="background-color: #fff8e6; border-left: 4px solid #ffc107 !important;">
-            <div class="d-flex align-items-center justify-content-between flex-wrap" style="gap: 12px;">
-                <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center mr-3" style="width: 38px; height: 38px; flex-shrink: 0;">
-                        <i class="fas fa-exclamation-triangle"></i>
+        <div class="alert alert-warning border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: #fff8e6; border-left: 4px solid #ffc107 !important;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="top: 10px; right: 15px; opacity: 0.7;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="d-flex align-items-start pr-4">
+                <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center mr-3 mt-1" style="width: 36px; height: 36px; flex-shrink: 0;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                        <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">Draft Belum Lengkap</h6>
+                        <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFieldsShow) }} Data Wajib Belum Terisi</span>
                     </div>
-                    <div>
-                        <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">
-                            Draft Belum Lengkap <span class="badge bg-warning text-dark ml-1" style="font-size: 0.75rem;">{{ count($missingFieldsShow) }} Data Wajib Belum Terisi</span>
-                        </h6>
-                        <small class="text-muted">Lengkapi data rencana kegiatan ini agar dapat diajukan ke supervisor.</small>
+                    <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
+                        Lengkapi data rencana kegiatan ini agar dapat diajukan ke supervisor. 
+                        <a href="#collapseMissingFields" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseMissingFields" class="text-primary font-weight-bold ml-1" style="text-decoration: underline;">
+                            <i class="fas fa-chevron-down mr-1"></i>Lihat Selengkapnya
+                        </a>
+                    </p>
+                    <div class="collapse mt-2" id="collapseMissingFields">
+                        <div class="p-2 rounded bg-white border" style="border-color: #ffe8a1 !important;">
+                            <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">Daftar Kolom Wajib yang Belum Terisi:</strong>
+                            <div class="d-flex flex-wrap" style="gap: 6px;">
+                                @foreach($missingFieldsShow as $mf)
+                                    <span class="badge bg-light text-dark border p-1" style="font-size: 0.78rem;">
+                                        <i class="fas fa-exclamation-circle text-warning mr-1"></i> {{ $mf }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <a href="{{ route('rencana_kegiatan.edit', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" class="btn btn-sm btn-warning text-dark font-weight-bold shadow-sm px-3">
-                    <i class="fas fa-edit mr-1"></i> Edit & Lengkapi Data
-                </a>
             </div>
         </div>
     @endif
