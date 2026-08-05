@@ -47,7 +47,7 @@
                             <th class="align-middle d-none d-md-table-cell" style="width:15%;">Jenis</th>
                             <th class="align-middle d-none d-lg-table-cell" style="width:20%;">Lokasi</th>
                             <th class="align-middle d-none d-md-table-cell" style="width:15%;">Tanggal Pelaksanaan</th>
-                            <th class="align-middle text-center" style="width:130px;">Aksi</th>
+                            <th class="align-middle text-center" style="width:220px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,11 +89,18 @@
                                 @endif
                             </td>
                             <td class="align-middle text-center">
-                                <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana->uuid]) }}"
-                                   class="btn btn-sm bg-navy text-white shadow-sm"
-                                   title="Buat Laporan untuk Kegiatan Ini">
-                                    <i class="fas fa-file-alt mr-1"></i> Buat Laporan
-                                </a>
+                                <div class="d-inline-flex align-items-center" style="gap:5px;">
+                                    <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'laporan']) }}"
+                                       class="btn btn-sm btn-info text-white shadow-sm"
+                                       title="Lihat Detail Rencana Kegiatan">
+                                        <i class="fas fa-info-circle mr-1"></i> Detail
+                                    </a>
+                                    <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana->uuid]) }}"
+                                       class="btn btn-sm bg-navy text-white shadow-sm"
+                                       title="Buat Laporan untuk Kegiatan Ini">
+                                        <i class="fas fa-file-alt mr-1"></i> Buat Laporan
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
