@@ -172,9 +172,12 @@
             <div class="col-md-7 mb-4 d-flex">
                 <div class="card w-100 h-100 d-flex flex-column">
                     <div class="card-header bg-navy">
-                        <h3 class="card-title">
+                        <h3 class="card-title mb-0">
                             <i class="fas fa-chart-bar mr-2"></i>
                             Statistik Kegiatan per Bulan
+                            <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
+                                <i class="fas fa-info-circle mr-1"></i> Kegiatan berstatus Disetujui & Selesai
+                            </small>
                         </h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -315,6 +318,9 @@
             }
 
             // === Chart.js: Bar Chart Kegiatan per Bulan ===
+            var chartDisetujuiData = @json($chartDisetujui);
+            var chartSelesaiData   = @json($chartSelesai);
+
             var ctx = document.getElementById('chartKegiatan').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
@@ -323,7 +329,7 @@
                     datasets: [{
                         label: 'Jumlah Kegiatan',
                         data: @json($chartValues),
-                        backgroundColor: 'rgba(108, 117, 125, 0.7)',
+                        backgroundColor: 'rgba(108, 117, 125, 0.75)',
                         borderColor: 'rgba(108, 117, 125, 1)',
                         borderWidth: 1,
                         borderRadius: 4,
@@ -343,6 +349,19 @@
                             bodyColor: '#fff',
                             padding: 10,
                             cornerRadius: 6,
+                            callbacks: {
+                                label: function(context) {
+                                    var idx = context.dataIndex;
+                                    var total = context.parsed.y || 0;
+                                    var disetujui = chartDisetujuiData[idx] || 0;
+                                    var selesai   = chartSelesaiData[idx] || 0;
+                                    return [
+                                        'Total: ' + total + ' Kegiatan',
+                                        '  • Disetujui: ' + disetujui,
+                                        '  • Selesai: ' + selesai
+                                    ];
+                                }
+                            }
                         }
                     },
                     scales: {

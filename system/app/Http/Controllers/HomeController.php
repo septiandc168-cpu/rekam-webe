@@ -34,37 +34,47 @@ class HomeController extends Controller
         if ($isAdmin) {
             $totalRencana = RencanaKegiatan::count();
             $totalDiajukan = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
-            $totalDisetujui = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DISETUJUI)->count();
+            $totalDisetujui = RencanaKegiatan::whereIn('status', [RencanaKegiatan::STATUS_DISETUJUI, RencanaKegiatan::STATUS_SELESAI])->count();
             $totalLaporan = LaporanKegiatan::count();
             $totalUsers = User::count();
         } else {
             $totalRencana = RencanaKegiatan::where('user_id', $user->id)->count();
             $totalDiajukan = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
-            $totalDisetujui = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DISETUJUI)->count();
+            $totalDisetujui = RencanaKegiatan::where('user_id', $user->id)->whereIn('status', [RencanaKegiatan::STATUS_DISETUJUI, RencanaKegiatan::STATUS_SELESAI])->count();
             $totalLaporan = LaporanKegiatan::where('user_id', $user->id)->count();
             $totalUsers = 0;
         }
 
-        // === Chart Data: Kegiatan per bulan (12 bulan terakhir) ===
-        $chartLabels = [];
-        $chartValues = [];
+        // === Chart Data: Kegiatan per bulan (12 bulan terakhir berdasarkan tanggal_mulai) ===
+        $chartLabels    = [];
+        $chartValues    = [];
+        $chartDisetujui = [];
+        $chartSelesai   = [];
         $now = Carbon::now();
 
         for ($i = 11; $i >= 0; $i--) {
             $month = $now->copy()->subMonths($i);
             $chartLabels[] = $month->translatedFormat('M Y');
 
-            $query = RencanaKegiatan::whereYear('created_at', $month->year)
-                ->whereMonth('created_at', $month->month);
+            $queryDisetujui = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
+                ->whereMonth('tanggal_mulai', $month->month)
+                ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
+
+            $querySelesai = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
+                ->whereMonth('tanggal_mulai', $month->month)
+                ->where('status', RencanaKegiatan::STATUS_SELESAI);
 
             if (!$isAdmin) {
-                $query->where(function($q) use ($user) {
-                    $q->where('user_id', $user->id)
-                      ->orWhereNotIn('status', [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]);
-                });
+                $queryDisetujui->where('user_id', $user->id);
+                $querySelesai->where('user_id', $user->id);
             }
 
-            $chartValues[] = $query->count();
+            $countDisetujui   = $queryDisetujui->count();
+            $countSelesai     = $querySelesai->count();
+
+            $chartDisetujui[] = $countDisetujui;
+            $chartSelesai[]   = $countSelesai;
+            $chartValues[]    = $countDisetujui + $countSelesai;
         }
 
         // === Tabel: 5 Rencana Terbaru ===
@@ -107,6 +117,8 @@ class HomeController extends Controller
             'totalUsers',
             'chartLabels',
             'chartValues',
+            'chartDisetujui',
+            'chartSelesai',
             'rencanaTerbaru',
             'mapData'
         ));
