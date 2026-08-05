@@ -309,17 +309,21 @@
     @endphp
 
     @if(!empty($missingFieldsShow))
-        <div class="alert alert-warning border-left-warning shadow-sm mb-4" role="alert">
-            <h6 class="font-weight-bold mb-1 text-dark"><i class="fas fa-exclamation-triangle mr-2 text-warning"></i> Draft Belum Lengkap!</h6>
-            <p class="mb-1 text-dark" style="font-size: 0.88rem;">Rencana kegiatan ini masih berstatus draft dan belum dapat diajukan karena data wajib berikut belum terisi:</p>
-            <div class="d-flex flex-wrap my-2" style="gap: 5px;">
-                @foreach($missingFieldsShow as $mf)
-                    <span class="badge bg-warning text-dark font-weight-bold p-2" style="font-size: 0.78rem;"><i class="fas fa-exclamation-circle mr-1"></i> {{ $mf }}</span>
-                @endforeach
-            </div>
-            <div class="mt-2">
-                <a href="{{ route('rencana_kegiatan.edit', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" class="btn btn-sm btn-warning text-dark font-weight-bold shadow-sm">
-                    <i class="fas fa-edit mr-1"></i> Edit & Lengkapi Data Sekarang
+        <div class="alert alert-warning border-0 shadow-sm mb-4 p-3 rounded" style="background-color: #fff8e6; border-left: 4px solid #ffc107 !important;">
+            <div class="d-flex align-items-center justify-content-between flex-wrap" style="gap: 12px;">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center mr-3" style="width: 38px; height: 38px; flex-shrink: 0;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">
+                            Draft Belum Lengkap <span class="badge bg-warning text-dark ml-1" style="font-size: 0.75rem;">{{ count($missingFieldsShow) }} Data Wajib Belum Terisi</span>
+                        </h6>
+                        <small class="text-muted">Lengkapi data rencana kegiatan ini agar dapat diajukan ke supervisor.</small>
+                    </div>
+                </div>
+                <a href="{{ route('rencana_kegiatan.edit', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" class="btn btn-sm btn-warning text-dark font-weight-bold shadow-sm px-3">
+                    <i class="fas fa-edit mr-1"></i> Edit & Lengkapi Data
                 </a>
             </div>
         </div>
