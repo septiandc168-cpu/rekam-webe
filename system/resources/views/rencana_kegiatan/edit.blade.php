@@ -853,150 +853,55 @@
                 });
 
                 // Event Listener Tombol "Selanjutnya"
-                function validateRencanaStep(stepIndex) {
-                    let missing = [];
-                    let firstInvalidEl = null;
-
-                    $('.is-invalid').removeClass('is-invalid');
-
-                    if (stepIndex === 0) { // Step 1: Detail Kegiatan
-                        let nama = $('input[name="nama_kegiatan"]').val();
-                        if (!nama || !nama.trim()) {
-                            missing.push("Nama Kegiatan");
-                            if (!firstInvalidEl) firstInvalidEl = $('input[name="nama_kegiatan"]');
-                            $('input[name="nama_kegiatan"]').addClass('is-invalid');
-                        }
-
-                        let jenis = $('select[name="jenis_kegiatan"]').val();
-                        if (!jenis || !jenis.trim()) {
-                            missing.push("Jenis Kegiatan");
-                            if (!firstInvalidEl) firstInvalidEl = $('select[name="jenis_kegiatan"]');
-                            $('select[name="jenis_kegiatan"]').addClass('is-invalid');
-                        } else if (jenis === 'lainnya') {
-                            let jenisLainnya = $('input[name="jenis_kegiatan_lainnya"]').val();
-                            if (!jenisLainnya || !jenisLainnya.trim()) {
-                                missing.push("Keterangan Jenis Kegiatan Lainnya");
-                                if (!firstInvalidEl) firstInvalidEl = $('input[name="jenis_kegiatan_lainnya"]');
-                                $('input[name="jenis_kegiatan_lainnya"]').addClass('is-invalid');
-                            }
-                        }
-
-                        let descText = $('#summernote-deskripsi').length ? $('#summernote-deskripsi').summernote('code').replace(/<[^>]*>/g, '').trim() : '';
-                        if (!descText) {
-                            missing.push("Deskripsi Kegiatan");
-                            if (!firstInvalidEl) firstInvalidEl = $('#summernote-deskripsi').next();
-                        }
-
-                        let tujuanText = $('#summernote-tujuan').length ? $('#summernote-tujuan').summernote('code').replace(/<[^>]*>/g, '').trim() : '';
-                        if (!tujuanText) {
-                            missing.push("Tujuan Kegiatan");
-                            if (!firstInvalidEl) firstInvalidEl = $('#summernote-tujuan').next();
-                        }
-
-                        let pj = $('input[name="penanggung_jawab"]').val();
-                        if (!pj || !pj.trim()) {
-                            missing.push("Penanggung Jawab");
-                            if (!firstInvalidEl) firstInvalidEl = $('input[name="penanggung_jawab"]');
-                            $('input[name="penanggung_jawab"]').addClass('is-invalid');
-                        }
-
-                        let kel = $('input[name="kelompok"]').val();
-                        if (!kel || !kel.trim()) {
-                            missing.push("Kelompok / Komunitas");
-                            if (!firstInvalidEl) firstInvalidEl = $('input[name="kelompok"]');
-                            $('input[name="kelompok"]').addClass('is-invalid');
-                        }
-
-                        let pes = $('input[name="estimasi_peserta"]').val();
-                        if (!pes || parseInt(pes) <= 0 || isNaN(parseInt(pes))) {
-                            missing.push("Target Peserta");
-                            if (!firstInvalidEl) firstInvalidEl = $('input[name="estimasi_peserta"]');
-                            $('input[name="estimasi_peserta"]').addClass('is-invalid');
-                        }
-                    } else if (stepIndex === 1) { // Step 2: Waktu & Lokasi
-                        let tMulai = $('input[name="tanggal_mulai"]').val();
-                        if (!tMulai) {
-                            missing.push("Tanggal Mulai");
-                            if (!firstInvalidEl) firstInvalidEl = $('input[name="tanggal_mulai"]');
-                            $('input[name="tanggal_mulai"]').addClass('is-invalid');
-                        }
-
-                        let tSelesai = $('input[name="tanggal_selesai"]').val();
-                        if (!tSelesai) {
-                            missing.push("Tanggal Selesai");
-                            if (!firstInvalidEl) firstInvalidEl = $('input[name="tanggal_selesai"]');
-                            $('input[name="tanggal_selesai"]').addClass('is-invalid');
-                        }
-
-                        let wMulai = $('input[name="waktu_mulai"]').val();
-                        if (!wMulai) {
-                            missing.push("Waktu Mulai");
-                            if (!firstInvalidEl) firstInvalidEl = $('input[name="waktu_mulai"]');
-                            $('input[name="waktu_mulai"]').addClass('is-invalid');
-                        }
-
-                        let wSelesai = $('input[name="waktu_selesai"]').val();
-                        if (!wSelesai) {
-                            missing.push("Waktu Selesai");
-                            if (!firstInvalidEl) firstInvalidEl = $('input[name="waktu_selesai"]');
-                            $('input[name="waktu_selesai"]').addClass('is-invalid');
-                        }
-
-                        let desa = $('input[name="desa"]').val();
-                        if (!desa || !desa.trim()) {
-                            missing.push("Desa / Wilayah");
-                            if (!firstInvalidEl) firstInvalidEl = $('input[name="desa"]');
-                            $('input[name="desa"]').addClass('is-invalid');
-                        }
-
-                        let lat = $('#location_lat').val();
-                        let lng = $('#location_lng').val();
-                        if (!lat || !lng) {
-                            missing.push("Titik Koordinat Lokasi pada Peta");
-                            if (!firstInvalidEl) firstInvalidEl = $('#map');
-                        }
-                    } else if (stepIndex === 2) { // Step 3: Perincian Kebutuhan & Anggaran
-                        recalculateRincianTable();
-                        let rincianVal = $('#hidden-rincian-kebutuhan').val();
-                        if (!rincianVal || !rincianVal.trim()) {
-                            missing.push("Perincian Kebutuhan (Minimal 1 item)");
-                            if (!firstInvalidEl) firstInvalidEl = $('#table-rincian-pengajuan');
-                        }
-                    }
-
-                    if (missing.length > 0) {
-                        if (typeof Swal !== 'undefined') {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Data Isian Belum Lengkap!',
-                                html: '<div class="text-left"><p class="mb-2">Mohon lengkapi data isian wajib berikut sebelum melanjutkan:</p><ul class="text-danger font-weight-bold pl-3 mb-0" style="list-style-type: disc;">' + missing.map(function(i){ return '<li>' + i + '</li>'; }).join('') + '</ul></div>',
-                                confirmButtonText: 'Lengkapi Sekarang',
-                                confirmButtonColor: '#001f3f'
-                            });
-                        } else {
-                            alert("Mohon lengkapi data isian wajib berikut:\n" + missing.map(function(i){ return '• ' + i; }).join('\n'));
-                        }
-
-                        if (firstInvalidEl && firstInvalidEl.length) {
-                            $('html, body').animate({
-                                scrollTop: firstInvalidEl.offset().top - 120
-                            }, 400);
-                            if (firstInvalidEl.is('input, select, textarea')) {
-                                firstInvalidEl.focus();
-                            }
-                        }
-                        return false;
-                    }
-
-                    return true;
-                }
-
                 document.querySelectorAll('.btn-next').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        if (validateRencanaStep(currentStepIndex)) {
+                        // 1. Validasi Halaman Saat Ini Sebelum Pindah
+                        const currentStepEl = document.getElementById(steps[currentStepIndex]);
+                        const inputs = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+                        let isValid = true;
+                        
+                        // Periksa setiap field wajib
+                        for (let i = 0; i < inputs.length; i++) {
+                            const input = inputs[i];
+                            if (!input.checkValidity()) {
+                                input.reportValidity(); // Memunculkan pop-up browser asli
+                                isValid = false;
+                                break;
+                            }
+                        }
+                        
+                        // Khusus untuk input koordinat peta yang hidden/readonly, periksa manual jika kosong
+                        if (currentStepIndex === 1 && isValid) { // Jika sedang di Step 2 (Lokasi)
+                            const lat = document.getElementById('location_lat').value;
+                            if (!lat) {
+                                alert("Mohon klik peta atau cari lokasi terlebih dahulu.");
+                                isValid = false;
+                            }
+                        }
+
+                        // Khusus Summernote required yang tidak terdeteksi HTML5 default
+                        if (currentStepIndex === 0 && isValid) {
+                            const desc = $('#summernote-deskripsi').summernote('isEmpty');
+                            const tujuan = $('#summernote-tujuan').summernote('isEmpty');
+                            if (desc || tujuan) {
+                                alert("Deskripsi dan Tujuan Kegiatan tidak boleh kosong.");
+                                isValid = false;
+                            }
+                        }
+
+                        if (currentStepIndex === 2 && isValid) {
+                            const rincian = $('#summernote-rincian').summernote('isEmpty');
+                            if (rincian) {
+                                alert("Rincian Kebutuhan tidak boleh kosong.");
+                                isValid = false;
+                            }
+                        }
+                        
+                        // Jika lulus validasi, pindah ke halaman berikutnya
+                        if (isValid) {
                             currentStepIndex++;
                             showStep(currentStepIndex);
-                            window.scrollTo(0, 0);
+                            window.scrollTo(0, 0); // Gulir ke atas
                         }
                     });
                 });
