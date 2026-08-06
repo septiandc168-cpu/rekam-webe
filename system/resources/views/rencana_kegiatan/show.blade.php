@@ -141,6 +141,28 @@
             transform: rotate(180deg);
         }
 
+        /* Leaflet Responsive Popup */
+        #map {
+            height: 220px;
+            width: 100%;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .leaflet-popup-content-wrapper {
+            max-width: 220px !important;
+            border-radius: 8px !important;
+            padding: 2px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        }
+        .leaflet-popup-content {
+            margin: 8px 10px !important;
+            line-height: 1.4 !important;
+            font-size: 0.78rem !important;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
+            white-space: normal !important;
+        }
+
 @endpush
 
 @section('content')
@@ -805,9 +827,18 @@
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
             
-            // Tambahkan Marker
+            // Tambahkan Marker dengan Popup Responsif
+            const popupContent = "<div style='text-align: center; max-width: 190px;'>" +
+                "<strong style='color:#001f3f; display:block; margin-bottom:3px; font-size:0.82rem;'>Titik Lokasi</strong>" +
+                "<span style='color:#4a5568; font-size:0.78rem; word-wrap:break-word; word-break:break-word; white-space:normal; line-height:1.35; display:block;'>" + @json($rencana_kegiatan->desa ?? '-') + "</span>" +
+                "</div>";
+
             L.marker([lat, lng]).addTo(map)
-             .bindPopup("<div class='text-center'><b>Titik Lokasi</b><br>{{ $rencana_kegiatan->desa }}</div>").openPopup();
+             .bindPopup(popupContent, {
+                 maxWidth: 210,
+                 minWidth: 140,
+                 autoPanPadding: [10, 10]
+             }).openPopup();
 
             // Accordion chevron rotation + active state
             var collapseEls = document.querySelectorAll('#accordionRencana .collapse');
