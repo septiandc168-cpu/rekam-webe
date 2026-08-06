@@ -139,10 +139,22 @@ class RencanaKegiatanController extends Controller
 
         // Filters
         if ($request->filled('bulan')) {
-            $query->whereMonth('tanggal_mulai', $request->bulan);
+            $bulan = $request->bulan;
+            $query->where(function ($q) use ($bulan) {
+                $q->whereMonth('tanggal_mulai', $bulan)
+                  ->orWhereHas('laporanKegiatan', function ($lq) use ($bulan) {
+                      $lq->whereMonth('realisasi_tanggal_mulai', $bulan);
+                  });
+            });
         }
         if ($request->filled('tahun')) {
-            $query->whereYear('tanggal_mulai', $request->tahun);
+            $tahun = $request->tahun;
+            $query->where(function ($q) use ($tahun) {
+                $q->whereYear('tanggal_mulai', $tahun)
+                  ->orWhereHas('laporanKegiatan', function ($lq) use ($tahun) {
+                      $lq->whereYear('realisasi_tanggal_mulai', $tahun);
+                  });
+            });
         }
         if ($request->filled('jenis')) {
             $query->where('jenis_kegiatan', $request->jenis);

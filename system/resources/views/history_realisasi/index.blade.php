@@ -218,9 +218,43 @@
                             </a>
                         @endif
                     </div>
-                    </div>
                 </div>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.getElementById('filter-form');
+                    if (!form) return;
+
+                    const desktopFields = form.querySelectorAll('.d-none.d-lg-flex select, .d-none.d-lg-flex input');
+                    const mobileFields = form.querySelectorAll('.d-lg-none select, .d-lg-none input');
+                    
+                    // Sync desktop to mobile
+                    desktopFields.forEach((desktopField, index) => {
+                        if (mobileFields[index]) {
+                            desktopField.addEventListener('change', function() {
+                                mobileFields[index].value = this.value;
+                            });
+                        }
+                    });
+                    
+                    // Sync mobile to desktop
+                    mobileFields.forEach((mobileField, index) => {
+                        if (desktopFields[index]) {
+                            mobileField.addEventListener('change', function() {
+                                desktopFields[index].value = this.value;
+                            });
+                        }
+                    });
+                    
+                    // Prevent duplicate name conflict on form submit
+                    form.addEventListener('submit', function() {
+                        mobileFields.forEach(field => {
+                            field.removeAttribute('name');
+                        });
+                    });
+                });
+            </script>
         </form>
     </div>
 
