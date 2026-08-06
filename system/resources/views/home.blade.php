@@ -327,8 +327,8 @@
                     datasets: [{
                         label: 'Jumlah Kegiatan',
                         data: @json($chartValues),
-                        backgroundColor: 'rgba(108, 117, 125, 0.75)',
-                        borderColor: 'rgba(108, 117, 125, 1)',
+                        backgroundColor: 'rgba(0, 31, 63, 0.8)',
+                        borderColor: '#001f3f',
                         borderWidth: 1,
                         borderRadius: 4,
                         maxBarThickness: 40,
@@ -347,6 +347,7 @@
                             bodyColor: '#fff',
                             padding: 10,
                             cornerRadius: 6,
+                            displayColors: false,
                             callbacks: {
                                 label: function(context) {
                                     var idx = context.dataIndex;
