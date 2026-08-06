@@ -152,12 +152,13 @@ class RencanaKegiatanController extends Controller
         }
 
 
-        $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->get();
+        // Stats (hitung total dari seluruh data sebelum paginasi)
+        $totalSelesai       = (clone $query)->count();
+        $totalDenganLaporan = $totalSelesai;
+        $totalTanpaLaporan  = 0;
 
-        // Stats
-        $totalSelesai       = $rencanaKegiatans->count();
-        $totalDenganLaporan = $rencanaKegiatans->filter(fn($r) => $r->laporanKegiatan && $r->laporanKegiatan->status === 'final')->count();
-        $totalTanpaLaporan  = $rencanaKegiatans->filter(fn($r) => !$r->laporanKegiatan)->count();
+        // Paginate 6 data per halaman (2 baris x 3 kolom card)
+        $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->paginate(6)->withQueryString();
 
         // User list for filter (admin only)
         $users = $isAdmin
@@ -171,6 +172,7 @@ class RencanaKegiatanController extends Controller
             'totalDenganLaporan',
             'totalTanpaLaporan'
         ));
+
     }
 
 

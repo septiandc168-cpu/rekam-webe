@@ -225,7 +225,7 @@
     @else
         <div class="mb-3 d-flex justify-content-between align-items-center">
             <small class="text-muted">
-                <i class="fas fa-list mr-1"></i> Menampilkan <strong>{{ $rencanaKegiatans->count() }}</strong> kegiatan
+                <i class="fas fa-list mr-1"></i> Menampilkan <strong>{{ $rencanaKegiatans->firstItem() ?? 0 }} - {{ $rencanaKegiatans->lastItem() ?? 0 }}</strong> dari <strong>{{ $rencanaKegiatans->total() }}</strong> kegiatan
             </small>
         </div>
         <div class="row">
@@ -335,6 +335,14 @@
                 </div>
             @endforeach
         </div>
+
+        {{-- Navigasi Pagination --}}
+        @if (method_exists($rencanaKegiatans, 'links'))
+            <div class="d-flex justify-content-center mt-4 mb-3">
+                {{ $rencanaKegiatans->links() }}
+            </div>
+        @endif
     @endif
+
 </div>
 @endsection

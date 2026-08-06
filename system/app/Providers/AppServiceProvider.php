@@ -10,6 +10,8 @@ use App\Policies\RencanaKegiatanPolicy;
 use App\Models\LaporanKegiatan;
 use App\Policies\LaporanKegiatanPolicy;
 
+use Illuminate\Pagination\Paginator;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -25,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::useBootstrapFour();
+
         // Force HTTPS in production environment
         if (config('app.env') === 'production' || strpos(config('app.url'), 'https://') !== false) {
             URL::forceScheme('https');
