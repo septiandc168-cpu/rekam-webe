@@ -39,9 +39,9 @@ class LaporanKegiatanController extends Controller
         
         // Filter data berdasarkan peran
         if ($isAdmin) {
-            // Admin melihat semua data kecuali draft
+            // Admin melihat data laporan yang aktif berproses (diajukan, revisi), mengecualikan draft dan final (final ada di History Realisasi)
             $query = LaporanKegiatan::with('rencanaKegiatan', 'user')
-                ->where('status', '!=', LaporanKegiatan::STATUS_DRAFT);
+                ->whereNotIn('status', [LaporanKegiatan::STATUS_DRAFT, LaporanKegiatan::STATUS_FINAL]);
                 
             // Apply filters if provided
             if ($request->filled('status')) {
@@ -64,9 +64,10 @@ class LaporanKegiatanController extends Controller
                 $q->where('role_name', 'anggota');
             })->orderBy('name')->get();
         } else {
-            // Anggota hanya melihat datanya sendiri
+            // Anggota hanya melihat datanya sendiri yang berstatus draft, diajukan, revisi (mengecualikan final)
             $query = LaporanKegiatan::with('rencanaKegiatan', 'user')
-                ->where('user_id', $user->id);
+                ->where('user_id', $user->id)
+                ->where('status', '!=', LaporanKegiatan::STATUS_FINAL);
                 
             // Apply filters if provided
             if ($request->filled('status')) {

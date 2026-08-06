@@ -142,7 +142,6 @@
                             <option value="draft" {{ (request('status') == 'draft') ? 'selected' : '' }}>Draft</option>
                             <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
                             <option value="revisi" {{ (request('status') == 'revisi') ? 'selected' : '' }}>Revisi</option>
-                            <option value="final" {{ (request('status') == 'final') ? 'selected' : '' }}>Final</option>
                         </select>
                         @if(auth()->user()->role->role_name === 'admin')
                             <select name="user_id" class="form-control mr-2 rounded" style="min-width: 150px;">
@@ -184,7 +183,6 @@
                                     <option value="draft" {{ (request('status') == 'draft') ? 'selected' : '' }}>Draft</option>
                                     <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
                                     <option value="revisi" {{ (request('status') == 'revisi') ? 'selected' : '' }}>Revisi</option>
-                                    <option value="final" {{ (request('status') == 'final') ? 'selected' : '' }}>Final</option>
                                 </select>
                             </div>
                             @if(auth()->user()->role->role_name === 'admin')
