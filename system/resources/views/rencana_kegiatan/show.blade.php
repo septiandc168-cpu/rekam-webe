@@ -622,29 +622,19 @@
         <div class="col-md-4">
             <!-- Peta Lokasi -->
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white py-2 px-3 d-flex align-items-center justify-content-between">
-                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-map-marker-alt text-navy mr-1"></i> Titik Lokasi</h6>
-                    <span class="badge bg-light text-muted border px-2 py-1" style="font-size:0.7rem; font-weight:500;">
-                        <i class="fas fa-compass mr-1 text-navy"></i> Geotagging
-                    </span>
+                <div class="card-header bg-white py-2 px-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-map-marker-alt mr-1"></i> Titik Lokasi</h6>
                 </div>
-                <div class="card-body p-3">
-                    <div class="d-flex align-items-center mb-2.5 p-2 rounded" style="background-color: #f8fafc; border: 1px solid #edf2f7;">
-                        <div class="rounded-circle bg-navy text-white d-flex align-items-center justify-content-center mr-2" style="width: 32px; height: 32px; flex-shrink: 0; font-size: 0.8rem;">
-                            <i class="fas fa-map-pin"></i>
-                        </div>
-                        <div style="min-width: 0;">
-                            <small class="text-muted d-block" style="font-size:0.7rem; font-weight: 500; line-height: 1.2;">Desa / Wilayah</small>
-                            <strong class="text-dark d-block text-truncate" style="font-size:0.85rem;" title="{{ $rencana_kegiatan->desa }}">{{ $rencana_kegiatan->desa ?? '-' }}</strong>
+                <div class="card-body p-2">
+                    <div class="d-flex align-items-center mb-2 px-1">
+                        <i class="fas fa-map-pin text-success mr-2" style="font-size:0.85rem;"></i>
+                        <div>
+                            <small class="text-muted" style="font-size:0.72rem;">Desa / Wilayah</small>
+                            <strong class="d-block" style="font-size:0.82rem;">{{ $rencana_kegiatan->desa }}</strong>
                         </div>
                     </div>
-                    
-                    <div id="map" class="shadow-sm" style="height: 240px; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; z-index: 1;"></div>
-                    
-                    <div class="d-flex align-items-center justify-content-between mt-2 px-1 text-muted" style="font-size:0.72rem;">
-                        <span><i class="fas fa-globe mr-1 text-navy"></i> Koordinat</span>
-                        <code class="text-dark font-weight-bold" style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:0.72rem;">{{ $rencana_kegiatan->lat }}, {{ $rencana_kegiatan->lng }}</code>
-                    </div>
+                    <div id="map"></div>
+                    <small class="text-muted d-block mt-1 text-center" style="font-size:0.7rem;">{{ $rencana_kegiatan->lat }}, {{ $rencana_kegiatan->lng }}</small>
                 </div>
             </div>
 
@@ -797,23 +787,27 @@
             const lat = {{ $rencana_kegiatan->lat ?: -0.0227 }};
             const lng = {{ $rencana_kegiatan->lng ?: 109.3323 }};
             
-            // Inisialisasi Peta
+            // Inisialisasi Peta (Statis, tanpa zoom control dan drag)
             const map = L.map('map', {
                 center: [lat, lng],
                 zoom: 15,
-                zoomControl: true,
-                scrollWheelZoom: false
+                zoomControl: false,
+                dragging: false,
+                scrollWheelZoom: false,
+                doubleClickZoom: false,
+                boxZoom: false,
+                keyboard: false
             });
             
             // Tile Layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
-                attribution: '&copy; OpenStreetMap'
+                attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
             
-            // Tambahkan Marker (popup tidak terbuka otomatis agar peta terlihat bersih)
-            const marker = L.marker([lat, lng]).addTo(map);
-            marker.bindPopup("<div class='p-1 text-center' style='font-size:0.82rem;'><strong class='text-navy d-block mb-1'><i class='fas fa-map-marker-alt mr-1'></i>" + @json($rencana_kegiatan->nama_kegiatan) + "</strong><span class='text-muted'>" + @json($rencana_kegiatan->desa) + "</span></div>");
+            // Tambahkan Marker
+            L.marker([lat, lng]).addTo(map)
+             .bindPopup("<div class='text-center'><b>Titik Lokasi</b><br>{{ $rencana_kegiatan->desa }}</div>").openPopup();
 
             // Accordion chevron rotation + active state
             var collapseEls = document.querySelectorAll('#accordionRencana .collapse');
