@@ -256,9 +256,7 @@
                     <div class="modal-body bg-light p-3" id="kalender-modal-body" style="max-height: 70vh; overflow-y: auto;">
                         <!-- Content injected via JS -->
                     </div>
-                    <div class="modal-footer bg-white py-2 px-3">
-                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -405,7 +403,7 @@
                     
                     var html = '';
                     props.items.forEach(function(item, idx) {
-                        html += '<div class="card mb-3 shadow-sm border-0" style="border-left: 4px solid #16a34a !important; border-radius: 8px; overflow: hidden;">';
+                        html += '<div class="card mb-3 shadow-sm border-0" style="border-radius: 8px; overflow: hidden;">';
                         html += '  <div class="card-body p-3 bg-white">';
                         html += '    <div class="d-flex justify-content-between align-items-start mb-2">';
                         html += '      <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">' + item.nama_kegiatan + '</h6>';
