@@ -17,7 +17,7 @@ return new class extends Migration
                 $query->whereNotExists(function ($sub) {
                     $sub->select(DB::raw(1))
                         ->from('laporan_kegiatans')
-                        ->whereColumn('laporan_kegiatans.rencana_kegiatan_id', 'rencana_kegiatans.id')
+                        ->whereColumn('laporan_kegiatans.rencana_kegiatan_id', 'rencana_kegiatans.uuid')
                         ->where('laporan_kegiatans.status', 'final');
                 });
             })
