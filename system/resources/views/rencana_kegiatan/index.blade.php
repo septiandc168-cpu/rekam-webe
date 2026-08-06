@@ -55,9 +55,14 @@
                                     @endif
                                 </select>
                             @endif
-                            <button type="submit" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm" title="Filter Tabel">
+                            <button type="submit" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1" title="Filter Tabel">
                                 <i class="fas fa-filter mr-1"></i> Filter
                             </button>
+                            @if(request()->hasAny(['bulan','tahun','status','user_id','filter_status']))
+                                <a href="{{ route('rencana_kegiatan.index') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm" title="Reset Filter">
+                                    <i class="fas fa-undo mr-1"></i> Reset
+                                </a>
+                            @endif
                         </div>
                         
                         <!-- Mobile Layout -->
@@ -105,10 +110,15 @@
                                         </select>
                                     </div>
                                 @endif
-                                <div class="col-12 mt-2">
-                                    <button type="submit" class="btn bg-navy text-white btn-sm btn-block w-100 shadow-sm">
+                                <div class="col-12 mt-2 d-flex" style="gap:8px;">
+                                    <button type="submit" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm">
                                         <i class="fas fa-filter mr-1"></i> Filter
                                     </button>
+                                    @if(request()->hasAny(['bulan','tahun','status','user_id','filter_status']))
+                                        <a href="{{ route('rencana_kegiatan.index') }}" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm text-center">
+                                            <i class="fas fa-undo mr-1"></i> Reset
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>

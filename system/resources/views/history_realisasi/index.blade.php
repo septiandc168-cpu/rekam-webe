@@ -163,8 +163,8 @@
                     </button>
                 @endif
                 @if(request()->hasAny(['bulan','tahun','jenis','user_id']))
-                    <a href="{{ route('history_realisasi.index') }}" class="btn btn-outline-secondary btn-sm flex-shrink-0">
-                        <i class="fas fa-times mr-1"></i> Reset
+                    <a href="{{ route('history_realisasi.index') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm" title="Reset Filter">
+                        <i class="fas fa-undo mr-1"></i> Reset
                     </a>
                 @endif
             </div>
@@ -213,8 +213,8 @@
                             </button>
                         @endif
                         @if(request()->hasAny(['bulan','tahun','jenis','user_id']))
-                            <a href="{{ route('history_realisasi.index') }}" class="btn btn-outline-secondary btn-sm">
-                                <i class="fas fa-times"></i>
+                            <a href="{{ route('history_realisasi.index') }}" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm text-center">
+                                <i class="fas fa-undo mr-1"></i> Reset
                             </a>
                         @endif
                     </div>
