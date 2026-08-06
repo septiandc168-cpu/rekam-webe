@@ -28,7 +28,7 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'admin';
+        $isAdmin = $user && $user->role && $user->role->role_name === 'admin';
 
         // === Widget Counts ===
         if ($isAdmin) {

@@ -117,8 +117,10 @@ class LaporanKegiatan extends Model
     public static function getStatusOptions(): array
     {
         return [
-            self::STATUS_DRAFT => 'Draft',
-            self::STATUS_FINAL => 'Final',
+            self::STATUS_DRAFT    => 'Draft',
+            self::STATUS_DIAJUKAN => 'Diajukan',
+            self::STATUS_REVISI   => 'Revisi',
+            self::STATUS_FINAL    => 'Final',
         ];
     }
 
