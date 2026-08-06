@@ -32,7 +32,11 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $query = RencanaKegiatan::with('user');
+        $query = RencanaKegiatan::with(['user', 'laporanKegiatan'])
+            ->where('status', RencanaKegiatan::STATUS_SELESAI)
+            ->whereHas('laporanKegiatan', function ($q) {
+                $q->where('status', \App\Models\LaporanKegiatan::STATUS_FINAL);
+            });
 
         if ($this->tahun) {
             $query->whereYear('tanggal_mulai', $this->tahun);
@@ -42,9 +46,6 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
         }
         if ($this->userId) {
             $query->where('user_id', $this->userId);
-        }
-        if ($this->status) {
-            $query->where('status', $this->status);
         }
 
         return $query->orderBy('tanggal_mulai', 'asc')->get();
@@ -57,13 +58,12 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
             'Nama Kegiatan',
             'Jenis Kegiatan',
             'Desa/Lokasi',
-            'Tanggal Mulai',
-            'Tanggal Selesai',
+            'Tanggal Pelaksanaan',
             'Penanggung Jawab',
-            'Kelompok/Komunitas',
-            'Estimasi Peserta',
-            'Status',
-            'Penyusun',
+            'Target Peserta',
+            'Realisasi Peserta',
+            'Status Laporan',
+            'Penyusun/Anggota',
         ];
     }
 
@@ -71,29 +71,23 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
     {
         $this->rowNumber++;
 
-        // Map status label
-        $statusLabels = [
-            'diajukan' => 'Diajukan',
-            'disetujui' => 'Disetujui',
-            'ditolak' => 'Ditolak',
-            'selesai' => 'Selesai',
-            'draft' => 'Draft',
-            'revisi' => 'Revisi'
-        ];
-        $statusFormatted = $statusLabels[$rencana->status] ?? ucfirst($rencana->status);
+        $laporan = $rencana->laporanKegiatan;
+        $tglPelaksanaan = $rencana->tanggal_mulai ? $rencana->tanggal_mulai->format('d/m/Y') : '-';
+        if ($rencana->tanggal_selesai && $rencana->tanggal_selesai != $rencana->tanggal_mulai) {
+            $tglPelaksanaan .= ' s/d ' . $rencana->tanggal_selesai->format('d/m/Y');
+        }
 
         return [
             $this->rowNumber,
             $rencana->nama_kegiatan,
             $rencana->getJenisKegiatanLabel(),
             $rencana->desa ?: '-',
-            $rencana->tanggal_mulai ? $rencana->tanggal_mulai->format('d/m/Y') : '-',
-            $rencana->tanggal_selesai ? $rencana->tanggal_selesai->format('d/m/Y') : '-',
-            $rencana->penanggung_jawab ?: '-',
-            $rencana->kelompok ?: '-',
+            $tglPelaksanaan,
+            $rencana->penanggung_jawab ?: ($rencana->user->name ?? '-'),
             $rencana->estimasi_peserta ?: 0,
-            $statusFormatted,
-            $rencana->user ? $rencana->user->name : 'Tidak diketahui',
+            $laporan ? ($laporan->realisasi_peserta ?: 0) : 0,
+            'Selesai (Laporan Final)',
+            $rencana->user ? $rencana->user->name : '-',
         ];
     }
 

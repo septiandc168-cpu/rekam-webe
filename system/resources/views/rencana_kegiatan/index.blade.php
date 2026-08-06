@@ -20,7 +20,7 @@
                     <div class="export-form-container">
                         <!-- Desktop Layout -->
                         <div class="d-none d-lg-flex input-group input-group-sm align-items-center">
-                            <span class="mr-2 text-muted fw-bold"><i class="fas fa-filter mr-1"></i> Filter {{ auth()->user()->role->role_name === 'admin' ? '& Export' : '' }}:</span>
+                            <span class="mr-2 text-muted fw-bold"><i class="fas fa-filter mr-1"></i> Filter:</span>
                             <select name="bulan" class="form-control mr-2 rounded" style="min-width: 120px;">
                                 <option value="">Semua Bulan</option>
                                 @for($i = 1; $i <= 12; $i++)
@@ -42,9 +42,6 @@
                                 @endif
                                 <option value="revisi" {{ (request('status') == 'revisi') ? 'selected' : '' }}>Revisi</option>
                                 <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
-                                @if(auth()->user()->role->role_name === 'admin')
-                                    <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
-                                @endif
                             </select>
                             @if(auth()->user()->role->role_name === 'admin')
                                 <select name="user_id" class="form-control mr-2 rounded" style="min-width: 150px;">
@@ -58,14 +55,9 @@
                                     @endif
                                 </select>
                             @endif
-                            <button type="submit" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1" title="Filter Tabel">
+                            <button type="submit" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm" title="Filter Tabel">
                                 <i class="fas fa-filter mr-1"></i> Filter
                             </button>
-                            @if(auth()->user()->role->role_name === 'admin')
-                                <button type="submit" formaction="{{ route('rencana_kegiatan.export.excel') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm" title="Export Excel">
-                                    <i class="fas fa-file-excel mr-1"></i> Export
-                                </button>
-                            @endif
                         </div>
                         
                         <!-- Mobile Layout -->
@@ -97,9 +89,6 @@
                                         @endif
                                         <option value="revisi" {{ (request('status') == 'revisi') ? 'selected' : '' }}>Revisi</option>
                                         <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
-                                        @if(auth()->user()->role->role_name === 'admin')
-                                            <option value="selesai" {{ (request('status') == 'selesai') ? 'selected' : '' }}>Selesai</option>
-                                        @endif
                                     </select>
                                 </div>
                                 @if(auth()->user()->role->role_name === 'admin')
@@ -116,18 +105,11 @@
                                         </select>
                                     </div>
                                 @endif
-                                <div class="{{ auth()->user()->role->role_name === 'admin' ? 'col-6' : 'col-12' }} mt-2">
+                                <div class="col-12 mt-2">
                                     <button type="submit" class="btn bg-navy text-white btn-sm btn-block w-100 shadow-sm">
                                         <i class="fas fa-filter mr-1"></i> Filter
                                     </button>
                                 </div>
-                                @if(auth()->user()->role->role_name === 'admin')
-                                    <div class="col-6 mt-2">
-                                        <button type="submit" formaction="{{ route('rencana_kegiatan.export.excel') }}" class="btn bg-navy text-white btn-sm btn-block w-100 shadow-sm">
-                                            <i class="fas fa-file-excel mr-1"></i> Export
-                                        </button>
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     </div>

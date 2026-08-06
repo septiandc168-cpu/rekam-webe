@@ -144,6 +144,11 @@
                 <button type="submit" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1">
                     <i class="fas fa-filter mr-1"></i> Filter
                 </button>
+                @if(auth()->user()->role->role_name === 'admin')
+                    <button type="submit" formaction="{{ route('rencana_kegiatan.export.excel') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1" title="Export Excel Rekap Realisasi">
+                        <i class="fas fa-file-excel mr-1"></i> Export Rekap
+                    </button>
+                @endif
                 @if(request()->hasAny(['bulan','tahun','jenis','user_id']))
                     <a href="{{ route('history_realisasi.index') }}" class="btn btn-outline-secondary btn-sm flex-shrink-0">
                         <i class="fas fa-times mr-1"></i> Reset
@@ -189,6 +194,11 @@
                         <button type="submit" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm">
                             <i class="fas fa-filter mr-1"></i> Filter
                         </button>
+                        @if(auth()->user()->role->role_name === 'admin')
+                            <button type="submit" formaction="{{ route('rencana_kegiatan.export.excel') }}" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm">
+                                <i class="fas fa-file-excel mr-1"></i> Export Rekap
+                            </button>
+                        @endif
                         @if(request()->hasAny(['bulan','tahun','jenis','user_id']))
                             <a href="{{ route('history_realisasi.index') }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="fas fa-times"></i>

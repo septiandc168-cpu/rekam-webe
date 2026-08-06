@@ -46,9 +46,9 @@ class RencanaKegiatanController extends Controller
         
         // Filter data berdasarkan peran
         if ($isAdmin) {
-            // Admin melihat semua data kecuali draft
+            // Admin melihat semua data kecuali draft dan selesai (selesai ada di History Realisasi)
             $query = RencanaKegiatan::with('laporanKegiatan', 'user')
-                ->where('status', '!=', RencanaKegiatan::STATUS_DRAFT);
+                ->whereNotIn('status', [RencanaKegiatan::STATUS_DRAFT, RencanaKegiatan::STATUS_SELESAI]);
             
             // Apply filters if provided
             if ($request->filled('status')) {
