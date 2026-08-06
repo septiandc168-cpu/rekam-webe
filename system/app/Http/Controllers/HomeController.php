@@ -191,9 +191,9 @@ class HomeController extends Controller
                 'title'           => $count . ' Kegiatan',
                 'start'           => $dateStr,
                 'allDay'          => true,
-                'backgroundColor' => '#def7ec',
-                'borderColor'     => '#03543f',
-                'textColor'       => '#03543f',
+                'backgroundColor' => '#e6f0fa',
+                'borderColor'     => '#001f3f',
+                'textColor'       => '#001f3f',
                 'extendedProps'   => [
                     'count'          => $count,
                     'date_formatted' => \Carbon\Carbon::parse($dateStr)->translatedFormat('d F Y'),
