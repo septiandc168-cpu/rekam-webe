@@ -98,23 +98,15 @@
                     <i class="fas fa-history fa-2x mr-3" style="opacity:0.7;"></i>
                     <div>
                         <div style="font-size: 1.05rem; font-weight: 600;">History Realisasi Kegiatan</div>
-                        <div style="opacity:0.75; font-size:0.8rem;">Semua rencana kegiatan berstatus <strong>Selesai</strong> beserta laporan realisasinya</div>
+                        <div style="opacity:0.75; font-size:0.8rem;">Semua rencana kegiatan berstatus <strong>Selesai</strong> dengan laporan kegiatan berstatus <strong>Final</strong></div>
                     </div>
                 </div>
             </div>
             <div class="col-md-7">
-                <div class="d-flex flex-wrap" style="gap: 12px;">
-                    <div class="text-center" style="flex:1;">
+                <div class="d-flex flex-wrap justify-content-end" style="gap: 12px;">
+                    <div class="text-center" style="flex:1; max-width: 200px;">
                         <div class="s-num">{{ $totalSelesai }}</div>
-                        <div class="s-lbl">Total Kegiatan Selesai</div>
-                    </div>
-                    <div class="text-center" style="flex:1;">
-                        <div class="s-num">{{ $totalDenganLaporan }}</div>
-                        <div class="s-lbl">Dengan Laporan Final</div>
-                    </div>
-                    <div class="text-center" style="flex:1;">
-                        <div class="s-num">{{ $totalTanpaLaporan }}</div>
-                        <div class="s-lbl">Tanpa Laporan</div>
+                        <div class="s-lbl">Total Realisasi Kegiatan Selesai</div>
                     </div>
                 </div>
             </div>
@@ -141,14 +133,6 @@
                     <option value="usaha masyarakat" {{ request('jenis') === 'usaha masyarakat' ? 'selected' : '' }}>Usaha Masyarakat</option>
                     <option value="lainnya"          {{ request('jenis') === 'lainnya'          ? 'selected' : '' }}>Lainnya</option>
                 </select>
-                <select name="status_laporan" class="form-control mr-2 rounded" style="min-width: 150px;">
-                    <option value="">Status Laporan</option>
-                    <option value="final"    {{ request('status_laporan') === 'final'    ? 'selected' : '' }}>Final</option>
-                    <option value="diajukan" {{ request('status_laporan') === 'diajukan' ? 'selected' : '' }}>Diajukan</option>
-                    <option value="revisi"   {{ request('status_laporan') === 'revisi'   ? 'selected' : '' }}>Revisi</option>
-                    <option value="draft"    {{ request('status_laporan') === 'draft'    ? 'selected' : '' }}>Draft</option>
-                    <option value="none"     {{ request('status_laporan') === 'none'     ? 'selected' : '' }}>Belum Ada Laporan</option>
-                </select>
                 @if(auth()->user()->role->role_name === 'admin')
                 <select name="user_id" class="form-control mr-2 rounded" style="min-width: 160px;">
                     <option value="">Semua Anggota</option>
@@ -160,7 +144,7 @@
                 <button type="submit" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1">
                     <i class="fas fa-filter mr-1"></i> Filter
                 </button>
-                @if(request()->hasAny(['bulan','tahun','jenis','status_laporan','user_id']))
+                @if(request()->hasAny(['bulan','tahun','jenis','user_id']))
                     <a href="{{ route('history_realisasi.index') }}" class="btn btn-outline-secondary btn-sm flex-shrink-0">
                         <i class="fas fa-times mr-1"></i> Reset
                     </a>
@@ -182,7 +166,7 @@
                         <input type="number" name="tahun" class="form-control form-control-sm rounded" placeholder="Tahun"
                                value="{{ request('tahun') }}" min="2020" max="2030">
                     </div>
-                    <div class="col-6 mt-2">
+                    <div class="{{ auth()->user()->role->role_name === 'admin' ? 'col-6' : 'col-12' }} mt-2">
                         <select name="jenis" class="form-control form-control-sm rounded">
                             <option value="">Semua Jenis</option>
                             <option value="konservasi" {{ request('jenis') === 'konservasi' ? 'selected' : '' }}>Konservasi</option>
@@ -191,18 +175,8 @@
                             <option value="lainnya" {{ request('jenis') === 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                         </select>
                     </div>
-                    <div class="col-6 mt-2">
-                        <select name="status_laporan" class="form-control form-control-sm rounded">
-                            <option value="">Status Laporan</option>
-                            <option value="final" {{ request('status_laporan') === 'final' ? 'selected' : '' }}>Final</option>
-                            <option value="diajukan" {{ request('status_laporan') === 'diajukan' ? 'selected' : '' }}>Diajukan</option>
-                            <option value="revisi" {{ request('status_laporan') === 'revisi' ? 'selected' : '' }}>Revisi</option>
-                            <option value="draft" {{ request('status_laporan') === 'draft' ? 'selected' : '' }}>Draft</option>
-                            <option value="none" {{ request('status_laporan') === 'none' ? 'selected' : '' }}>Belum Ada</option>
-                        </select>
-                    </div>
                     @if(auth()->user()->role->role_name === 'admin')
-                    <div class="col-12 mt-2">
+                    <div class="col-6 mt-2">
                         <select name="user_id" class="form-control form-control-sm rounded">
                             <option value="">Semua Anggota</option>
                             @foreach($users as $u)
@@ -215,11 +189,12 @@
                         <button type="submit" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm">
                             <i class="fas fa-filter mr-1"></i> Filter
                         </button>
-                        @if(request()->hasAny(['bulan','tahun','jenis','status_laporan','user_id']))
+                        @if(request()->hasAny(['bulan','tahun','jenis','user_id']))
                             <a href="{{ route('history_realisasi.index') }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="fas fa-times"></i>
                             </a>
                         @endif
+                    </div>
                     </div>
                 </div>
             </div>

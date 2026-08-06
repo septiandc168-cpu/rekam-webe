@@ -125,8 +125,12 @@ class RencanaKegiatanController extends Controller
         $user        = auth()->user();
         $isAdmin = $user->role->role_name === 'admin';
 
+        // History Realisasi hanya menampilkan rencana kegiatan berstatus Selesai yang laporan kegiatannya sudah Final
         $query = RencanaKegiatan::with(['laporanKegiatan', 'user'])
-            ->where('status', RencanaKegiatan::STATUS_SELESAI);
+            ->where('status', RencanaKegiatan::STATUS_SELESAI)
+            ->whereHas('laporanKegiatan', function ($q) {
+                $q->where('status', \App\Models\LaporanKegiatan::STATUS_FINAL);
+            });
 
         // Scope anggota ke data milik sendiri
         if (!$isAdmin) {
@@ -146,15 +150,7 @@ class RencanaKegiatanController extends Controller
         if ($request->filled('user_id') && $isAdmin) {
             $query->where('user_id', $request->user_id);
         }
-        if ($request->filled('status_laporan')) {
-            if ($request->status_laporan === 'none') {
-                $query->doesntHave('laporanKegiatan');
-            } else {
-                $query->whereHas('laporanKegiatan', function ($q) use ($request) {
-                    $q->where('status', $request->status_laporan);
-                });
-            }
-        }
+
 
         $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->get();
 
