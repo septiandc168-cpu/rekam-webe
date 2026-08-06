@@ -412,9 +412,9 @@
                         html += '    </div>';
                         html += '    <div class="row text-muted text-sm mt-2 g-2">';
                         html += '      <div class="col-md-6 mb-1"><i class="fas fa-user text-navy mr-1"></i> PJ: <strong>' + item.penanggung_jawab + '</strong></div>';
-                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-map-marker-alt text-danger mr-1"></i> Lokasi: <strong>' + item.desa + '</strong></div>';
-                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-tag text-info mr-1"></i> Jenis: <strong>' + item.jenis + '</strong></div>';
-                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-calendar-alt text-primary mr-1"></i> Tanggal: <strong>' + item.tanggal_mulai + (item.tanggal_mulai !== item.tanggal_selesai ? ' - ' + item.tanggal_selesai : '') + '</strong></div>';
+                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-map-marker-alt text-navy mr-1"></i> Lokasi: <strong>' + item.desa + '</strong></div>';
+                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-tag text-navy mr-1"></i> Jenis: <strong>' + item.jenis + '</strong></div>';
+                        html += '      <div class="col-md-6 mb-1"><i class="fas fa-calendar-alt text-navy mr-1"></i> Tanggal: <strong>' + item.tanggal_mulai + (item.tanggal_mulai !== item.tanggal_selesai ? ' - ' + item.tanggal_selesai : '') + '</strong></div>';
                         html += '    </div>';
                         html += '    <div class="text-right mt-2 pt-2 border-top">';
                         html += '      <a href="' + item.url + '" class="btn btn-sm bg-navy text-white shadow-sm"><i class="fas fa-external-link-alt mr-1"></i> Lihat Detail Rencana</a>';
