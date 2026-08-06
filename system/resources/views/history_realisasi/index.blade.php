@@ -17,6 +17,19 @@
     .history-card .card-header-custom {
         background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
         padding: 14px 18px;
+        min-height: 105px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .history-card .title-text {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        min-height: 42px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
     .badge-jenis {
         font-size: 0.72rem;
@@ -264,9 +277,8 @@
                                 <span class="badge-jenis {{ $jenisBadge }}">{{ $jenisLabel }}</span>
                                 <span class="{{ $laporanBadgeClass }}">{{ $laporanBadgeLabel }}</span>
                             </div>
-                            <h6 class="mb-0 text-white fw-bold" style="font-size:0.9rem; line-height:1.4;"
-                                title="{{ $rencana->nama_kegiatan }}">
-                                {{ Str::limit($rencana->nama_kegiatan, 60) }}
+                            <h6 class="mb-0 text-white fw-bold title-text" title="{{ $rencana->nama_kegiatan }}">
+                                {{ $rencana->nama_kegiatan }}
                             </h6>
                         </div>
 
