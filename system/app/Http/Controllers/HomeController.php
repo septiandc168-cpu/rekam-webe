@@ -32,16 +32,20 @@ class HomeController extends Controller
 
         // === Widget Counts ===
         if ($isAdmin) {
-            $totalRencana   = RencanaKegiatan::count();
+            // Admin melihat rencana aktif (diajukan, disetujui, revisi, ditolak) & laporan aktif (diajukan, revisi)
+            $totalRencana   = RencanaKegiatan::whereNotIn('status', [RencanaKegiatan::STATUS_DRAFT, RencanaKegiatan::STATUS_SELESAI])->count();
             $totalDiajukan  = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
             $totalDisetujui = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DISETUJUI)->count();
-            $totalLaporan   = LaporanKegiatan::count();
+            $totalLaporan   = LaporanKegiatan::whereNotIn('status', [LaporanKegiatan::STATUS_DRAFT, LaporanKegiatan::STATUS_FINAL])->count();
             $totalUsers     = User::whereHas('role', fn($q) => $q->where('role_name', 'anggota'))->count();
         } else {
-            $totalRencana   = RencanaKegiatan::where('user_id', $user->id)->count();
+            // Anggota melihat rencana miliknya yang belum disetujui/selesai & laporan yang belum final
+            $totalRencana   = RencanaKegiatan::where('user_id', $user->id)
+                ->whereNotIn('status', [RencanaKegiatan::STATUS_DISETUJUI, RencanaKegiatan::STATUS_SELESAI])->count();
             $totalDiajukan  = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
             $totalDisetujui = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DISETUJUI)->count();
-            $totalLaporan   = LaporanKegiatan::where('user_id', $user->id)->count();
+            $totalLaporan   = LaporanKegiatan::where('user_id', $user->id)
+                ->where('status', '!=', LaporanKegiatan::STATUS_FINAL)->count();
             $totalUsers     = 0;
         }
 
