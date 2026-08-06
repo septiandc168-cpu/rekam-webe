@@ -32,21 +32,21 @@
         overflow: hidden;
     }
     .badge-jenis {
-        font-size: 0.72rem;
-        padding: 3px 9px;
-        border-radius: 20px;
-        font-weight: 600;
-        letter-spacing: 0.3px;
+        font-size: 0.68rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 500;
+        letter-spacing: 0.2px;
     }
-    .badge-jenis-konservasi   { background: #d1fae5; color: #065f46; }
-    .badge-jenis-edukasi      { background: #dbeafe; color: #1e40af; }
-    .badge-jenis-usaha        { background: #fef3c7; color: #92400e; }
-    .badge-jenis-lainnya      { background: #f3e8ff; color: #6b21a8; }
-    .badge-laporan-final      { background: #def7ec; color: #03543f; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
-    .badge-laporan-diajukan   { background: #e8f0fe; color: #1a56db; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
-    .badge-laporan-revisi     { background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
-    .badge-laporan-draft      { background: #f1f3f5; color: #495057; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
-    .badge-laporan-none       { background: #f8d7da; color: #721c24; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+    .badge-jenis-konservasi   { background: rgba(16, 185, 129, 0.18); color: #a7f3d0; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-jenis-edukasi      { background: rgba(59, 130, 246, 0.18); color: #bfdbfe; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-jenis-usaha        { background: rgba(245, 158, 11, 0.18); color: #fef08a; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-jenis-lainnya      { background: rgba(168, 85, 247, 0.18); color: #e9d5ff; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-laporan-final      { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
+    .badge-laporan-diajukan   { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
+    .badge-laporan-revisi     { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
+    .badge-laporan-draft      { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
+    .badge-laporan-none       { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
     .info-row {
         display: flex;
         align-items: flex-start;
