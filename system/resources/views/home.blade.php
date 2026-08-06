@@ -429,9 +429,8 @@
                 eventDidMount: function(info) {
                     info.el.style.cursor = 'pointer';
                     var props = info.event.extendedProps;
-                    if (props && props.items) {
-                        var titles = props.items.map(function(it) { return '• ' + it.nama_kegiatan; }).join('\n');
-                        info.el.setAttribute('title', props.count + ' Rencana Kegiatan Disetujui:\n' + titles);
+                    if (props) {
+                        info.el.setAttribute('title', info.event.title + '\nJadwal: ' + props.date_formatted);
                     }
                 },
                 displayEventTime: false,

@@ -136,7 +136,7 @@ class HomeController extends Controller
         $user = auth()->user();
         $isAdmin = $user && $user->role && $user->role->role_name === 'admin';
 
-        // Kalender hanya menampilkan rencana kegiatan berstatus DISETUJUI (scoped by user for anggota)
+        // Kalender hanya menampilkan rencana kegiatan berstatus DISETUJUI
         $query = RencanaKegiatan::with('user')
             ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
 
@@ -144,56 +144,48 @@ class HomeController extends Controller
             $query->where('user_id', $user->id);
         }
 
-        $rencanaKegiatan = $query->get();
+        $rencanaKegiatans = $query->get();
 
-        $dateGrouped = [];
-
-        foreach ($rencanaKegiatan as $rencana) {
+        $events = [];
+        foreach ($rencanaKegiatans as $rencana) {
             $startDate = \Carbon\Carbon::parse($rencana->tanggal_mulai);
-            $endDate   = \Carbon\Carbon::parse($rencana->tanggal_selesai);
+            $endDate   = \Carbon\Carbon::parse($rencana->tanggal_selesai ?: $rencana->tanggal_mulai);
 
             $formattedMulai   = $startDate->translatedFormat('d M Y');
             $formattedSelesai = $endDate->translatedFormat('d M Y');
 
-            $currentDate = $startDate->copy();
-            while ($currentDate->lte($endDate)) {
-                $dateStr = $currentDate->format('Y-m-d');
+            $item = [
+                'uuid'             => $rencana->uuid,
+                'nama_kegiatan'    => $rencana->nama_kegiatan,
+                'penanggung_jawab' => $rencana->penanggung_jawab ?? ($rencana->user ? $rencana->user->name : '-'),
+                'desa'             => $rencana->desa ?? '-',
+                'jenis'            => $rencana->getJenisKegiatanLabel(),
+                'tanggal_mulai'    => $formattedMulai,
+                'tanggal_selesai'  => $formattedSelesai,
+                'estimasi_peserta' => $rencana->estimasi_peserta ?? '-',
+                'url'              => route('rencana_kegiatan.show', $rencana->uuid),
+            ];
 
-                if (!isset($dateGrouped[$dateStr])) {
-                    $dateGrouped[$dateStr] = [];
-                }
+            // Warna badge berdasarkan jenis kegiatan
+            $color = match($rencana->jenis_kegiatan) {
+                'konservasi'       => '#065f46',
+                'edukasi'          => '#1e40af',
+                'usaha masyarakat' => '#92400e',
+                default            => '#001f3f',
+            };
 
-                $dateGrouped[$dateStr][] = [
-                    'uuid'            => $rencana->uuid,
-                    'nama_kegiatan'   => $rencana->nama_kegiatan,
-                    'penanggung_jawab'=> $rencana->penanggung_jawab ?? ($rencana->user ? $rencana->user->name : '-'),
-                    'desa'            => $rencana->desa ?? '-',
-                    'jenis'           => $rencana->getJenisKegiatanLabel(),
-                    'tanggal_mulai'   => $formattedMulai,
-                    'tanggal_selesai' => $formattedSelesai,
-                    'estimasi_peserta'=> $rencana->estimasi_peserta ?? '-',
-                    'url'             => route('rencana_kegiatan.show', $rencana->uuid),
-                ];
-
-                $currentDate->addDay();
-            }
-        }
-
-        $events = [];
-        foreach ($dateGrouped as $dateStr => $items) {
-            $count = count($items);
             $events[] = [
-                'id'              => 'date_' . $dateStr,
-                'title'           => $count . ' Kegiatan',
-                'start'           => $dateStr,
+                'id'              => $rencana->uuid,
+                'title'           => $rencana->nama_kegiatan,
+                'start'           => $startDate->format('Y-m-d'),
+                'end'             => $endDate->copy()->addDay()->format('Y-m-d'),
                 'allDay'          => true,
-                'backgroundColor' => '#def7ec',
-                'borderColor'     => '#03543f',
-                'textColor'       => '#03543f',
+                'backgroundColor' => $color,
+                'borderColor'     => $color,
+                'textColor'       => '#ffffff',
                 'extendedProps'   => [
-                    'count'          => $count,
-                    'date_formatted' => \Carbon\Carbon::parse($dateStr)->translatedFormat('d F Y'),
-                    'items'          => $items,
+                    'date_formatted' => $formattedMulai === $formattedSelesai ? $formattedMulai : $formattedMulai . ' - ' . $formattedSelesai,
+                    'items'          => [$item],
                 ]
             ];
         }
