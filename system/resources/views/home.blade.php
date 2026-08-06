@@ -153,7 +153,7 @@
                     <div class="small-box bg-white shadow-sm h-100 mb-0" style="border-top: 4px solid #6c757d; padding-bottom: 30px;">
                         <div class="inner">
                             <h3 class="text-dark">{{ $totalUsers }}</h3>
-                            <p class="text-muted">Total Pengguna Terdaftar</p>
+                            <p class="text-muted">Total Anggota Terdaftar</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-users" style="color: #6c757d; opacity: 0.15;"></i>

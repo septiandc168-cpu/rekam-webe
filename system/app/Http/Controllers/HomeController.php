@@ -36,7 +36,7 @@ class HomeController extends Controller
             $totalDiajukan  = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
             $totalDisetujui = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DISETUJUI)->count();
             $totalLaporan   = LaporanKegiatan::count();
-            $totalUsers     = User::count();
+            $totalUsers     = User::whereHas('role', fn($q) => $q->where('role_name', 'anggota'))->count();
         } else {
             $totalRencana   = RencanaKegiatan::where('user_id', $user->id)->count();
             $totalDiajukan  = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
