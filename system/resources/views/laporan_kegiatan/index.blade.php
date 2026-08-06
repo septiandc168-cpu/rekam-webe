@@ -139,7 +139,9 @@
                                value="{{ request('tahun') }}" min="2020" max="2030" style="min-width: 80px;">
                         <select name="status" class="form-control mr-2 rounded" style="min-width: 130px;">
                             <option value="">Semua Status</option>
-                            <option value="draft" {{ (request('status') == 'draft') ? 'selected' : '' }}>Draft</option>
+                            @if(auth()->user()->role->role_name !== 'admin')
+                                <option value="draft" {{ (request('status') == 'draft') ? 'selected' : '' }}>Draft</option>
+                            @endif
                             <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
                             <option value="revisi" {{ (request('status') == 'revisi') ? 'selected' : '' }}>Revisi</option>
                         </select>
@@ -180,7 +182,9 @@
                             <div class="col-6 mt-2">
                                 <select name="status" class="form-control form-control-sm rounded">
                                     <option value="">Status</option>
-                                    <option value="draft" {{ (request('status') == 'draft') ? 'selected' : '' }}>Draft</option>
+                                    @if(auth()->user()->role->role_name !== 'admin')
+                                        <option value="draft" {{ (request('status') == 'draft') ? 'selected' : '' }}>Draft</option>
+                                    @endif
                                     <option value="diajukan" {{ (request('status') == 'diajukan') ? 'selected' : '' }}>Diajukan</option>
                                     <option value="revisi" {{ (request('status') == 'revisi') ? 'selected' : '' }}>Revisi</option>
                                 </select>
