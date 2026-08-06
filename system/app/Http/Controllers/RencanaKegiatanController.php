@@ -1257,9 +1257,6 @@ class RencanaKegiatanController extends Controller
         if (empty(trim(strip_tags($rencana->rincian_kebutuhan ?? '')))) {
             $missing[] = 'Rincian Kebutuhan';
         }
-        if (empty($rencana->anggaran_kegiatan)) {
-            $missing[] = 'File Anggaran Kegiatan';
-        }
 
         return $missing;
     }

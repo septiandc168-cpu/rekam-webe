@@ -44,7 +44,7 @@ class StoreRencanaRequest extends FormRequest
             'foto.*' => 'image|mimes:jpg,jpeg,png|max:5120',
             'dokumen' => 'nullable|array|max:5',
             'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
-            'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+            'anggaran_kegiatan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
         ];
 
         if ($isSupervisor) {
