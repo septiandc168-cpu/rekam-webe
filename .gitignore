@@ -90,3 +90,6 @@ update_*.php
 *.zip
 /system/scratch/
 
+# Backup files
+*.backup
+*.bak

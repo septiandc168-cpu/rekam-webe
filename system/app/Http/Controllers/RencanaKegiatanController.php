@@ -466,7 +466,18 @@ class RencanaKegiatanController extends Controller
         $this->authorize('view', $rencana_kegiatan);
         
         $rencana_kegiatan->load('laporanKegiatan');
-        return view('rencana_kegiatan.show', compact('rencana_kegiatan'));
+        $user = auth()->user();
+        $isAnggota = $user && $user->role && $user->role->role_name === 'anggota';
+
+        // Hitung missing fields untuk anggota pemilik rencana draft/revisi
+        $missingFields = [];
+        if ($isAnggota && $rencana_kegiatan->user_id == $user->id &&
+            in_array($rencana_kegiatan->status, [RencanaKegiatan::STATUS_DRAFT, RencanaKegiatan::STATUS_REVISI])
+        ) {
+            $missingFields = $this->getMissingFields($rencana_kegiatan);
+        }
+
+        return view('rencana_kegiatan.show', compact('rencana_kegiatan', 'missingFields'));
     }
 
     public function edit(RencanaKegiatan $rencana_kegiatan)

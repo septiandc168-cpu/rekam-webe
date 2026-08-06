@@ -183,33 +183,13 @@
                 </a>
             @endif
 
-            @php
-                $missingFieldsShow = [];
-                if ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DRAFT && auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id()) {
-                    if (empty(trim($rencana_kegiatan->nama_kegiatan ?? ''))) $missingFieldsShow[] = 'Nama Kegiatan';
-                    if (empty(trim($rencana_kegiatan->jenis_kegiatan ?? ''))) $missingFieldsShow[] = 'Jenis Kegiatan';
-                    elseif ($rencana_kegiatan->jenis_kegiatan === 'lainnya' && empty(trim($rencana_kegiatan->jenis_kegiatan_lainnya ?? ''))) $missingFieldsShow[] = 'Deskripsi Jenis Kegiatan Lainnya';
-                    if (empty(trim(strip_tags($rencana_kegiatan->deskripsi ?? '')))) $missingFieldsShow[] = 'Deskripsi Kegiatan';
-                    if (empty(trim(strip_tags($rencana_kegiatan->tujuan ?? '')))) $missingFieldsShow[] = 'Tujuan Kegiatan';
-                    if (empty(trim($rencana_kegiatan->penanggung_jawab ?? ''))) $missingFieldsShow[] = 'Penanggung Jawab';
-                    if (empty(trim($rencana_kegiatan->kelompok ?? ''))) $missingFieldsShow[] = 'Kelompok / Komunitas Pelaksana';
-                    if (empty($rencana_kegiatan->estimasi_peserta)) $missingFieldsShow[] = 'Estimasi Jumlah Peserta';
-                    if (empty($rencana_kegiatan->tanggal_mulai)) $missingFieldsShow[] = 'Tanggal Mulai';
-                    if (empty($rencana_kegiatan->tanggal_selesai)) $missingFieldsShow[] = 'Tanggal Selesai';
-                    if (empty($rencana_kegiatan->waktu_mulai)) $missingFieldsShow[] = 'Waktu Mulai';
-                    if (empty($rencana_kegiatan->waktu_selesai)) $missingFieldsShow[] = 'Waktu Selesai';
-                    if (empty(trim($rencana_kegiatan->desa ?? ''))) $missingFieldsShow[] = 'Desa / Wilayah';
-                    if (empty($rencana_kegiatan->lat) || empty($rencana_kegiatan->lng)) $missingFieldsShow[] = 'Koordinat Lokasi (Peta)';
-                    if (empty(trim(strip_tags($rencana_kegiatan->rincian_kebutuhan ?? '')))) $missingFieldsShow[] = 'Rincian Kebutuhan';
-                    if (empty($rencana_kegiatan->anggaran_kegiatan)) $missingFieldsShow[] = 'File Anggaran Kegiatan';
-                }
-            @endphp
+            {{-- missingFields dihitung oleh controller --}}
 
             @if(auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id())
                 @if ($rencana_kegiatan->user_id == auth()->id())
                     @if (in_array($rencana_kegiatan->status, [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]))
                         @if ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DRAFT)
-                            @if(empty($missingFieldsShow))
+                            @if(empty($missingFields))
                                 <form action="{{ route('rencana_kegiatan.ajukan', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2">
                                     @csrf
                                     @method('PUT')
@@ -286,28 +266,9 @@
         </div>
     @endif
 
-    @php
-        $missingFieldsShow = [];
-        if ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DRAFT && auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id()) {
-            if (empty(trim($rencana_kegiatan->nama_kegiatan ?? ''))) $missingFieldsShow[] = 'Nama Kegiatan';
-            if (empty(trim($rencana_kegiatan->jenis_kegiatan ?? ''))) $missingFieldsShow[] = 'Jenis Kegiatan';
-            elseif ($rencana_kegiatan->jenis_kegiatan === 'lainnya' && empty(trim($rencana_kegiatan->jenis_kegiatan_lainnya ?? ''))) $missingFieldsShow[] = 'Deskripsi Jenis Kegiatan Lainnya';
-            if (empty(trim(strip_tags($rencana_kegiatan->deskripsi ?? '')))) $missingFieldsShow[] = 'Deskripsi Kegiatan';
-            if (empty(trim(strip_tags($rencana_kegiatan->tujuan ?? '')))) $missingFieldsShow[] = 'Tujuan Kegiatan';
-            if (empty(trim($rencana_kegiatan->penanggung_jawab ?? ''))) $missingFieldsShow[] = 'Penanggung Jawab';
-            if (empty(trim($rencana_kegiatan->kelompok ?? ''))) $missingFieldsShow[] = 'Kelompok / Komunitas Pelaksana';
-            if (empty($rencana_kegiatan->estimasi_peserta)) $missingFieldsShow[] = 'Estimasi Jumlah Peserta';
-            if (empty($rencana_kegiatan->tanggal_mulai)) $missingFieldsShow[] = 'Tanggal Mulai';
-            if (empty($rencana_kegiatan->tanggal_selesai)) $missingFieldsShow[] = 'Tanggal Selesai';
-            if (empty($rencana_kegiatan->waktu_mulai)) $missingFieldsShow[] = 'Waktu Mulai';
-            if (empty($rencana_kegiatan->waktu_selesai)) $missingFieldsShow[] = 'Waktu Selesai';
-            if (empty(trim($rencana_kegiatan->desa ?? ''))) $missingFieldsShow[] = 'Desa / Wilayah';
-            if (empty($rencana_kegiatan->lat) || empty($rencana_kegiatan->lng)) $missingFieldsShow[] = 'Koordinat Lokasi (Peta)';
-            if (empty(trim(strip_tags($rencana_kegiatan->rincian_kebutuhan ?? '')))) $missingFieldsShow[] = 'Rincian Kebutuhan';
-        }
-    @endphp
+    {{-- missingFields sudah dihitung di controller, tersedia sebagai $missingFields --}}
 
-    @if(!empty($missingFieldsShow))
+    @if(!empty($missingFields))
         <div class="alert alert-warning alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: #fff8e6; border-left: 4px solid #ffc107 !important;">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="top: 10px; right: 15px; opacity: 0.7;">
                 <span aria-hidden="true">&times;</span>
@@ -319,7 +280,7 @@
                 <div class="flex-grow-1">
                     <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
                         <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">Draft Belum Lengkap</h6>
-                        <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFieldsShow) }} Data Wajib Belum Terisi</span>
+                        <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFields) }} Data Wajib Belum Terisi</span>
                     </div>
                     <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
                         Lengkapi data rencana kegiatan ini agar dapat diajukan ke admin. 
@@ -331,7 +292,7 @@
                         <div class="p-2 rounded bg-white border" style="border-color: #ffe8a1 !important;">
                             <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">Daftar Kolom Wajib yang Belum Terisi:</strong>
                             <div class="d-flex flex-wrap" style="gap: 6px;">
-                                @foreach($missingFieldsShow as $mf)
+                                @foreach($missingFields as $mf)
                                     <span class="badge bg-light text-dark border p-1" style="font-size: 0.78rem;">
                                         <i class="fas fa-exclamation-circle text-warning mr-1"></i> {{ $mf }}
                                     </span>
@@ -630,7 +591,7 @@
                                         }
                                     @endphp
                                     <div class="col-6 col-sm-4 col-md-4 col-lg-3 mb-3">
-                                        <img src="/public/storage/app/{{ $fotoPath }}" class="gallery-img border shadow-sm" alt="{{ $fotoName }}" data-toggle="modal" data-target="#imageModal{{ $index }}" style="height: 180px; width: 100%; object-fit: cover;">
+                                        <img src="{{ asset('storage/' . $fotoPath) }}" class="gallery-img border shadow-sm" alt="{{ $fotoName }}" data-toggle="modal" data-target="#imageModal{{ $index }}" style="height: 180px; width: 100%; object-fit: cover;">
                                     </div>
 
                                     <!-- Modal for Image -->
@@ -644,7 +605,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body text-center p-0 bg-dark">
-                                                    <img src="/public/storage/app/{{ $fotoPath }}" class="img-fluid" style="max-height: 80vh;" alt="{{ $fotoName }}">
+                                                    <img src="{{ asset('storage/' . $fotoPath) }}" class="img-fluid" style="max-height: 80vh;" alt="{{ $fotoName }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -693,7 +654,7 @@
                             <i class="fas fa-file-excel mr-2" style="font-size:1.4rem; color:#001f3f;"></i>
                             <span class="text-truncate font-weight-bold" style="font-size:0.82rem;" title="{{ $anggaranName }}">{{ $anggaranName }}</span>
                         </div>
-                        <a href="/public/storage/app/{{ $anggaranPath }}" target="_blank" class="btn btn-sm bg-navy text-white btn-block">
+                        <a href="{{ asset('storage/' . $anggaranPath) }}" target="_blank" class="btn btn-sm bg-navy text-white btn-block">
                             <i class="fas fa-download mr-1"></i> Unduh Anggaran
                         </a>
                     </div>
@@ -723,7 +684,7 @@
                                         $fileName = basename($file);
                                     }
                                 @endphp
-                                <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                <a href="{{ asset('storage/' . $filePath) }}" target="_blank"
                                    class="btn btn-sm bg-navy text-white btn-block text-left mb-1 text-truncate"
                                    title="{{ $fileName }}" style="font-size:0.78rem;">
                                     <i class="fas fa-file-pdf mr-1"></i> {{ $fileName }}
