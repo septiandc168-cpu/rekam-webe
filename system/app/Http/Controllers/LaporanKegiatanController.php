@@ -305,6 +305,13 @@ class LaporanKegiatanController extends Controller
 
         // Kirim notifikasi ke admin jika anggota yang mengajukan
         if ($isAnggota && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
+            if ($rencanaKegiatan) {
+                $rencanaKegiatan->update([
+                    'status' => \App\Models\RencanaKegiatan::STATUS_SELESAI,
+                    'keterangan_status' => 'Kegiatan telah selesai dilaksanakan di lapangan dan laporan telah diajukan.'
+                ]);
+            }
+
             $notification = new LaporanActivityNotification(
                 $laporan->uuid,
                 $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
@@ -638,6 +645,13 @@ class LaporanKegiatanController extends Controller
         // Kirim notifikasi ke admin jika anggota yang mengajukan ulang
         if ($isAnggota && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
             $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
+            if ($rencanaKegiatan) {
+                $rencanaKegiatan->update([
+                    'status' => \App\Models\RencanaKegiatan::STATUS_SELESAI,
+                    'keterangan_status' => 'Kegiatan telah selesai dilaksanakan di lapangan dan laporan telah diajukan.'
+                ]);
+            }
+
             $notification = new LaporanActivityNotification(
                 $laporanKegiatan->uuid,
                 $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
