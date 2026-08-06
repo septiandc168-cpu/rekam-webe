@@ -207,7 +207,7 @@
                             </button>
                         </form>
                     @else
-                        <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Draft Belum Lengkap!', text: 'Laporan kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
+                        <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Draft Belum Lengkap!', text: 'Laporan kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow ?? []) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
                             <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
                         </button>
                     @endif
@@ -261,7 +261,7 @@
                 <div class="flex-grow-1">
                     <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
                         <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">Draft Belum Lengkap</h6>
-                        <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFieldsShow) }} Data Wajib Belum Terisi</span>
+                        <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFieldsShow ?? []) }} Data Wajib Belum Terisi</span>
                     </div>
                     <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
                         Lengkapi data laporan kegiatan ini agar dapat diajukan ke admin. 
