@@ -307,13 +307,13 @@
                     <div class="card history-card shadow-sm h-100">
                         {{-- Card Header --}}
                         <div class="history-card card-header-custom">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-2 text-white fw-bold title-text" title="{{ $rencana->nama_kegiatan }}">
+                                {{ $rencana->nama_kegiatan }}
+                            </h6>
+                            <div class="d-flex flex-wrap align-items-center" style="gap: 6px;">
                                 <span class="badge-jenis {{ $jenisBadge }}">{{ $jenisLabel }}</span>
                                 <span class="{{ $laporanBadgeClass }}">{{ $laporanBadgeLabel }}</span>
                             </div>
-                            <h6 class="mb-0 text-white fw-bold title-text" title="{{ $rencana->nama_kegiatan }}">
-                                {{ $rencana->nama_kegiatan }}
-                            </h6>
                         </div>
 
                         {{-- Card Body --}}
@@ -371,7 +371,7 @@
                                 </a>
                                 @if($laporan)
                                     <a href="{{ route('laporan_kegiatan.show', $laporan->uuid ?? $laporan->id) }}"
-                                       class="btn btn-sm btn-success flex-fill shadow-sm">
+                                       class="btn btn-sm bg-navy text-white flex-fill shadow-sm">
                                         <i class="fas fa-file-alt mr-1"></i> Lihat Laporan
                                     </a>
                                 @endif
