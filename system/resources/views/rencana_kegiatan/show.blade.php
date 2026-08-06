@@ -649,7 +649,7 @@
                 </div>
                 <div class="card-body p-2">
                     <div class="d-flex align-items-center mb-2 px-1">
-                        <i class="fas fa-map-pin text-success mr-2" style="font-size:0.85rem;"></i>
+                        <i class="fas fa-map-pin text-navy mr-2" style="font-size:0.85rem;"></i>
                         <div>
                             <small class="text-muted" style="font-size:0.72rem;">Desa / Wilayah</small>
                             <strong class="d-block" style="font-size:0.82rem;">{{ $rencana_kegiatan->desa }}</strong>
