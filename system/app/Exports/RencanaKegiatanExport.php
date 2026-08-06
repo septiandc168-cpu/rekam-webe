@@ -59,11 +59,10 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
             'Jenis Kegiatan',
             'Desa/Lokasi',
             'Tanggal Pelaksanaan',
-            'Penanggung Jawab',
+            'Penanggung Jawab / Anggota',
             'Target Peserta',
             'Realisasi Peserta',
             'Status Laporan',
-            'Penyusun/Anggota',
         ];
     }
 
@@ -83,11 +82,10 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
             $rencana->getJenisKegiatanLabel(),
             $rencana->desa ?: '-',
             $tglPelaksanaan,
-            $rencana->penanggung_jawab ?: ($rencana->user->name ?? '-'),
+            $rencana->user ? $rencana->user->name : ($rencana->penanggung_jawab ?: '-'),
             $rencana->estimasi_peserta ?: 0,
             $laporan ? ($laporan->realisasi_peserta ?: 0) : 0,
             'Selesai (Laporan Final)',
-            $rencana->user ? $rencana->user->name : '-',
         ];
     }
 

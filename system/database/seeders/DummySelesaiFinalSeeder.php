@@ -146,7 +146,7 @@ class DummySelesaiFinalSeeder extends Seeder
                 'tanggal_selesai' => $data['tgl_selesai'],
                 'waktu_mulai' => '08:00',
                 'waktu_selesai' => '16:00',
-                'penanggung_jawab' => $data['pj'],
+                'penanggung_jawab' => $user->name,
                 'kelompok' => $data['kelompok'],
                 'estimasi_peserta' => $data['target'],
                 'rincian_kebutuhan' => '• Konsumsi peserta = Rp1.500.000<br>• ATK & Spanduk = Rp500.000<br>• Transportasi = Rp1.000.000',
