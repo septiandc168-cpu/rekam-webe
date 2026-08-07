@@ -212,7 +212,8 @@
                                 <h4 class="mb-0 fw-bold text-navy" id="display-grand-total">Rp 0</h4>
                             </div>
 
-                            <label class="form-label fw-bold text-dark mb-2">Perincian Kebutuhan <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold text-dark mb-1">Perincian Kebutuhan <span class="text-danger">*</span></label>
+                            <small class="text-muted d-block mb-2"><i class="fas fa-info-circle mr-1"></i>Isi rincian kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau transportasi. Masukkan Jumlah dan Harga Satuan (Rp) untuk menghitung Subtotal secara otomatis.</small>
                             
                             <div class="table-responsive">
                                 <table class="table table-bordered align-middle text-sm" id="table-rincian-pengajuan">
