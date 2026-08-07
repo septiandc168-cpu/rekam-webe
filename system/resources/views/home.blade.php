@@ -519,9 +519,9 @@
                             </div>
                             
                             <ul class="list-unstyled text-muted mb-3" style="font-size: 0.78rem;">
-                                <li class="mb-1"><i class="fas fa-map-marker-alt text-danger mr-2" style="width: 15px; text-align: center;"></i> ${item.desa}</li>
-                                <li class="mb-1"><i class="far fa-calendar-alt text-primary mr-2" style="width: 15px; text-align: center;"></i> ${item.tanggal}</li>
-                                <li><i class="fas fa-user-circle text-info mr-2" style="width: 15px; text-align: center;"></i> ${item.person}</li>
+                                <li class="mb-1"><i class="fas fa-map-marker-alt text-navy mr-2" style="width: 15px; text-align: center;"></i> ${item.desa}</li>
+                                <li class="mb-1"><i class="far fa-calendar-alt text-navy mr-2" style="width: 15px; text-align: center;"></i> ${item.tanggal}</li>
+                                <li><i class="fas fa-user-circle text-navy mr-2" style="width: 15px; text-align: center;"></i> ${item.person}</li>
                             </ul>
  
                             <a href="${item.url}" class="btn btn-sm bg-navy text-white btn-block shadow-sm" style="border-radius: 20px; font-size: 0.75rem;">
