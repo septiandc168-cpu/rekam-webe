@@ -344,8 +344,10 @@
             };
             $titleText = match($st) {
                 'revisi' => 'Catatan Revisi:',
+                'disetujui' => 'Catatan Persetujuan:',
                 'ditolak' => 'Catatan Penolakan:',
-                default => 'Catatan:'
+                'selesai' => 'Catatan Penyelesaian / Verifikasi Laporan:',
+                default => 'Catatan Status:'
             };
         @endphp
         <div class="alert {{ $alertClass }} mb-4 shadow-sm border-0">
