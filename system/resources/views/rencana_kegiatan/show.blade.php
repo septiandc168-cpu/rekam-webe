@@ -675,12 +675,10 @@
                         <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-invoice-dollar mr-1"></i> Anggaran Kegiatan</h6>
                     </div>
                     <div class="card-body py-2 px-3">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-file-excel mr-2" style="font-size:1.4rem; color:#001f3f;"></i>
-                            <span class="text-truncate font-weight-bold" style="font-size:0.82rem;" title="{{ $anggaranName }}">{{ $anggaranName }}</span>
-                        </div>
-                        <a href="/public/storage/app/{{ $anggaranPath }}" target="_blank" class="btn btn-sm bg-navy text-white btn-block">
-                            <i class="fas fa-download mr-1"></i> Unduh Anggaran
+                        <a href="/public/storage/app/{{ $anggaranPath }}" target="_blank"
+                           class="btn btn-sm bg-navy text-white btn-block text-left mb-1 text-truncate"
+                           title="{{ $anggaranName }}" style="font-size:0.78rem;">
+                            <i class="fas fa-file-excel mr-1"></i> {{ $anggaranName }}
                         </a>
                     </div>
                 </div>
