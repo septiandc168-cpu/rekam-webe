@@ -182,17 +182,17 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Kendala yang Dihadapi <span class="text-danger">*</span></label>
-                                <textarea name="kendala" class="form-control summernote-editor" rows="4" placeholder="Contoh: Cuaca buruk sempat menunda penanaman selama 2 jam...">{!! old('kendala', $laporanKegiatan->kendala) !!}</textarea>
+                                <textarea name="kendala" class="form-control summernote-editor" rows="4" placeholder="Contoh: Cuaca buruk sempat menunda penanaman selama 2 jam..." required>{!! old('kendala', $laporanKegiatan->kendala) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan hambatan atau masalah yang muncul selama pelaksanaan kegiatan. Isi "Tidak ada" jika tidak ada kendala.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Solusi yang Dilakukan <span class="text-danger">*</span></label>
-                                <textarea name="solusi" class="form-control summernote-editor" rows="4" placeholder="Contoh: Memindahkan area tanam sementara ke sisi timur pantai...">{!! old('solusi', $laporanKegiatan->solusi) !!}</textarea>
+                                <textarea name="solusi" class="form-control summernote-editor" rows="4" placeholder="Contoh: Memindahkan area tanam sementara ke sisi timur pantai..." required>{!! old('solusi', $laporanKegiatan->solusi) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan langkah-langkah yang diambil untuk mengatasi kendala tersebut.</small>
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Catatan Evaluasi & Rekomendasi <span class="text-danger">*</span></label>
-                                <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="4" placeholder="Contoh: Ke depannya perlu persiapan terpal untuk antisipasi hujan...">{!! old('evaluasi_rekomendasi', $laporanKegiatan->evaluasi_rekomendasi) !!}</textarea>
+                                <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="4" placeholder="Contoh: Ke depannya perlu persiapan terpal untuk antisipasi hujan..." required>{!! old('evaluasi_rekomendasi', $laporanKegiatan->evaluasi_rekomendasi) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
                             </div>
                         </div>
@@ -467,16 +467,35 @@
                     let nextStepId = $(this).data('next');
                     let nextIndex = parseInt(nextStepId.split('-')[1]);
 
-                    // Simple Frontend Validation on current step before moving
                     let currentStep = $(this).closest('.wizard-step');
-                    let requiredInputs = currentStep.find('input[required], select[required], textarea[required]');
                     let isValid = true;
 
+                    // 1. Validate normal required inputs/selects (visible ones)
+                    let requiredInputs = currentStep.find('input[required]:visible, select[required]:visible, textarea[required]:not(.summernote-editor)');
                     requiredInputs.each(function() {
                         if (!this.checkValidity()) {
                             isValid = false;
                             this.reportValidity();
                             return false; // break loop
+                        }
+                    });
+
+                    if (!isValid) return false;
+
+                    // 2. Validate Summernote required editors in current step
+                    currentStep.find('textarea.summernote-editor[required]').each(function() {
+                        let $el = $(this);
+                        let code = $el.summernote('code');
+                        let cleanText = $('<div>').html(code).text().trim();
+                        if (!cleanText || cleanText === '') {
+                            isValid = false;
+                            $el.val('');
+                            let labelText = $el.closest('.mb-3').find('label').text().replace('*', '').trim() || 'Kolom isian';
+                            alert('Mohon lengkapi ' + labelText + ' terlebih dahulu.');
+                            $el.summernote('focus');
+                            return false; // break loop
+                        } else {
+                            $el.val(code);
                         }
                     });
 
