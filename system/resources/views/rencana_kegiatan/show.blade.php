@@ -263,14 +263,19 @@
             @endif
 
             @php
+                $isAnggotaUser = auth()->user()->role->role_name === 'anggota';
                 $backRoute = route('rencana_kegiatan.index');
-                if ($rencana_kegiatan->status === 'disetujui' || request('from') === 'laporan') {
+
+                if (request('from') === 'laporan') {
                     $backRoute = route('laporan_kegiatan.index');
-                } elseif (in_array($rencana_kegiatan->status, ['selesai', 'draft']) || request('from') === 'history') {
+                } elseif (request('from') === 'history' || $rencana_kegiatan->status === 'selesai') {
                     $backRoute = route('history_realisasi.index');
-                } elseif (auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id != auth()->id()) {
-                    // Jika anggota melihat dokumen milik orang lain (dari dashboard), kembalikan ke dashboard
-                    $backRoute = route('home');
+                } elseif ($isAnggotaUser) {
+                    if ($rencana_kegiatan->status === 'disetujui') {
+                        $backRoute = route('laporan_kegiatan.index');
+                    } elseif ($rencana_kegiatan->user_id != auth()->id()) {
+                        $backRoute = route('home');
+                    }
                 }
             @endphp
             <a href="{{ $backRoute }}" class="btn btn-secondary text-white btn-sm">
