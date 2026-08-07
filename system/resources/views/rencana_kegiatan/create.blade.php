@@ -61,10 +61,12 @@
                             <div class="col-md-8 mb-3">
                                 <label class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
                                 <input type="text" name="nama_kegiatan" class="form-control" placeholder="Contoh: Penanaman 1000 Bibit Mangrove" value="{{ old('nama_kegiatan') }}" required>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Tuliskan nama kegiatan yang jelas dan spesifik agar mudah diidentifikasi oleh Admin.</small>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Estimasi Jumlah Peserta <span class="text-danger">*</span></label>
                                 <input type="number" name="estimasi_peserta" class="form-control" placeholder="Contoh: 50" value="{{ old('estimasi_peserta') }}" required>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Perkiraan jumlah peserta yang akan hadir dalam kegiatan.</small>
                             </div>
                         </div>
 
@@ -77,6 +79,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Kelompok / Komunitas Pelaksana <span class="text-danger">*</span></label>
                                 <input type="text" name="kelompok" class="form-control" placeholder="Contoh: Kelompok Tani Harapan Jaya" value="{{ old('kelompok') }}" required>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Nama kelompok, komunitas, atau lembaga yang bertanggung jawab melaksanakan kegiatan.</small>
                             </div>
                         </div>
 
@@ -89,20 +92,24 @@
                                         <option value="{{ $value }}" {{ old('jenis_kegiatan') == $value ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
                                 </select>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Pilih kategori yang paling sesuai dengan kegiatan yang akan dilaksanakan.</small>
                             </div>
                             <div class="col-md-6 mb-3" id="jenis_kegiatan_lainnya_row" style="display: {{ old('jenis_kegiatan') == 'lainnya' ? 'block' : 'none' }};">
                                 <label class="form-label">Deskripsi Jenis Kegiatan Lainnya <span class="text-danger">*</span></label>
                                 <input type="text" name="jenis_kegiatan_lainnya" class="form-control" placeholder="Contoh: Monitoring Terumbu Karang & Bersih Pantai (Beach Cleanup)" value="{{ old('jenis_kegiatan_lainnya') }}">
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Jelaskan secara singkat jenis kegiatan yang tidak tercantum dalam daftar pilihan.</small>
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Deskripsi Kegiatan <span class="text-danger">*</span></label>
                                 <textarea name="deskripsi" class="form-control" id="summernote-deskripsi" rows="3" placeholder="Contoh: Kegiatan ini difokuskan pada perbaikan ekosistem...">{!! old('deskripsi') !!}</textarea>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Jelaskan gambaran umum kegiatan: apa yang dilakukan, di mana, dan bagaimana pelaksanaannya.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tujuan Kegiatan <span class="text-danger">*</span></label>
                                 <textarea name="tujuan" class="form-control" id="summernote-tujuan" rows="2" placeholder="Contoh: 1. Mencegah abrasi; 2. Membuka lahan baru...">{!! old('tujuan') !!}</textarea>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Sebutkan tujuan utama kegiatan secara jelas. Gunakan format poin jika lebih dari satu tujuan.</small>
                             </div>
                         </div>
                     </div>
@@ -127,20 +134,24 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
                                 <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="form-control" value="{{ old('tanggal_mulai') }}" required>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Tanggal pertama kegiatan dimulai.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tanggal Selesai <span class="text-danger">*</span></label>
                                 <input type="date" name="tanggal_selesai" id="tanggal_selesai" class="form-control" value="{{ old('tanggal_selesai') }}" required>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Tanggal terakhir kegiatan berlangsung. Jika hanya 1 hari, isi sama dengan tanggal mulai.</small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Waktu Mulai <span class="text-danger">*</span></label>
                                 <input type="time" name="waktu_mulai" class="form-control" value="{{ old('waktu_mulai') }}" required>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Jam kegiatan dimulai (format 24 jam, contoh: 08:00).</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Waktu Selesai <span class="text-danger">*</span></label>
                                 <input type="time" name="waktu_selesai" class="form-control" value="{{ old('waktu_selesai') }}" required>
+                                <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Perkiraan jam kegiatan selesai (format 24 jam, contoh: 16:00).</small>
                             </div>
                         </div>
                     </div>
@@ -154,6 +165,7 @@
                         <div class="mb-3">
                             <label class="form-label">Desa / Wilayah <span class="text-danger">*</span></label>
                             <input type="text" name="desa" class="form-control" placeholder="Contoh: Pesisir Desa Suka Maju" value="{{ old('desa') }}" required>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Tuliskan nama desa atau wilayah tempat kegiatan akan dilaksanakan.</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Koordinat Lokasi <span class="text-danger">*</span></label>
@@ -161,6 +173,7 @@
                                 <input type="text" id="location_lat" name="lat" class="form-control" placeholder="Latitude" value="{{ old('lat') }}" readonly required>
                                 <input type="text" id="location_lng" name="lng" class="form-control" placeholder="Longitude" value="{{ old('lng') }}" readonly required>
                             </div>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Klik langsung pada peta atau gunakan kotak pencarian untuk menentukan titik lokasi kegiatan secara akurat.</small>
                         </div>
                         <div class="mb-3" id="map-create" style="width:100%; height:400px; border:1px solid #ddd; border-radius:4px;"></div>
                     </div>
@@ -240,7 +253,7 @@
                                 <input type="file" id="fotoInput" name="foto[]" class="custom-file-input" accept="image/jpeg,image/png" multiple>
                                 <label class="custom-file-label" for="fotoInput">Pilih file foto/banner...</label>
                             </div>
-                            <small class="text-muted">Maksimal 5 foto (JPG/PNG). Ukuran maksimal 5MB/foto.</small>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Unggah foto/banner terkait kegiatan sebagai media dokumentasi. Maksimal 5 foto (JPG/PNG), ukuran maks. 5MB/foto.</small>
                             <div id="image-preview-container" class="row mt-2"></div>
                         </div>
                         <div class="mb-3">
@@ -249,7 +262,7 @@
                                 <input type="file" id="dokumenInput" name="dokumen[]" class="custom-file-input" accept=".pdf,.doc,.docx" multiple>
                                 <label class="custom-file-label" for="dokumenInput">Pilih file dokumen...</label>
                             </div>
-                            <small class="text-muted">Maksimal 5 dokumen (PDF/DOC). Ukuran maksimal 5MB/dokumen.</small>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Lampirkan dokumen pendukung seperti surat izin, proposal, atau jadwal kegiatan. Maks. 5 file (PDF/DOC), ukuran maks. 5MB/file.</small>
                             <div id="preview-dokumen" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
