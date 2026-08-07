@@ -98,14 +98,13 @@ class LaporanKegiatanController extends Controller
 
         session()->flash('alert.delete', json_encode($confirm, JSON_UNESCAPED_SLASHES));
 
-        // === Rencana Kegiatan Disetujui yang belum ada laporannya ===
-        // Hanya untuk anggota: rencana milik sendiri yang berstatus disetujui dan belum ada laporan
+        // === Rencana Kegiatan Disetujui ===
+        // Hanya untuk anggota: rencana milik sendiri yang berstatus disetujui
         $rencanaDisetujui = collect();
         if (!$isAdmin) {
             $rencanaDisetujui = RencanaKegiatan::with('user')
                 ->where('user_id', $user->id)
                 ->where('status', RencanaKegiatan::STATUS_DISETUJUI)
-                ->doesntHave('laporanKegiatan')
                 ->orderBy('tanggal_mulai', 'asc')
                 ->get();
         }
