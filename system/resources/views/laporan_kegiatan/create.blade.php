@@ -379,7 +379,7 @@
                         if (!cleanText || cleanText === '') {
                             isValid = false;
                             $el.val('');
-                            let labelText = $el.closest('.mb-3').find('label').text().replace('*', '').trim() || 'Kolom isian';
+                            let labelText = $el.closest('.mb-3').find('label.form-label').first().text().replace('*', '').trim() || 'Kolom isian';
                             alert('Mohon lengkapi ' + labelText + ' terlebih dahulu.');
                             $el.summernote('focus');
                             return false; // break loop
