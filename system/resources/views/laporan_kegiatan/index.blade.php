@@ -26,16 +26,18 @@
     <div class="card shadow-sm elevation-1 text-sm mb-4">
         <div class="card-header bg-white d-flex align-items-center justify-content-between py-2 px-3">
             <div class="d-flex align-items-center">
-                <h6 class="card-title fw-bold text-dark mt-1 mb-0" style="font-size: 0.95rem;">
+                <h6 class="fw-bold text-dark mt-1 mb-0" style="font-size: 0.95rem;">
                     <i class="fas fa-clipboard-check text-navy mr-1"></i> Rencana Kegiatan Disetujui
                     <span class="badge bg-navy text-white ml-1" style="font-size: 0.78rem;">
                         {{ $rencanaDisetujui->count() }}
                     </span>
                 </h6>
             </div>
-            <small class="text-muted d-none d-md-block" style="font-size: 0.78rem;">
-                <i class="fas fa-info-circle mr-1"></i> Rencana kegiatan yang sudah disetujui dan belum ada laporannya
-            </small>
+            <div class="ml-auto text-right">
+                <small class="text-muted d-none d-md-inline-block" style="font-size: 0.78rem;">
+                    <i class="fas fa-info-circle mr-1"></i> Rencana kegiatan yang sudah disetujui dan belum ada laporannya
+                </small>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
