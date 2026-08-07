@@ -408,7 +408,7 @@
                         html += '  <div class="card-body p-3 bg-white">';
                         html += '    <div class="d-flex justify-content-between align-items-start mb-2">';
                         html += '      <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">' + item.nama_kegiatan + '</h6>';
-                        html += '      <span class="badge bg-success text-white px-2 py-1" style="font-size: 0.72rem; font-weight: 600;">Disetujui</span>';
+                        html += '      <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #047857; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.72rem; font-weight: 600; border-radius: 4px; padding: 3px 8px;">Disetujui</span>';
                         html += '    </div>';
                         html += '    <div class="row text-muted text-sm mt-2 g-2">';
                         html += '      <div class="col-md-6 mb-1"><i class="fas fa-user text-navy mr-1"></i> PJ: <strong>' + item.penanggung_jawab + '</strong></div>';
