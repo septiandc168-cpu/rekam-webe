@@ -106,7 +106,7 @@ class LaporanKegiatanController extends Controller
                 ->where('user_id', $user->id)
                 ->where('status', RencanaKegiatan::STATUS_DISETUJUI)
                 ->doesntHave('laporanKegiatan')
-                ->orderBy('tanggal_mulai', 'asc')
+                ->orderBy('updated_at', 'desc')
                 ->get();
         }
 

@@ -358,6 +358,7 @@
     $(function() {
         if ($('#table-rencana-disetujui').length) {
             $('#table-rencana-disetujui').DataTable({
+                "order": [],
                 "paging": true,
                 "lengthChange": true,
                 "searching": true,
