@@ -15,6 +15,37 @@ class LaporanKegiatanRequest extends FormRequest
     }
 
     /**
+     * Check if a file field has at least 1 file (newly uploaded or existing in edit mode).
+     */
+    private function hasFileOrExisting(string $field): bool
+    {
+        if ($this->hasFile($field) && count(array_filter($this->file($field))) > 0) {
+            return true;
+        }
+
+        if (in_array($this->method(), ['PUT', 'PATCH']) && $this->route('laporan_kegiatan')) {
+            $laporan = $this->route('laporan_kegiatan');
+            $existing = $laporan->$field ?? [];
+            if (is_string($existing)) {
+                $existing = json_decode($existing, true) ?? [];
+            }
+            if (!is_array($existing)) {
+                $existing = [];
+            }
+
+            $removed = $this->input('remove_' . $field, []);
+            if (!is_array($removed)) {
+                $removed = [];
+            }
+
+            $remainingCount = count($existing) - count($removed);
+            return $remainingCount > 0;
+        }
+
+        return false;
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -103,16 +134,16 @@ class LaporanKegiatanRequest extends FormRequest
             'solusi' => 'required|string',
             'evaluasi_rekomendasi' => 'required|string',
 
-            // Dokumentasi
-            'foto_kegiatan' => 'nullable|array',
+            // Dokumentasi (Required saat diajukan)
+            'foto_kegiatan' => $this->hasFileOrExisting('foto_kegiatan') ? 'nullable|array' : 'required|array|min:1',
             'foto_kegiatan.*' => 'nullable|image|mimes:jpg,jpeg,png|max:3072',
-            'daftar_hadir' => 'nullable|array',
+            'daftar_hadir' => $this->hasFileOrExisting('daftar_hadir') ? 'nullable|array' : 'required|array|min:1',
             'daftar_hadir.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
             'notulen' => 'nullable|array',
             'notulen.*' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-            'materi' => 'nullable|array',
+            'materi' => $this->hasFileOrExisting('materi') ? 'nullable|array' : 'required|array|min:1',
             'materi.*' => 'nullable|file|mimes:pdf,ppt,pptx,doc,docx|max:10240',
-            'berita_acara' => 'nullable|array',
+            'berita_acara' => $this->hasFileOrExisting('berita_acara') ? 'nullable|array' : 'required|array|min:1',
             'berita_acara.*' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
 
             // Remove files (for edit)
@@ -177,6 +208,16 @@ class LaporanKegiatanRequest extends FormRequest
             'kendala.required' => 'Kendala yang dihadapi wajib diisi.',
             'solusi.required' => 'Solusi yang dilakukan wajib diisi.',
             'evaluasi_rekomendasi.required' => 'Catatan evaluasi & rekomendasi wajib diisi.',
+
+            // Dokumentasi (Required error messages)
+            'foto_kegiatan.required' => 'Foto kegiatan wajib diunggah.',
+            'foto_kegiatan.min' => 'Foto kegiatan wajib diunggah minimal 1 foto.',
+            'daftar_hadir.required' => 'Daftar hadir wajib diunggah.',
+            'daftar_hadir.min' => 'Daftar hadir wajib diunggah minimal 1 file.',
+            'materi.required' => 'Materi wajib diunggah.',
+            'materi.min' => 'Materi wajib diunggah minimal 1 file.',
+            'berita_acara.required' => 'Berita acara wajib diunggah.',
+            'berita_acara.min' => 'Berita acara wajib diunggah minimal 1 file.',
 
             // Dokumentasi
             'foto_kegiatan.*.image' => 'Foto kegiatan harus berupa gambar.',

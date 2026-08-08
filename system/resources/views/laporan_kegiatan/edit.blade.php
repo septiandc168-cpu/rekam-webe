@@ -244,9 +244,9 @@
                                         </div>
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Foto Kegiatan</label>
+                                <label class="form-label fw-bold mt-2">Foto Kegiatan <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="foto_kegiatan[]" class="custom-file-input custom-img-input" id="fotoInput" accept="image/jpeg,image/jpg,image/png" multiple>
+                                    <input type="file" name="foto_kegiatan[]" class="custom-file-input custom-img-input" id="fotoInput" accept="image/jpeg,image/jpg,image/png" multiple {{ empty($fotos) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="fotoInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
                                 <small class="text-muted">Maksimal 10 foto (JPG/PNG), Max 3MB/foto.</small>
@@ -276,9 +276,9 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Daftar Hadir</label>
+                                <label class="form-label fw-bold mt-2">Daftar Hadir <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="daftar_hadir[]" class="custom-file-input custom-doc-input" id="daftarHadirInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" multiple>
+                                    <input type="file" name="daftar_hadir[]" class="custom-file-input custom-doc-input" id="daftarHadirInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" multiple {{ empty($daftar_hadir) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="daftarHadirInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
                                 <small class="text-muted">Maksimal 5 file (PDF/DOC/XLS/JPG/PNG), Max 5MB/file.</small>
@@ -340,9 +340,9 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Materi</label>
+                                <label class="form-label fw-bold mt-2">Materi <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="materi[]" class="custom-file-input custom-doc-input" id="materiInput" accept=".pdf,.ppt,.pptx,.doc,.docx" multiple>
+                                    <input type="file" name="materi[]" class="custom-file-input custom-doc-input" id="materiInput" accept=".pdf,.ppt,.pptx,.doc,.docx" multiple {{ empty($materi) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="materiInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
                                 <small class="text-muted">Maksimal 5 file (PDF/PPT/DOC), Max 10MB/file.</small>
@@ -528,6 +528,31 @@
                     let prevStepId = $(this).data('prev');
                     currentStepIndex = parseInt(prevStepId.split('-')[1]);
                     showStep(currentStepIndex);
+                });
+
+                $('#laporan-kegiatan-form').on('submit', function(e) {
+                    const actionVal = $('#form-action').val();
+                    if (actionVal === 'draft') return true;
+
+                    const requiredFiles = [
+                        { key: 'foto_kegiatan', name: 'Foto Kegiatan', inputId: 'fotoInput' },
+                        { key: 'daftar_hadir', name: 'Daftar Hadir', inputId: 'daftarHadirInput' },
+                        { key: 'materi', name: 'Materi', inputId: 'materiInput' },
+                        { key: 'berita_acara', name: 'Berita Acara', inputId: 'beritaAcaraInput' }
+                    ];
+
+                    for (let req of requiredFiles) {
+                        const hasBuffer = fileBuffers[req.key] && fileBuffers[req.key].length > 0;
+                        const hasExisting = $(this).find(`.existing-${req.key === 'foto_kegiatan' ? 'foto' : 'dokumen'}-item:visible`).length > 0;
+
+                        if (!hasBuffer && !hasExisting) {
+                            e.preventDefault();
+                            alert(`Mohon unggah ${req.name} terlebih dahulu.`);
+                            showStep(3);
+                            $(`#${req.inputId}`).focus();
+                            return false;
+                        }
+                    }
                 });
 
                 showStep(currentStepIndex);
