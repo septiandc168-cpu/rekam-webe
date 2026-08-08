@@ -796,7 +796,16 @@ class RencanaKegiatanController extends Controller
                 'keterangan_status' => $validated['keterangan_status'] ?? null,
             ];
         } else {
-            // Admin revisi: reset status to 'diajukan' and clear keterangan
+            $action = $request->input('action');
+            $currentStatus = $rencana_kegiatan->status;
+
+            $newStatus = match(true) {
+                $currentStatus === RencanaKegiatan::STATUS_REVISI && $action === 'draft' => RencanaKegiatan::STATUS_REVISI,
+                $action === 'draft' => RencanaKegiatan::STATUS_DRAFT,
+                $action === 'diajukan' => RencanaKegiatan::STATUS_DIAJUKAN,
+                default => $currentStatus,
+            };
+
             $data = [
                 'nama_kegiatan' => $validated['nama_kegiatan'],
                 'jenis_kegiatan' => $validated['jenis_kegiatan'],
@@ -813,8 +822,9 @@ class RencanaKegiatanController extends Controller
                 'penanggung_jawab' => $validated['penanggung_jawab'] ?? null,
                 'kelompok' => $validated['kelompok'] ?? null,
                 'estimasi_peserta' => $validated['estimasi_peserta'] ?? null,
-                'rincian_kebutuhan' => $validated['rincian_kebutuhan'] ?? null,                'status' => $request->input('action') === 'draft' ? 'draft' : ($request->input('action') === 'diajukan' ? 'diajukan' : $rencana_kegiatan->status),
-                'keterangan_status' => null, // Clear keterangan
+                'rincian_kebutuhan' => $validated['rincian_kebutuhan'] ?? null,
+                'status' => $newStatus,
+                'keterangan_status' => $newStatus === RencanaKegiatan::STATUS_REVISI ? $rencana_kegiatan->keterangan_status : null,
                 'foto' => !empty($finalFoto) ? array_values($finalFoto) : null,
                 'dokumen' => !empty($finalDokumen) ? array_values($finalDokumen) : null,
                 'anggaran_kegiatan' => $newAnggaranPath ? $newAnggaranPath : $currentAnggaran,
