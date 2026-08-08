@@ -956,8 +956,15 @@ class LaporanKegiatanController extends Controller
             'catatan_evaluasi' => null // Reset catatan evaluasi
         ]);
         
-        // Kirim notifikasi ke admin
         $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
+        if ($rencanaKegiatan) {
+            $rencanaKegiatan->update([
+                'status' => \App\Models\RencanaKegiatan::STATUS_SELESAI,
+                'keterangan_status' => 'Kegiatan telah selesai dilaksanakan di lapangan dan laporan telah diajukan.'
+            ]);
+        }
+        
+        // Kirim notifikasi ke admin
         $namaJudul = $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Kegiatan');
 
         $notification = new LaporanActivityNotification(
