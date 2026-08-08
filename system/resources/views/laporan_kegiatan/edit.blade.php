@@ -624,19 +624,20 @@
                             else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon = 'fa-file-powerpoint text-warning';
 
                             const div = document.createElement('div');
-                            div.className = 'preview-file-item d-flex align-items-center justify-content-between p-2 mb-1 border rounded bg-white shadow-sm';
+                            div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
+                            div.style.paddingRight = '25px';
                             div.innerHTML = `
-                                <div class="d-flex align-items-center text-truncate mr-2" style="max-width: 85%;">
-                                    <i class="fas ${icon} mr-2" style="font-size:1.1rem;"></i>
-                                    <div>
+                                <div class="d-flex align-items-center text-truncate mr-2" style="max-width: 90%;">
+                                    <i class="fas ${icon} mr-2" style="font-size:1.2rem;"></i>
+                                    <div class="text-truncate">
                                         <div class="text-truncate font-weight-bold" style="font-size:0.85rem;" title="${file.name}">${file.name}</div>
                                         <small class="text-muted">${(file.size / 1024).toFixed(1)} KB</small>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-danger rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm"
-                                        style="width:22px; height:22px; border-radius:50%;"
+                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow"
+                                        style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
                                         onclick="removeFileFromBuffer('${fieldName}', ${idx})" title="Hapus file ini">
-                                    <i class="fas fa-times" style="font-size:11px;"></i>
+                                    <i class="fas fa-times" style="font-size:11px; line-height:1; margin:0;"></i>
                                 </button>
                             `;
                             previewContainer.appendChild(div);
