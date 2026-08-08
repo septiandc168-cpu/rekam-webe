@@ -196,26 +196,21 @@
                 @endcan
             @endif
 
-            @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DRAFT)
+            @if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DRAFT, \App\Models\LaporanKegiatan::STATUS_REVISI]))
                 @can('update', $laporanKegiatan)
                     @if(empty($missingFieldsShow))
                         <form action="{{ route('laporan_kegiatan.ajukan', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}" method="POST" class="d-inline mr-2">
                             @csrf
                             @method('PUT')
                             <button type="submit" class="btn bg-navy text-white btn-sm shadow-sm fw-bold">
-                                <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
+                                <i class="fas fa-paper-plane mr-1"></i> {{ $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_REVISI ? 'Ajukan Revisi Sekarang' : 'Ajukan Sekarang' }}
                             </button>
                         </form>
                     @else
-                        <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Draft Belum Lengkap!', text: 'Laporan kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow ?? []) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
-                            <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
+                        <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Data Belum Lengkap!', text: 'Laporan kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow ?? []) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
+                            <i class="fas fa-paper-plane mr-1"></i> {{ $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_REVISI ? 'Ajukan Revisi Sekarang' : 'Ajukan Sekarang' }}
                         </button>
                     @endif
-                @endcan
-            @endif
-
-            @if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DRAFT, \App\Models\LaporanKegiatan::STATUS_REVISI]))
-                @can('update', $laporanKegiatan)
                     <a href="{{ route('laporan_kegiatan.edit', $laporanKegiatan) }}" class="btn btn-warning btn-sm mr-2 shadow-sm text-dark">
                         <i class="fas fa-edit mr-1"></i> Edit Laporan
                     </a>
