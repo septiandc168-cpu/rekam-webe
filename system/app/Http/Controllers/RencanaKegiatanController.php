@@ -1134,10 +1134,13 @@ class RencanaKegiatanController extends Controller
             }
         }
 
+        $rencanaStatus = $rencana_kegiatan->status;
+        $isAnggota = $user->role && $user->role->role_name === 'anggota';
+
         $rencana_kegiatan->delete();
 
-        // Kirim notifikasi ke admin jika anggota yang menghapus
-        if ($isAdmin) {
+        // Kirim notifikasi ke admin jika anggota yang menghapus rencana yang BUKAN berstatus draft
+        if ($isAnggota && $rencanaStatus !== RencanaKegiatan::STATUS_DRAFT) {
             $notification = new KegiatanActivityNotification(
                 $kegiatanUuid,
                 $kegiatanNama,

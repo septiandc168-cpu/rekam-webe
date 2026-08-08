@@ -739,10 +739,12 @@ class LaporanKegiatanController extends Controller
             }
         }
 
+        $laporanStatus = $laporanKegiatan->status;
+
         $laporanKegiatan->delete();
 
-        // Kirim notifikasi ke admin jika anggota yang menghapus
-        if ($isAnggota) {
+        // Kirim notifikasi ke admin jika anggota yang menghapus laporan yang BUKAN berstatus draft
+        if ($isAnggota && $laporanStatus !== LaporanKegiatan::STATUS_DRAFT) {
             $notification = new LaporanActivityNotification(
                 $laporanUuid,
                 $rencanaUuid,
