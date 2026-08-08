@@ -187,12 +187,12 @@
                 </form>
 
                 <!-- Tombol Buka Modal Revisi -->
-                <button type="button" class="btn btn-sm bg-navy text-white font-weight-bold mr-2" data-toggle="modal" data-target="#modal-revisi">
+                <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark" data-toggle="modal" data-target="#modal-revisi">
                     <i class="fas fa-edit mr-1"></i> Minta Revisi
                 </button>
                 
                 <!-- Tombol Buka Modal Tolak -->
-                <button type="button" class="btn btn-sm bg-navy text-white mr-2" data-toggle="modal" data-target="#modal-tolak">
+                <button type="button" class="btn btn-danger btn-sm mr-2" data-toggle="modal" data-target="#modal-tolak">
                     <i class="fas fa-times mr-1"></i> Tolak
                 </button>
             @endif

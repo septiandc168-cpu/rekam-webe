@@ -183,7 +183,7 @@
                 </form>
 
                 <!-- Tombol Buka Modal Revisi -->
-                <button type="button" class="btn btn-sm bg-navy text-white font-weight-bold mr-2" data-toggle="modal" data-target="#modal-revisi">
+                <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark" data-toggle="modal" data-target="#modal-revisi">
                     <i class="fas fa-edit mr-1"></i> Minta Revisi
                 </button>
             @endif
