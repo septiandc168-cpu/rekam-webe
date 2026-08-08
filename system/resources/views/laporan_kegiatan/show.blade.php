@@ -93,9 +93,9 @@
             box-shadow: 0 0 0 3px #28a745;
         }
         .timeline-step.rejected .timeline-icon {
-            background: #dc3545;
-            color: #fff;
-            box-shadow: 0 0 0 3px #dc3545;
+            background: #ffc107;
+            color: #212529;
+            box-shadow: 0 0 0 3px #ffc107;
         }
         .timeline-label {
             font-size: 0.85rem;
@@ -104,7 +104,7 @@
         }
         .timeline-step.active .timeline-label { color: #007bff; }
         .timeline-step.completed .timeline-label { color: #28a745; }
-        .timeline-step.rejected .timeline-label { color: #dc3545; }
+        .timeline-step.rejected .timeline-label { color: #d39e00; }
 
         /* Accordion polished */
         .accordion-toggle-icon {
