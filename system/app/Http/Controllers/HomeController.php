@@ -68,13 +68,27 @@ class HomeController extends Controller
                 ->whereMonth('tanggal_mulai', $month->month)
                 ->where('status', RencanaKegiatan::STATUS_SELESAI);
 
+            // Hitung Laporan Langsung (Tanpa Rencana Kegiatan) yang bukan draft
+            $queryLaporanLangsung = LaporanKegiatan::whereNull('rencana_kegiatan_id')
+                ->where('status', '!=', LaporanKegiatan::STATUS_DRAFT)
+                ->where(function ($q) use ($month) {
+                    $q->whereYear('realisasi_tanggal_mulai', $month->year)
+                      ->whereMonth('realisasi_tanggal_mulai', $month->month)
+                      ->orWhere(function ($q2) use ($month) {
+                          $q2->whereNull('realisasi_tanggal_mulai')
+                             ->whereYear('created_at', $month->year)
+                             ->whereMonth('created_at', $month->month);
+                      });
+                });
+
             if (!$isAdmin) {
                 $queryDisetujui->where('user_id', $user->id);
                 $querySelesai->where('user_id', $user->id);
+                $queryLaporanLangsung->where('user_id', $user->id);
             }
 
             $countDisetujui   = $queryDisetujui->count();
-            $countSelesai     = $querySelesai->count();
+            $countSelesai     = $querySelesai->count() + $queryLaporanLangsung->count();
 
             $chartDisetujui[] = $countDisetujui;
             $chartSelesai[]   = $countSelesai;
