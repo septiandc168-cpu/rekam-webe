@@ -435,7 +435,7 @@
                     <button type="button" class="btn btn-sm btn-danger position-absolute shadow"
                             style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
                             onclick="removeDokumen(${index})" title="Hapus file ini">
-                        <i class="fas fa-times" style="font-size:11px; line-height:1; margin:0;"></i>
+                        <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
                     </button>
                 `;
 

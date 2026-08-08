@@ -267,9 +267,9 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
                                                          data-path="{{ $path }}" data-type="dokumen"
-                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                         style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="font-size:11px; margin:auto;"></i>
+                                                     <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
@@ -298,9 +298,9 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
                                                          data-path="{{ $path }}" data-type="dokumen"
-                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                         style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="font-size:11px; margin:auto;"></i>
+                                                     <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
@@ -331,9 +331,9 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
                                                          data-path="{{ $path }}" data-type="dokumen"
-                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                         style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="font-size:11px; margin:auto;"></i>
+                                                     <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
                                                  </button>
                                                 <i class="fas fa-file-powerpoint text-warning"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
@@ -363,9 +363,9 @@
                                             <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
                                                          data-path="{{ $path }}" data-type="dokumen"
-                                                         style="top:50%; right:10px; transform:translateY(-50%); border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                         style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="font-size:11px; margin:auto;"></i>
+                                                     <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
@@ -417,7 +417,7 @@
             .preview-img-wrapper { position: relative; display: inline-block; margin-right: 10px; margin-bottom: 10px; }
             .preview-img-wrapper img { max-width: 150px; max-height: 110px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #ddd; }
             .preview-file-item { display: flex; align-items: center; padding: 8px 12px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; margin-bottom: 5px; font-size: 0.9rem; }
-            .preview-file-item i { font-size: 1.2rem; color: #6c757d; margin-right: 10px; }
+            .preview-file-item > i:first-child { font-size: 1.2rem; color: #6c757d; margin-right: 10px; }
             .gap-2 { gap: 0.5rem; }
             .gap-1 { gap: 0.25rem; }
         </style>
@@ -637,7 +637,7 @@
                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow"
                                         style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
                                         onclick="removeFileFromBuffer('${fieldName}', ${idx})" title="Hapus file ini">
-                                    <i class="fas fa-times" style="font-size:11px; line-height:1; margin:0;"></i>
+                                    <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
                                 </button>
                             `;
                             previewContainer.appendChild(div);
