@@ -833,12 +833,12 @@ class RencanaKegiatanController extends Controller
 
         $rencana_kegiatan->update($data);
 
-        // Kirim notifikasi ke admin jika anggota yang mengedit dan bukan draft
-        if ($isAnggota && ($data['status'] ?? null) !== 'draft') {
+        // Kirim notifikasi ke admin hanya jika anggota resmi mengajukan / mengajukan ulang (status === 'diajukan')
+        if ($isAnggota && ($data['status'] ?? null) === RencanaKegiatan::STATUS_DIAJUKAN) {
             $notification = new KegiatanActivityNotification(
                 $rencana_kegiatan->uuid,
                 $rencana_kegiatan->nama_kegiatan,
-                'diedit',
+                'diajukan',
                 $user->name,
                 null,
                 now()
