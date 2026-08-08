@@ -64,12 +64,21 @@
                                        title="Lihat Detail Rencana Kegiatan">
                                         <i class="fas fa-info" style="font-size: 12px;"></i>
                                     </a>
-                                    <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana->uuid]) }}"
-                                       class="btn btn-sm bg-navy text-white shadow-sm text-nowrap"
-                                       style="white-space: nowrap;"
-                                       title="Buat Laporan untuk Kegiatan Ini">
-                                        <i class="fas fa-file-alt mr-1"></i> Buat Laporan
-                                    </a>
+                                    @php
+                                        $hasDraftReport = $rencana->laporanKegiatan && $rencana->laporanKegiatan->status === 'draft';
+                                    @endphp
+                                    @if(!$hasDraftReport)
+                                        <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana->uuid]) }}"
+                                           class="btn btn-sm bg-navy text-white shadow-sm text-nowrap"
+                                           style="white-space: nowrap;"
+                                           title="Buat Laporan untuk Kegiatan Ini">
+                                            <i class="fas fa-file-alt mr-1"></i> Buat Laporan
+                                        </a>
+                                    @else
+                                        <span class="badge badge-warning py-1 px-2 text-dark" style="font-size: 0.75rem; font-weight: 600;" title="Draft Laporan telah dibuat">
+                                            <i class="fas fa-edit mr-1"></i> Draft Laporan
+                                        </span>
+                                    @endif
                                 </div>
                             </td>
                             <td class="align-middle py-3">

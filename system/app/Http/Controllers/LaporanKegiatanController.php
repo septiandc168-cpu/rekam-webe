@@ -99,13 +99,15 @@ class LaporanKegiatanController extends Controller
         session()->flash('alert.delete', json_encode($confirm, JSON_UNESCAPED_SLASHES));
 
         // === Rencana Kegiatan Disetujui ===
-        // Hanya untuk anggota: rencana milik sendiri yang berstatus disetujui dan BELUM memilik laporan kegiatan
+        // Hanya untuk anggota: rencana milik sendiri yang berstatus disetujui dan BELUM mengajukan/menyelesaikan laporan kegiatan (jika draft masih tetap tampil)
         $rencanaDisetujui = collect();
         if (!$isAdmin) {
-            $rencanaDisetujui = RencanaKegiatan::with('user')
+            $rencanaDisetujui = RencanaKegiatan::with(['user', 'laporanKegiatan'])
                 ->where('user_id', $user->id)
                 ->where('status', RencanaKegiatan::STATUS_DISETUJUI)
-                ->doesntHave('laporanKegiatan')
+                ->whereDoesntHave('laporanKegiatan', function ($q) {
+                    $q->whereIn('status', [LaporanKegiatan::STATUS_DIAJUKAN, LaporanKegiatan::STATUS_REVISI, LaporanKegiatan::STATUS_FINAL]);
+                })
                 ->orderBy('updated_at', 'desc')
                 ->get();
         }
@@ -145,7 +147,12 @@ class LaporanKegiatanController extends Controller
 
         // Check if laporan already exists
         if ($rencanaKegiatan->hasLaporan()) {
-            return redirect()->route('laporan_kegiatan.show', $rencanaKegiatan->laporanKegiatan)
+            $existingLaporan = $rencanaKegiatan->laporanKegiatan;
+            if ($existingLaporan && $existingLaporan->status === LaporanKegiatan::STATUS_DRAFT) {
+                return redirect()->route('laporan_kegiatan.edit', $existingLaporan->uuid ?? $existingLaporan->id)
+                    ->with('info', 'Anda sudah memiliki draft laporan untuk kegiatan ini.');
+            }
+            return redirect()->route('laporan_kegiatan.show', $existingLaporan->uuid ?? $existingLaporan->id)
                 ->with('error', 'Laporan untuk rencana kegiatan ini sudah ada');
         }
 
