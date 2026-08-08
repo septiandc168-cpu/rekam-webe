@@ -684,7 +684,7 @@
                 </div>
             @endif
 
-            <!-- Dokumen Tambahan -->
+            <!-- Dokumen Pendukung -->
             @php
                 $dokumens = $rencana_kegiatan->dokumen;
                 if (is_string($dokumens)) $dokumens = json_decode($dokumens, true);
@@ -694,7 +694,7 @@
             @if (count($dokumens) > 0)
                 <div class="card shadow-sm mb-3">
                     <div class="card-header bg-white py-2 px-3">
-                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Tambahan</h6>
+                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Pendukung</h6>
                     </div>
                     <div class="card-body py-2 px-3">
                         @foreach ($dokumens as $file)

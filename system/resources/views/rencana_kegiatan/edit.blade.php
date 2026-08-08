@@ -302,7 +302,7 @@
                             <div id="image-preview-container" class="row mt-2"></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Dokumen Tambahan (Opsional)</label>
+                            <label class="form-label fw-bold">Dokumen Pendukung (Opsional)</label>
                             @if($rencana_kegiatan->dokumen)
                                 @php
                                     $dokumens = is_string($rencana_kegiatan->dokumen) ? json_decode($rencana_kegiatan->dokumen, true) : $rencana_kegiatan->dokumen;

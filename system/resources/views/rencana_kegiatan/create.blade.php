@@ -258,7 +258,7 @@
                             <div id="image-preview-container" class="row mt-2"></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Dokumen Tambahan (Opsional)</label>
+                            <label class="form-label fw-bold">Dokumen Pendukung (Opsional)</label>
                             <div class="custom-file mb-1">
                                 <input type="file" id="dokumenInput" name="dokumen[]" class="custom-file-input" accept=".pdf,.doc,.docx" multiple>
                                 <label class="custom-file-label" for="dokumenInput">Pilih file dokumen...</label>
