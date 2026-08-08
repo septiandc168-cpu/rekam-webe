@@ -183,7 +183,7 @@
                 </form>
 
                 <!-- Tombol Buka Modal Revisi -->
-                <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark" data-toggle="modal" data-target="#modal-revisi">
+                <button type="button" class="btn btn-sm bg-navy text-white font-weight-bold mr-2" data-toggle="modal" data-target="#modal-revisi">
                     <i class="fas fa-edit mr-1"></i> Minta Revisi
                 </button>
             @endif
@@ -573,7 +573,7 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-edit mr-2 text-warning"></i>Minta Revisi Laporan</h5>
+                    <h5 class="modal-title fw-bold"><i class="fas fa-edit mr-2 text-navy"></i>Minta Revisi Laporan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -586,7 +586,7 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-secondary text-white" data-dismiss="modal"><i class="fas fa-times mr-1"></i> Batal</button>
-                    <button type="submit" class="btn btn-warning font-weight-bold"><i class="fas fa-paper-plane mr-1"></i> Kirim Permintaan Revisi</button>
+                    <button type="submit" class="btn bg-navy text-white font-weight-bold"><i class="fas fa-paper-plane mr-1"></i> Kirim Permintaan Revisi</button>
                 </div>
             </form>
         </div>

@@ -187,12 +187,12 @@
                 </form>
 
                 <!-- Tombol Buka Modal Revisi -->
-                <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark" data-toggle="modal" data-target="#modal-revisi">
+                <button type="button" class="btn btn-sm bg-navy text-white font-weight-bold mr-2" data-toggle="modal" data-target="#modal-revisi">
                     <i class="fas fa-edit mr-1"></i> Minta Revisi
                 </button>
                 
                 <!-- Tombol Buka Modal Tolak -->
-                <button type="button" class="btn btn-danger btn-sm mr-2" data-toggle="modal" data-target="#modal-tolak">
+                <button type="button" class="btn btn-sm bg-navy text-white mr-2" data-toggle="modal" data-target="#modal-tolak">
                     <i class="fas fa-times mr-1"></i> Tolak
                 </button>
             @endif
@@ -736,7 +736,7 @@
             @method('PUT')
             <div class="modal-content">
                 <div class="modal-header bg-white">
-                    <h5 class="modal-title font-weight-bold text-dark" id="modal-revisi-label"><i class="fas fa-edit mr-2 text-warning"></i> Catatan Revisi</h5>
+                    <h5 class="modal-title font-weight-bold text-dark" id="modal-revisi-label"><i class="fas fa-edit mr-2 text-navy"></i> Catatan Revisi</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -749,7 +749,7 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-secondary text-white" data-dismiss="modal"><i class="fas fa-times mr-1"></i> Batal</button>
-                    <button type="submit" class="btn btn-warning font-weight-bold"><i class="fas fa-paper-plane mr-1"></i> Kirim Permintaan Revisi</button>
+                    <button type="submit" class="btn bg-navy text-white font-weight-bold"><i class="fas fa-paper-plane mr-1"></i> Kirim Permintaan Revisi</button>
                 </div>
             </div>
         </form>
@@ -764,7 +764,7 @@
             @method('PUT')
             <div class="modal-content">
                 <div class="modal-header bg-white">
-                    <h5 class="modal-title font-weight-bold text-dark" id="modal-tolak-label"><i class="fas fa-ban mr-2 text-danger"></i> Tolak Rencana Kegiatan</h5>
+                    <h5 class="modal-title font-weight-bold text-dark" id="modal-tolak-label"><i class="fas fa-ban mr-2 text-navy"></i> Tolak Rencana Kegiatan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -777,7 +777,7 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-secondary text-white" data-dismiss="modal"><i class="fas fa-times mr-1"></i> Batal</button>
-                    <button type="submit" class="btn btn-danger"><i class="fas fa-ban mr-1"></i> Tolak Rencana Kegiatan</button>
+                    <button type="submit" class="btn bg-navy text-white"><i class="fas fa-ban mr-1"></i> Tolak Rencana Kegiatan</button>
                 </div>
             </div>
         </form>
