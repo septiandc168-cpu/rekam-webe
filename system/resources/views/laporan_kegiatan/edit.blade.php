@@ -278,10 +278,10 @@
                                 @endif
                                 <label class="form-label fw-bold mt-2">Daftar Hadir</label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="daftar_hadir[]" class="custom-file-input custom-doc-input" id="daftarHadirInput" accept=".pdf,.doc,.docx,.xls,.xlsx" multiple>
+                                    <input type="file" name="daftar_hadir[]" class="custom-file-input custom-doc-input" id="daftarHadirInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" multiple>
                                     <label class="custom-file-label" for="daftarHadirInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
-                                <small class="text-muted">Maksimal 10 file (PDF/DOC/XLS), Max 3MB/file.</small>
+                                <small class="text-muted">Maksimal 5 file (PDF/DOC/XLS/JPG/PNG), Max 5MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan.</small>
                                 <div id="preview-daftar_hadir" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
@@ -312,7 +312,7 @@
                                     <input type="file" name="notulen[]" class="custom-file-input custom-doc-input" id="notulenInput" accept=".pdf,.doc,.docx" multiple>
                                     <label class="custom-file-label" for="notulenInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
-                                <small class="text-muted">Maksimal 10 file (PDF/DOC), Max 3MB/file.</small>
+                                <small class="text-muted">Maksimal 3 file (PDF/DOC), Max 5MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah catatan hasil rapat/diskusi selama kegiatan berlangsung (opsional).</small>
                                 <div id="preview-notulen" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
@@ -345,7 +345,7 @@
                                     <input type="file" name="materi[]" class="custom-file-input custom-doc-input" id="materiInput" accept=".pdf,.ppt,.pptx,.doc,.docx" multiple>
                                     <label class="custom-file-label" for="materiInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
-                                <small class="text-muted">Maksimal 10 file (PDF/PPT/DOC), Max 3MB/file.</small>
+                                <small class="text-muted">Maksimal 5 file (PDF/PPT/DOC), Max 10MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.</small>
                                 <div id="preview-materi" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
@@ -377,7 +377,7 @@
                                     <input type="file" name="berita_acara[]" class="custom-file-input custom-doc-input" id="beritaAcaraInput" accept=".pdf,.doc,.docx" multiple>
                                     <label class="custom-file-label" for="beritaAcaraInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
-                                <small class="text-muted">Maksimal 10 file (PDF/DOC), Max 3MB/file.</small>
+                                <small class="text-muted">Maksimal 3 file (PDF/DOC), Max 5MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah berita acara resmi pelaksanaan kegiatan jika tersedia (opsional).</small>
                                 <div id="preview-berita_acara" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
@@ -549,24 +549,31 @@
                     berita_acara: 'beritaAcaraInput'
                 };
 
+                const fieldConfigs = {
+                    foto_kegiatan: { maxFiles: 10, maxSize: 3 * 1024 * 1024, sizeLabel: '3MB' },
+                    daftar_hadir:  { maxFiles: 5,  maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' },
+                    notulen:       { maxFiles: 3,  maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' },
+                    materi:        { maxFiles: 5,  maxSize: 10 * 1024 * 1024, sizeLabel: '10MB' },
+                    berita_acara:  { maxFiles: 3,  maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' }
+                };
+
                 function handleFileUpload(fieldName, inputElement, isImage) {
                     const files = Array.from(inputElement.files);
-                    const maxFiles = 10;
-                    const maxSize = 3 * 1024 * 1024; // 3MB
+                    const config = fieldConfigs[fieldName] || { maxFiles: 10, maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' };
                     const currentBuffer = fileBuffers[fieldName];
 
                     // Count existing files if editing
                     const existingCount = $(inputElement).closest('.mb-4').find('.existing-foto-item, .existing-dokumen-item:visible').length;
 
-                    if (existingCount + currentBuffer.length + files.length > maxFiles) {
-                        alert(`Maksimal ${maxFiles} file. Saat ini ada ${existingCount + currentBuffer.length} file.`);
+                    if (existingCount + currentBuffer.length + files.length > config.maxFiles) {
+                        alert(`Maksimal ${config.maxFiles} file. Saat ini ada ${existingCount + currentBuffer.length} file.`);
                         syncInputAndRender(fieldName, inputElement, isImage);
                         return;
                     }
 
                     files.forEach(file => {
-                        if (file.size > maxSize) {
-                            alert(`File "${file.name}" terlalu besar. Maksimal ukuran 3MB/file.`);
+                        if (file.size > config.maxSize) {
+                            alert(`File "${file.name}" terlalu besar. Maksimal ukuran ${config.sizeLabel}/file.`);
                             return;
                         }
 
