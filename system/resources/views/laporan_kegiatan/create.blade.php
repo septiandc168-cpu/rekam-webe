@@ -421,58 +421,123 @@
 
                 showStep(currentStepIndex);
 
-                // --- FILE UPLOAD PREVIEW ---
-                function createImagePreview(input, previewContainer) {
-                    const files = input.files;
-                    previewContainer.innerHTML = '';
-                    
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        if (!file.type.startsWith('image/')) continue;
-                        
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const wrapper = document.createElement('div');
-                            wrapper.className = 'preview-img-wrapper';
-                            wrapper.innerHTML = `
-                                <img src="${e.target.result}" title="${file.name}">
-                            `;
-                            previewContainer.appendChild(wrapper);
-                        };
-                        reader.readAsDataURL(file);
+                // --- FILE UPLOAD BUFFER & PREVIEW MANAGER ---
+                const fileBuffers = {
+                    foto_kegiatan: [],
+                    daftar_hadir: [],
+                    notulen: [],
+                    materi: [],
+                    berita_acara: []
+                };
+
+                const inputIdMap = {
+                    foto_kegiatan: 'fotoInput',
+                    daftar_hadir: 'daftarHadirInput',
+                    notulen: 'notulenInput',
+                    materi: 'materiInput',
+                    berita_acara: 'beritaAcaraInput'
+                };
+
+                function handleFileUpload(fieldName, inputElement, isImage) {
+                    const files = Array.from(inputElement.files);
+                    const maxFiles = 10;
+                    const maxSize = 3 * 1024 * 1024; // 3MB
+                    const currentBuffer = fileBuffers[fieldName];
+
+                    if (currentBuffer.length + files.length > maxFiles) {
+                        alert(`Maksimal ${maxFiles} file. Saat ini ada ${currentBuffer.length} file.`);
+                        syncInputAndRender(fieldName, inputElement, isImage);
+                        return;
                     }
+
+                    files.forEach(file => {
+                        if (file.size > maxSize) {
+                            alert(`File "${file.name}" terlalu besar. Maksimal ukuran 3MB/file.`);
+                            return;
+                        }
+
+                        if (!currentBuffer.some(f => f.name === file.name && f.size === file.size)) {
+                            currentBuffer.push(file);
+                        }
+                    });
+
+                    syncInputAndRender(fieldName, inputElement, isImage);
                 }
 
-                function createFilePreview(input, previewContainer) {
-                    const files = input.files;
+                window.removeFileFromBuffer = function(fieldName, index) {
+                    fileBuffers[fieldName].splice(index, 1);
+                    const inputElement = document.getElementById(inputIdMap[fieldName]);
+                    if (inputElement) {
+                        syncInputAndRender(fieldName, inputElement, fieldName === 'foto_kegiatan');
+                    }
+                };
+
+                function syncInputAndRender(fieldName, inputElement, isImage) {
+                    const dt = new DataTransfer();
+                    fileBuffers[fieldName].forEach(file => dt.items.add(file));
+                    inputElement.files = dt.files;
+
+                    const previewContainer = document.getElementById('preview-' + fieldName);
+                    if (!previewContainer) return;
                     previewContainer.innerHTML = '';
-                    
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        const div = document.createElement('div');
-                        div.className = 'preview-file-item';
-                        
-                        let icon = 'fa-file-alt';
-                        if(file.name.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
-                        else if(file.name.endsWith('.doc') || file.name.endsWith('.docx')) icon = 'fa-file-word text-primary';
-                        else if(file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) icon = 'fa-file-excel text-success';
-                        
-                        div.innerHTML = `
-                            <i class="fas ${icon}"></i>
-                            <span class="text-truncate" style="max-width: 85%;" title="${file.name}">${file.name}</span>
-                        `;
-                        previewContainer.appendChild(div);
+
+                    if (isImage) {
+                        fileBuffers[fieldName].forEach((file, idx) => {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const wrapper = document.createElement('div');
+                                wrapper.className = 'position-relative preview-img-wrapper mr-2 mb-2';
+                                wrapper.style.display = 'inline-block';
+                                wrapper.innerHTML = `
+                                    <img src="${e.target.result}" style="max-width:110px; max-height:85px; object-fit:cover; border-radius:6px; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.1);" title="${file.name}">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute shadow"
+                                            style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                            onclick="removeFileFromBuffer('${fieldName}', ${idx})" title="Hapus foto ini">
+                                        <i class="fas fa-times" style="font-size:11px;"></i>
+                                    </button>
+                                `;
+                                previewContainer.appendChild(wrapper);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                    } else {
+                        fileBuffers[fieldName].forEach((file, idx) => {
+                            let icon = 'fa-file-alt text-secondary';
+                            const nameLower = file.name.toLowerCase();
+                            if (nameLower.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
+                            else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon = 'fa-file-word text-primary';
+                            else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx')) icon = 'fa-file-excel text-success';
+                            else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon = 'fa-file-powerpoint text-warning';
+
+                            const div = document.createElement('div');
+                            div.className = 'preview-file-item d-flex align-items-center justify-content-between p-2 mb-1 border rounded bg-white shadow-sm';
+                            div.innerHTML = `
+                                <div class="d-flex align-items-center text-truncate mr-2" style="max-width: 85%;">
+                                    <i class="fas ${icon} mr-2" style="font-size:1.1rem;"></i>
+                                    <div>
+                                        <div class="text-truncate font-weight-bold" style="font-size:0.85rem;" title="${file.name}">${file.name}</div>
+                                        <small class="text-muted">${(file.size / 1024).toFixed(1)} KB</small>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-danger rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm"
+                                        style="width:22px; height:22px; border-radius:50%;"
+                                        onclick="removeFileFromBuffer('${fieldName}', ${idx})" title="Hapus file ini">
+                                    <i class="fas fa-times" style="font-size:11px;"></i>
+                                </button>
+                            `;
+                            previewContainer.appendChild(div);
+                        });
                     }
                 }
 
                 $('.custom-img-input').on('change', function() {
-                    const targetId = $(this).attr('name').replace('[]', '');
-                    createImagePreview(this, document.getElementById('preview-' + targetId));
+                    const fieldName = $(this).attr('name').replace('[]', '');
+                    handleFileUpload(fieldName, this, true);
                 });
 
                 $('.custom-doc-input').on('change', function() {
-                    let targetId = $(this).attr('name').replace('[]', '');
-                    createFilePreview(this, document.getElementById('preview-' + targetId));
+                    const fieldName = $(this).attr('name').replace('[]', '');
+                    handleFileUpload(fieldName, this, false);
                 });
             });
 
