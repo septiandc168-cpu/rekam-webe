@@ -958,11 +958,13 @@ class LaporanKegiatanController extends Controller
         
         // Kirim notifikasi ke admin
         $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
+        $namaJudul = $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Kegiatan');
+
         $notification = new LaporanActivityNotification(
             $laporanKegiatan->uuid,
             $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
-            null,
-            $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Darurat'),
+            $namaJudul,
+            $namaJudul,
             'diajukan',
             auth()->user()->name,
             null,

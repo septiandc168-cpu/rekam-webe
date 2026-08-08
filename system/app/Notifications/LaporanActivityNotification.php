@@ -48,19 +48,22 @@ class LaporanActivityNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        $message = "Laporan kegiatan '{$this->judul_laporan}' {$this->aksi} oleh {$this->user_name}";
+        $judulDisplay = !empty(trim($this->judul_laporan ?? '')) 
+            ? $this->judul_laporan 
+            : (!empty(trim($this->judul_kegiatan ?? '')) ? $this->judul_kegiatan : 'Laporan Kegiatan');
+
+        $message = "Laporan kegiatan '{$judulDisplay}' {$this->aksi} oleh {$this->user_name}";
         
         return [
             'id_laporan' => $this->id_laporan,
             'id_kegiatan' => $this->id_kegiatan,
-            'judul_laporan' => $this->judul_laporan,
-            'judul_kegiatan' => $this->judul_kegiatan,
+            'judul_laporan' => $judulDisplay,
+            'judul_kegiatan' => $this->judul_kegiatan ?? $judulDisplay,
             'aksi' => $this->aksi,
             'user_name' => $this->user_name,
             'keterangan' => $this->keterangan,
-            'created_at' => $this->created_at,
             'message' => $message,
-            'type' => 'laporan_kegiatan'
+            'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : now()->format('Y-m-d H:i:s'),
         ];
     }
 }
