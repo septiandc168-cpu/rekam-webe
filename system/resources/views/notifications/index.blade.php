@@ -35,7 +35,7 @@
                                 $kegiatanUuid = $data['id_kegiatan'] ?? null;
                                 $laporanUuid = $data['id_laporan'] ?? null;
                                 $notificationType = $data['type'] ?? null;
-                                $hasValidLink = ($notificationType === 'laporan_kegiatan' && $laporanUuid) || ($kegiatanUuid && $notificationType !== 'laporan_kegiatan');
+                                $hasValidLink = !empty($laporanUuid) || !empty($kegiatanUuid);
                             @endphp
 
                             <div class="time-label">

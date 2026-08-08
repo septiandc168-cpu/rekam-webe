@@ -68,31 +68,29 @@ class NotificationController extends Controller
             'data' => $data
         ]);
 
-        // Redirect based on notification type
-        if ($notificationType === 'laporan_kegiatan' && $laporanUuid) {
-            // Check if laporan exists
-            $laporan = \App\Models\LaporanKegiatan::where('uuid', $laporanUuid)->first();
-            if (!$laporan) {
-                \Log::error('Laporan not found with UUID', ['uuid' => $laporanUuid]);
-                return redirect()->back()->with('error', 'Laporan tidak ditemukan.');
+        // Redirect based on notification data: Prioritize Laporan if id_laporan exists
+        if (!empty($laporanUuid)) {
+            $laporan = \App\Models\LaporanKegiatan::where('uuid', $laporanUuid)
+                ->orWhere('id', $laporanUuid)
+                ->first();
+
+            if ($laporan) {
+                return redirect()->route('laporan_kegiatan.show', $laporan->uuid ?? $laporan->id);
             }
             
-            \Log::info('Redirecting to laporan', ['uuid' => $laporanUuid, 'route' => route('laporan_kegiatan.show', ['laporan_kegiatan' => $laporanUuid])]);
-            
-            // Redirect to laporan detail page using UUID
-            return redirect()->route('laporan_kegiatan.show', ['laporan_kegiatan' => $laporanUuid]);
-        } elseif ($kegiatanUuid) {
-            // Check if kegiatan exists
-            $kegiatan = \App\Models\RencanaKegiatan::where('uuid', $kegiatanUuid)->first();
-            if (!$kegiatan) {
-                \Log::error('Kegiatan not found with UUID', ['uuid' => $kegiatanUuid]);
-                return redirect()->back()->with('error', 'Kegiatan tidak ditemukan.');
+            return redirect()->back()->with('error', 'Laporan kegiatan tidak ditemukan.');
+        }
+
+        if (!empty($kegiatanUuid)) {
+            $kegiatan = \App\Models\RencanaKegiatan::where('uuid', $kegiatanUuid)
+                ->orWhere('id', $kegiatanUuid)
+                ->first();
+
+            if ($kegiatan) {
+                return redirect()->route('rencana_kegiatan.show', $kegiatan->uuid ?? $kegiatan->id);
             }
             
-            \Log::info('Redirecting to kegiatan', ['uuid' => $kegiatanUuid, 'route' => route('rencana_kegiatan.show', ['rencana_kegiatan' => $kegiatanUuid])]);
-            
-            // Redirect to kegiatan detail page using UUID
-            return redirect()->route('rencana_kegiatan.show', ['rencana_kegiatan' => $kegiatanUuid]);
+            return redirect()->back()->with('error', 'Rencana kegiatan tidak ditemukan.');
         }
 
         // If no kegiatan ID, redirect back
