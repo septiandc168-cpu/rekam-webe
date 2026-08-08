@@ -190,7 +190,7 @@
 
             @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_FINAL)
                 @can('print', $laporanKegiatan)
-                    <button type="button" onclick="printLaporan('{{ route('laporan_kegiatan.print', $laporanKegiatan) }}')" class="btn btn-sm btn-outline-primary mr-2">
+                    <button type="button" onclick="printLaporan('{{ route('laporan_kegiatan.print', $laporanKegiatan) }}')" class="btn btn-sm bg-navy text-white mr-2 shadow-sm">
                         <i class="fas fa-print mr-1"></i> Cetak Laporan
                     </button>
                 @endcan
@@ -229,7 +229,13 @@
                 @endcan
             @endif
 
-            <a href="{{ route('laporan_kegiatan.index') }}" class="btn btn-secondary text-white btn-sm">
+            @php
+                $backRoute = route('laporan_kegiatan.index');
+                if (request('from') === 'history' || $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_FINAL) {
+                    $backRoute = route('history_realisasi.index');
+                }
+            @endphp
+            <a href="{{ $backRoute }}" class="btn btn-secondary text-white btn-sm">
                 <i class="fas fa-arrow-left mr-1"></i> Kembali
             </a>
         </div>
