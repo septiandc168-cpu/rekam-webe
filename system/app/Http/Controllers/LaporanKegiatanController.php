@@ -906,6 +906,19 @@ class LaporanKegiatanController extends Controller
             $missing[] = 'Catatan Evaluasi & Rekomendasi';
         }
 
+        if (empty($laporan->foto_kegiatan)) {
+            $missing[] = 'Foto Kegiatan';
+        }
+        if (empty($laporan->daftar_hadir)) {
+            $missing[] = 'Daftar Hadir';
+        }
+        if (empty($laporan->materi)) {
+            $missing[] = 'Materi';
+        }
+        if (empty($laporan->berita_acara)) {
+            $missing[] = 'Berita Acara';
+        }
+
         return $missing;
     }
 

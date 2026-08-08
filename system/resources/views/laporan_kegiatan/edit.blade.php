@@ -372,13 +372,13 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Berita Acara</label>
+                                <label class="form-label fw-bold mt-2">Berita Acara <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="berita_acara[]" class="custom-file-input custom-doc-input" id="beritaAcaraInput" accept=".pdf,.doc,.docx" multiple>
+                                    <input type="file" name="berita_acara[]" class="custom-file-input custom-doc-input" id="beritaAcaraInput" accept=".pdf,.doc,.docx" multiple {{ empty($berita_acara) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="beritaAcaraInput">Biarkan kosong jika tidak diubah...</label>
                                 </div>
                                 <small class="text-muted">Maksimal 3 file (PDF/DOC), Max 5MB/file.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah berita acara resmi pelaksanaan kegiatan jika tersedia (opsional).</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah berita acara resmi pelaksanaan kegiatan.</small>
                                 <div id="preview-berita_acara" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
                         </div>
