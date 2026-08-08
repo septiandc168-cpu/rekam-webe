@@ -684,34 +684,40 @@
                 </div>
             @endif
 
-            <!-- Dokumen Pendukung -->
+            <!-- Dokumen Tambahan -->
             @php
                 $dokumens = $rencana_kegiatan->dokumen;
                 if (is_string($dokumens)) $dokumens = json_decode($dokumens, true);
-                $dokumens = is_array($dokumens) ? $dokumens : [];
+                if (is_string($dokumens)) $dokumens = json_decode($dokumens, true);
+                $dokumens = is_array($dokumens) ? array_filter($dokumens) : [];
             @endphp
             @if (count($dokumens) > 0)
                 <div class="card shadow-sm mb-3">
                     <div class="card-header bg-white py-2 px-3">
-                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Pendukung</h6>
+                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Tambahan</h6>
                     </div>
                     <div class="card-body py-2 px-3">
                         @foreach ($dokumens as $file)
                             @if ($file)
                                 @php
                                     if (is_array($file)) {
-                                        $filePath = $file['path'];
-                                        $fileName = $file['original_name'];
+                                        $filePath = $file['path'] ?? '';
+                                        $fileName = $file['original_name'] ?? basename($filePath);
                                     } else {
                                         $filePath = $file;
                                         $fileName = basename($file);
+                                        if (preg_match('/^\d+_(.+)$/', $fileName, $m)) {
+                                            $fileName = str_replace('_', ' ', $m[1]);
+                                        }
                                     }
                                 @endphp
-                                <a href="/public/storage/app/{{ $filePath }}" target="_blank"
-                                   class="btn btn-sm bg-navy text-white btn-block text-left mb-1 text-truncate"
-                                   title="{{ $fileName }}" style="font-size:0.78rem;">
-                                    <i class="fas fa-file-pdf mr-1"></i> {{ $fileName }}
-                                </a>
+                                @if($filePath)
+                                    <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                       class="btn btn-sm bg-navy text-white btn-block text-left mb-1 text-truncate"
+                                       title="{{ $fileName }}" style="font-size:0.78rem;">
+                                        <i class="fas fa-file-pdf mr-1"></i> {{ $fileName }}
+                                    </a>
+                                @endif
                             @endif
                         @endforeach
                     </div>
