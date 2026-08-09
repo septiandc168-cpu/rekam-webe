@@ -207,42 +207,6 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
         // Membekukan Header agar tidak ikut ter-scroll
         $sheet->freezePane('A2');
 
-        // Baris Total Penjumlahan di paling bawah
-        $totalRow = $lastRow + 1;
-        $sheet->setCellValue('A' . $totalRow, 'TOTAL REALISASI');
-        $sheet->mergeCells('A' . $totalRow . ':F' . $totalRow);
-        $sheet->setCellValue('G' . $totalRow, '=SUM(G2:G' . $lastRow . ')');
-        $sheet->setCellValue('H' . $totalRow, '=SUM(H2:H' . $lastRow . ')');
-
-        $sheet->getRowDimension($totalRow)->setRowHeight(25);
-        $sheet->getStyle('A' . $totalRow . ':I' . $totalRow)->applyFromArray([
-            'font' => [
-                'name' => 'Times New Roman',
-                'size' => 11,
-                'bold' => true,
-            ],
-            'alignment' => [
-                'vertical' => Alignment::VERTICAL_CENTER,
-            ],
-            'fill' => [
-                'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFF2F4F7'], // Soft gray
-            ],
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => 'FF000000'],
-                ],
-                'bottom' => [
-                    'borderStyle' => Border::BORDER_DOUBLE,
-                    'color' => ['argb' => 'FF000000'],
-                ],
-            ],
-        ]);
-
-        $sheet->getStyle('A' . $totalRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-        $sheet->getStyle('G' . $totalRow . ':H' . $totalRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
         return [];
     }
 
