@@ -68,9 +68,22 @@
                 @php
                     $isRencanaShow = request()->routeIs('rencana_kegiatan.show');
                     $isLaporanShow = request()->routeIs('laporan_kegiatan.show');
-                    $rencanaStatus = isset($rencana_kegiatan) ? $rencana_kegiatan->status : null;
-                    $fromHistory    = request('from') === 'history';
-                    $fromLaporan    = request('from') === 'laporan';
+
+                    $rencanaModel = null;
+                    if ($isRencanaShow) {
+                        $rParam = request()->route('rencana_kegiatan');
+                        if ($rParam instanceof \App\Models\RencanaKegiatan) {
+                            $rencanaModel = $rParam;
+                        } elseif (isset($rencana_kegiatan) && $rencana_kegiatan instanceof \App\Models\RencanaKegiatan) {
+                            $rencanaModel = $rencana_kegiatan;
+                        } elseif (is_string($rParam) || is_numeric($rParam)) {
+                            $rencanaModel = \App\Models\RencanaKegiatan::where('uuid', $rParam)->orWhere('id', $rParam)->first();
+                        }
+                    }
+
+                    $rencanaStatus = $rencanaModel ? $rencanaModel->status : null;
+                    $fromHistory   = request('from') === 'history';
+                    $fromLaporan   = request('from') === 'laporan';
 
                     $isHistoryActive = request()->routeIs('history_realisasi.*') || 
                         ($isRencanaShow && (in_array($rencanaStatus, ['selesai', 'draft']) || $fromHistory)) || 
