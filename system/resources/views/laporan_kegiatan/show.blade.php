@@ -285,6 +285,48 @@
                 </div>
             </div>
         </div>
+    @if(!empty($laporanKegiatan->catatan_evaluasi))
+        @php
+            $lapSt = $laporanKegiatan->status;
+            $alertBg = match($lapSt) {
+                'final' => '#e6f4ea',
+                'revisi' => '#fff3cd',
+                default => '#e8f4fd'
+            };
+            $borderCol = match($lapSt) {
+                'final' => '#28a745',
+                'revisi' => '#ffc107',
+                default => '#17a2b8'
+            };
+            $iconCol = match($lapSt) {
+                'final' => 'text-success',
+                'revisi' => 'text-warning',
+                default => 'text-info'
+            };
+            $iconClass = match($lapSt) {
+                'final' => 'fa-check-circle',
+                'revisi' => 'fa-exclamation-triangle',
+                default => 'fa-info-circle'
+            };
+            $titleText = match($lapSt) {
+                'revisi' => 'Catatan Permintaan Revisi (Admin)',
+                'final' => 'Catatan Verifikasi Laporan',
+                default => 'Catatan Evaluasi / Catatan Admin'
+            };
+        @endphp
+        <div class="alert border-0 shadow-sm mb-4 p-3 rounded" style="background-color: {{ $alertBg }}; border-left: 4px solid {{ $borderCol }} !important;">
+            <div class="d-flex align-items-start">
+                <div class="rounded-circle bg-white d-flex align-items-center justify-content-center mr-3 mt-1 shadow-sm" style="width: 36px; height: 36px; flex-shrink: 0;">
+                    <i class="fas {{ $iconClass }} {{ $iconCol }}"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h6 class="font-weight-bold text-dark mb-1" style="font-size: 0.95rem;">{{ $titleText }}</h6>
+                    <div class="text-dark" style="font-size: 0.9rem; line-height: 1.5;">
+                        {!! nl2br(e($laporanKegiatan->catatan_evaluasi)) !!}
+                    </div>
+                </div>
+            </div>
+        </div>
     @endif
 
     <!-- Visual Progress Tracker -->

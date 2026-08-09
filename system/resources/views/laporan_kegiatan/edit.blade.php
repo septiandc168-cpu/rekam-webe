@@ -19,6 +19,22 @@
             </div>
         @endif
 
+        @if(!empty($laporanKegiatan->catatan_evaluasi))
+            <div class="alert border-0 shadow-sm mb-4 p-3 rounded" style="background-color: #fff3cd; border-left: 4px solid #ffc107 !important;">
+                <div class="d-flex align-items-start">
+                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center mr-3 mt-1 shadow-sm" style="width: 36px; height: 36px; flex-shrink: 0;">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="font-weight-bold text-dark mb-1" style="font-size: 0.95rem;">Catatan Permintaan Revisi (Admin)</h6>
+                        <div class="text-dark" style="font-size: 0.9rem; line-height: 1.5;">
+                            {!! nl2br(e($laporanKegiatan->catatan_evaluasi)) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @if(!$laporanKegiatan->isDarurat())
             <!-- CALLOUT: Header Konteks Rencana Kegiatan -->
             <div class="card shadow-sm mb-4 bg-white p-3" style="border: 1px solid #e2e8f0; border-radius: 8px;">
