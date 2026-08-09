@@ -3,132 +3,211 @@
 @section('content_title', 'Notifikasi')
 
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm elevation-1">
-                <div class="card-header bg-white py-3 px-4">
-                    <h3 class="card-title font-weight-bold text-dark mt-1">
-                        <i class="fas fa-bell text-navy mr-2"></i> Daftar Notifikasi
-                    </h3>
+    <div class="container-fluid pb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm border-0 rounded-lg">
+                    <!-- Header Card -->
+                    <div class="card-header bg-white py-3 px-4 d-flex flex-wrap justify-content-between align-items-center" style="border-bottom: 1px solid #edf2f7;">
+                        <h5 class="card-title font-weight-bold text-dark mb-2 mb-md-0 d-flex align-items-center">
+                            <i class="fas fa-bell text-navy mr-2 style-icon"></i> Pusat Notifikasi
+                        </h5>
 
-                    <div class="card-tools d-flex align-items-center">
-                        @if (auth()->user()->unreadNotifications()->count() > 0)
-                            <form action="{{ route('notifications.readAll') }}" method="POST" class="mb-0">
-                                @csrf
-                                <button type="submit" class="btn btn-sm bg-navy text-white shadow-sm rounded-pill px-3"
-                                     title="Tandai Semua Dibaca">
-                                    <i class="fas fa-check-double"></i>
-                                    <span class="d-none d-sm-inline ml-1"> Tandai Semua Dibaca</span>
-                                </button>
-                            </form>
+                        <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                            @if ($unreadCount > 0)
+                                <form action="{{ route('notifications.readAll') }}" method="POST" class="mb-0">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm bg-navy text-white shadow-sm rounded px-3 font-weight-bold">
+                                        <i class="fas fa-check-double mr-1"></i> Tandai Semua Dibaca
+                                    </button>
+                                </form>
+                            @endif
+
+                            @if ($totalCount > 0)
+                                <form action="{{ route('notifications.deleteAll') }}" method="POST" class="mb-0" data-confirm-delete="true">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm rounded px-3 font-weight-bold">
+                                        <i class="fas fa-trash-alt mr-1"></i> Hapus Semua Notifikasi
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Filter Tabs -->
+                    <div class="card-body bg-light py-2 px-4 border-bottom">
+                        <ul class="nav nav-pills custom-nav-pills" style="gap: 6px;">
+                            <li class="nav-item">
+                                <a href="{{ route('notifications.index', ['filter' => 'all']) }}" 
+                                   class="nav-link px-3 py-1 font-weight-bold {{ $filter === 'all' ? 'active bg-navy text-white' : 'text-dark bg-white border' }}" style="border-radius: 20px; font-size: 0.85rem;">
+                                    <i class="fas fa-inbox mr-1"></i> Semua <span class="badge badge-pill {{ $filter === 'all' ? 'badge-light text-dark' : 'badge-secondary' }} ml-1">{{ $totalCount }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('notifications.index', ['filter' => 'unread']) }}" 
+                                   class="nav-link px-3 py-1 font-weight-bold {{ $filter === 'unread' ? 'active bg-navy text-white' : 'text-dark bg-white border' }}" style="border-radius: 20px; font-size: 0.85rem;">
+                                    <i class="fas fa-envelope mr-1 text-warning"></i> Belum Dibaca <span class="badge badge-pill {{ $filter === 'unread' ? 'badge-light text-dark' : 'badge-warning' }} ml-1">{{ $unreadCount }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('notifications.index', ['filter' => 'read']) }}" 
+                                   class="nav-link px-3 py-1 font-weight-bold {{ $filter === 'read' ? 'active bg-navy text-white' : 'text-dark bg-white border' }}" style="border-radius: 20px; font-size: 0.85rem;">
+                                    <i class="fas fa-envelope-open mr-1 text-success"></i> Sudah Dibaca <span class="badge badge-pill {{ $filter === 'read' ? 'badge-light text-dark' : 'badge-success' }} ml-1">{{ $readCount }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Notification Body -->
+                    <div class="card-body p-3 p-md-4">
+                        @if ($notifications->count() > 0)
+                            <div class="d-flex flex-column" style="gap: 12px;">
+                                @foreach($notifications as $notification)
+                                    @php
+                                        $data = $notification->data;
+                                        $isUnread = is_null($notification->read_at);
+                                        $kegiatanUuid = $data['id_kegiatan'] ?? null;
+                                        $laporanUuid = $data['id_laporan'] ?? null;
+                                        $notificationType = $data['type'] ?? null;
+                                        $message = $data['message'] ?? 'Notifikasi Kegiatan';
+                                        $keterangan = $data['keterangan'] ?? null;
+
+                                        // Determinasi tipe & warna badge berbasis pesan
+                                        $msgLower = strtolower($message);
+                                        $badgeBg = '#001f3f';
+                                        $badgeColor = '#ffffff';
+                                        $badgeText = 'Notifikasi';
+                                        $iconClass = 'fa-bell';
+                                        $iconBg = '#e2e8f0';
+                                        $iconColor = '#001f3f';
+
+                                        if (str_contains($msgLower, 'revisi')) {
+                                            $badgeBg = '#fff3cd';
+                                            $badgeColor = '#856404';
+                                            $badgeText = 'Perlu Revisi';
+                                            $iconClass = 'fa-exclamation-triangle';
+                                            $iconBg = '#fef3c7';
+                                            $iconColor = '#d97706';
+                                        } elseif (str_contains($msgLower, 'disetujui')) {
+                                            $badgeBg = '#def7ec';
+                                            $badgeColor = '#03543f';
+                                            $badgeText = 'Disetujui';
+                                            $iconClass = 'fa-check-circle';
+                                            $iconBg = '#d1fae5';
+                                            $iconColor = '#059669';
+                                        } elseif (str_contains($msgLower, 'diajukan')) {
+                                            $badgeBg = '#e8f0fe';
+                                            $badgeColor = '#1a56db';
+                                            $badgeText = 'Diajukan';
+                                            $iconClass = 'fa-paper-plane';
+                                            $iconBg = '#dbeafe';
+                                            $iconColor = '#2563eb';
+                                        } elseif (str_contains($msgLower, 'ditolak')) {
+                                            $badgeBg = '#fde8e8';
+                                            $badgeColor = '#9b1c1c';
+                                            $badgeText = 'Ditolak';
+                                            $iconClass = 'fa-times-circle';
+                                            $iconBg = '#fee2e2';
+                                            $iconColor = '#dc2626';
+                                        } elseif (str_contains($msgLower, 'selesai') || str_contains($msgLower, 'final')) {
+                                            $badgeBg = '#e6f4ea';
+                                            $badgeColor = '#137333';
+                                            $badgeText = 'Selesai';
+                                            $iconClass = 'fa-check-double';
+                                            $iconBg = '#d1fae5';
+                                            $iconColor = '#059669';
+                                        }
+
+                                        // Waktu relatif indonesia
+                                        $diffForHumans = $notification->created_at->diffForHumans();
+                                        $indonesianTime = str_replace([
+                                            ' seconds ago', ' second ago',
+                                            ' minutes ago', ' minute ago', 
+                                            ' hours ago', ' hour ago',
+                                            ' days ago', ' day ago',
+                                            ' weeks ago', ' week ago',
+                                            ' months ago', ' month ago',
+                                            ' years ago', ' year ago',
+                                        ], [
+                                            ' detik lalu', ' detik lalu',
+                                            ' menit lalu', ' menit lalu',
+                                            ' jam lalu', ' jam lalu',
+                                            ' hari lalu', ' hari lalu',
+                                            ' minggu lalu', ' minggu lalu',
+                                            ' bulan lalu', ' bulan lalu',
+                                            ' tahun lalu', ' tahun lalu',
+                                        ], $diffForHumans);
+                                    @endphp
+
+                                    <div class="card border-0 shadow-sm p-3 rounded position-relative transition-all" 
+                                         style="background-color: {{ $isUnread ? '#f8fafc' : '#ffffff' }}; border-left: 4px solid {{ $isUnread ? '#001f3f' : '#cbd5e1' }} !important; border: 1px solid #e2e8f0;">
+                                        <div class="d-flex align-items-start">
+                                            <!-- Icon Wrapper -->
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 mt-1 shadow-sm" 
+                                                 style="width: 40px; height: 40px; background-color: {{ $iconBg }}; color: {{ $iconColor }}; flex-shrink: 0;">
+                                                <i class="fas {{ $iconClass }}" style="font-size: 1.1rem;"></i>
+                                            </div>
+
+                                            <!-- Content Wrapper -->
+                                            <div class="flex-grow-1 pr-md-3">
+                                                <div class="d-flex align-items-center flex-wrap" style="gap: 6px;">
+                                                    @if($isUnread)
+                                                        <span class="badge badge-danger font-weight-bold px-2 py-1" style="font-size: 0.72rem; border-radius: 4px;">Baru</span>
+                                                    @endif
+                                                    <span class="badge font-weight-bold px-2 py-1" style="background-color: {{ $badgeBg }}; color: {{ $badgeColor }}; font-size: 0.72rem; border-radius: 4px;">
+                                                        {{ $badgeText }}
+                                                    </span>
+                                                    <small class="text-muted ml-auto d-flex align-items-center" style="font-size: 0.8rem;">
+                                                        <i class="far fa-clock mr-1"></i> {{ $indonesianTime }} ({{ $notification->created_at->translatedFormat('d M Y H:i') }})
+                                                    </small>
+                                                </div>
+
+                                                <h6 class="font-weight-bold text-dark mt-2 mb-1" style="font-size: 0.95rem; line-height: 1.4;">
+                                                    {{ $message }}
+                                                </h6>
+
+                                                @if(!empty($keterangan))
+                                                    <div class="p-2 rounded bg-white border mt-2 text-muted" style="font-size: 0.88rem; border-color: #e2e8f0 !important;">
+                                                        <i class="fas fa-info-circle text-navy mr-1"></i> {{ $keterangan }}
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <!-- Action Button -->
+                                            <div class="ml-auto pl-2 d-flex align-items-center align-self-center mt-2 mt-md-0">
+                                                <a href="{{ route('notifications.read', $notification->id) }}" 
+                                                   class="btn btn-sm bg-navy text-white font-weight-bold shadow-sm rounded-pill px-3 py-1 text-nowrap">
+                                                    <i class="fas fa-eye mr-1"></i> Lihat Detail
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-center mt-4">
+                                {{ $notifications->links() }}
+                            </div>
+                        @else
+                            <div class="text-center py-5">
+                                <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 70px; height: 70px;">
+                                    <i class="fas fa-bell-slash fa-2x text-muted"></i>
+                                </div>
+                                <h5 class="text-dark font-weight-bold">Tidak Ada Notifikasi</h5>
+                                <p class="text-muted" style="font-size: 0.9rem;">
+                                    @if($filter === 'unread')
+                                        Tidak ada notifikasi yang belum dibaca.
+                                    @elseif($filter === 'read')
+                                        Belum ada notifikasi yang sudah dibaca.
+                                    @else
+                                        Belum ada notifikasi untuk ditampilkan saat ini.
+                                    @endif
+                                </p>
+                            </div>
                         @endif
                     </div>
-                </div>
-
-                <div class="card-body">
-                    @if ($notifications->count() > 0)
-                        <div class="timeline timeline-inverse">
-                            @forelse($notifications as $notification)
-                            @php
-                                $data = $notification->data;
-                                $isUnread = is_null($notification->read_at);
-                                $kegiatanUuid = $data['id_kegiatan'] ?? null;
-                                $laporanUuid = $data['id_laporan'] ?? null;
-                                $notificationType = $data['type'] ?? null;
-                                $hasValidLink = !empty($laporanUuid) || !empty($kegiatanUuid);
-                            @endphp
-
-                            <div class="time-label">
-                                <span class="bg-{{ $isUnread ? 'warning' : 'secondary' }}">
-                                    {{ $notification->created_at->translatedFormat('d M Y H:i') }}
-                                </span>
-                            </div>
-
-                            <div>
-                                <i class="fas fa-bell {{ $isUnread ? 'bg-navy text-white' : 'bg-secondary text-white' }} shadow-sm"></i>
-
-                                <div class="timeline-item shadow-sm border-0 border-left-{{ $isUnread ? 'navy' : 'secondary' }}">
-                                    <h3 class="timeline-header border-0 font-weight-bold text-dark pt-3 pb-1">
-                                        @if($isUnread)
-                                            <span class="badge badge-danger mr-1 badge-pill px-2">Baru</span>
-                                        @endif
-                                        {{ $data['message'] ?? 'Notifikasi' }}
-                                    </h3>
-
-                                    @if(!empty($data['keterangan']))
-                                        <div class="timeline-body bg-light rounded px-3 py-2 text-muted mx-3 mb-2">
-                                            <i class="fas fa-info-circle mr-1 text-navy"></i> {{ $data['keterangan'] }}
-                                        </div>
-                                    @endif
-
-                                    <div class="timeline-footer">
-                                        <small class="text-muted">
-                                            <i class="fas fa-clock"></i> 
-                                            @php
-                                                $diffForHumans = $notification->created_at->diffForHumans();
-                                                $indonesianTime = str_replace([
-                                                    ' seconds ago', ' second ago',
-                                                    ' minutes ago', ' minute ago', 
-                                                    ' hours ago', ' hour ago',
-                                                    ' days ago', ' day ago',
-                                                    ' weeks ago', ' week ago',
-                                                    ' months ago', ' month ago',
-                                                    ' years ago', ' year ago',
-                                                    ' seconds from now', ' second from now',
-                                                    ' minutes from now', ' minute from now',
-                                                    ' hours from now', ' hour from now',
-                                                    ' days from now', ' day from now',
-                                                    ' weeks from now', ' week from now',
-                                                    ' months from now', ' month from now',
-                                                    ' years from now', ' year from now'
-                                                ], [
-                                                    ' detik yang lalu', ' detik yang lalu',
-                                                    ' menit yang lalu', ' menit yang lalu',
-                                                    ' jam yang lalu', ' jam yang lalu',
-                                                    ' hari yang lalu', ' hari yang lalu',
-                                                    ' minggu yang lalu', ' minggu yang lalu',
-                                                    ' bulan yang lalu', ' bulan yang lalu',
-                                                    ' tahun yang lalu', ' tahun yang lalu',
-                                                    ' detik dari sekarang', ' detik dari sekarang',
-                                                    ' menit dari sekarang', ' menit dari sekarang',
-                                                    ' jam dari sekarang', ' jam dari sekarang',
-                                                    ' hari dari sekarang', ' hari dari sekarang',
-                                                    ' minggu dari sekarang', ' minggu dari sekarang',
-                                                    ' bulan dari sekarang', ' bulan dari sekarang',
-                                                    ' tahun dari sekarang', ' tahun dari sekarang'
-                                                ], $diffForHumans);
-                                            @endphp
-                                            {{ $indonesianTime }}
-                                        </small>
-
-                                        @if($isUnread && $hasValidLink)
-                                            <a href="{{ route('notifications.read', $notification->id) }}" 
-                                               class="btn btn-sm bg-navy text-white shadow-sm rounded-pill px-3 mt-2 mt-md-0">
-                                                <i class="fas fa-eye mr-1"></i> Lihat Detail
-                                            </a>
-                                        @elseif($notificationType === 'laporan_kegiatan' && $laporanUuid)
-                                            <a href="{{ route('laporan_kegiatan.show', ['laporan_kegiatan' => $laporanUuid]) }}" 
-                                               class="btn btn-sm bg-navy text-white shadow-sm rounded-pill px-3 mt-2 mt-md-0">
-                                                <i class="fas fa-eye mr-1"></i> Lihat Detail
-                                            </a>
-                                        @elseif($kegiatanUuid)
-                                            <a href="{{ route('rencana_kegiatan.show', ['rencana_kegiatan' => $kegiatanUuid]) }}" 
-                                               class="btn btn-sm bg-navy text-white shadow-sm rounded-pill px-3 mt-2 mt-md-0">
-                                                <i class="fas fa-eye mr-1"></i> Lihat Detail
-                                            </a>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                        </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
-                            <h4 class="text-muted">Tidak Ada Notifikasi</h4>
-                            <p class="text-muted">Belum ada notifikasi untuk ditampilkan.</p>
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
@@ -137,68 +216,21 @@
 
 @push('styles')
     <style>
-        .timeline-inverse {
-            color: #000;
+        .style-icon {
+            font-size: 1.1rem;
         }
-
-        .timeline-item {
-            background: #f8f9fa;
-            border-left: 3px solid #adb5bd;
-            margin-bottom: 15px;
-            padding: 15px;
-            border-radius: 0 5px 5px 0;
+        .custom-nav-pills .nav-link {
+            transition: all 0.2s ease-in-out;
         }
-
-        .border-left-blue, .border-left-navy {
-            border-left-color: #001f3f !important;
+        .custom-nav-pills .nav-link:hover:not(.active) {
+            background-color: #e2e8f0 !important;
         }
-
-        .text-navy {
-            color: #001f3f !important;
+        .transition-all {
+            transition: all 0.2s ease-in-out;
         }
-
-        .bg-navy {
-            background-color: #001f3f !important;
-            color: #ffffff !important;
-        }
-
-        .timeline-header {
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .timeline-body {
-            margin-bottom: 10px;
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
-        }
-
-        .timeline-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .time-label span {
-            padding: 8px 12px;
-            font-size: 12px;
-            border-radius: 20px;
-        }
-
-        .bg-blue {
-            background-color: #007bff !important;
-        }
-
-        .bg-gray {
-            background-color: #6c757d !important;
-        }
-
-        .badge-warning {
-            background-color: #ffc107;
-            color: #212529;
-            font-size: 10px;
-            padding: 3px 6px;
+        .transition-all:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+            transform: translateY(-1px);
         }
     </style>
 @endpush

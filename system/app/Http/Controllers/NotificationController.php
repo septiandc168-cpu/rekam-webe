@@ -10,16 +10,26 @@ class NotificationController extends Controller
     /**
      * Display all notifications for the authenticated user.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
+        $filter = $request->get('filter', 'all');
 
-        // Get all notifications for the user, ordered by latest first
-        $notifications = $user->notifications()
-            ->orderBy('created_at', 'desc')
-            ->latest()
-            ->take(10)
-            ->get();
+        $query = $user->notifications();
+
+        if ($filter === 'unread') {
+            $query->whereNull('read_at');
+        } elseif ($filter === 'read') {
+            $query->whereNotNull('read_at');
+        }
+
+        $notifications = $query->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
+
+        $unreadCount = $user->unreadNotifications()->count();
+        $readCount   = $user->readNotifications()->count();
+        $totalCount  = $user->notifications()->count();
 
         // Konfigurasi SweetAlert untuk delete dengan warna danger
         $confirm = [
@@ -35,7 +45,7 @@ class NotificationController extends Controller
 
         session()->flash('alert.delete', json_encode($confirm, JSON_UNESCAPED_SLASHES));
 
-        return view('notifications.index', compact('notifications'));
+        return view('notifications.index', compact('notifications', 'filter', 'unreadCount', 'readCount', 'totalCount'));
     }
 
     /**
