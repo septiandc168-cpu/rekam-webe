@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles, WithColumnWidths
 {
@@ -119,7 +120,7 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
 
         $tglPelaksanaan = $tglMulai ? \Carbon\Carbon::parse($tglMulai)->format('d/m/Y') : '-';
         if ($tglSelesai && \Carbon\Carbon::parse($tglSelesai)->format('d/m/Y') != $tglPelaksanaan) {
-            $tglPelaksanaan .= ' s/d ' . \Carbon\Carbon::parse($tglSelesai)->format('d/m/Y');
+            $tglPelaksanaan .= ' - ' . \Carbon\Carbon::parse($tglSelesai)->format('d/m/Y');
         }
 
         $pembuat = $laporan->user ? $laporan->user->name : ($rencana && $rencana->user ? $rencana->user->name : '-');
@@ -150,6 +151,15 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
     {
         $lastRow = $sheet->getHighestRow();
         $range = 'A1:I' . $lastRow;
+
+        // Pastikan kolom G (Target) dan H (Realisasi) bertipe angka murni agar SUM berjalan sempurna
+        for ($r = 2; $r <= $lastRow; $r++) {
+            $gVal = (int) preg_replace('/[^0-9]/', '', (string)$sheet->getCell('G' . $r)->getValue());
+            $hVal = (int) preg_replace('/[^0-9]/', '', (string)$sheet->getCell('H' . $r)->getValue());
+
+            $sheet->getCell('G' . $r)->setValueExplicit($gVal, DataType::TYPE_NUMERIC);
+            $sheet->getCell('H' . $r)->setValueExplicit($hVal, DataType::TYPE_NUMERIC);
+        }
 
         // Gaya default seluruh tabel (Font: Times New Roman, ukuran 11)
         $sheet->getStyle($range)->applyFromArray([
@@ -243,7 +253,7 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
             'B' => 38,  // Nama Kegiatan
             'C' => 22,  // Jenis Kegiatan
             'D' => 25,  // Desa/Lokasi
-            'E' => 22,  // Tanggal Pelaksanaan
+            'E' => 24,  // Tanggal Pelaksanaan
             'F' => 26,  // Penanggung Jawab
             'G' => 16,  // Target Peserta
             'H' => 18,  // Realisasi Peserta
