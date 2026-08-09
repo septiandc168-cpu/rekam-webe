@@ -176,7 +176,7 @@
                             <i class="fas fa-chart-bar mr-2"></i>
                             Statistik Kegiatan per Bulan
                             <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
-                                <i class="fas fa-info-circle mr-1"></i> Sebaran status: Akan Dilaksanakan, Telah Selesai, dan Kegiatan Langsung
+                                <i class="fas fa-info-circle mr-1"></i> Grafik perbandingan jumlah kegiatan berdasarkan status pelaksanaan setiap bulan
                             </small>
                         </h3>
                         <div class="card-tools">
