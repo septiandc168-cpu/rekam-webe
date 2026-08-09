@@ -176,7 +176,7 @@
                             <i class="fas fa-chart-bar mr-2"></i>
                             Statistik Kegiatan per Bulan
                             <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
-                                <i class="fas fa-info-circle mr-1"></i> Kegiatan berstatus Disetujui & Selesai
+                                <i class="fas fa-info-circle mr-1"></i> Sebaran status: Disetujui, Rencana Selesai, dan Laporan Langsung
                             </small>
                         </h3>
                         <div class="card-tools">
@@ -253,10 +253,12 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body bg-light p-3" id="kalender-modal-body" style="max-height: 70vh; overflow-y: auto;">
-                        <!-- Content injected via JS -->
+                    <div class="modal-body p-3" id="kalender-modal-body" style="max-height: 70vh; overflow-y: auto;">
+                        <!-- Item list loaded dynamically via JS -->
                     </div>
-
+                    <div class="modal-footer py-2 px-3 bg-light">
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Tutup</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -315,32 +317,62 @@
                 $.fn.bootstrapTooltip = bootstrapTooltip;
             }
 
-            // === Chart.js: Bar Chart Kegiatan per Bulan ===
-            var chartDisetujuiData       = @json($chartDisetujui);
-            var chartRencanaSelesaiData  = @json($chartRencanaSelesai);
-            var chartLaporanLangsungData = @json($chartLaporanLangsung);
-
+            // === Chart.js: Stacked Bar Chart Kegiatan per Bulan ===
             var ctx = document.getElementById('chartKegiatan').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: @json($chartLabels),
-                    datasets: [{
-                        label: 'Jumlah Kegiatan',
-                        data: @json($chartValues),
-                        backgroundColor: 'rgba(0, 31, 63, 0.8)',
-                        borderColor: '#001f3f',
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        maxBarThickness: 40,
-                    }]
+                    datasets: [
+                        {
+                            label: 'Disetujui',
+                            data: @json($chartDisetujui),
+                            backgroundColor: '#28a745',
+                            borderColor: '#1e7e34',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            stack: 'Stack 0',
+                            maxBarThickness: 40,
+                        },
+                        {
+                            label: 'Rencana Selesai',
+                            data: @json($chartRencanaSelesai),
+                            backgroundColor: '#001f3f',
+                            borderColor: '#001226',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            stack: 'Stack 0',
+                            maxBarThickness: 40,
+                        },
+                        {
+                            label: 'Laporan Langsung',
+                            data: @json($chartLaporanLangsung),
+                            backgroundColor: '#fd7e14',
+                            borderColor: '#d96207',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            stack: 'Stack 0',
+                            maxBarThickness: 40,
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false
+                            display: true,
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'rectRounded',
+                                padding: 12,
+                                font: {
+                                    size: 11,
+                                    weight: '600'
+                                }
+                            }
                         },
                         tooltip: {
                             backgroundColor: '#001f3f',
@@ -348,34 +380,31 @@
                             bodyColor: '#fff',
                             padding: 10,
                             cornerRadius: 6,
-                            displayColors: false,
                             callbacks: {
                                 label: function(context) {
-                                    var idx = context.dataIndex;
-                                    var total = context.parsed.y || 0;
-                                    var disetujui = chartDisetujuiData[idx] || 0;
-                                    var rSelesai  = chartRencanaSelesaiData[idx] || 0;
-                                    var langsung  = chartLaporanLangsungData[idx] || 0;
-                                    var totalSelesai = rSelesai + langsung;
-
-                                    var res = [
-                                        'Total: ' + total + ' Kegiatan',
-                                        '  • Disetujui: ' + disetujui,
-                                        '  • Selesai: ' + totalSelesai
-                                    ];
-
-                                    if (langsung > 0) {
-                                        res.push('    - Rencana Selesai: ' + rSelesai);
-                                        res.push('    - Laporan Langsung: ' + langsung);
-                                    }
-
-                                    return res;
+                                    var label = context.dataset.label || '';
+                                    var val = context.parsed.y || 0;
+                                    return '  • ' + label + ': ' + val + ' Kegiatan';
+                                },
+                                footer: function(tooltipItems) {
+                                    var sum = 0;
+                                    tooltipItems.forEach(function(item) {
+                                        sum += item.parsed.y || 0;
+                                    });
+                                    return 'Total: ' + sum + ' Kegiatan';
                                 }
                             }
                         }
                     },
                     scales: {
+                        x: {
+                            stacked: true,
+                            grid: {
+                                display: false
+                            }
+                        },
                         y: {
+                            stacked: true,
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1,
