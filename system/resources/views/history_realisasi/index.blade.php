@@ -110,29 +110,6 @@
 @section('content')
 <div class="text-sm">
 
-    {{-- Summary Stats Bar --}}
-    <div class="summary-bar mb-4 shadow-sm">
-        <div class="row align-items-center">
-            <div class="col-md-5 mb-3 mb-md-0">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-history fa-2x mr-3" style="opacity:0.7;"></i>
-                    <div>
-                        <div style="font-size: 1.05rem; font-weight: 600;">History Realisasi Kegiatan</div>
-                        <div style="opacity:0.75; font-size:0.8rem;">Semua realisasi kegiatan lapangan (Laporan Diajukan, Revisi, maupun Final)</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-7">
-                <div class="d-flex flex-wrap justify-content-end" style="gap: 12px;">
-                    <div class="text-center" style="flex:1; max-width: 200px;">
-                        <div class="s-num">{{ $totalSelesai }}</div>
-                        <div class="s-lbl">Total Realisasi Kegiatan Selesai</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     {{-- Filter Section --}}
     <div class="filter-section shadow-sm mb-4 p-3">
         <form action="{{ route('history_realisasi.index') }}" method="GET" class="mb-0 no-loader" id="filter-form">
