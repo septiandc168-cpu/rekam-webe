@@ -13,7 +13,7 @@
                             <i class="fas fa-bell text-navy mr-2 style-icon"></i> Pusat Notifikasi
                         </h5>
 
-                        <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                        <div class="d-flex align-items-center flex-wrap ml-auto" style="gap: 8px;">
                             @if ($unreadCount > 0)
                                 <form action="{{ route('notifications.readAll') }}" method="POST" class="mb-0">
                                     @csrf
@@ -27,7 +27,7 @@
                                 <form action="{{ route('notifications.deleteAll') }}" method="POST" class="mb-0" data-confirm-delete="true">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm rounded px-3 font-weight-bold">
+                                    <button type="submit" class="btn btn-sm btn-danger text-white shadow-sm rounded px-3 font-weight-bold border-0">
                                         <i class="fas fa-trash-alt mr-1"></i> Hapus Semua Notifikasi
                                     </button>
                                 </form>
@@ -41,19 +41,19 @@
                             <li class="nav-item">
                                 <a href="{{ route('notifications.index', ['filter' => 'all']) }}" 
                                    class="nav-link px-3 py-1 font-weight-bold {{ $filter === 'all' ? 'active bg-navy text-white' : 'text-dark bg-white border' }}" style="border-radius: 20px; font-size: 0.85rem;">
-                                    <i class="fas fa-inbox mr-1"></i> Semua <span class="badge badge-pill {{ $filter === 'all' ? 'badge-light text-dark' : 'badge-secondary' }} ml-1">{{ $totalCount }}</span>
+                                    <i class="fas fa-inbox mr-1 {{ $filter === 'all' ? 'text-white' : 'text-navy' }}"></i> Semua <span class="badge badge-pill bg-secondary text-white ml-1" style="background-color: #6c757d !important;">{{ $totalCount }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('notifications.index', ['filter' => 'unread']) }}" 
                                    class="nav-link px-3 py-1 font-weight-bold {{ $filter === 'unread' ? 'active bg-navy text-white' : 'text-dark bg-white border' }}" style="border-radius: 20px; font-size: 0.85rem;">
-                                    <i class="fas fa-envelope mr-1 text-warning"></i> Belum Dibaca <span class="badge badge-pill {{ $filter === 'unread' ? 'badge-light text-dark' : 'badge-warning' }} ml-1">{{ $unreadCount }}</span>
+                                    <i class="fas fa-envelope mr-1 {{ $filter === 'unread' ? 'text-white' : 'text-navy' }}"></i> Belum Dibaca <span class="badge badge-pill bg-secondary text-white ml-1" style="background-color: #6c757d !important;">{{ $unreadCount }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('notifications.index', ['filter' => 'read']) }}" 
                                    class="nav-link px-3 py-1 font-weight-bold {{ $filter === 'read' ? 'active bg-navy text-white' : 'text-dark bg-white border' }}" style="border-radius: 20px; font-size: 0.85rem;">
-                                    <i class="fas fa-envelope-open mr-1 text-success"></i> Sudah Dibaca <span class="badge badge-pill {{ $filter === 'read' ? 'badge-light text-dark' : 'badge-success' }} ml-1">{{ $readCount }}</span>
+                                    <i class="fas fa-envelope-open mr-1 {{ $filter === 'read' ? 'text-white' : 'text-navy' }}"></i> Sudah Dibaca <span class="badge badge-pill bg-secondary text-white ml-1" style="background-color: #6c757d !important;">{{ $readCount }}</span>
                                 </a>
                             </li>
                         </ul>
