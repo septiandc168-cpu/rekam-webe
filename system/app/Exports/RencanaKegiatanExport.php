@@ -21,15 +21,17 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
     protected $status;
     protected $userId;
     protected $jenis;
+    protected $search;
     private $rowNumber = 0;
 
-    public function __construct($tahun, $bulan, $status, $userId, $jenis = null)
+    public function __construct($tahun, $bulan, $status, $userId, $jenis = null, $search = null)
     {
         $this->tahun = $tahun;
         $this->bulan = $bulan;
         $this->status = $status;
         $this->userId = $userId;
         $this->jenis = $jenis;
+        $this->search = $search;
     }
 
     public function collection()
@@ -66,6 +68,19 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
         }
         if ($this->userId) {
             $query->where('user_id', $this->userId);
+        }
+        if ($this->search) {
+            $search = $this->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul_kegiatan', 'like', "%{$search}%")
+                  ->orWhere('lokasi_kegiatan', 'like', "%{$search}%")
+                  ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$search}%"))
+                  ->orWhereHas('rencanaKegiatan', function ($r) use ($search) {
+                      $r->where('nama_kegiatan', 'like', "%{$search}%")
+                        ->orWhere('desa', 'like', "%{$search}%")
+                        ->orWhere('penanggung_jawab', 'like', "%{$search}%");
+                  });
+            });
         }
 
         return $query->orderBy('created_at', 'asc')->get();

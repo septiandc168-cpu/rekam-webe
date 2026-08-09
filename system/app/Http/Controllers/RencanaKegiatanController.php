@@ -185,6 +185,19 @@ class RencanaKegiatanController extends Controller
         if ($request->filled('user_id') && $isAdmin) {
             $query->where('user_id', $request->user_id);
         }
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul_kegiatan', 'like', "%{$search}%")
+                  ->orWhere('lokasi_kegiatan', 'like', "%{$search}%")
+                  ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$search}%"))
+                  ->orWhereHas('rencanaKegiatan', function ($r) use ($search) {
+                      $r->where('nama_kegiatan', 'like', "%{$search}%")
+                        ->orWhere('desa', 'like', "%{$search}%")
+                        ->orWhere('penanggung_jawab', 'like', "%{$search}%");
+                  });
+            });
+        }
 
         // Stats (hitung total dari seluruh data sebelum paginasi)
         $totalSelesai       = (clone $query)->count();
@@ -1210,10 +1223,11 @@ class RencanaKegiatanController extends Controller
         $jenis = $request->jenis;
         $status = $request->status;
         $userId = $request->user_id;
+        $search = $request->search;
 
         $fileName = 'Rekap_Rencana_Kegiatan_' . date('Ymd_His') . '.xlsx';
 
-        return Excel::download(new RencanaKegiatanExport($tahun, $bulan, $status, $userId, $jenis), $fileName);
+        return Excel::download(new RencanaKegiatanExport($tahun, $bulan, $status, $userId, $jenis, $search), $fileName);
     }
 
     /**

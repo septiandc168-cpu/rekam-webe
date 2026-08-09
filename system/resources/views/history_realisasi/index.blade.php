@@ -138,6 +138,8 @@
         <form action="{{ route('history_realisasi.index') }}" method="GET" class="mb-0 no-loader" id="filter-form">
             <div class="d-none d-lg-flex input-group input-group-sm align-items-center">
                 <span class="mr-2 text-muted fw-bold"><i class="fas fa-filter mr-1"></i> Filter:</span>
+                <input type="text" name="search" class="form-control mr-2 rounded" placeholder="Cari kegiatan/lokasi/PJ..."
+                       value="{{ request('search') }}" style="min-width: 170px;">
                 <select name="bulan" class="form-control mr-2 rounded" style="min-width: 130px;">
                     <option value="">Semua Bulan</option>
                     @foreach(['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'] as $idx => $bln)
@@ -170,7 +172,7 @@
                         <i class="fas fa-file-excel mr-1"></i> Export Rekap
                     </button>
                 @endif
-                @if(request()->hasAny(['bulan','tahun','jenis','user_id']))
+                @if(request()->hasAny(['bulan','tahun','jenis','user_id','search']))
                     <a href="{{ route('history_realisasi.index') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm" title="Reset Filter">
                         <i class="fas fa-undo mr-1"></i> Reset
                     </a>
@@ -180,6 +182,10 @@
             {{-- Mobile --}}
             <div class="d-lg-none">
                 <div class="row g-2">
+                    <div class="col-12 mt-2">
+                        <input type="text" name="search" class="form-control form-control-sm rounded" placeholder="Cari kegiatan/lokasi/PJ..."
+                               value="{{ request('search') }}">
+                    </div>
                     <div class="col-6 mt-2">
                         <select name="bulan" class="form-control form-control-sm rounded">
                             <option value="">Semua Bulan</option>
@@ -221,7 +227,7 @@
                                 <i class="fas fa-file-excel mr-1"></i> Export Rekap
                             </button>
                         @endif
-                        @if(request()->hasAny(['bulan','tahun','jenis','user_id']))
+                        @if(request()->hasAny(['bulan','tahun','jenis','user_id','search']))
                             <a href="{{ route('history_realisasi.index') }}" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm text-center">
                                 <i class="fas fa-undo mr-1"></i> Reset
                             </a>
