@@ -398,7 +398,7 @@
                 </div>
                 <div class="timeline-step {{ $isSelesai ? 'completed' : '' }}">
                     <div class="timeline-icon"><i class="fas fa-flag-checkered"></i></div>
-                    <div class="timeline-label">Laporan Selesai</div>
+                    <div class="timeline-label">Kegiatan Selesai</div>
                 </div>
             </div>
         </div>
