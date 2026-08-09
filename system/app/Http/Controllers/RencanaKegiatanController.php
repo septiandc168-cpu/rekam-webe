@@ -185,6 +185,9 @@ class RencanaKegiatanController extends Controller
         if ($request->filled('user_id') && $isAdmin) {
             $query->where('user_id', $request->user_id);
         }
+        if ($request->filled('status_laporan')) {
+            $query->where('status', $request->status_laporan);
+        }
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -1224,10 +1227,11 @@ class RencanaKegiatanController extends Controller
         $status = $request->status;
         $userId = $request->user_id;
         $search = $request->search;
+        $statusLaporan = $request->status_laporan;
 
         $fileName = 'Rekap_Rencana_Kegiatan_' . date('Ymd_His') . '.xlsx';
 
-        return Excel::download(new RencanaKegiatanExport($tahun, $bulan, $status, $userId, $jenis, $search), $fileName);
+        return Excel::download(new RencanaKegiatanExport($tahun, $bulan, $status, $userId, $jenis, $search, $statusLaporan), $fileName);
     }
 
     /**

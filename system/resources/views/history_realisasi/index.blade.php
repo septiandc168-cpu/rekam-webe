@@ -154,6 +154,12 @@
                     <option value="lainnya"          {{ request('jenis') === 'lainnya'          ? 'selected' : '' }}>Lainnya</option>
                     <option value="langsung"         {{ request('jenis') === 'langsung'         ? 'selected' : '' }}>Laporan Langsung</option>
                 </select>
+                <select name="status_laporan" class="form-control mr-2 rounded" style="min-width: 150px;">
+                    <option value="">Semua Status</option>
+                    <option value="diajukan" {{ request('status_laporan') === 'diajukan' ? 'selected' : '' }}>Laporan Diajukan</option>
+                    <option value="revisi"   {{ request('status_laporan') === 'revisi'   ? 'selected' : '' }}>Laporan Revisi</option>
+                    <option value="final"    {{ request('status_laporan') === 'final'    ? 'selected' : '' }}>Laporan Final</option>
+                </select>
                 @if(auth()->user()->role->role_name === 'admin')
                 <select name="user_id" class="form-control mr-2 rounded" style="min-width: 160px;">
                     <option value="">Semua Anggota</option>
@@ -170,7 +176,7 @@
                         <i class="fas fa-file-excel mr-1"></i> Export Rekap
                     </button>
                 @endif
-                @if(request()->hasAny(['bulan','tahun','jenis','user_id','search']))
+                @if(request()->hasAny(['bulan','tahun','jenis','status_laporan','user_id','search']))
                     <a href="{{ route('history_realisasi.index') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm" title="Reset Filter">
                         <i class="fas fa-undo mr-1"></i> Reset
                     </a>
@@ -192,7 +198,7 @@
                         <input type="number" name="tahun" class="form-control form-control-sm rounded" placeholder="Tahun"
                                value="{{ request('tahun') }}" min="2020" max="2030">
                     </div>
-                    <div class="{{ auth()->user()->role->role_name === 'admin' ? 'col-6' : 'col-12' }} mt-2">
+                    <div class="col-6 mt-2">
                         <select name="jenis" class="form-control form-control-sm rounded">
                             <option value="">Semua Jenis</option>
                             <option value="konservasi" {{ request('jenis') === 'konservasi' ? 'selected' : '' }}>Konservasi</option>
@@ -202,8 +208,16 @@
                             <option value="langsung" {{ request('jenis') === 'langsung' ? 'selected' : '' }}>Laporan Langsung</option>
                         </select>
                     </div>
-                    @if(auth()->user()->role->role_name === 'admin')
                     <div class="col-6 mt-2">
+                        <select name="status_laporan" class="form-control form-control-sm rounded">
+                            <option value="">Semua Status</option>
+                            <option value="diajukan" {{ request('status_laporan') === 'diajukan' ? 'selected' : '' }}>Laporan Diajukan</option>
+                            <option value="revisi"   {{ request('status_laporan') === 'revisi'   ? 'selected' : '' }}>Laporan Revisi</option>
+                            <option value="final"    {{ request('status_laporan') === 'final'    ? 'selected' : '' }}>Laporan Final</option>
+                        </select>
+                    </div>
+                    @if(auth()->user()->role->role_name === 'admin')
+                    <div class="col-12 mt-2">
                         <select name="user_id" class="form-control form-control-sm rounded">
                             <option value="">Semua Anggota</option>
                             @foreach($users as $u)
@@ -221,7 +235,7 @@
                                 <i class="fas fa-file-excel mr-1"></i> Export Rekap
                             </button>
                         @endif
-                        @if(request()->hasAny(['bulan','tahun','jenis','user_id','search']))
+                        @if(request()->hasAny(['bulan','tahun','jenis','status_laporan','user_id','search']))
                             <a href="{{ route('history_realisasi.index') }}" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm text-center">
                                 <i class="fas fa-undo mr-1"></i> Reset
                             </a>

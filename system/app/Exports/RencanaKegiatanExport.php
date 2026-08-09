@@ -23,9 +23,10 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
     protected $userId;
     protected $jenis;
     protected $search;
+    protected $statusLaporan;
     private $rowNumber = 0;
 
-    public function __construct($tahun, $bulan, $status, $userId, $jenis = null, $search = null)
+    public function __construct($tahun, $bulan, $status, $userId, $jenis = null, $search = null, $statusLaporan = null)
     {
         $this->tahun = $tahun;
         $this->bulan = $bulan;
@@ -33,6 +34,7 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
         $this->userId = $userId;
         $this->jenis = $jenis;
         $this->search = $search;
+        $this->statusLaporan = $statusLaporan;
     }
 
     public function collection()
@@ -73,6 +75,9 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
         }
         if ($this->userId) {
             $query->where('user_id', $this->userId);
+        }
+        if ($this->statusLaporan) {
+            $query->where('status', $this->statusLaporan);
         }
         if ($this->search) {
             $search = $this->search;
