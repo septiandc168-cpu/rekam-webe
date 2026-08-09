@@ -226,9 +226,12 @@
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-header bg-navy">
-                        <h3 class="card-title">
+                        <h3 class="card-title mb-0">
                             <i class="fas fa-map-marked-alt mr-2"></i>
                             Peta Sebaran Kegiatan
+                            <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
+                                <i class="fas fa-info-circle mr-1"></i> Menampilkan titik lokasi kegiatan yang akan dilaksanakan
+                            </small>
                         </h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
