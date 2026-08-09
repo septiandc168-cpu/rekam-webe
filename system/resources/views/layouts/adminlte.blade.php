@@ -242,13 +242,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- /.content-wrapper -->
 
         <!-- Main Footer -->
-        <footer class="main-footer">
-            <!-- To the right -->
-            <div class="float-right d-none d-sm-inline d-flex">
-                <small><strong>Yayasan WeBe</strong></small>
+        <footer class="main-footer text-sm">
+            <div class="float-right d-none d-sm-inline">
+                <strong>Yayasan WeBe</strong>
             </div>
-            <!-- Default to the left -->
-            <small>&copy; 2025-2026 <strong>Rekam WeBe</strong>. All rights reserved.</small>
+            &copy; 2025-2026 <strong>Rekam WeBe</strong>. All rights reserved.
         </footer>
     </div>
     <!-- ./wrapper -->

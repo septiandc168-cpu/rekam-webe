@@ -247,6 +247,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         <!-- Modal Detail Kalender Kegiatan -->
         <div class="modal fade" id="modal-detail-kalender" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
