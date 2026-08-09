@@ -118,19 +118,16 @@ class RencanaKegiatanController extends Controller
     }
 
     /**
-     * History Realisasi Kegiatan: semua rencana berstatus selesai beserta laporannya.
+     * History Realisasi Kegiatan: semua kegiatan yang ber-Laporan Final (baik dari Rencana maupun Laporan Langsung).
      */
     public function historyRealisasi(Request $request)
     {
-        $user        = auth()->user();
+        $user    = auth()->user();
         $isAdmin = $user->role->role_name === 'admin';
 
-        // History Realisasi hanya menampilkan rencana kegiatan berstatus Selesai yang laporan kegiatannya sudah Final
-        $query = RencanaKegiatan::with(['laporanKegiatan', 'user'])
-            ->where('status', RencanaKegiatan::STATUS_SELESAI)
-            ->whereHas('laporanKegiatan', function ($q) {
-                $q->where('status', \App\Models\LaporanKegiatan::STATUS_FINAL);
-            });
+        // History Realisasi menampilkan semua kegiatan ber-Laporan Final
+        $query = \App\Models\LaporanKegiatan::with(['rencanaKegiatan', 'user'])
+            ->where('status', \App\Models\LaporanKegiatan::STATUS_FINAL);
 
         // Scope anggota ke data milik sendiri
         if (!$isAdmin) {
@@ -141,28 +138,45 @@ class RencanaKegiatanController extends Controller
         if ($request->filled('bulan')) {
             $bulan = $request->bulan;
             $query->where(function ($q) use ($bulan) {
-                $q->whereMonth('tanggal_mulai', $bulan)
-                  ->orWhereHas('laporanKegiatan', function ($lq) use ($bulan) {
-                      $lq->whereMonth('realisasi_tanggal_mulai', $bulan);
+                $q->whereMonth('realisasi_tanggal_mulai', $bulan)
+                  ->orWhere(function ($q2) use ($bulan) {
+                      $q2->whereNull('realisasi_tanggal_mulai')
+                         ->whereHas('rencanaKegiatan', fn($r) => $r->whereMonth('tanggal_mulai', $bulan));
+                  })
+                  ->orWhere(function ($q3) use ($bulan) {
+                      $q3->whereNull('realisasi_tanggal_mulai')
+                         ->whereNull('rencana_kegiatan_id')
+                         ->whereMonth('created_at', $bulan);
                   });
             });
         }
         if ($request->filled('tahun')) {
             $tahun = $request->tahun;
             $query->where(function ($q) use ($tahun) {
-                $q->whereYear('tanggal_mulai', $tahun)
-                  ->orWhereHas('laporanKegiatan', function ($lq) use ($tahun) {
-                      $lq->whereYear('realisasi_tanggal_mulai', $tahun);
+                $q->whereYear('realisasi_tanggal_mulai', $tahun)
+                  ->orWhere(function ($q2) use ($tahun) {
+                      $q2->whereNull('realisasi_tanggal_mulai')
+                         ->whereHas('rencanaKegiatan', fn($r) => $r->whereYear('tanggal_mulai', $tahun));
+                  })
+                  ->orWhere(function ($q3) use ($tahun) {
+                      $q3->whereNull('realisasi_tanggal_mulai')
+                         ->whereNull('rencana_kegiatan_id')
+                         ->whereYear('created_at', $tahun);
                   });
             });
         }
         if ($request->filled('jenis')) {
-            $query->where('jenis_kegiatan', $request->jenis);
+            $jenis = $request->jenis;
+            $query->where(function ($q) use ($jenis) {
+                $q->whereHas('rencanaKegiatan', fn($r) => $r->where('jenis_kegiatan', $jenis));
+                if ($jenis === 'lainnya') {
+                    $q->orWhereNull('rencana_kegiatan_id');
+                }
+            });
         }
         if ($request->filled('user_id') && $isAdmin) {
             $query->where('user_id', $request->user_id);
         }
-
 
         // Stats (hitung total dari seluruh data sebelum paginasi)
         $totalSelesai       = (clone $query)->count();
@@ -170,7 +184,7 @@ class RencanaKegiatanController extends Controller
         $totalTanpaLaporan  = 0;
 
         // Paginate 6 data per halaman (2 baris x 3 kolom card)
-        $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->paginate(6)->withQueryString();
+        $laporans = $query->orderBy('updated_at', 'desc')->paginate(6)->withQueryString();
 
         // User list for filter (admin only)
         $users = $isAdmin
@@ -178,7 +192,7 @@ class RencanaKegiatanController extends Controller
             : collect();
 
         return view('history_realisasi.index', compact(
-            'rencanaKegiatans',
+            'laporans',
             'users',
             'totalSelesai',
             'totalDenganLaporan',

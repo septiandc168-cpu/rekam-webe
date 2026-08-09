@@ -32,23 +32,28 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $query = RencanaKegiatan::with(['user', 'laporanKegiatan'])
-            ->where('status', RencanaKegiatan::STATUS_SELESAI)
-            ->whereHas('laporanKegiatan', function ($q) {
-                $q->where('status', \App\Models\LaporanKegiatan::STATUS_FINAL);
-            });
+        $query = \App\Models\LaporanKegiatan::with(['user', 'rencanaKegiatan'])
+            ->where('status', \App\Models\LaporanKegiatan::STATUS_FINAL);
 
         if ($this->tahun) {
-            $query->whereYear('tanggal_mulai', $this->tahun);
+            $tahun = $this->tahun;
+            $query->where(function ($q) use ($tahun) {
+                $q->whereYear('realisasi_tanggal_mulai', $tahun)
+                  ->orWhereHas('rencanaKegiatan', fn($r) => $r->whereYear('tanggal_mulai', $tahun));
+            });
         }
         if ($this->bulan) {
-            $query->whereMonth('tanggal_mulai', $this->bulan);
+            $bulan = $this->bulan;
+            $query->where(function ($q) use ($bulan) {
+                $q->whereMonth('realisasi_tanggal_mulai', $bulan)
+                  ->orWhereHas('rencanaKegiatan', fn($r) => $r->whereMonth('tanggal_mulai', $bulan));
+            });
         }
         if ($this->userId) {
             $query->where('user_id', $this->userId);
         }
 
-        return $query->orderBy('tanggal_mulai', 'asc')->get();
+        return $query->orderBy('created_at', 'asc')->get();
     }
 
     public function headings(): array
@@ -66,25 +71,36 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
         ];
     }
 
-    public function map($rencana): array
+    public function map($laporan): array
     {
         $this->rowNumber++;
 
-        $laporan = $rencana->laporanKegiatan;
-        $tglPelaksanaan = $rencana->tanggal_mulai ? $rencana->tanggal_mulai->format('d/m/Y') : '-';
-        if ($rencana->tanggal_selesai && $rencana->tanggal_selesai != $rencana->tanggal_mulai) {
-            $tglPelaksanaan .= ' s/d ' . $rencana->tanggal_selesai->format('d/m/Y');
+        $rencana = $laporan->rencanaKegiatan;
+        $namaKegiatan = $rencana ? $rencana->nama_kegiatan : ($laporan->judul_kegiatan ?: 'Laporan Langsung');
+        $jenisKegiatan = $rencana ? $rencana->getJenisKegiatanLabel() : 'Laporan Langsung';
+        $lokasi = $laporan->lokasi_kegiatan ?: ($rencana ? ($rencana->desa ?: '-') : '-');
+
+        $tglMulai = $laporan->realisasi_tanggal_mulai ?: ($rencana ? $rencana->tanggal_mulai : $laporan->created_at);
+        $tglSelesai = $laporan->realisasi_tanggal_selesai ?: ($rencana ? $rencana->tanggal_selesai : null);
+
+        $tglPelaksanaan = $tglMulai ? \Carbon\Carbon::parse($tglMulai)->format('d/m/Y') : '-';
+        if ($tglSelesai && \Carbon\Carbon::parse($tglSelesai)->format('d/m/Y') != $tglPelaksanaan) {
+            $tglPelaksanaan .= ' s/d ' . \Carbon\Carbon::parse($tglSelesai)->format('d/m/Y');
         }
+
+        $pembuat = $laporan->user ? $laporan->user->name : ($rencana && $rencana->user ? $rencana->user->name : '-');
+        $target = $laporan->target_peserta ?: ($rencana ? ($rencana->estimasi_peserta ?: 0) : 0);
+        $realisasi = $laporan->realisasi_peserta ?: 0;
 
         return [
             $this->rowNumber,
-            $rencana->nama_kegiatan,
-            $rencana->getJenisKegiatanLabel(),
-            $rencana->desa ?: '-',
+            $namaKegiatan,
+            $jenisKegiatan,
+            $lokasi,
             $tglPelaksanaan,
-            $rencana->user ? $rencana->user->name : ($rencana->penanggung_jawab ?: '-'),
-            $rencana->estimasi_peserta ?: 0,
-            $laporan ? ($laporan->realisasi_peserta ?: 0) : 0,
+            $pembuat,
+            $target,
+            $realisasi,
             'Selesai (Laporan Final)',
         ];
     }

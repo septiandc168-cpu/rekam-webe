@@ -266,60 +266,70 @@
     </div>
 
     {{-- Content --}}
-    @if($rencanaKegiatans->isEmpty())
+    @if($laporans->isEmpty())
         <div class="card shadow-sm">
             <div class="card-body">
                 <div class="empty-state py-5">
                     <i class="fas fa-box-open text-muted" style="font-size:3.5rem;"></i>
                     <h5 class="mt-3 text-muted">Belum Ada Data</h5>
-                    <p class="text-muted">Belum ada kegiatan yang berstatus <strong>Selesai</strong> sesuai filter yang dipilih.</p>
+                    <p class="text-muted">Belum ada kegiatan yang berstatus <strong>Selesai</strong> atau Laporan <strong>Final</strong> sesuai filter yang dipilih.</p>
                 </div>
             </div>
         </div>
     @else
         <div class="mb-3 d-flex justify-content-between align-items-center">
             <small class="text-muted">
-                <i class="fas fa-list mr-1"></i> Menampilkan <strong>{{ $rencanaKegiatans->firstItem() ?? 0 }} - {{ $rencanaKegiatans->lastItem() ?? 0 }}</strong> dari <strong>{{ $rencanaKegiatans->total() }}</strong> kegiatan
+                <i class="fas fa-list mr-1"></i> Menampilkan <strong>{{ $laporans->firstItem() ?? 0 }} - {{ $laporans->lastItem() ?? 0 }}</strong> dari <strong>{{ $laporans->total() }}</strong> kegiatan
             </small>
         </div>
         <div class="row">
-            @foreach($rencanaKegiatans as $rencana)
+            @foreach($laporans as $laporan)
                 @php
-                    $laporan     = $rencana->laporanKegiatan;
-                    $jenisLabel  = $rencana->getJenisKegiatanLabel();
-                    $jenisBadge  = match($rencana->jenis_kegiatan) {
-                        'konservasi'       => 'badge-jenis-konservasi',
-                        'edukasi'          => 'badge-jenis-edukasi',
-                        'usaha masyarakat' => 'badge-jenis-usaha',
-                        default            => 'badge-jenis-lainnya',
-                    };
-                    $laporanBadgeClass = 'badge-laporan-none';
-                    $laporanBadgeLabel = 'Belum Ada Laporan';
-                    if ($laporan) {
-                        $laporanBadgeClass = match($laporan->status) {
-                            'final'    => 'badge-laporan-final',
-                            'diajukan' => 'badge-laporan-diajukan',
-                            'revisi'   => 'badge-laporan-revisi',
-                            default    => 'badge-laporan-draft',
+                    $rencana = $laporan->rencanaKegiatan;
+                    $isLaporanLangsung = is_null($laporan->rencana_kegiatan_id);
+
+                    $namaKegiatan = $rencana ? $rencana->nama_kegiatan : ($laporan->judul_kegiatan ?: 'Laporan Langsung');
+
+                    if ($rencana) {
+                        $jenisLabel = $rencana->getJenisKegiatanLabel();
+                        $jenisBadge = match($rencana->jenis_kegiatan) {
+                            'konservasi'       => 'badge-jenis-konservasi',
+                            'edukasi'          => 'badge-jenis-edukasi',
+                            'usaha masyarakat' => 'badge-jenis-usaha',
+                            default            => 'badge-jenis-lainnya',
                         };
-                        $laporanBadgeLabel = match($laporan->status) {
-                            'final'    => 'Laporan Final',
-                            'diajukan' => 'Laporan Diajukan',
-                            'revisi'   => 'Laporan Revisi',
-                            default    => 'Laporan Draft',
-                        };
+                    } else {
+                        $jenisLabel = 'Laporan Langsung';
+                        $jenisBadge = 'badge-jenis-lainnya';
                     }
+
+                    $laporanBadgeClass = 'badge-laporan-final';
+                    $laporanBadgeLabel = 'Laporan Final';
+
+                    $userName = $laporan->user ? $laporan->user->name : ($rencana && $rencana->user ? $rencana->user->name : '-');
+                    $lokasi = $laporan->lokasi_kegiatan ?: ($rencana ? ($rencana->desa ?: '-') : '-');
+
+                    $tglMulaiRaw = $laporan->realisasi_tanggal_mulai ?: ($rencana ? $rencana->tanggal_mulai : $laporan->created_at);
+                    $tglSelesaiRaw = $laporan->realisasi_tanggal_selesai ?: ($rencana ? $rencana->tanggal_selesai : null);
+
+                    $tglMulaiFormatted = $tglMulaiRaw ? \Carbon\Carbon::parse($tglMulaiRaw)->translatedFormat('d M Y') : '-';
+                    $tglSelesaiFormatted = $tglSelesaiRaw ? \Carbon\Carbon::parse($tglSelesaiRaw)->translatedFormat('d M Y') : null;
+
+                    $targetPeserta = $laporan->target_peserta ?: ($rencana ? ($rencana->estimasi_peserta ?: '-') : '-');
                 @endphp
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card history-card shadow-sm h-100">
                         {{-- Card Header --}}
                         <div class="history-card card-header-custom">
-                            <h6 class="mb-2 text-white fw-bold title-text" title="{{ $rencana->nama_kegiatan }}">
-                                {{ $rencana->nama_kegiatan }}
+                            <h6 class="mb-2 text-white fw-bold title-text" title="{{ $namaKegiatan }}">
+                                {{ $namaKegiatan }}
                             </h6>
                             <div class="d-flex flex-wrap align-items-center" style="gap: 6px;">
                                 <span class="badge-jenis {{ $jenisBadge }}">{{ $jenisLabel }}</span>
                                 <span class="{{ $laporanBadgeClass }}">{{ $laporanBadgeLabel }}</span>
+                                @if($isLaporanLangsung)
+                                    <span class="badge badge-warning text-dark" style="font-size:0.68rem; padding: 2px 6px;"><i class="fas fa-bolt mr-1"></i>Langsung</span>
+                                @endif
                             </div>
                         </div>
 
@@ -327,61 +337,55 @@
                         <div class="card-body pb-2">
                             <div class="info-row">
                                 <i class="fas fa-user"></i>
-                                <span>{{ $rencana->user->name ?? '-' }}</span>
+                                <span>{{ $userName }}</span>
                             </div>
                             <div class="info-row">
                                 <i class="fas fa-map-marker-alt"></i>
-                                <span>{{ Str::limit($rencana->desa ?? '-', 45) }}</span>
+                                <span>{{ Str::limit($lokasi, 45) }}</span>
                             </div>
                             <div class="info-row">
                                 <i class="fas fa-calendar-alt"></i>
                                 <span>
-                                    {{ \Carbon\Carbon::parse($rencana->tanggal_mulai)->translatedFormat('d M Y') }}
-                                    @if($rencana->tanggal_selesai && $rencana->tanggal_mulai != $rencana->tanggal_selesai)
-                                        &ndash; {{ \Carbon\Carbon::parse($rencana->tanggal_selesai)->translatedFormat('d M Y') }}
+                                    {{ $tglMulaiFormatted }}
+                                    @if($tglSelesaiFormatted && $tglMulaiFormatted != $tglSelesaiFormatted)
+                                        &ndash; {{ $tglSelesaiFormatted }}
                                     @endif
                                 </span>
                             </div>
                             <div class="info-row">
                                 <i class="fas fa-users"></i>
-                                <span>Target: <strong>{{ $rencana->estimasi_peserta ?? '-' }} orang</strong></span>
+                                <span>Target: <strong>{{ $targetPeserta }} orang</strong></span>
                             </div>
 
                             {{-- Laporan Stats --}}
-                            @if($laporan)
-                                <hr class="my-2">
-                                <div class="d-flex" style="gap:8px;">
-                                    <div class="stat-mini">
-                                        <div class="stat-val">{{ $laporan->realisasi_peserta ?? '-' }}</div>
-                                        <div class="stat-lbl">Realisasi Peserta</div>
-                                    </div>
-                                    <div class="stat-mini">
-                                        <div class="stat-val" style="font-size:0.8rem;">
-                                            {{ $laporan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporan->realisasi_tanggal_mulai)->translatedFormat('d M Y') : '-' }}
-                                        </div>
-                                        <div class="stat-lbl">Tgl Realisasi</div>
-                                    </div>
+                            <hr class="my-2">
+                            <div class="d-flex" style="gap:8px;">
+                                <div class="stat-mini">
+                                    <div class="stat-val">{{ $laporan->realisasi_peserta ?? '-' }}</div>
+                                    <div class="stat-lbl">Realisasi Peserta</div>
                                 </div>
-                            @else
-                                <div class="mt-2 p-2 rounded text-center" style="background:#fff5f5; border:1px dashed #fca5a5;">
-                                    <small class="text-danger"><i class="fas fa-exclamation-circle mr-1"></i>Laporan kegiatan belum dibuat</small>
+                                <div class="stat-mini">
+                                    <div class="stat-val" style="font-size:0.8rem;">
+                                        {{ $laporan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporan->realisasi_tanggal_mulai)->translatedFormat('d M Y') : '-' }}
+                                    </div>
+                                    <div class="stat-lbl">Tgl Realisasi</div>
                                 </div>
-                            @endif
+                            </div>
                         </div>
 
                         {{-- Card Footer --}}
                         <div class="card-footer bg-white border-top-0 pt-0 pb-3 px-3">
                             <div class="d-flex" style="gap:8px;">
-                                <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'history']) }}"
-                                   class="btn btn-sm bg-navy text-white flex-fill shadow-sm">
-                                    <i class="fas fa-calendar-check mr-1"></i> Lihat Rencana
-                                </a>
-                                @if($laporan)
-                                    <a href="{{ route('laporan_kegiatan.show', $laporan->uuid ?? $laporan->id) }}"
+                                @if($rencana)
+                                    <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'history']) }}"
                                        class="btn btn-sm bg-navy text-white flex-fill shadow-sm">
-                                        <i class="fas fa-file-alt mr-1"></i> Lihat Laporan
+                                        <i class="fas fa-calendar-check mr-1"></i> Lihat Rencana
                                     </a>
                                 @endif
+                                <a href="{{ route('laporan_kegiatan.show', $laporan->uuid ?? $laporan->id) }}"
+                                   class="btn btn-sm bg-navy text-white flex-fill shadow-sm">
+                                    <i class="fas fa-file-alt mr-1"></i> Lihat Laporan
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -390,9 +394,9 @@
         </div>
 
         {{-- Navigasi Pagination --}}
-        @if (method_exists($rencanaKegiatans, 'links'))
+        @if (method_exists($laporans, 'links'))
             <div class="d-flex justify-content-center mt-4 mb-3">
-                {{ $rencanaKegiatans->links() }}
+                {{ $laporans->links() }}
             </div>
         @endif
     @endif
