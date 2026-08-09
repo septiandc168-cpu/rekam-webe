@@ -86,7 +86,7 @@
                     $fromLaporan   = request('from') === 'laporan';
 
                     $isHistoryActive = request()->routeIs('history_realisasi.*') || 
-                        ($isRencanaShow && (in_array($rencanaStatus, ['selesai', 'draft']) || $fromHistory)) || 
+                        ($isRencanaShow && ($rencanaStatus === 'selesai' || $fromHistory)) || 
                         ($isLaporanShow && $fromHistory) ||
                         $fromHistory;
 
