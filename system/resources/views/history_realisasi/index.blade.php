@@ -327,9 +327,6 @@
                             <div class="d-flex flex-wrap align-items-center" style="gap: 6px;">
                                 <span class="badge-jenis {{ $jenisBadge }}">{{ $jenisLabel }}</span>
                                 <span class="{{ $laporanBadgeClass }}">{{ $laporanBadgeLabel }}</span>
-                                @if($isLaporanLangsung)
-                                    <span class="badge badge-warning text-dark" style="font-size:0.68rem; padding: 2px 6px;"><i class="fas fa-bolt mr-1"></i>Langsung</span>
-                                @endif
                             </div>
                         </div>
 
