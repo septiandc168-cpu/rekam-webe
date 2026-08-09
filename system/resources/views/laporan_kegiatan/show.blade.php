@@ -285,6 +285,8 @@
                 </div>
             </div>
         </div>
+    @endif
+
     @if(!empty($laporanKegiatan->catatan_evaluasi))
         @php
             $lapSt = $laporanKegiatan->status;
