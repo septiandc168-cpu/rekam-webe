@@ -337,8 +337,8 @@
                         {
                             label: 'Rencana Selesai',
                             data: @json($chartRencanaSelesai),
-                            backgroundColor: '#001f3f',
-                            borderColor: '#001226',
+                            backgroundColor: '#007bff',
+                            borderColor: '#0056b3',
                             borderWidth: 1,
                             borderRadius: 4,
                             stack: 'Stack 0',
@@ -347,8 +347,8 @@
                         {
                             label: 'Laporan Langsung',
                             data: @json($chartLaporanLangsung),
-                            backgroundColor: '#fd7e14',
-                            borderColor: '#d96207',
+                            backgroundColor: '#ffc107',
+                            borderColor: '#d39e00',
                             borderWidth: 1,
                             borderRadius: 4,
                             stack: 'Stack 0',
@@ -363,7 +363,7 @@
                         legend: {
                             display: true,
                             position: 'top',
-                            align: 'end',
+                            align: 'center',
                             labels: {
                                 usePointStyle: true,
                                 pointStyle: 'rectRounded',
