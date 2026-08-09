@@ -20,14 +20,16 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
     protected $bulan;
     protected $status;
     protected $userId;
+    protected $jenis;
     private $rowNumber = 0;
 
-    public function __construct($tahun, $bulan, $status, $userId)
+    public function __construct($tahun, $bulan, $status, $userId, $jenis = null)
     {
         $this->tahun = $tahun;
         $this->bulan = $bulan;
         $this->status = $status;
         $this->userId = $userId;
+        $this->jenis = $jenis;
     }
 
     public function collection()
@@ -48,6 +50,19 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
                 $q->whereMonth('realisasi_tanggal_mulai', $bulan)
                   ->orWhereHas('rencanaKegiatan', fn($r) => $r->whereMonth('tanggal_mulai', $bulan));
             });
+        }
+        if ($this->jenis) {
+            $jenis = $this->jenis;
+            if ($jenis === 'langsung') {
+                $query->whereNull('rencana_kegiatan_id');
+            } else {
+                $query->where(function ($q) use ($jenis) {
+                    $q->whereHas('rencanaKegiatan', fn($r) => $r->where('jenis_kegiatan', $jenis));
+                    if ($jenis === 'lainnya') {
+                        $q->orWhereNull('rencana_kegiatan_id');
+                    }
+                });
+            }
         }
         if ($this->userId) {
             $query->where('user_id', $this->userId);

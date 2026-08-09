@@ -152,6 +152,7 @@
                     <option value="edukasi"          {{ request('jenis') === 'edukasi'          ? 'selected' : '' }}>Edukasi</option>
                     <option value="usaha masyarakat" {{ request('jenis') === 'usaha masyarakat' ? 'selected' : '' }}>Usaha Masyarakat</option>
                     <option value="lainnya"          {{ request('jenis') === 'lainnya'          ? 'selected' : '' }}>Lainnya</option>
+                    <option value="langsung"         {{ request('jenis') === 'langsung'         ? 'selected' : '' }}>Laporan Langsung</option>
                 </select>
                 @if(auth()->user()->role->role_name === 'admin')
                 <select name="user_id" class="form-control mr-2 rounded" style="min-width: 160px;">
@@ -198,6 +199,7 @@
                             <option value="edukasi" {{ request('jenis') === 'edukasi' ? 'selected' : '' }}>Edukasi</option>
                             <option value="usaha masyarakat" {{ request('jenis') === 'usaha masyarakat' ? 'selected' : '' }}>Usaha Masyarakat</option>
                             <option value="lainnya" {{ request('jenis') === 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                            <option value="langsung" {{ request('jenis') === 'langsung' ? 'selected' : '' }}>Laporan Langsung</option>
                         </select>
                     </div>
                     @if(auth()->user()->role->role_name === 'admin')

@@ -167,12 +167,16 @@ class RencanaKegiatanController extends Controller
         }
         if ($request->filled('jenis')) {
             $jenis = $request->jenis;
-            $query->where(function ($q) use ($jenis) {
-                $q->whereHas('rencanaKegiatan', fn($r) => $r->where('jenis_kegiatan', $jenis));
-                if ($jenis === 'lainnya') {
-                    $q->orWhereNull('rencana_kegiatan_id');
-                }
-            });
+            if ($jenis === 'langsung') {
+                $query->whereNull('rencana_kegiatan_id');
+            } else {
+                $query->where(function ($q) use ($jenis) {
+                    $q->whereHas('rencanaKegiatan', fn($r) => $r->where('jenis_kegiatan', $jenis));
+                    if ($jenis === 'lainnya') {
+                        $q->orWhereNull('rencana_kegiatan_id');
+                    }
+                });
+            }
         }
         if ($request->filled('user_id') && $isAdmin) {
             $query->where('user_id', $request->user_id);
@@ -1199,12 +1203,13 @@ class RencanaKegiatanController extends Controller
 
         $bulan = $request->bulan;
         $tahun = $request->tahun;
+        $jenis = $request->jenis;
         $status = $request->status;
         $userId = $request->user_id;
 
         $fileName = 'Rekap_Rencana_Kegiatan_' . date('Ymd_His') . '.xlsx';
 
-        return Excel::download(new RencanaKegiatanExport($tahun, $bulan, $status, $userId), $fileName);
+        return Excel::download(new RencanaKegiatanExport($tahun, $bulan, $status, $userId, $jenis), $fileName);
     }
 
     /**
