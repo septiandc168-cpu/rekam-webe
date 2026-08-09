@@ -138,7 +138,7 @@
             <div class="d-flex align-items-center flex-wrap mb-2" style="gap: 8px;">
                 @if($laporanKegiatan->isDarurat())
                     <span class="d-inline-flex align-items-center" style="background:#f1f5f9; color:#334155; padding:3px 10px; border-radius:4px; font-size:0.75rem; font-weight:600; border:1px solid #e2e8f0; white-space:nowrap; flex-shrink:0;">
-                        <i class="fas fa-bolt mr-1 text-warning"></i> Laporan Langsung
+                        Laporan Langsung
                     </span>
                 @endif
                 <div class="flex-shrink-0 d-inline-flex align-items-center">

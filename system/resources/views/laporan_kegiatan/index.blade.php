@@ -290,7 +290,7 @@
                                             {{ $laporan->isDarurat() ? $laporan->judul_kegiatan : ($laporan->rencanaKegiatan?->nama_kegiatan ?? '-') }}
                                         </div>
                                         @if ($laporan->isDarurat())
-                                            <span style="background:#e2e8f0; color:#334155; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500;"><i class="fas fa-bolt mr-1"></i> Laporan Langsung</span>
+                                            <span style="background:#e2e8f0; color:#334155; padding:2px 8px; border-radius:4px; font-size:0.78rem; font-weight:500;">Laporan Langsung</span>
                                         @else
                                             <small class="text-muted d-block text-truncate" style="max-width: 250px;" title="{{ $laporan->rencanaKegiatan?->getJenisKegiatanLabel() ?? '-' }}">{{ $laporan->rencanaKegiatan?->getJenisKegiatanLabel() ?? '-' }}</small>
                                         @endif
