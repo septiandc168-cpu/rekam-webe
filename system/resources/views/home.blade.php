@@ -197,9 +197,12 @@
             <div class="col-md-5 mb-4 d-flex">
                 <div class="card w-100 h-100 d-flex flex-column">
                     <div class="card-header bg-navy">
-                        <h3 class="card-title">
+                        <h3 class="card-title mb-0">
                             <i class="fas fa-calendar-alt mr-2"></i>
                             Kalender Kegiatan
+                            <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
+                                <i class="fas fa-info-circle mr-1"></i> Menampilkan jadwal rencana kegiatan yang akan dilaksanakan
+                            </small>
                         </h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
