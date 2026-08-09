@@ -201,7 +201,7 @@
                             <i class="fas fa-calendar-alt mr-2"></i>
                             Kalender Kegiatan
                             <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
-                                <i class="fas fa-info-circle mr-1"></i> Menampilkan jadwal rencana kegiatan yang akan dilaksanakan
+                                <i class="fas fa-info-circle mr-1"></i> Menampilkan jadwal kegiatan yang akan dilaksanakan
                             </small>
                         </h3>
                         <div class="card-tools">
