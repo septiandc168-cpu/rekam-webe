@@ -256,9 +256,6 @@
                     <div class="modal-body p-3" id="kalender-modal-body" style="max-height: 70vh; overflow-y: auto;">
                         <!-- Item list loaded dynamically via JS -->
                     </div>
-                    <div class="modal-footer py-2 px-3 bg-light">
-                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Tutup</button>
-                    </div>
                 </div>
             </div>
         </div>
