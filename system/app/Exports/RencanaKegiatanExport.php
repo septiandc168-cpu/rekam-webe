@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\RencanaKegiatan;
+use App\Models\LaporanKegiatan;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -36,8 +36,12 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $query = \App\Models\LaporanKegiatan::with(['user', 'rencanaKegiatan'])
-            ->where('status', \App\Models\LaporanKegiatan::STATUS_FINAL);
+        $query = LaporanKegiatan::with(['user', 'rencanaKegiatan'])
+            ->whereIn('status', [
+                LaporanKegiatan::STATUS_FINAL,
+                LaporanKegiatan::STATUS_DIAJUKAN,
+                LaporanKegiatan::STATUS_REVISI,
+            ]);
 
         if ($this->tahun) {
             $tahun = $this->tahun;
@@ -119,8 +123,15 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
         }
 
         $pembuat = $laporan->user ? $laporan->user->name : ($rencana && $rencana->user ? $rencana->user->name : '-');
-        $target = $laporan->target_peserta ?: ($rencana ? ($rencana->estimasi_peserta ?: 0) : 0);
-        $realisasi = $laporan->realisasi_peserta ?: 0;
+        $target = (int) ($laporan->target_peserta ?: ($rencana ? ($rencana->estimasi_peserta ?: 0) : 0));
+        $realisasi = (int) ($laporan->realisasi_peserta ?: 0);
+
+        $statusText = match($laporan->status) {
+            'final'    => 'Laporan Final',
+            'diajukan' => 'Laporan Diajukan',
+            'revisi'   => 'Laporan Revisi',
+            default    => 'Draft',
+        };
 
         return [
             $this->rowNumber,
@@ -131,44 +142,47 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
             $pembuat,
             $target,
             $realisasi,
-            'Selesai (Laporan Final)',
+            $statusText,
         ];
     }
 
     public function styles(Worksheet $sheet)
     {
         $lastRow = $sheet->getHighestRow();
-        $lastColumn = $sheet->getHighestColumn();
-        $range = 'A1:' . $lastColumn . $lastRow;
+        $range = 'A1:I' . $lastRow;
 
-        // Gaya default seluruh tabel (Font: Times New Roman, ukuran 12)
+        // Gaya default seluruh tabel (Font: Times New Roman, ukuran 11)
         $sheet->getStyle($range)->applyFromArray([
             'font' => [
                 'name' => 'Times New Roman',
-                'size' => 12,
+                'size' => 11,
             ],
             'alignment' => [
                 'vertical' => Alignment::VERTICAL_CENTER,
-                'wrapText' => true, // Mengaktifkan text-wrap agar tidak terpotong
+                'wrapText' => true,
             ],
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => 'FF000000'], // Hitam solid
+                    'color' => ['argb' => 'FF000000'],
                 ],
             ],
         ]);
 
-        // Merapikan posisi tengah (center) pada kolom tertentu (No, Tanggal, Status)
+        // Perataan tengah kolom No, Jenis, Tanggal, Target, Realisasi, Status
         $sheet->getStyle('A1:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('E1:F' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('I1:J' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('C1:C' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('E1:E' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('G1:H' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('I1:I' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         // Gaya khusus baris Header (Baris 1)
-        $sheet->getStyle('A1:' . $lastColumn . '1')->applyFromArray([
+        $sheet->getRowDimension(1)->setRowHeight(28);
+        $sheet->getStyle('A1:I1')->applyFromArray([
             'font' => [
                 'bold' => true,
-                'color' => ['argb' => 'FFFFFFFF'], // Teks putih
+                'size' => 11,
+                'color' => ['argb' => 'FFFFFFFF'],
             ],
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -176,12 +190,48 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
             ],
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FF001f3f'], // Warna dasar bg-navy (Biru dongker) khas AdminLTE
+                'startColor' => ['argb' => 'FF001f3f'], // Navy Blue
             ],
         ]);
-        
+
         // Membekukan Header agar tidak ikut ter-scroll
         $sheet->freezePane('A2');
+
+        // Baris Total Penjumlahan di paling bawah
+        $totalRow = $lastRow + 1;
+        $sheet->setCellValue('A' . $totalRow, 'TOTAL REALISASI');
+        $sheet->mergeCells('A' . $totalRow . ':F' . $totalRow);
+        $sheet->setCellValue('G' . $totalRow, '=SUM(G2:G' . $lastRow . ')');
+        $sheet->setCellValue('H' . $totalRow, '=SUM(H2:H' . $lastRow . ')');
+
+        $sheet->getRowDimension($totalRow)->setRowHeight(25);
+        $sheet->getStyle('A' . $totalRow . ':I' . $totalRow)->applyFromArray([
+            'font' => [
+                'name' => 'Times New Roman',
+                'size' => 11,
+                'bold' => true,
+            ],
+            'alignment' => [
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FFF2F4F7'], // Soft gray
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'FF000000'],
+                ],
+                'bottom' => [
+                    'borderStyle' => Border::BORDER_DOUBLE,
+                    'color' => ['argb' => 'FF000000'],
+                ],
+            ],
+        ]);
+
+        $sheet->getStyle('A' . $totalRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        $sheet->getStyle('G' . $totalRow . ':H' . $totalRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         return [];
     }
@@ -190,16 +240,14 @@ class RencanaKegiatanExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             'A' => 6,   // No
-            'B' => 35,  // Nama Kegiatan
-            'C' => 20,  // Jenis Kegiatan
+            'B' => 38,  // Nama Kegiatan
+            'C' => 22,  // Jenis Kegiatan
             'D' => 25,  // Desa/Lokasi
-            'E' => 15,  // Tgl Mulai
-            'F' => 15,  // Tgl Selesai
-            'G' => 20,  // Penanggung Jawab
-            'H' => 25,  // Kelompok/Komunitas
-            'I' => 15,  // Estimasi Peserta
-            'J' => 15,  // Status
-            'K' => 25,  // Penyusun
+            'E' => 22,  // Tanggal Pelaksanaan
+            'F' => 26,  // Penanggung Jawab
+            'G' => 16,  // Target Peserta
+            'H' => 18,  // Realisasi Peserta
+            'I' => 20,  // Status Laporan
         ];
     }
 }
