@@ -176,7 +176,7 @@
                             <i class="fas fa-chart-bar mr-2"></i>
                             Statistik Kegiatan per Bulan
                             <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
-                                <i class="fas fa-info-circle mr-1"></i> Sebaran status: Disetujui, Rencana Selesai, dan Laporan Langsung
+                                <i class="fas fa-info-circle mr-1"></i> Sebaran status: Akan Dilaksanakan, Telah Selesai, dan Kegiatan Langsung
                             </small>
                         </h3>
                         <div class="card-tools">
@@ -322,7 +322,7 @@
                     labels: @json($chartLabels),
                     datasets: [
                         {
-                            label: 'Disetujui',
+                            label: 'Akan Dilaksanakan',
                             data: @json($chartDisetujui),
                             backgroundColor: '#28a745',
                             borderColor: '#1e7e34',
@@ -332,7 +332,7 @@
                             maxBarThickness: 40,
                         },
                         {
-                            label: 'Rencana Selesai',
+                            label: 'Telah Selesai',
                             data: @json($chartRencanaSelesai),
                             backgroundColor: '#007bff',
                             borderColor: '#0056b3',
@@ -342,7 +342,7 @@
                             maxBarThickness: 40,
                         },
                         {
-                            label: 'Laporan Langsung',
+                            label: 'Kegiatan Langsung',
                             data: @json($chartLaporanLangsung),
                             backgroundColor: '#ffc107',
                             borderColor: '#d39e00',
