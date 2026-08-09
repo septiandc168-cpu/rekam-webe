@@ -112,6 +112,19 @@
 </li>
 
 <style>
+    .dropdown-item:active,
+    .dropdown-item:focus,
+    .dropdown-item.active {
+        background-color: #001f3f !important;
+        color: #ffffff !important;
+    }
+
+    .dropdown-item:active *,
+    .dropdown-item:focus *,
+    .dropdown-item.active * {
+        color: #ffffff !important;
+    }
+
     .notification-unread:hover {
         background-color: #e9ecef !important;
     }

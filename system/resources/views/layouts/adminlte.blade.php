@@ -83,6 +83,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
         a.btn-secondary:hover {
             color: #ffffff !important;
         }
+
+        /* Dropdown item active & focus navy */
+        .dropdown-item:active,
+        .dropdown-item:focus,
+        .dropdown-item.active {
+            background-color: #001f3f !important;
+            color: #ffffff !important;
+        }
+        .dropdown-item:active *,
+        .dropdown-item:focus *,
+        .dropdown-item.active * {
+            color: #ffffff !important;
+        }
         
         /* UI/UX Enhancements */
         .hover-card, .small-box {
