@@ -150,19 +150,23 @@
                                             </div>
 
                                             <!-- Content Wrapper -->
-                                            <div class="flex-grow-1 pr-md-3">
-                                                <div class="d-flex align-items-center flex-wrap" style="gap: 6px;">
-                                                    @if($isUnread)
-                                                        <span class="badge badge-danger font-weight-bold px-2 py-1" style="font-size: 0.72rem; border-radius: 4px;">Baru</span>
-                                                    @endif
-                                                    <span class="badge font-weight-bold px-2 py-1" style="background-color: {{ $badgeBg }}; color: {{ $badgeColor }}; font-size: 0.72rem; border-radius: 4px;">
-                                                        {{ $badgeText }}
-                                                    </span>
-                                                    <small class="text-muted ml-auto d-flex align-items-center" style="font-size: 0.8rem;">
+                                            <div class="flex-grow-1">
+                                                <!-- Header Row: Badges di Kiri, Waktu di Kanan Atas -->
+                                                <div class="d-flex align-items-center justify-content-between flex-wrap" style="gap: 6px;">
+                                                    <div class="d-flex align-items-center" style="gap: 6px;">
+                                                        @if($isUnread)
+                                                            <span class="badge badge-danger font-weight-bold px-2 py-1" style="font-size: 0.72rem; border-radius: 4px;">Baru</span>
+                                                        @endif
+                                                        <span class="badge font-weight-bold px-2 py-1" style="background-color: {{ $badgeBg }}; color: {{ $badgeColor }}; font-size: 0.72rem; border-radius: 4px;">
+                                                            {{ $badgeText }}
+                                                        </span>
+                                                    </div>
+                                                    <small class="text-muted d-flex align-items-center ml-auto" style="font-size: 0.8rem;">
                                                         <i class="far fa-clock mr-1"></i> {{ $indonesianTime }} ({{ $notification->created_at->translatedFormat('d M Y H:i') }})
                                                     </small>
                                                 </div>
 
+                                                <!-- Message Body -->
                                                 <h6 class="font-weight-bold text-dark mt-2 mb-1" style="font-size: 0.95rem; line-height: 1.4;">
                                                     {{ $message }}
                                                 </h6>
@@ -172,14 +176,14 @@
                                                         <i class="fas fa-info-circle text-navy mr-1"></i> {{ $keterangan }}
                                                     </div>
                                                 @endif
-                                            </div>
 
-                                            <!-- Action Button -->
-                                            <div class="ml-auto pl-2 d-flex align-items-center align-self-center mt-2 mt-md-0">
-                                                <a href="{{ route('notifications.read', $notification->id) }}" 
-                                                   class="btn btn-sm bg-navy text-white font-weight-bold shadow-sm rounded-pill px-3 py-1 text-nowrap">
-                                                    <i class="fas fa-eye mr-1"></i> Lihat Detail
-                                                </a>
+                                                <!-- Footer Row: Tombol Lihat Detail di Kanan Bawah -->
+                                                <div class="d-flex justify-content-end mt-3">
+                                                    <a href="{{ route('notifications.read', $notification->id) }}" 
+                                                       class="btn btn-sm bg-navy text-white font-weight-bold shadow-sm rounded-pill px-3 py-1 text-nowrap">
+                                                        <i class="fas fa-eye mr-1"></i> Lihat Detail
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
