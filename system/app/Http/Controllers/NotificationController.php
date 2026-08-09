@@ -24,7 +24,7 @@ class NotificationController extends Controller
         }
 
         $notifications = $query->orderBy('created_at', 'desc')
-            ->paginate(15)
+            ->paginate(5)
             ->withQueryString();
 
         $unreadCount = $user->unreadNotifications()->count();
