@@ -316,8 +316,9 @@
             }
 
             // === Chart.js: Bar Chart Kegiatan per Bulan ===
-            var chartDisetujuiData = @json($chartDisetujui);
-            var chartSelesaiData   = @json($chartSelesai);
+            var chartDisetujuiData       = @json($chartDisetujui);
+            var chartRencanaSelesaiData  = @json($chartRencanaSelesai);
+            var chartLaporanLangsungData = @json($chartLaporanLangsung);
 
             var ctx = document.getElementById('chartKegiatan').getContext('2d');
             new Chart(ctx, {
@@ -353,12 +354,22 @@
                                     var idx = context.dataIndex;
                                     var total = context.parsed.y || 0;
                                     var disetujui = chartDisetujuiData[idx] || 0;
-                                    var selesai   = chartSelesaiData[idx] || 0;
-                                    return [
+                                    var rSelesai  = chartRencanaSelesaiData[idx] || 0;
+                                    var langsung  = chartLaporanLangsungData[idx] || 0;
+                                    var totalSelesai = rSelesai + langsung;
+
+                                    var res = [
                                         'Total: ' + total + ' Kegiatan',
                                         '  • Disetujui: ' + disetujui,
-                                        '  • Selesai: ' + selesai
+                                        '  • Selesai: ' + totalSelesai
                                     ];
+
+                                    if (langsung > 0) {
+                                        res.push('    - Rencana Selesai: ' + rSelesai);
+                                        res.push('    - Laporan Langsung: ' + langsung);
+                                    }
+
+                                    return res;
                                 }
                             }
                         }

@@ -50,10 +50,12 @@ class HomeController extends Controller
         }
 
         // === Chart Data: Kegiatan per bulan (12 bulan terakhir berdasarkan tanggal_mulai) ===
-        $chartLabels    = [];
-        $chartValues    = [];
-        $chartDisetujui = [];
-        $chartSelesai   = [];
+        $chartLabels          = [];
+        $chartValues          = [];
+        $chartDisetujui       = [];
+        $chartSelesai         = [];
+        $chartRencanaSelesai  = [];
+        $chartLaporanLangsung = [];
         $now = Carbon::now();
 
         for ($i = 11; $i >= 0; $i--) {
@@ -87,12 +89,16 @@ class HomeController extends Controller
                 $queryLaporanLangsung->where('user_id', $user->id);
             }
 
-            $countDisetujui   = $queryDisetujui->count();
-            $countSelesai     = $querySelesai->count() + $queryLaporanLangsung->count();
+            $countDisetujui       = $queryDisetujui->count();
+            $countRencanaSelesai  = $querySelesai->count();
+            $countLaporanLangsung = $queryLaporanLangsung->count();
+            $countSelesaiTotal    = $countRencanaSelesai + $countLaporanLangsung;
 
-            $chartDisetujui[] = $countDisetujui;
-            $chartSelesai[]   = $countSelesai;
-            $chartValues[]    = $countDisetujui + $countSelesai;
+            $chartDisetujui[]       = $countDisetujui;
+            $chartRencanaSelesai[]  = $countRencanaSelesai;
+            $chartLaporanLangsung[] = $countLaporanLangsung;
+            $chartSelesai[]         = $countSelesaiTotal;
+            $chartValues[]          = $countDisetujui + $countSelesaiTotal;
         }
 
         // === Tabel: 5 Rencana Terbaru ===
@@ -138,6 +144,8 @@ class HomeController extends Controller
             'chartLabels',
             'chartValues',
             'chartDisetujui',
+            'chartRencanaSelesai',
+            'chartLaporanLangsung',
             'chartSelesai',
             'rencanaTerbaru',
             'mapData'
