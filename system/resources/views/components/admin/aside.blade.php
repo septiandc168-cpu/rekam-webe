@@ -67,15 +67,19 @@
                 @endif
                 @php
                     $isRencanaShow = request()->routeIs('rencana_kegiatan.show');
+                    $isLaporanShow = request()->routeIs('laporan_kegiatan.show');
                     $rencanaStatus = isset($rencana_kegiatan) ? $rencana_kegiatan->status : null;
-                    
-                    $isLaporanActive = request()->routeIs('laporan_kegiatan.*') ||
-                        ($isRencanaShow && $rencanaStatus === 'disetujui') ||
-                        request('from') === 'laporan';
+                    $fromHistory    = request('from') === 'history';
+                    $fromLaporan    = request('from') === 'laporan';
 
                     $isHistoryActive = request()->routeIs('history_realisasi.*') || 
-                        ($isRencanaShow && in_array($rencanaStatus, ['selesai', 'draft'])) || 
-                        request('from') === 'history';
+                        ($isRencanaShow && (in_array($rencanaStatus, ['selesai', 'draft']) || $fromHistory)) || 
+                        ($isLaporanShow && $fromHistory) ||
+                        $fromHistory;
+
+                    $isLaporanActive = (request()->routeIs('laporan_kegiatan.*') && !$isHistoryActive) ||
+                        ($isRencanaShow && $rencanaStatus === 'disetujui' && !$isHistoryActive) ||
+                        $fromLaporan;
 
                     $isRencanaActive = request()->routeIs('rencana_kegiatan.*') && !$isHistoryActive && !$isLaporanActive;
                 @endphp

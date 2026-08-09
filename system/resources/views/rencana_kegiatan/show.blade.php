@@ -198,7 +198,7 @@
             @endif
 
             @if(auth()->user()->role->role_name === 'admin' && ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_SELESAI || ($rencana_kegiatan->hasLaporan() && $rencana_kegiatan->laporanKegiatan->status === 'final')))
-                <a href="{{ route('laporan_kegiatan.show', $rencana_kegiatan->laporanKegiatan->uuid ?? $rencana_kegiatan->laporanKegiatan->id) }}" class="btn btn-sm bg-navy text-white mr-2 shadow-sm fw-bold">
+                <a href="{{ route('laporan_kegiatan.show', [$rencana_kegiatan->laporanKegiatan->uuid ?? $rencana_kegiatan->laporanKegiatan->id, 'from' => request('from') ?? ($rencana_kegiatan->status === 'selesai' ? 'history' : null)]) }}" class="btn btn-sm bg-navy text-white mr-2 shadow-sm fw-bold">
                     <i class="fas fa-file-alt mr-1"></i> Lihat Laporan
                 </a>
             @endif
@@ -241,7 +241,7 @@
             {{-- Tombol Lihat Laporan Kegiatan (Khusus Anggota jika sudah ada laporan) --}}
             @if(auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id())
                 @if($rencana_kegiatan->hasLaporan() && $rencana_kegiatan->laporanKegiatan)
-                    <a href="{{ route('laporan_kegiatan.show', $rencana_kegiatan->laporanKegiatan->uuid ?? $rencana_kegiatan->laporanKegiatan->id) }}" class="btn btn-sm bg-navy text-white mr-2 shadow-sm fw-bold">
+                    <a href="{{ route('laporan_kegiatan.show', [$rencana_kegiatan->laporanKegiatan->uuid ?? $rencana_kegiatan->laporanKegiatan->id, 'from' => request('from') ?? ($rencana_kegiatan->status === 'selesai' ? 'history' : null)]) }}" class="btn btn-sm bg-navy text-white mr-2 shadow-sm fw-bold">
                         <i class="fas fa-file-alt mr-1"></i> Lihat Laporan Kegiatan
                         @php
                             $lapStatus = $rencana_kegiatan->laporanKegiatan->status;
