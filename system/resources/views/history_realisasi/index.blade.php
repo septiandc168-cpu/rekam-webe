@@ -138,8 +138,6 @@
         <form action="{{ route('history_realisasi.index') }}" method="GET" class="mb-0 no-loader" id="filter-form">
             <div class="d-none d-lg-flex input-group input-group-sm align-items-center">
                 <span class="mr-2 text-muted fw-bold"><i class="fas fa-filter mr-1"></i> Filter:</span>
-                <input type="text" name="search" class="form-control mr-2 rounded" placeholder="Cari kegiatan/lokasi/PJ..."
-                       value="{{ request('search') }}" style="min-width: 170px;">
                 <select name="bulan" class="form-control mr-2 rounded" style="min-width: 130px;">
                     <option value="">Semua Bulan</option>
                     @foreach(['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'] as $idx => $bln)
@@ -182,10 +180,6 @@
             {{-- Mobile --}}
             <div class="d-lg-none">
                 <div class="row g-2">
-                    <div class="col-12 mt-2">
-                        <input type="text" name="search" class="form-control form-control-sm rounded" placeholder="Cari kegiatan/lokasi/PJ..."
-                               value="{{ request('search') }}">
-                    </div>
                     <div class="col-6 mt-2">
                         <select name="bulan" class="form-control form-control-sm rounded">
                             <option value="">Semua Bulan</option>
@@ -274,7 +268,7 @@
     </div>
 
     {{-- Content --}}
-    @if($laporans->isEmpty())
+    @if($laporans->isEmpty() && !request()->filled('search'))
         <div class="card shadow-sm">
             <div class="card-body">
                 <div class="empty-state py-5">
@@ -285,11 +279,39 @@
             </div>
         </div>
     @else
-        <div class="mb-3 d-flex justify-content-between align-items-center">
-            <small class="text-muted">
+        <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+            <small class="text-muted mb-2 mb-md-0">
                 <i class="fas fa-list mr-1"></i> Menampilkan <strong>{{ $laporans->firstItem() ?? 0 }} - {{ $laporans->lastItem() ?? 0 }}</strong> dari <strong>{{ $laporans->total() }}</strong> kegiatan
             </small>
+
+            {{-- Kolom Pencarian Gaya DataTables --}}
+            <div class="d-inline-flex align-items-center">
+                <label class="mb-0 text-muted font-weight-normal mr-2" style="font-size: 0.875rem;">Cari:</label>
+                <div class="input-group input-group-sm" style="width: 230px;">
+                    <input type="text" name="search" form="filter-form" class="form-control form-control-sm rounded-left" placeholder="Nama / Lokasi / PJ..." value="{{ request('search') }}">
+                    <div class="input-group-append">
+                        <button type="submit" form="filter-form" class="btn bg-navy text-white shadow-sm" title="Cari Data">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        @if($laporans->isEmpty() && request()->filled('search'))
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="empty-state py-5 text-center">
+                        <i class="fas fa-search text-muted" style="font-size:3.5rem;"></i>
+                        <h5 class="mt-3 text-muted">Data Tidak Ditemukan</h5>
+                        <p class="text-muted">Tidak ditemukan kegiatan yang cocok dengan kata kunci "<strong>{{ request('search') }}</strong>".</p>
+                        <a href="{{ route('history_realisasi.index') }}" class="btn bg-navy text-white btn-sm mt-2">
+                            <i class="fas fa-undo mr-1"></i> Reset Pencarian
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @else
         <div class="row">
             @foreach($laporans as $laporan)
                 @php
@@ -413,6 +435,7 @@
             <div class="d-flex justify-content-center mt-4 mb-3">
                 {{ $laporans->links() }}
             </div>
+        @endif
         @endif
     @endif
 
