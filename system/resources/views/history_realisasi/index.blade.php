@@ -49,11 +49,11 @@
         color: #e2e8f0;
         border: 1px solid rgba(255, 255, 255, 0.25);
     }
-    .badge-laporan-final      { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
-    .badge-laporan-diajukan   { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
-    .badge-laporan-revisi     { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
-    .badge-laporan-draft      { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
-    .badge-laporan-none       { background: rgba(255, 255, 255, 0.14); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 500; }
+    .badge-laporan-final      { background: #def7ec; color: #03543f; border: 1px solid #bcf0da; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
+    .badge-laporan-diajukan   { background: #e8f0fe; color: #1a56db; border: 1px solid #c7d8f9; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
+    .badge-laporan-revisi     { background: #fff3cd; color: #856404; border: 1px solid #ffebaa; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
+    .badge-laporan-draft      { background: #f1f3f5; color: #495057; border: 1px solid #dee2e6; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
+    .badge-laporan-none       { background: #f1f3f5; color: #495057; border: 1px solid #dee2e6; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
     .info-row {
         display: flex;
         align-items: flex-start;
