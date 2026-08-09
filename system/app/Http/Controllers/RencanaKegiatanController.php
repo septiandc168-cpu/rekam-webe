@@ -118,16 +118,20 @@ class RencanaKegiatanController extends Controller
     }
 
     /**
-     * History Realisasi Kegiatan: semua kegiatan yang ber-Laporan Final (baik dari Rencana maupun Laporan Langsung).
+     * History Realisasi Kegiatan: semua kegiatan yang ber-Laporan (Final, Diajukan, maupun Revisi).
      */
     public function historyRealisasi(Request $request)
     {
         $user    = auth()->user();
         $isAdmin = $user->role->role_name === 'admin';
 
-        // History Realisasi menampilkan semua kegiatan ber-Laporan Final
+        // History Realisasi menampilkan semua kegiatan ber-Laporan (Final, Diajukan, maupun Revisi)
         $query = \App\Models\LaporanKegiatan::with(['rencanaKegiatan', 'user'])
-            ->where('status', \App\Models\LaporanKegiatan::STATUS_FINAL);
+            ->whereIn('status', [
+                \App\Models\LaporanKegiatan::STATUS_FINAL,
+                \App\Models\LaporanKegiatan::STATUS_DIAJUKAN,
+                \App\Models\LaporanKegiatan::STATUS_REVISI,
+            ]);
 
         // Scope anggota ke data milik sendiri
         if (!$isAdmin) {

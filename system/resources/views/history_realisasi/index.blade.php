@@ -118,7 +118,7 @@
                     <i class="fas fa-history fa-2x mr-3" style="opacity:0.7;"></i>
                     <div>
                         <div style="font-size: 1.05rem; font-weight: 600;">History Realisasi Kegiatan</div>
-                        <div style="opacity:0.75; font-size:0.8rem;">Semua rencana kegiatan berstatus <strong>Selesai</strong> dengan laporan kegiatan berstatus <strong>Final</strong></div>
+                        <div style="opacity:0.75; font-size:0.8rem;">Semua realisasi kegiatan lapangan (Laporan Diajukan, Revisi, maupun Final)</div>
                     </div>
                 </div>
             </div>
@@ -305,8 +305,18 @@
                         $jenisBadge = 'badge-jenis-lainnya';
                     }
 
-                    $laporanBadgeClass = 'badge-laporan-final';
-                    $laporanBadgeLabel = 'Laporan Final';
+                    $laporanBadgeClass = match($laporan->status) {
+                        'final'    => 'badge-laporan-final',
+                        'diajukan' => 'badge-laporan-diajukan',
+                        'revisi'   => 'badge-laporan-revisi',
+                        default    => 'badge-laporan-draft',
+                    };
+                    $laporanBadgeLabel = match($laporan->status) {
+                        'final'    => 'Laporan Final',
+                        'diajukan' => 'Laporan Diajukan',
+                        'revisi'   => 'Laporan Revisi',
+                        default    => 'Laporan Draft',
+                    };
 
                     $userName = $laporan->user ? $laporan->user->name : ($rencana && $rencana->user ? $rencana->user->name : '-');
                     $lokasi = $laporan->lokasi_kegiatan ?: ($rencana ? ($rencana->desa ?: '-') : '-');
