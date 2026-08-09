@@ -90,8 +90,11 @@
             <div class="col-lg col-6 mb-3 mb-lg-0">
                 <div class="small-box bg-white shadow-sm h-100 mb-0" style="border-top: 4px solid #007bff; padding-bottom: 30px;">
                     <div class="inner">
-                        <h3 class="text-dark">{{ $totalRencana }}</h3>
-                        <p class="text-muted">Total Rencana Kegiatan</p>
+                        <h3 class="text-dark mb-1">{{ $totalRencana }}</h3>
+                        <p class="text-muted font-weight-bold mb-1">Total Rencana Kegiatan</p>
+                        <small class="text-muted d-block" style="font-size: 0.72rem; opacity: 0.85;">
+                            <i class="fas fa-info-circle mr-1 text-primary"></i> Seluruh draf & usulan rencana
+                        </small>
                     </div>
                     <div class="icon">
                         <i class="fas fa-file-alt" style="color: #007bff; opacity: 0.15;"></i>
@@ -105,8 +108,11 @@
             <div class="col-lg col-6 mb-3 mb-lg-0">
                 <div class="small-box bg-white shadow-sm h-100 mb-0" style="border-top: 4px solid #ffc107; padding-bottom: 30px;">
                     <div class="inner">
-                        <h3 class="text-dark">{{ $totalDiajukan }}</h3>
-                        <p class="text-muted">Menunggu Persetujuan</p>
+                        <h3 class="text-dark mb-1">{{ $totalDiajukan }}</h3>
+                        <p class="text-muted font-weight-bold mb-1">Menunggu Persetujuan</p>
+                        <small class="text-muted d-block" style="font-size: 0.72rem; opacity: 0.85;">
+                            <i class="fas fa-info-circle mr-1 text-warning"></i> Perlu verifikasi oleh Admin
+                        </small>
                     </div>
                     <div class="icon">
                         <i class="fas fa-clock" style="color: #ffc107; opacity: 0.15;"></i>
@@ -120,8 +126,11 @@
             <div class="col-lg col-6 mb-3 mb-lg-0">
                 <div class="small-box bg-white shadow-sm h-100 mb-0" style="border-top: 4px solid #28a745; padding-bottom: 30px;">
                     <div class="inner">
-                        <h3 class="text-dark">{{ $totalDisetujui }}</h3>
-                        <p class="text-muted">Kegiatan Disetujui</p>
+                        <h3 class="text-dark mb-1">{{ $totalDisetujui }}</h3>
+                        <p class="text-muted font-weight-bold mb-1">Kegiatan Disetujui</p>
+                        <small class="text-muted d-block" style="font-size: 0.72rem; opacity: 0.85;">
+                            <i class="fas fa-info-circle mr-1 text-success"></i> Siap/sedang dilaksanakan
+                        </small>
                     </div>
                     <div class="icon">
                         <i class="fas fa-check-circle" style="color: #28a745; opacity: 0.15;"></i>
@@ -135,8 +144,11 @@
             <div class="col-lg col-6 mb-3 mb-lg-0">
                 <div class="small-box bg-white shadow-sm h-100 mb-0" style="border-top: 4px solid #17a2b8; padding-bottom: 30px;">
                     <div class="inner">
-                        <h3 class="text-dark">{{ $totalLaporan }}</h3>
-                        <p class="text-muted">{{ $isAdmin ? 'Total Laporan Masuk' : 'Laporan Saya' }}</p>
+                        <h3 class="text-dark mb-1">{{ $totalLaporan }}</h3>
+                        <p class="text-muted font-weight-bold mb-1">{{ $isAdmin ? 'Total Laporan Masuk' : 'Laporan Saya' }}</p>
+                        <small class="text-muted d-block" style="font-size: 0.72rem; opacity: 0.85;">
+                            <i class="fas fa-info-circle mr-1 text-info"></i> Laporan realisasi lapangan
+                        </small>
                     </div>
                     <div class="icon">
                         <i class="fas fa-folder-open" style="color: #17a2b8; opacity: 0.15;"></i>
@@ -152,8 +164,11 @@
                 <div class="col-lg col-6 mb-3 mb-lg-0">
                     <div class="small-box bg-white shadow-sm h-100 mb-0" style="border-top: 4px solid #6c757d; padding-bottom: 30px;">
                         <div class="inner">
-                            <h3 class="text-dark">{{ $totalUsers }}</h3>
-                            <p class="text-muted">Total Anggota Terdaftar</p>
+                            <h3 class="text-dark mb-1">{{ $totalUsers }}</h3>
+                            <p class="text-muted font-weight-bold mb-1">Total Anggota Terdaftar</p>
+                            <small class="text-muted d-block" style="font-size: 0.72rem; opacity: 0.85;">
+                                <i class="fas fa-info-circle mr-1 text-secondary"></i> Pengguna aktif dalam sistem
+                            </small>
                         </div>
                         <div class="icon">
                             <i class="fas fa-users" style="color: #6c757d; opacity: 0.15;"></i>
@@ -176,7 +191,7 @@
                             <i class="fas fa-chart-bar mr-2"></i>
                             Statistik Kegiatan per Bulan
                             <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
-                                <i class="fas fa-info-circle mr-1"></i> Sebaran status: Akan Dilaksanakan, Telah Selesai, dan Kegiatan Langsung
+                                <i class="fas fa-info-circle mr-1"></i> Rekapitulasi bulanan: Akan Dilaksanakan (Hijau), Telah Selesai (Biru), dan Kegiatan Langsung (Kuning)
                             </small>
                         </h3>
                         <div class="card-tools">
@@ -197,9 +212,12 @@
             <div class="col-md-5 mb-4 d-flex">
                 <div class="card w-100 h-100 d-flex flex-column">
                     <div class="card-header bg-navy">
-                        <h3 class="card-title">
+                        <h3 class="card-title mb-0">
                             <i class="fas fa-calendar-alt mr-2"></i>
                             Kalender Kegiatan
+                            <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
+                                <i class="fas fa-info-circle mr-1"></i> Jadwal tanggal pelaksanaan seluruh kegiatan
+                            </small>
                         </h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -223,9 +241,12 @@
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-header bg-navy">
-                        <h3 class="card-title">
+                        <h3 class="card-title mb-0">
                             <i class="fas fa-map-marked-alt mr-2"></i>
                             Peta Sebaran Kegiatan
+                            <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
+                                <i class="fas fa-info-circle mr-1"></i> Pemetaan lokasi koordinat (geotagging) kegiatan di wilayah kerja
+                            </small>
                         </h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -241,6 +262,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         <!-- Modal Detail Kalender Kegiatan -->
         <div class="modal fade" id="modal-detail-kalender" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
