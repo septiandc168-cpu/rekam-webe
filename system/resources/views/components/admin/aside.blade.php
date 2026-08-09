@@ -54,7 +54,7 @@
                         </p>
                     </a>
                 </li>
-                @if (Auth::user()->role_id == 1)
+                @if (Auth::check() && Auth::user()->role && (Auth::user()->role->role_name === 'admin' || Auth::user()->role_id == 1))
                     <li class="nav-item">
                         <a href="{{ route('users.index') }}"
                             class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
