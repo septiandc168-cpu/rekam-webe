@@ -122,7 +122,7 @@
             <h6 class="card-title fw-bold text-dark mt-1 mb-0" style="font-size: 0.95rem;">Data Laporan Kegiatan</h6>
             <div class="card-tools">
                 @can('create', \App\Models\LaporanKegiatan::class)
-                    <a href="{{ route('laporan_kegiatan.create', ['jenis' => 'langsung']) }}" class="btn bg-navy text-white btn-sm shadow-sm">
+                    <a href="{{ route('laporan_kegiatan.create', ['jenis' => 'langsung']) }}" class="btn bg-navy text-white btn-sm shadow-sm btn-laporan-langsung">
                         <i class="fas fa-paper-plane mr-1"></i> Buat Laporan Langsung
                     </a>
                 @endcan
@@ -392,6 +392,27 @@
                 }
             });
         }
+
+        // Alert konfirmasi saat anggota mengeklik tombol Buat Laporan Langsung
+        $(document).on('click', '.btn-laporan-langsung, a[href*="jenis=langsung"]', function(e) {
+            e.preventDefault();
+            var targetUrl = $(this).attr('href');
+
+            Swal.fire({
+                title: 'Buat Laporan Langsung?',
+                text: 'Laporan Langsung digunakan untuk kegiatan yang dilaksanakan secara langsung tanpa Rencana Kegiatan yang disetujui sebelumnya. Apakah Anda yakin ingin melanjutkan?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#001f3f',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Lanjutkan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = targetUrl;
+                }
+            });
+        });
     });
 </script>
 @endpush
