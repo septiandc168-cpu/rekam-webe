@@ -232,7 +232,7 @@
                                 @php $fotos = !empty($laporanKegiatan->foto_kegiatan) ? (is_string($laporanKegiatan->foto_kegiatan) ? json_decode($laporanKegiatan->foto_kegiatan, true) : $laporanKegiatan->foto_kegiatan) : []; @endphp
                                 @if(is_array($fotos) && count($fotos) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-camera text-primary mr-1"></i> Foto saat ini:</p>
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-camera text-navy mr-1"></i> Foto saat ini:</p>
                                         <div class="d-flex flex-wrap gap-2">
                                             @foreach($fotos as $foto)
                                                 @php $path = is_array($foto) ? $foto['path'] : $foto; @endphp
@@ -265,7 +265,7 @@
                                 @php $daftar_hadir = !empty($laporanKegiatan->daftar_hadir) ? (is_string($laporanKegiatan->daftar_hadir) ? json_decode($laporanKegiatan->daftar_hadir, true) : $laporanKegiatan->daftar_hadir) : []; @endphp
                                 @if(is_array($daftar_hadir) && count($daftar_hadir) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
                                         @foreach($daftar_hadir as $file)
                                             @php
                                                 $path = is_array($file) ? $file['path'] : $file;
@@ -296,7 +296,7 @@
                                 @php $notulen = !empty($laporanKegiatan->notulen) ? (is_string($laporanKegiatan->notulen) ? json_decode($laporanKegiatan->notulen, true) : $laporanKegiatan->notulen) : []; @endphp
                                 @if(is_array($notulen) && count($notulen) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
                                         @foreach($notulen as $file)
                                             @php
                                                 $path = is_array($file) ? $file['path'] : $file;
@@ -329,7 +329,7 @@
                                 @php $materi = !empty($laporanKegiatan->materi) ? (is_string($laporanKegiatan->materi) ? json_decode($laporanKegiatan->materi, true) : $laporanKegiatan->materi) : []; @endphp
                                 @if(is_array($materi) && count($materi) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
                                         @foreach($materi as $file)
                                             @php
                                                 $path = is_array($file) ? $file['path'] : $file;
@@ -361,7 +361,7 @@
                                 @php $berita_acara = !empty($laporanKegiatan->berita_acara) ? (is_string($laporanKegiatan->berita_acara) ? json_decode($laporanKegiatan->berita_acara, true) : $laporanKegiatan->berita_acara) : []; @endphp
                                 @if(is_array($berita_acara) && count($berita_acara) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-info mr-1"></i> Dokumen saat ini:</p>
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
                                         @foreach($berita_acara as $file)
                                             @php
                                                 $path = is_array($file) ? $file['path'] : $file;
