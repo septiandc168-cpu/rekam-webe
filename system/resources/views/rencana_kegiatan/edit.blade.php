@@ -28,6 +28,35 @@
                 </div>
             @endif
 
+            @if(!empty($rencana_kegiatan->keterangan_status))
+                @php
+                    $st = $rencana_kegiatan->status;
+                    $alertClass = match($st) {
+                        'disetujui', 'selesai' => 'alert-success',
+                        'ditolak' => 'alert-danger',
+                        'revisi' => 'alert-warning',
+                        default => 'alert-info'
+                    };
+                    $iconClass = match($st) {
+                        'disetujui', 'selesai' => 'fa-check-circle',
+                        'ditolak' => 'fa-times-circle',
+                        'revisi' => 'fa-exclamation-triangle',
+                        default => 'fa-info-circle'
+                    };
+                    $titleText = match($st) {
+                        'revisi' => 'Catatan Revisi:',
+                        'disetujui' => 'Catatan Persetujuan:',
+                        'ditolak' => 'Catatan Penolakan:',
+                        'selesai' => 'Catatan Penyelesaian / Verifikasi Laporan:',
+                        default => 'Catatan Status:'
+                    };
+                @endphp
+                <div class="alert {{ $alertClass }} mb-4 shadow-sm border-0">
+                    <i class="fas {{ $iconClass }} mr-1"></i> <strong>{{ $titleText }}</strong><br>
+                    <span class="d-block mt-1">{!! nl2br(e($rencana_kegiatan->keterangan_status)) !!}</span>
+                </div>
+            @endif
+
             <!-- WIZARD PROGRESS BAR -->
             <div class="row mb-5 mt-2">
                 <div class="col-12">
