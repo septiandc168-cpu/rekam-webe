@@ -342,7 +342,7 @@
                                                          title="Hapus dokumen ini">
                                                      <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
                                                  </button>
-                                                <i class="fas fa-file-powerpoint text-warning"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                                <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
                                     </div>
