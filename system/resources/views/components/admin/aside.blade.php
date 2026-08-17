@@ -66,6 +66,9 @@
                     </li>
                 @endif
                 @php
+                    $userRole = Auth::user() && Auth::user()->role ? Auth::user()->role->role_name : '';
+                    $isAdmin  = $userRole === 'admin' || (Auth::user() && Auth::user()->role_id == 1);
+
                     $isRencanaShow = request()->routeIs('rencana_kegiatan.show');
                     $isLaporanShow = request()->routeIs('laporan_kegiatan.show');
 
@@ -91,7 +94,7 @@
                         $fromHistory;
 
                     $isLaporanActive = (request()->routeIs('laporan_kegiatan.*') && !$isHistoryActive) ||
-                        ($isRencanaShow && $rencanaStatus === 'disetujui' && !$isHistoryActive) ||
+                        ($isRencanaShow && $rencanaStatus === 'disetujui' && !$isHistoryActive && !$isAdmin) ||
                         $fromLaporan;
 
                     $isRencanaActive = request()->routeIs('rencana_kegiatan.*') && !$isHistoryActive && !$isLaporanActive;
