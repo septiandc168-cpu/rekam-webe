@@ -546,6 +546,7 @@ class RencanaKegiatanController extends Controller
         $isAdmin   = $user->role->role_name === 'admin';
         Log::info('RencanaKegiatanController@update called', ['id' => $rencana_kegiatan->id, 'input' => $request->all()]);
 
+        $previousStatus = $rencana_kegiatan->status;
         $isDraft = $request->input('action') === 'draft';
 
         // Different validation rules based on role
@@ -887,7 +888,8 @@ class RencanaKegiatanController extends Controller
         $message = match(true) {
             $request->input('action') === 'draft' => 'Draft rencana kegiatan berhasil diperbarui!',
             $isAdmin => 'Rencana kegiatan berhasil diperbarui!',
-            default => 'Rencana kegiatan berhasil direvisi dan diajukan ulang!'
+            $previousStatus === RencanaKegiatan::STATUS_REVISI => 'Rencana kegiatan berhasil direvisi dan diajukan ulang!',
+            default => 'Rencana kegiatan berhasil diajukan!'
         };
 
         toast($message, 'success');
