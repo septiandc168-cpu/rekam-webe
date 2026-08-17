@@ -117,7 +117,8 @@ class NotificationController extends Controller
         // Mark all unread notifications as read
         $user->unreadNotifications()->update(['read_at' => now()]);
 
-        return redirect()->back()->with('success', 'Semua notifikasi telah ditandai sebagai dibaca.');
+        toast('Semua notifikasi telah ditandai sebagai dibaca.', 'success');
+        return redirect()->back();
     }
 
     /**
@@ -130,7 +131,8 @@ class NotificationController extends Controller
         // Delete all notifications for the user
         $deletedCount = $user->notifications()->delete();
 
-        return redirect()->back()->with('success', "Semua notifikasi ($deletedCount) telah dihapus.");
+        toast("Semua notifikasi ($deletedCount) telah dihapus.", 'success');
+        return redirect()->back();
     }
 
     /**
