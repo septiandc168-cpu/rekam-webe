@@ -49,7 +49,7 @@ class HomeController extends Controller
             $totalUsers     = 0;
         }
 
-        // === Chart Data: Kegiatan per bulan (12 bulan terakhir berdasarkan tanggal_mulai) ===
+        // === Chart Data: Kegiatan per bulan (12 bulan: 2 bulan lalu s/d 9 bulan ke depan) ===
         $chartLabels          = [];
         $chartValues          = [];
         $chartDisetujui       = [];
@@ -58,8 +58,8 @@ class HomeController extends Controller
         $chartLaporanLangsung = [];
         $now = Carbon::now();
 
-        for ($i = 11; $i >= 0; $i--) {
-            $month = $now->copy()->subMonths($i);
+        for ($i = -2; $i <= 9; $i++) {
+            $month = $now->copy()->addMonths($i);
             $chartLabels[] = $month->translatedFormat('M Y');
 
             $queryDisetujui = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
