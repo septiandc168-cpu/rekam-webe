@@ -819,13 +819,13 @@ class LaporanKegiatanController extends Controller
                         $laporan->uuid,
                         $laporan->rencanaKegiatan->nama_kegiatan ?? 'Kegiatan',
                         \App\Models\LaporanKegiatan::STATUS_FINAL,
-                        'Laporan telah diterima dan kegiatan selesai.',
+                        'Laporan telah diterima dan berstatus Final.',
                         now()
                     ));
                 }
             }
 
-            toast('Laporan diterima dan kegiatan dinyatakan Selesai secara otomatis.', 'success');
+            toast('Laporan kegiatan berhasil diterima dan berstatus Final!', 'success');
             return redirect()->back();
         } catch (\Exception $e) {
             Log::error('Gagal menyetujui laporan: ' . $e->getMessage());
