@@ -70,9 +70,12 @@ class HomeController extends Controller
                 ->whereMonth('tanggal_mulai', $month->month)
                 ->where('status', RencanaKegiatan::STATUS_SELESAI);
 
-            // Hitung Laporan Langsung (Tanpa Rencana Kegiatan) yang resmi (mengecualikan draft)
+            // Hitung Laporan Langsung (Tanpa Rencana Kegiatan) yang resmi (hanya status diajukan & final, mengecualikan draft & revisi)
             $queryLaporanLangsung = LaporanKegiatan::whereNull('rencana_kegiatan_id')
-                ->whereNotIn('status', [LaporanKegiatan::STATUS_DRAFT])
+                ->whereIn('status', [
+                    LaporanKegiatan::STATUS_DIAJUKAN,
+                    LaporanKegiatan::STATUS_FINAL
+                ])
                 ->where(function ($q) use ($month) {
                     $q->whereYear('realisasi_tanggal_mulai', $month->year)
                       ->whereMonth('realisasi_tanggal_mulai', $month->month)
