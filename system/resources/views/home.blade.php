@@ -363,6 +363,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    devicePixelRatio: window.devicePixelRatio || 2,
                     plugins: {
                         legend: {
                             display: true,
@@ -371,10 +372,11 @@
                             labels: {
                                 usePointStyle: true,
                                 pointStyle: 'rectRounded',
-                                padding: 12,
+                                padding: 14,
                                 font: {
-                                    size: 11,
-                                    weight: '600'
+                                    size: 12,
+                                    weight: '600',
+                                    family: "'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
                                 }
                             }
                         },
@@ -384,6 +386,13 @@
                             bodyColor: '#fff',
                             padding: 10,
                             cornerRadius: 6,
+                            titleFont: {
+                                size: 12,
+                                weight: '600'
+                            },
+                            bodyFont: {
+                                size: 12
+                            },
                             callbacks: {
                                 label: function(context) {
                                     var label = context.dataset.label || '';
@@ -403,6 +412,13 @@
                     scales: {
                         x: {
                             stacked: true,
+                            ticks: {
+                                font: {
+                                    size: 11,
+                                    weight: '500',
+                                    family: "'Source Sans Pro', sans-serif"
+                                }
+                            },
                             grid: {
                                 display: false
                             }
@@ -412,15 +428,15 @@
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1,
-                                precision: 0
+                                precision: 0,
+                                font: {
+                                    size: 11,
+                                    weight: '500',
+                                    family: "'Source Sans Pro', sans-serif"
+                                }
                             },
                             grid: {
                                 color: 'rgba(0, 0, 0, 0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
                             }
                         }
                     }
