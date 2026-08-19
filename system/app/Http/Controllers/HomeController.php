@@ -45,7 +45,7 @@ class HomeController extends Controller
             $totalDiajukan  = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
             $totalDisetujui = RencanaKegiatan::where('user_id', $user->id)->where('status', RencanaKegiatan::STATUS_DISETUJUI)->count();
             $totalLaporan   = LaporanKegiatan::where('user_id', $user->id)
-                ->where('status', '!=', LaporanKegiatan::STATUS_FINAL)->count();
+                ->whereNotIn('status', [LaporanKegiatan::STATUS_DRAFT, LaporanKegiatan::STATUS_FINAL])->count();
             $totalUsers     = 0;
         }
 
@@ -70,9 +70,9 @@ class HomeController extends Controller
                 ->whereMonth('tanggal_mulai', $month->month)
                 ->where('status', RencanaKegiatan::STATUS_SELESAI);
 
-            // Hitung Laporan Langsung (Tanpa Rencana Kegiatan) yang bukan draft
+            // Hitung Laporan Langsung (Tanpa Rencana Kegiatan) yang resmi (mengecualikan draft)
             $queryLaporanLangsung = LaporanKegiatan::whereNull('rencana_kegiatan_id')
-                ->where('status', '!=', LaporanKegiatan::STATUS_DRAFT)
+                ->whereNotIn('status', [LaporanKegiatan::STATUS_DRAFT])
                 ->where(function ($q) use ($month) {
                     $q->whereYear('realisasi_tanggal_mulai', $month->year)
                       ->whereMonth('realisasi_tanggal_mulai', $month->month)
