@@ -2,43 +2,6 @@
 
 @section('content_title', 'Detail Laporan Kegiatan')
 
-@php
-    $formatTextList = function ($text) {
-        if (empty($text)) return '-';
-        
-        if (strip_tags($text) !== $text) {
-            return $text;
-        }
-
-        $pattern = '/(?:\r?\n|\s)*(?=\d+[\.\)]\s+)/';
-        $items = preg_split($pattern, trim($text), -1, PREG_SPLIT_NO_EMPTY);
-
-        if (count($items) > 1) {
-            $html = '<ol class="mb-0 pl-3 text-justify" style="line-height: 1.6;">';
-            foreach ($items as $item) {
-                $cleanItem = preg_replace('/^\d+[\.\)]\s*/', '', trim($item));
-                if (!empty($cleanItem)) {
-                    $html .= '<li class="mb-1">' . e($cleanItem) . '</li>';
-                }
-            }
-            $html .= '</ol>';
-            return $html;
-        }
-
-        $lines = array_filter(array_map('trim', explode("\n", trim($text))));
-        if (count($lines) > 1) {
-            $html = '<ul class="mb-0 pl-3 text-justify" style="line-height: 1.6;">';
-            foreach ($lines as $line) {
-                $html .= '<li class="mb-1">' . e($line) . '</li>';
-            }
-            $html .= '</ul>';
-            return $html;
-        }
-
-        return '<div class="text-justify" style="line-height: 1.6;">' . nl2br(e($text)) . '</div>';
-    };
-@endphp
-
 @push('styles')
     <style>
         .list-group-item {
@@ -472,7 +435,7 @@
                             </div>
                             <div id="collapseRangkaian" class="collapse" aria-labelledby="headRangkaian" data-parent="#accordionLaporan">
                                 <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                    {!! $formatTextList($laporanKegiatan->rangkaian_kegiatan) !!}
+                                    {!! $laporanKegiatan->rangkaian_kegiatan !!}
                                 </div>
                             </div>
                         </div>
@@ -489,7 +452,7 @@
                             </div>
                             <div id="collapseProfil" class="collapse" aria-labelledby="headProfil" data-parent="#accordionLaporan">
                                 <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                    {!! $formatTextList($laporanKegiatan->profil_peserta) !!}
+                                    {!! $laporanKegiatan->profil_peserta !!}
                                 </div>
                             </div>
                         </div>
@@ -508,17 +471,17 @@
                                 <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
                                     <div class="mb-3">
                                         <strong class="text-dark d-block mb-1">Hasil yang Dicapai:</strong>
-                                        {!! $formatTextList($laporanKegiatan->hasil_dicapai) !!}
+                                        {!! $laporanKegiatan->hasil_dicapai !!}
                                     </div>
                                     <hr>
                                     <div class="mb-3 mt-3">
                                         <strong class="text-dark d-block mb-1">Output Nyata:</strong>
-                                        {!! $formatTextList($laporanKegiatan->output_nyata) !!}
+                                        {!! $laporanKegiatan->output_nyata !!}
                                     </div>
                                     <hr>
                                     <div class="mt-3">
                                         <strong class="text-dark d-block mb-1">Dampak Awal:</strong>
-                                        {!! $formatTextList($laporanKegiatan->dampak_awal) !!}
+                                        {!! $laporanKegiatan->dampak_awal !!}
                                     </div>
                                 </div>
                             </div>
@@ -539,19 +502,19 @@
                                     <div class="mb-4">
                                         <strong class="text-dark d-block mb-2"><i class="fas fa-exclamation-triangle mr-1 text-dark"></i> Kendala yang Dihadapi:</strong>
                                         <div class="text-dark">
-                                            {!! $laporanKegiatan->kendala ? $formatTextList($laporanKegiatan->kendala) : '<em class="text-dark">Tidak ada kendala.</em>' !!}
+                                            {!! $laporanKegiatan->kendala ?: '<em class="text-dark">Tidak ada kendala.</em>' !!}
                                         </div>
                                     </div>
                                     <div class="mb-4">
                                         <strong class="text-dark d-block mb-2"><i class="fas fa-check-circle mr-1 text-dark"></i> Solusi yang Dilakukan:</strong>
                                         <div class="text-dark">
-                                            {!! $laporanKegiatan->solusi ? $formatTextList($laporanKegiatan->solusi) : '<em class="text-dark">Tidak ada solusi yang dicatat.</em>' !!}
+                                            {!! $laporanKegiatan->solusi ?: '<em class="text-dark">Tidak ada solusi yang dicatat.</em>' !!}
                                         </div>
                                     </div>
                                     <div class="mb-2">
                                         <strong class="text-dark d-block mb-2"><i class="fas fa-lightbulb mr-1 text-dark"></i> Evaluasi & Rekomendasi:</strong>
                                         <div class="text-dark">
-                                            {!! $laporanKegiatan->evaluasi_rekomendasi ? $formatTextList($laporanKegiatan->evaluasi_rekomendasi) : '<em class="text-dark">Tidak ada evaluasi.</em>' !!}
+                                            {!! $laporanKegiatan->evaluasi_rekomendasi ?: '<em class="text-dark">Tidak ada evaluasi.</em>' !!}
                                         </div>
                                     </div>
                                 </div>
