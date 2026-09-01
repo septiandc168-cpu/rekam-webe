@@ -141,9 +141,20 @@
                 </td>
             </tr>
             <tr>
-                <td>Rangkaian Kegiatan</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
+                <td style="vertical-align: top;">Rangkaian Kegiatan</td>
+                <td style="text-align: center; vertical-align: top;">:</td>
+                <td style="vertical-align: top;">
+                    @php
+                        $rangkaianText = $laporanKegiatan->rangkaian_kegiatan ?? '-';
+                        if (strip_tags($rangkaianText) === $rangkaianText) {
+                            $formattedRangkaian = preg_replace('/(?<=\S|\.)\s+(\d+[\.\)])\s+/', "<br>$1 ", $rangkaianText);
+                            $formattedRangkaian = nl2br($formattedRangkaian);
+                        } else {
+                            $formattedRangkaian = $rangkaianText;
+                        }
+                    @endphp
+                    {!! $formattedRangkaian !!}
+                </td>
             </tr>
             <tr>
                 <td>Target Peserta</td>
