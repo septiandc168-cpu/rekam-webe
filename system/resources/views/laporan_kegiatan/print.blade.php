@@ -24,6 +24,44 @@
         'December' => 'Desember'
     ];
     $tanggalIndo = now()->format('d') . ' ' . $bulan[now()->format('F')] . ' ' . now()->format('Y');
+
+    $formatTextList = function ($text) {
+        if (empty($text)) return '-';
+        
+        // If text already contains HTML list tags like <ol>, <ul>, <p>, <br>
+        if (strip_tags($text) !== $text) {
+            return $text;
+        }
+
+        // Try splitting numbered points like "1. ", "2. ", "3. " or "1) ", "2) "
+        $pattern = '/(?:\r?\n|\s)*(?=\d+[\.\)]\s+)/';
+        $items = preg_split($pattern, trim($text), -1, PREG_SPLIT_NO_EMPTY);
+
+        if (count($items) > 1) {
+            $html = '<ol style="margin: 0; padding-left: 18px; text-align: justify; line-height: 1.5;">';
+            foreach ($items as $item) {
+                $cleanItem = preg_replace('/^\d+[\.\)]\s*/', '', trim($item));
+                if (!empty($cleanItem)) {
+                    $html .= '<li style="margin-bottom: 4px;">' . e($cleanItem) . '</li>';
+                }
+            }
+            $html .= '</ol>';
+            return $html;
+        }
+
+        // If split by lines (\n)
+        $lines = array_filter(array_map('trim', explode("\n", trim($text))));
+        if (count($lines) > 1) {
+            $html = '<ul style="margin: 0; padding-left: 18px; text-align: justify; line-height: 1.5; list-style-type: disc;">';
+            foreach ($lines as $line) {
+                $html .= '<li style="margin-bottom: 4px;">' . e($line) . '</li>';
+            }
+            $html .= '</ul>';
+            return $html;
+        }
+
+        return '<div style="text-align: justify; line-height: 1.5;">' . nl2br(e($text)) . '</div>';
+    };
 @endphp
 
         <!-- Header Web (tidak muncul saat print) -->
@@ -39,60 +77,89 @@
         <!-- Kop Surat -->
         <table class="kop-surat mb-4" style="width: 100%; border-bottom: 3px solid black; margin-bottom: 10px;">
             <tr>
-                <td style="width: 15%; text-align: left; vertical-align: middle; padding-bottom: 10px;">
-                    <img src="/public/adminlte/dist/img/logo_webe.png" alt="Logo" style="width: 100px;">
+                <td style="width: 15%; text-align: center;">
+                    <img src="/public/adminlte/dist/img/logo_webe.png" alt="Logo Yayasan WeBe" style="width: 90px; height: auto;">
                 </td>
-                <td style="width: 85%; text-align: center; vertical-align: middle; padding-bottom: 10px;">
-                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 16pt; font-weight: bold; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</div>
-                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: bold; margin-bottom: 5px;">REKAM WEBE - SISTEM PELAPORAN KEGIATAN</div>
-                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 11pt;">
-                        Jl. RM Sudiono No.49A, Ketapang, Kalimantan Barat<br>
-                        Email: yayasanwebe@gmail.com | Telp/WA: +62 813 6022 733
-                    </div>
+                <td style="width: 85%; text-align: center;">
+                    <h3 style="margin: 0; font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 16pt;">YAYASAN WEBE KONSORSIUM KONSULTAN MANAGEMENT</h3>
+                    <h4 style="margin: 5px 0 0 0; font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 14pt;">REKAM WEBE</h4>
+                    <p style="margin: 5px 0 0 0; font-family: 'Times New Roman', Times, serif; font-size: 10pt;">Jl. Pelabuhan Kiri Kendawangan, Kab. Ketapang, Kalimantan Barat</p>
+                    <p style="margin: 2px 0 0 0; font-family: 'Times New Roman', Times, serif; font-size: 10pt;">Email: info@rekamwebe.org | Website: www.rekamwebe.org</p>
                 </td>
             </tr>
         </table>
-        <div style="border-top: 1px solid black; margin-top: -8px; margin-bottom: 20px;"></div>
 
-        <!-- Judul Surat -->
-        <div class="print-title-section mb-4 text-center">
-            <h3 style="font-family: 'Times New Roman', Times, serif; text-decoration: underline; font-weight: bold; font-size: 14pt; margin-bottom: 5px; text-transform: uppercase;">LAPORAN PELAKSANAAN KEGIATAN</h3>
-            <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; text-transform: uppercase;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</div>
+        <!-- Header Print (muncul di halaman pertama) -->
+        <div class="first-page-header">
+            <div class="document-header">
+                <h2>LAPORAN KEGIATAN</h2>
+                <h3>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h3>
+            </div>
         </div>
 
-        @if(!$laporanKegiatan->isDarurat())
-        <!-- Informasi Rencana Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 20px;">Informasi Rencana Kegiatan</div>
+        <!-- Informasi Umum -->
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 15px;">Informasi Umum</div>
         <table class="table-borderless mb-4" style="width: 100%; border-collapse: collapse; margin-left: 30px;">
             <tr>
-                <td style="width: 220px;">Nama Kegiatan</td>
-                <td style="width: 15px; text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rencanaKegiatan->nama_kegiatan !!}</td>
+                <td style="width: 220px; vertical-align: top; padding: 2px 0;">Jenis Laporan</td>
+                <td style="width: 15px; text-align: center; vertical-align: top; padding: 2px 0;">:</td>
+                <td style="vertical-align: top; padding: 2px 0;">
+                    @if($laporanKegiatan->isDarurat())
+                        <span class="badge badge-warning">Laporan Langsung</span>
+                    @else
+                        <span class="badge badge-info">Laporan Rencana Kegiatan</span>
+                    @endif
+                </td>
             </tr>
             <tr>
-                <td>Jenis Kegiatan</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() !!}</td>
+                <td style="vertical-align: top; padding: 2px 0;">Penanggung Jawab</td>
+                <td style="text-align: center; vertical-align: top; padding: 2px 0;">:</td>
+                <td style="vertical-align: top; padding: 2px 0;">{{ $laporanKegiatan->user->name }}</td>
             </tr>
             <tr>
-                <td>Tujuan</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) ?: '-' !!}</td>
+                <td style="vertical-align: top; padding: 2px 0;">Status Laporan</td>
+                <td style="text-align: center; vertical-align: top; padding: 2px 0;">:</td>
+                <td style="vertical-align: top; padding: 2px 0;">{{ ucfirst($laporanKegiatan->status) }}</td>
             </tr>
             <tr>
-                <td>Penanggung Jawab</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' !!}</td>
+                <td style="vertical-align: top; padding: 2px 0;">Tanggal Dibuat</td>
+                <td style="text-align: center; vertical-align: top; padding: 2px 0;">:</td>
+                <td style="vertical-align: top; padding: 2px 0;">{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
+            </tr>
+        </table>
+
+        @if (!$laporanKegiatan->isDarurat())
+        <!-- Informasi Rencana Kegiatan -->
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 15px;">Informasi Rencana Kegiatan</div>
+        <table class="table-borderless mb-4" style="width: 100%; border-collapse: collapse; margin-left: 30px;">
+            <tr>
+                <td style="width: 220px; vertical-align: top; padding: 2px 0;">Nama Rencana Kegiatan</td>
+                <td style="width: 15px; text-align: center; vertical-align: top; padding: 2px 0;">:</td>
+                <td style="vertical-align: top; padding: 2px 0;">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</td>
             </tr>
             <tr>
-                <td>Kelompok</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' !!}</td>
+                <td style="vertical-align: top; padding: 2px 0;">Target Desa</td>
+                <td style="text-align: center; vertical-align: top; padding: 2px 0;">:</td>
+                <td style="vertical-align: top; padding: 2px 0;">{{ $laporanKegiatan->rencanaKegiatan->desa }}</td>
             </tr>
             <tr>
-                <td>Tanggal Laporan</td>
-                <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
+                <td style="vertical-align: top; padding: 2px 0;">Tanggal Rencana</td>
+                <td style="text-align: center; vertical-align: top; padding: 2px 0;">:</td>
+                <td style="vertical-align: top; padding: 2px 0;">
+                    {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->format('d/m/Y') }} 
+                    s/d 
+                    {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->format('d/m/Y') }}
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; padding: 2px 0;">Estimasi Peserta</td>
+                <td style="text-align: center; vertical-align: top; padding: 2px 0;">:</td>
+                <td style="vertical-align: top; padding: 2px 0;">{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }} orang</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; padding: 2px 0;">Tanggal Disetujui</td>
+                <td style="text-align: center; vertical-align: top; padding: 2px 0;">:</td>
+                <td style="vertical-align: top; padding: 2px 0;">{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
             </tr>
         </table>
         @endif
@@ -101,9 +168,9 @@
         <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 15px;">Detail Pelaksanaan Kegiatan</div>
         <table class="table-borderless mb-4" style="width: 100%; border-collapse: collapse; margin-left: 30px;">
             <tr>
-                <td style="width: 220px;">Tanggal Pelaksanaan</td>
-                <td style="width: 15px; text-align: center;">:</td>
-                <td>
+                <td style="width: 220px; vertical-align: top; padding: 3px 0;">Tanggal Pelaksanaan</td>
+                <td style="width: 15px; text-align: center; vertical-align: top; padding: 3px 0;">:</td>
+                <td style="vertical-align: top; padding: 3px 0;">
                     {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
                     @if ($laporanKegiatan->isDarurat() ? ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai) : ($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai))
                         s/d {{ \Carbon\Carbon::parse($laporanKegiatan->isDarurat() ? $laporanKegiatan->realisasi_tanggal_selesai : $laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d F Y') }}
@@ -111,9 +178,9 @@
                 </td>
             </tr>
             <tr>
-                <td>Realisasi Tanggal Pelaksanaan</td>
-                <td style="text-align: center;">:</td>
-                <td>
+                <td style="vertical-align: top; padding: 3px 0;">Realisasi Tanggal Pelaksanaan</td>
+                <td style="text-align: center; vertical-align: top; padding: 3px 0;">:</td>
+                <td style="vertical-align: top; padding: 3px 0;">
                     {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
                     @if ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
                         s/d {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->translatedFormat('d F Y') }}
@@ -121,14 +188,14 @@
                 </td>
             </tr>
             <tr>
-                <td>Lokasi</td>
-                <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</td>
+                <td style="vertical-align: top; padding: 3px 0;">Lokasi</td>
+                <td style="text-align: center; vertical-align: top; padding: 3px 0;">:</td>
+                <td style="vertical-align: top; padding: 3px 0;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</td>
             </tr>
             <tr>
-                <td>Waktu Pelaksanaan</td>
-                <td style="text-align: center;">:</td>
-                <td>
+                <td style="vertical-align: top; padding: 3px 0;">Waktu Pelaksanaan</td>
+                <td style="text-align: center; vertical-align: top; padding: 3px 0;">:</td>
+                <td style="vertical-align: top; padding: 3px 0;">
                     @if ($laporanKegiatan->isDarurat())
                         Menyesuaikan
                     @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai && $laporanKegiatan->rencanaKegiatan->waktu_selesai)
@@ -141,24 +208,24 @@
                 </td>
             </tr>
             <tr>
-                <td>Rangkaian Kegiatan</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rangkaian_kegiatan !!}</td>
+                <td style="vertical-align: top; padding: 4px 0;">Rangkaian Kegiatan</td>
+                <td style="text-align: center; vertical-align: top; padding: 4px 0;">:</td>
+                <td style="vertical-align: top; padding: 4px 0;">{!! $formatTextList($laporanKegiatan->rangkaian_kegiatan) !!}</td>
             </tr>
             <tr>
-                <td>Target Peserta</td>
-                <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->isDarurat() ? '-' : ($laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-') }} orang</td>
+                <td style="vertical-align: top; padding: 3px 0;">Target Peserta</td>
+                <td style="text-align: center; vertical-align: top; padding: 3px 0;">:</td>
+                <td style="vertical-align: top; padding: 3px 0;">{{ $laporanKegiatan->isDarurat() ? '-' : ($laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-') }} orang</td>
             </tr>
             <tr>
-                <td>Realisasi Peserta</td>
-                <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->realisasi_peserta }} orang</td>
+                <td style="vertical-align: top; padding: 3px 0;">Realisasi Peserta</td>
+                <td style="text-align: center; vertical-align: top; padding: 3px 0;">:</td>
+                <td style="vertical-align: top; padding: 3px 0;">{{ $laporanKegiatan->realisasi_peserta }} orang</td>
             </tr>
             <tr>
-                <td>Profil Peserta</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->profil_peserta !!}</td>
+                <td style="vertical-align: top; padding: 4px 0;">Profil Peserta</td>
+                <td style="text-align: center; vertical-align: top; padding: 4px 0;">:</td>
+                <td style="vertical-align: top; padding: 4px 0;">{!! $formatTextList($laporanKegiatan->profil_peserta) !!}</td>
             </tr>
         </table>
 
@@ -167,17 +234,17 @@
 
         <div style="margin-bottom: 15px;">
             <div style="font-weight: bold; margin-bottom: 5px;">Hasil yang Dicapai</div>
-            <div>{!! $laporanKegiatan->hasil_dicapai !!}</div>
+            <div>{!! $formatTextList($laporanKegiatan->hasil_dicapai) !!}</div>
         </div>
 
         <div style="margin-bottom: 15px;">
             <div style="font-weight: bold; margin-bottom: 5px;">Output Nyata</div>
-            <div>{!! $laporanKegiatan->output_nyata !!}</div>
+            <div>{!! $formatTextList($laporanKegiatan->output_nyata) !!}</div>
         </div>
 
         <div style="margin-bottom: 15px;">
             <div style="font-weight: bold; margin-bottom: 5px;">Dampak Awal yang Terlihat</div>
-            <div>{!! $laporanKegiatan->dampak_awal !!}</div>
+            <div>{!! $formatTextList($laporanKegiatan->dampak_awal) !!}</div>
         </div>
 
         <!-- Kendala dan Evaluasi -->
@@ -186,21 +253,21 @@
         @if($laporanKegiatan->kendala)
             <div style="margin-bottom: 15px;">
                 <div style="font-weight: bold; margin-bottom: 5px;">Kendala yang Dihadapi</div>
-                <div>{!! $laporanKegiatan->kendala !!}</div>
+                <div>{!! $formatTextList($laporanKegiatan->kendala) !!}</div>
             </div>
         @endif
 
         @if($laporanKegiatan->solusi)
             <div style="margin-bottom: 15px;">
                 <div style="font-weight: bold; margin-bottom: 5px;">Solusi yang Dilakukan</div>
-                <div>{!! $laporanKegiatan->solusi !!}</div>
+                <div>{!! $formatTextList($laporanKegiatan->solusi) !!}</div>
             </div>
         @endif
 
         @if($laporanKegiatan->evaluasi_rekomendasi)
             <div style="margin-bottom: 15px;">
                 <div style="font-weight: bold; margin-bottom: 5px;">Evaluasi dan Rekomendasi</div>
-                <div>{!! $laporanKegiatan->evaluasi_rekomendasi !!}</div>
+                <div>{!! $formatTextList($laporanKegiatan->evaluasi_rekomendasi) !!}</div>
             </div>
         @endif
 
