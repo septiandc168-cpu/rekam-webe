@@ -197,48 +197,18 @@
                         <div class="mb-4">
                             <!-- Grand Total Banner -->
                             <div class="p-3 mb-3 rounded d-flex align-items-center justify-content-between" style="background-color: #eef2ff; border: 1px solid #c7d2fe;">
-                                <div>
-                                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-calculator text-navy mr-2"></i>Jumlah Kebutuhan</h6>
-                                    <small class="text-muted">Total otomatis terhitung dari perincian kebutuhan di bawah</small>
-                                </div>
-                                <h4 class="mb-0 fw-bold text-navy" id="display-grand-total">Rp 0</h4>
-                            </div>
-
-                            <label class="form-label fw-bold text-dark mb-1">Perincian Kebutuhan (Opsional)</label>
-                            <small class="text-muted d-block mb-2"><i class="fas fa-info-circle mr-1"></i>Isi rincian kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau transportasi. Masukkan Jumlah dan Harga Satuan (Rp) untuk menghitung Subtotal secara otomatis.</small>
-                            
-                            <div class="table-responsive">
-                                <table class="table table-bordered align-middle text-sm" id="table-rincian-pengajuan">
-                                    <thead class="bg-navy text-white">
-                                        <tr>
-                                            <th class="text-center align-middle" style="width: 40px;">No</th>
-                                            <th class="align-middle" style="min-width: 200px;">Objek Kebutuhan</th>
-                                            <th class="align-middle" style="width: 140px;">Jumlah</th>
-                                            <th class="align-middle" style="width: 160px;">Harga Satuan (Rp)</th>
-                                            <th class="align-middle" style="width: 160px;">Subtotal (Rp)</th>
-                                            <th class="align-middle" style="min-width: 180px;">Keterangan</th>
-                                            <th class="text-center align-middle" style="width: 50px;"><i class="fas fa-cog"></i></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbody-rincian-pengajuan">
-                                        <!-- Rows added dynamically via JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <button type="button" class="btn bg-navy text-white btn-sm font-weight-bold shadow-sm" id="btn-tambah-baris-rincian">
-                                <i class="fas fa-plus mr-1"></i> Tambah Baris
-                            </button>
-
-                            <textarea name="rincian_kebutuhan" id="hidden-rincian-kebutuhan" class="d-none">{!! old('rincian_kebutuhan') !!}</textarea>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark mb-1">Rincian Kebutuhan <span class="text-danger">*</span></label>
+                            <textarea name="rincian_kebutuhan" id="summernote-rincian" class="form-control summernote" rows="4" placeholder="Tuliskan rincian kebutuhan kegiatan..." required>{!! old('rincian_kebutuhan') !!}</textarea>
+                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan rincian kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau rincian anggaran yang dibutuhkan.</small>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">File Anggaran Kegiatan (Opsional)</label>
+                            <label class="form-label fw-bold text-dark mb-1">File Anggaran Kegiatan <span class="text-danger">*</span></label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx">
-                                <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran (jika ada)...</label>
+                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
+                                <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran...</label>
                             </div>
-                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah proposal/RAB jika ada. Ukuran maksimal 5MB (PDF/DOC/XLS).</small>
+                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file proposal/RAB kegiatan. Ukuran maksimal 5MB (PDF/DOC/XLS).</small>
                         </div>
                     </div>
                 </div>
