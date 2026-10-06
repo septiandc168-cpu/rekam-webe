@@ -1310,7 +1310,19 @@ class RencanaKegiatanController extends Controller
         if (empty($rencana->lat) || empty($rencana->lng)) {
             $missing[] = 'Koordinat Lokasi (Peta)';
         }
-        if (empty(trim(strip_tags($rencana->rincian_kebutuhan ?? '')))) {
+        $rincianItems = $rencana->rincian_kebutuhan_items;
+        $hasRincian = false;
+        if (is_array($rincianItems) && count($rincianItems) > 0) {
+            foreach ($rincianItems as $item) {
+                if (!empty(trim($item['objek'] ?? ''))) {
+                    $hasRincian = true;
+                    break;
+                }
+            }
+        } else {
+            $hasRincian = !empty(trim(strip_tags($rencana->rincian_kebutuhan ?? '')));
+        }
+        if (!$hasRincian) {
             $missing[] = 'Rincian Kebutuhan';
         }
 
