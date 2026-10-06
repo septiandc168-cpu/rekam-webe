@@ -331,7 +331,7 @@ class RencanaKegiatanController extends Controller
                 'penanggung_jawab' => 'required|string',
                 'kelompok' => 'required|string',
                 'estimasi_peserta' => 'required|integer|min:1',
-                'rincian_kebutuhan' => 'required|string',
+                'rincian_kebutuhan' => 'nullable|string',
                 'foto' => 'nullable|array',
                 'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
                 'dokumen' => 'nullable|array',
@@ -619,7 +619,7 @@ class RencanaKegiatanController extends Controller
                 'penanggung_jawab' => 'required|string',
                 'kelompok' => 'required|string',
                 'estimasi_peserta' => 'required|integer|min:1',
-                'rincian_kebutuhan' => 'required|string',
+                'rincian_kebutuhan' => 'nullable|string',
                 'foto' => 'nullable|array',
                 'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
                 'dokumen' => 'nullable|array',
@@ -1310,22 +1310,6 @@ class RencanaKegiatanController extends Controller
         if (empty($rencana->lat) || empty($rencana->lng)) {
             $missing[] = 'Koordinat Lokasi (Peta)';
         }
-        $rincianItems = $rencana->rincian_kebutuhan_items;
-        $hasRincian = false;
-        if (is_array($rincianItems) && count($rincianItems) > 0) {
-            foreach ($rincianItems as $item) {
-                if (!empty(trim($item['objek'] ?? ''))) {
-                    $hasRincian = true;
-                    break;
-                }
-            }
-        } else {
-            $hasRincian = !empty(trim(strip_tags($rencana->rincian_kebutuhan ?? '')));
-        }
-        if (!$hasRincian) {
-            $missing[] = 'Rincian Kebutuhan';
-        }
-
         return $missing;
     }
 
