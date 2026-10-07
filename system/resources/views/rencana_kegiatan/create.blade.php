@@ -195,50 +195,17 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-4">
-                            <!-- Grand Total Banner -->
-                            <div class="p-3 mb-3 rounded d-flex align-items-center justify-content-between" style="background-color: #eef2ff; border: 1px solid #c7d2fe;">
-                                <div>
-                                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-calculator text-navy mr-2"></i>Jumlah Kebutuhan</h6>
-                                    <small class="text-muted">Total otomatis terhitung dari perincian kebutuhan di bawah</small>
-                                </div>
-                                <h4 class="mb-0 fw-bold text-navy" id="display-grand-total">Rp 0</h4>
-                            </div>
-
-                            <label class="form-label fw-bold text-dark mb-1">Perincian Kebutuhan <span class="text-danger">*</span></label>
-                            <small class="text-muted d-block mb-2"><i class="fas fa-info-circle mr-1"></i>Isi rincian kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau transportasi. Masukkan Jumlah dan Harga Satuan (Rp) untuk menghitung Subtotal secara otomatis.</small>
-                            
-                            <div class="table-responsive">
-                                <table class="table table-bordered align-middle text-sm" id="table-rincian-pengajuan">
-                                    <thead class="bg-navy text-white">
-                                        <tr>
-                                            <th class="text-center align-middle" style="width: 40px;">No</th>
-                                            <th class="align-middle" style="min-width: 200px;">Objek Kebutuhan</th>
-                                            <th class="align-middle" style="width: 140px;">Jumlah</th>
-                                            <th class="align-middle" style="width: 160px;">Harga Satuan (Rp)</th>
-                                            <th class="align-middle" style="width: 160px;">Subtotal (Rp)</th>
-                                            <th class="align-middle" style="min-width: 180px;">Keterangan</th>
-                                            <th class="text-center align-middle" style="width: 50px;"><i class="fas fa-cog"></i></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbody-rincian-pengajuan">
-                                        <!-- Rows added dynamically via JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <button type="button" class="btn bg-navy text-white btn-sm font-weight-bold shadow-sm" id="btn-tambah-baris-rincian">
-                                <i class="fas fa-plus mr-1"></i> Tambah Baris
-                            </button>
-
-                            <textarea name="rincian_kebutuhan" id="hidden-rincian-kebutuhan" class="d-none">{!! old('rincian_kebutuhan') !!}</textarea>
+                            <label class="form-label fw-bold text-dark mb-1">Rincian Kebutuhan <span class="text-danger">*</span></label>
+                            <textarea name="rincian_kebutuhan" id="summernote-rincian" class="form-control summernote" rows="4" placeholder="Tuliskan rincian kebutuhan kegiatan..." required>{!! old('rincian_kebutuhan') !!}</textarea>
+                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan rincian kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau rincian anggaran yang dibutuhkan.</small>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">File Anggaran Kegiatan (Opsional)</label>
+                            <label class="form-label fw-bold text-dark mb-1">File Anggaran Kegiatan <span class="text-danger">*</span></label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx">
-                                <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran (jika ada)...</label>
+                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
+                                <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran...</label>
                             </div>
-                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah proposal/RAB jika ada. Ukuran maksimal 5MB (PDF/DOC/XLS).</small>
+                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file proposal/RAB kegiatan. Ukuran maksimal 5MB (PDF/DOC/XLS).</small>
                         </div>
                     </div>
                 </div>
@@ -891,126 +858,7 @@
                 return 'Rp ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(number || 0);
             }
 
-            function parseNumber(val) {
-                if (!val) return 0;
-                var clean = val.toString().replace(/[^0-9]/g, '');
-                return parseFloat(clean) || 0;
-            }
 
-            function extractQuantity(val) {
-                if (!val) return 1;
-                var match = val.toString().match(/\d+(\.\d+)?/);
-                return match ? parseFloat(match[0]) : 1;
-            }
-
-            function recalculateRincianTable() {
-                var totalGrand = 0;
-                var items = [];
-
-                $('#tbody-rincian-pengajuan tr').each(function(index) {
-                    $(this).find('.rincian-no').text(index + 1);
-
-                    var objek = $(this).find('.rincian-objek').val() || '';
-                    var jumlahStr = $(this).find('.rincian-jumlah').val() || '';
-                    var hargaRaw = $(this).find('.rincian-harga').val() || '';
-                    var hargaNum = parseNumber(hargaRaw);
-                    var qty = extractQuantity(jumlahStr);
-                    var subtotal = qty * hargaNum;
-
-                    $(this).find('.rincian-subtotal').val(formatRupiah(subtotal));
-
-                    totalGrand += subtotal;
-
-                    if (objek.trim() !== '' || jumlahStr.trim() !== '' || hargaNum > 0) {
-                        items.push({
-                            objek: objek.trim(),
-                            jumlah: jumlahStr.trim(),
-                            harga_satuan: hargaNum,
-                            subtotal: subtotal,
-                            keterangan: ($(this).find('.rincian-keterangan').val() || '').trim()
-                        });
-                    }
-                });
-
-                $('#display-grand-total').text(formatRupiah(totalGrand));
-                
-                if (items.length > 0) {
-                    $('#hidden-rincian-kebutuhan').val(JSON.stringify(items));
-                } else {
-                    $('#hidden-rincian-kebutuhan').val('');
-                }
-            }
-
-            function addRincianRow(data) {
-                data = data || { objek: '', jumlah: '', harga_satuan: '', subtotal: 0, keterangan: '' };
-                var rowCount = $('#tbody-rincian-pengajuan tr').length + 1;
-                
-                var html = '<tr class="rincian-row">' +
-                    '<td class="text-center align-middle rincian-no text-muted fw-bold">' + rowCount + '</td>' +
-                    '<td><input type="text" class="form-control form-control-sm rincian-objek" placeholder="Objek kebutuhan / nama barang" value="' + (data.objek || '').replace(/"/g, '&quot;') + '"></td>' +
-                    '<td><input type="text" class="form-control form-control-sm rincian-jumlah" placeholder="Contoh: 1 orang" value="' + (data.jumlah || '').replace(/"/g, '&quot;') + '"></td>' +
-                    '<td><input type="number" min="0" class="form-control form-control-sm rincian-harga" placeholder="0" value="' + (data.harga_satuan !== '' && data.harga_satuan !== undefined ? data.harga_satuan : '') + '"></td>' +
-                    '<td><input type="text" class="form-control form-control-sm rincian-subtotal bg-light" readonly placeholder="Rp 0"></td>' +
-                    '<td><input type="text" class="form-control form-control-sm rincian-keterangan" placeholder="Keterangan (opsional)" value="' + (data.keterangan || '').replace(/"/g, '&quot;') + '"></td>' +
-                    '<td class="text-center align-middle"><button type="button" class="btn btn-sm btn-danger rounded-circle btn-remove-rincian shadow-sm" style="width: 24px; height: 24px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Hapus Baris"><i class="fas fa-times" style="font-size: 11px;"></i></button></td>' +
-                    '</tr>';
-                    
-                $('#tbody-rincian-pengajuan').append(html);
-                recalculateRincianTable();
-            }
-
-            function loadInitialRincian(rawContent) {
-                $('#tbody-rincian-pengajuan').empty();
-                if (!rawContent) {
-                    addRincianRow();
-                    return;
-                }
-                
-                try {
-                    var parsed = typeof rawContent === 'string' ? JSON.parse(rawContent) : rawContent;
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        parsed.forEach(function(item) {
-                            addRincianRow(item);
-                        });
-                        return;
-                    }
-                } catch(e) {}
-                
-                // Legacy text fallback
-                var cleanText = rawContent.replace(/<[^>]*>/g, '\n').split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
-                if (cleanText.length > 0) {
-                    cleanText.forEach(function(line) {
-                        addRincianRow({ objek: line, jumlah: '1', harga_satuan: 0, keterangan: '' });
-                    });
-                } else {
-                    addRincianRow();
-                }
-            }
-
-            $('#btn-tambah-baris-rincian').on('click', function() {
-                addRincianRow();
-            });
-
-            $(document).on('click', '.btn-remove-rincian', function() {
-                if ($('#tbody-rincian-pengajuan tr').length > 1) {
-                    $(this).closest('tr').remove();
-                    recalculateRincianTable();
-                } else {
-                    alert('Minimal harus ada 1 baris rincian pengajuan.');
-                }
-            });
-
-            $(document).on('input keyup change', '.rincian-objek, .rincian-jumlah, .rincian-harga, .rincian-keterangan', function() {
-                recalculateRincianTable();
-            });
-
-            // Load initial content on ready
-            loadInitialRincian($('#hidden-rincian-kebutuhan').val());
-
-            // Ensure table recalculated on form submit
-            $('form').on('submit', function() {
-                recalculateRincianTable();
-            });
         </script>
         <script src="/public/adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
         <script>
