@@ -73,8 +73,8 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Penanggung Jawab <span class="text-danger">*</span></label>
-                                <input type="text" name="penanggung_jawab" class="form-control bg-light" value="{{ auth()->user()->name }}" readonly required>
-                                <small class="text-muted">Terisi otomatis berdasarkan akun login Anda.</small>
+                                <input type="text" name="penanggung_jawab" class="form-control" placeholder="Masukkan nama penanggung jawab..." value="{{ old('penanggung_jawab') }}" required>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Nama individu yang bertanggung jawab atas pelaksanaan kegiatan ini.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Kelompok / Komunitas Pelaksana <span class="text-danger">*</span></label>
