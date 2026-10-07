@@ -1310,7 +1310,7 @@ class RencanaKegiatanController extends Controller
         if (empty($rencana->lat) || empty($rencana->lng)) {
             $missing[] = 'Koordinat Lokasi (Peta)';
         }
-        if (empty(trim(strip_tags($rencana->rincian_kebutuhan ?? '')))) {
+        if (empty(trim(preg_replace('/\s+/', '', strip_tags($rencana->rincian_kebutuhan ?? ''))))) {
             $missing[] = 'Rincian Kebutuhan';
         }
         if (empty($rencana->anggaran_kegiatan)) {

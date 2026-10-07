@@ -630,6 +630,13 @@
                         console.log('Summernote loaded:', typeof $.summernote !== 'undefined');
                         
                         try {
+                            // Helper: sync Summernote value back to underlying textarea
+                            function syncSummernoteValue(id) {
+                                var $el = $('#' + id);
+                                var code = $el.summernote('code');
+                                $el.val(code);
+                            }
+
                             // Summernote untuk rincian kebutuhan
                             $('#summernote-rincian').summernote({
                                 toolbar: [
@@ -639,7 +646,12 @@
                                     ['color', ['color']],
                                     ['para', ['ul', 'ol', 'paragraph']]
                                 ],
-                                height: 120
+                                height: 120,
+                                callbacks: {
+                                    onInit: function() { syncSummernoteValue('summernote-rincian'); },
+                                    onChange: function() { syncSummernoteValue('summernote-rincian'); },
+                                    onBlur: function() { syncSummernoteValue('summernote-rincian'); }
+                                }
                             });
                             console.log('Summernote rincian initialized');
 
@@ -652,7 +664,12 @@
                                     ['color', ['color']],
                                     ['para', ['ul', 'ol', 'paragraph']]
                                 ],
-                                height: 120
+                                height: 120,
+                                callbacks: {
+                                    onInit: function() { syncSummernoteValue('summernote-deskripsi'); },
+                                    onChange: function() { syncSummernoteValue('summernote-deskripsi'); },
+                                    onBlur: function() { syncSummernoteValue('summernote-deskripsi'); }
+                                }
                             });
                             console.log('Summernote deskripsi initialized');
 
@@ -665,9 +682,24 @@
                                     ['color', ['color']],
                                     ['para', ['ul', 'ol', 'paragraph']]
                                 ],
-                                height: 120
+                                height: 120,
+                                callbacks: {
+                                    onInit: function() { syncSummernoteValue('summernote-tujuan'); },
+                                    onChange: function() { syncSummernoteValue('summernote-tujuan'); },
+                                    onBlur: function() { syncSummernoteValue('summernote-tujuan'); }
+                                }
                             });
                             console.log('Summernote tujuan initialized');
+
+                            // Sync semua nilai Summernote ke textarea sebelum form submit
+                            $('form').on('submit', function() {
+                                ['summernote-rincian', 'summernote-deskripsi', 'summernote-tujuan'].forEach(function(id) {
+                                    var $el = $('#' + id);
+                                    if ($el.length && typeof $el.summernote === 'function') {
+                                        $el.val($el.summernote('code'));
+                                    }
+                                });
+                            });
                             
                         } catch (error) {
                             console.error('Error initializing Summernote:', error);
