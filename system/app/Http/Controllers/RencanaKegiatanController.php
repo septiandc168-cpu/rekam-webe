@@ -336,7 +336,7 @@ class RencanaKegiatanController extends Controller
                 'foto.*' => 'image|mimes:jpg,jpeg,png|max:4096',
                 'dokumen' => 'nullable|array',
                 'dokumen.*' => 'file|mimes:pdf,doc,docx|max:5120',
-                'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+                'anggaran_kegiatan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
             ];
 
             $messages = [
@@ -628,7 +628,7 @@ class RencanaKegiatanController extends Controller
                 'remove_foto.*' => 'string',
                 'remove_dokumen' => 'nullable|array',
                 'remove_dokumen.*' => 'string',
-                'anggaran_kegiatan' => $hasExistingAnggaran ? 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120' : 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+                'anggaran_kegiatan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
                 'remove_anggaran_kegiatan' => 'nullable|string',
             ];
 
@@ -1310,29 +1310,8 @@ class RencanaKegiatanController extends Controller
         if (empty($rencana->lat) || empty($rencana->lng)) {
             $missing[] = 'Koordinat Lokasi (Peta)';
         }
-        // Check rincian_kebutuhan (supports both HTML text and JSON array)
-        $hasRincian = false;
-        $rincianItems = $rencana->rincian_kebutuhan_items;
-        if (is_array($rincianItems) && count($rincianItems) > 0) {
-            foreach ($rincianItems as $item) {
-                if (!empty(trim($item['objek'] ?? ''))) {
-                    $hasRincian = true;
-                    break;
-                }
-            }
-        }
-        if (!$hasRincian) {
-            $cleanRincian = trim(str_replace(['&nbsp;', ' '], '', strip_tags($rencana->rincian_kebutuhan ?? '')));
-            if (!empty($cleanRincian) && $cleanRincian !== '[]') {
-                $hasRincian = true;
-            }
-        }
-        if (!$hasRincian) {
+        if (empty(trim(strip_tags($rencana->rincian_kebutuhan ?? '')))) {
             $missing[] = 'Rincian Kebutuhan';
-        }
-
-        if (empty($rencana->anggaran_kegiatan)) {
-            $missing[] = 'File Anggaran Kegiatan';
         }
 
         return $missing;
