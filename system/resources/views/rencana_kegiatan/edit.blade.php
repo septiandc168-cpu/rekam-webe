@@ -897,54 +897,9 @@
                 // Event Listener Tombol "Selanjutnya"
                 document.querySelectorAll('.btn-next').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        // 1. Validasi Halaman Saat Ini Sebelum Pindah
-                        const currentStepEl = document.getElementById(steps[currentStepIndex]);
-                        const inputs = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
-                        let isValid = true;
-                        
-                        // Periksa setiap field wajib
-                        for (let i = 0; i < inputs.length; i++) {
-                            const input = inputs[i];
-                            if (!input.checkValidity()) {
-                                input.reportValidity(); // Memunculkan pop-up browser asli
-                                isValid = false;
-                                break;
-                            }
-                        }
-                        
-                        // Khusus untuk input koordinat peta yang hidden/readonly, periksa manual jika kosong
-                        if (currentStepIndex === 1 && isValid) { // Jika sedang di Step 2 (Lokasi)
-                            const lat = document.getElementById('location_lat').value;
-                            if (!lat) {
-                                alert("Mohon klik peta atau cari lokasi terlebih dahulu.");
-                                isValid = false;
-                            }
-                        }
-
-                        // Khusus Summernote required yang tidak terdeteksi HTML5 default
-                        if (currentStepIndex === 0 && isValid) {
-                            const desc = $('#summernote-deskripsi').summernote('isEmpty');
-                            const tujuan = $('#summernote-tujuan').summernote('isEmpty');
-                            if (desc || tujuan) {
-                                alert("Deskripsi dan Tujuan Kegiatan tidak boleh kosong.");
-                                isValid = false;
-                            }
-                        }
-
-                        if (currentStepIndex === 2 && isValid) {
-                            const rincian = $('#summernote-rincian').summernote('isEmpty');
-                            if (rincian) {
-                                alert("Rincian Kebutuhan tidak boleh kosong.");
-                                isValid = false;
-                            }
-                        }
-                        
-                        // Jika lulus validasi, pindah ke halaman berikutnya
-                        if (isValid) {
-                            currentStepIndex++;
-                            showStep(currentStepIndex);
-                            window.scrollTo(0, 0); // Gulir ke atas
-                        }
+                        currentStepIndex++;
+                        showStep(currentStepIndex);
+                        window.scrollTo(0, 0); // Gulir ke atas
                     });
                 });
                 
