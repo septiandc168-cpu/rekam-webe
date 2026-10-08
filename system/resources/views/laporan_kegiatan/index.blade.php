@@ -260,7 +260,7 @@
                                 <th class="align-middle" style="width: 25%;">Nama Kegiatan</th>
                                 <th class="align-middle" style="width: 15%;">Penanggung Jawab</th>
                                 <th class="align-middle" style="width: 20%;">Lokasi</th>
-                                <th class="align-middle" style="width: 15%;">Tanggal Laporan</th>
+                                <th class="align-middle text-nowrap" style="width: 18%;">Tanggal Realisasi Kegiatan</th>
                                 <th class="align-middle text-center" style="width: 100px;">Status</th>
                             </tr>
                         </thead>
@@ -301,7 +301,21 @@
                                             {{ $laporan->isDarurat() ? $laporan->lokasi_kegiatan : ($laporan->rencanaKegiatan?->desa ?: '-') }}
                                         </div>
                                     </td>
-                                    <td class="align-middle">{{ $laporan->created_at->translatedFormat('d M Y') }}</td>
+                                    <td class="align-middle text-nowrap">
+                                        @if ($laporan->realisasi_tanggal_mulai)
+                                            <span class="text-dark"><i class="far fa-calendar-alt mr-1 text-muted"></i> {{ \Carbon\Carbon::parse($laporan->realisasi_tanggal_mulai)->translatedFormat('d M Y') }}</span>
+                                            @if ($laporan->realisasi_tanggal_selesai && $laporan->realisasi_tanggal_selesai != $laporan->realisasi_tanggal_mulai)
+                                                <br><small class="text-muted">s/d {{ \Carbon\Carbon::parse($laporan->realisasi_tanggal_selesai)->translatedFormat('d M Y') }}</small>
+                                            @endif
+                                        @elseif ($laporan->rencanaKegiatan && $laporan->rencanaKegiatan->tanggal_mulai)
+                                            <span class="text-dark"><i class="far fa-calendar-alt mr-1 text-muted"></i> {{ \Carbon\Carbon::parse($laporan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }}</span>
+                                            @if ($laporan->rencanaKegiatan->tanggal_selesai && $laporan->rencanaKegiatan->tanggal_selesai != $laporan->rencanaKegiatan->tanggal_mulai)
+                                                <br><small class="text-muted">s/d {{ \Carbon\Carbon::parse($laporan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}</small>
+                                            @endif
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
                                     <td class="align-middle text-center">
                                         @php
                                             $statusStyles = [

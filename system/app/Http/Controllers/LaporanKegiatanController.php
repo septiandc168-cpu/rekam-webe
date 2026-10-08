@@ -48,10 +48,34 @@ class LaporanKegiatanController extends Controller
                 $query->where('status', $request->status);
             }
             if ($request->filled('bulan')) {
-                $query->whereMonth('created_at', $request->bulan);
+                $bulan = $request->bulan;
+                $query->where(function ($q) use ($bulan) {
+                    $q->whereMonth('realisasi_tanggal_mulai', $bulan)
+                      ->orWhere(function ($q2) use ($bulan) {
+                          $q2->whereNull('realisasi_tanggal_mulai')
+                             ->whereHas('rencanaKegiatan', fn($r) => $r->whereMonth('tanggal_mulai', $bulan));
+                      })
+                      ->orWhere(function ($q3) use ($bulan) {
+                          $q3->whereNull('realisasi_tanggal_mulai')
+                             ->whereNull('rencana_kegiatan_id')
+                             ->whereMonth('created_at', $bulan);
+                      });
+                });
             }
             if ($request->filled('tahun')) {
-                $query->whereYear('created_at', $request->tahun);
+                $tahun = $request->tahun;
+                $query->where(function ($q) use ($tahun) {
+                    $q->whereYear('realisasi_tanggal_mulai', $tahun)
+                      ->orWhere(function ($q2) use ($tahun) {
+                          $q2->whereNull('realisasi_tanggal_mulai')
+                             ->whereHas('rencanaKegiatan', fn($r) => $r->whereYear('tanggal_mulai', $tahun));
+                      })
+                      ->orWhere(function ($q3) use ($tahun) {
+                          $q3->whereNull('realisasi_tanggal_mulai')
+                             ->whereNull('rencana_kegiatan_id')
+                             ->whereYear('created_at', $tahun);
+                      });
+                });
             }
             if ($request->filled('user_id')) {
                 $query->where('user_id', $request->user_id);
@@ -74,10 +98,34 @@ class LaporanKegiatanController extends Controller
                 $query->where('status', $request->status);
             }
             if ($request->filled('bulan')) {
-                $query->whereMonth('created_at', $request->bulan);
+                $bulan = $request->bulan;
+                $query->where(function ($q) use ($bulan) {
+                    $q->whereMonth('realisasi_tanggal_mulai', $bulan)
+                      ->orWhere(function ($q2) use ($bulan) {
+                          $q2->whereNull('realisasi_tanggal_mulai')
+                             ->whereHas('rencanaKegiatan', fn($r) => $r->whereMonth('tanggal_mulai', $bulan));
+                      })
+                      ->orWhere(function ($q3) use ($bulan) {
+                          $q3->whereNull('realisasi_tanggal_mulai')
+                             ->whereNull('rencana_kegiatan_id')
+                             ->whereMonth('created_at', $bulan);
+                      });
+                });
             }
             if ($request->filled('tahun')) {
-                $query->whereYear('created_at', $request->tahun);
+                $tahun = $request->tahun;
+                $query->where(function ($q) use ($tahun) {
+                    $q->whereYear('realisasi_tanggal_mulai', $tahun)
+                      ->orWhere(function ($q2) use ($tahun) {
+                          $q2->whereNull('realisasi_tanggal_mulai')
+                             ->whereHas('rencanaKegiatan', fn($r) => $r->whereYear('tanggal_mulai', $tahun));
+                      })
+                      ->orWhere(function ($q3) use ($tahun) {
+                          $q3->whereNull('realisasi_tanggal_mulai')
+                             ->whereNull('rencana_kegiatan_id')
+                             ->whereYear('created_at', $tahun);
+                      });
+                });
             }
 
             $laporans = $query->orderBy('updated_at', 'desc')->get();
