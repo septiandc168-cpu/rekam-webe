@@ -175,10 +175,13 @@ class LaporanKegiatan extends Model
     public function getFormattedRealisasiTanggalPelaksanaan(): string
     {
         if ($this->realisasi_tanggal_mulai && $this->realisasi_tanggal_selesai) {
-            return \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->format('d F Y') . ' - ' . 
-                   \Carbon\Carbon::parse($this->realisasi_tanggal_selesai)->format('d F Y');
+            if ($this->realisasi_tanggal_mulai === $this->realisasi_tanggal_selesai) {
+                return \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->translatedFormat('d F Y');
+            }
+            return \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->translatedFormat('d F Y') . ' - ' . 
+                   \Carbon\Carbon::parse($this->realisasi_tanggal_selesai)->translatedFormat('d F Y');
         } elseif ($this->realisasi_tanggal_mulai) {
-            return \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->format('d F Y');
+            return \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->translatedFormat('d F Y');
         }
         return '-';
     }
@@ -189,7 +192,7 @@ class LaporanKegiatan extends Model
     public function getFormattedRealisasiTanggalMulai(): string
     {
         return $this->realisasi_tanggal_mulai 
-            ? \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->format('d F Y') 
+            ? \Carbon\Carbon::parse($this->realisasi_tanggal_mulai)->translatedFormat('d F Y') 
             : '-';
     }
 
@@ -199,7 +202,7 @@ class LaporanKegiatan extends Model
     public function getFormattedRealisasiTanggalSelesai(): string
     {
         return $this->realisasi_tanggal_selesai 
-            ? \Carbon\Carbon::parse($this->realisasi_tanggal_selesai)->format('d F Y') 
+            ? \Carbon\Carbon::parse($this->realisasi_tanggal_selesai)->translatedFormat('d F Y') 
             : '-';
     }
 
