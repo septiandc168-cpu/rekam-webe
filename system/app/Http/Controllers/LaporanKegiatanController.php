@@ -194,18 +194,7 @@ class LaporanKegiatanController extends Controller
         $fotoKegiatanPaths = [];
         if ($request->hasFile('foto_kegiatan')) {
             foreach ($request->file('foto_kegiatan') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/foto_kegiatan', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $fotoKegiatanPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $fotoKegiatanPaths[] = \App\Services\ImageService::compressAndStore($file, 'laporan_kegiatan/foto_kegiatan', 'public');
             }
         }
 
@@ -516,18 +505,7 @@ class LaporanKegiatanController extends Controller
         $newFotoKegiatanPaths = [];
         if ($request->hasFile('foto_kegiatan')) {
             foreach ($request->file('foto_kegiatan') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/foto_kegiatan', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $newFotoKegiatanPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $newFotoKegiatanPaths[] = \App\Services\ImageService::compressAndStore($file, 'laporan_kegiatan/foto_kegiatan', 'public');
             }
         }
 

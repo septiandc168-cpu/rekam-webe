@@ -227,10 +227,10 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Foto Kegiatan <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="foto_kegiatan[]" class="custom-file-input custom-img-input" id="fotoInput" accept="image/jpeg,image/jpg,image/png" multiple required>
+                                    <input type="file" name="foto_kegiatan[]" class="custom-file-input custom-img-input" id="fotoInput" accept="image/*" multiple required>
                                     <label class="custom-file-label" for="fotoInput">Pilih foto...</label>
                                 </div>
-                                <small class="text-muted">Maksimal 10 foto (JPG/PNG), Max 3MB/foto.</small>
+                                <small class="text-muted">Bebas format gambar & jumlah file, foto berukuran besar akan otomatis dikompres oleh sistem.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah foto dokumentasi pelaksanaan kegiatan seperti suasana acara, narasumber, dan peserta.</small>
                                 <div id="preview-foto_kegiatan" class="d-flex flex-wrap gap-2 mt-2"></div>
                             </div>
@@ -238,10 +238,10 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Daftar Hadir <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="daftar_hadir[]" class="custom-file-input custom-doc-input" id="daftarHadirInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" multiple required>
+                                    <input type="file" name="daftar_hadir[]" class="custom-file-input custom-doc-input" id="daftarHadirInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*" multiple required>
                                     <label class="custom-file-label" for="daftarHadirInput">Pilih file...</label>
                                 </div>
-                                <small class="text-muted">Maksimal 5 file (PDF/DOC/XLS/JPG/PNG), Max 5MB/file.</small>
+                                <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga 50MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan.</small>
                                 <div id="preview-daftar_hadir" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
@@ -249,10 +249,10 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Notulen</label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="notulen[]" class="custom-file-input custom-doc-input" id="notulenInput" accept=".pdf,.doc,.docx" multiple>
+                                    <input type="file" name="notulen[]" class="custom-file-input custom-doc-input" id="notulenInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple>
                                     <label class="custom-file-label" for="notulenInput">Pilih file...</label>
                                 </div>
-                                <small class="text-muted">Maksimal 3 file (PDF/DOC), Max 5MB/file.</small>
+                                <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah catatan hasil rapat/diskusi selama kegiatan berlangsung (opsional).</small>
                                 <div id="preview-notulen" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
@@ -260,10 +260,10 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Materi <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="materi[]" class="custom-file-input custom-doc-input" id="materiInput" accept=".pdf,.ppt,.pptx,.doc,.docx" multiple required>
+                                    <input type="file" name="materi[]" class="custom-file-input custom-doc-input" id="materiInput" accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple required>
                                     <label class="custom-file-label" for="materiInput">Pilih file...</label>
                                 </div>
-                                <small class="text-muted">Maksimal 5 file (PDF/PPT/DOC), Max 10MB/file.</small>
+                                <small class="text-muted">Bebas format dokumen/presentasi hingga 50MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.</small>
                                 <div id="preview-materi" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
@@ -271,10 +271,10 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Berita Acara <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="berita_acara[]" class="custom-file-input custom-doc-input" id="beritaAcaraInput" accept=".pdf,.doc,.docx" multiple required>
+                                    <input type="file" name="berita_acara[]" class="custom-file-input custom-doc-input" id="beritaAcaraInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple required>
                                     <label class="custom-file-label" for="beritaAcaraInput">Pilih file...</label>
                                 </div>
-                                <small class="text-muted">Maksimal 3 file (PDF/DOC), Max 5MB/file.</small>
+                                <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah berita acara resmi pelaksanaan kegiatan.</small>
                                 <div id="preview-berita_acara" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
@@ -464,11 +464,11 @@
                 };
 
                 const fieldConfigs = {
-                    foto_kegiatan: { maxFiles: 10, maxSize: 3 * 1024 * 1024, sizeLabel: '3MB' },
-                    daftar_hadir:  { maxFiles: 5,  maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' },
-                    notulen:       { maxFiles: 3,  maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' },
-                    materi:        { maxFiles: 5,  maxSize: 10 * 1024 * 1024, sizeLabel: '10MB' },
-                    berita_acara:  { maxFiles: 3,  maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' }
+                    foto_kegiatan: { maxFiles: 100, maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
+                    daftar_hadir:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
+                    notulen:       { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
+                    materi:        { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
+                    berita_acara:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' }
                 };
 
                 function handleFileUpload(fieldName, inputElement, isImage) {
@@ -538,8 +538,10 @@
                             const nameLower = file.name.toLowerCase();
                             if (nameLower.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
                             else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon = 'fa-file-word text-primary';
-                            else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx')) icon = 'fa-file-excel text-success';
+                            else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower.endsWith('.csv')) icon = 'fa-file-excel text-success';
                             else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon = 'fa-file-powerpoint text-warning';
+                            else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z')) icon = 'fa-file-archive text-info';
+                            else if (nameLower.match(/\.(jpg|jpeg|png|webp|gif|bmp)$/)) icon = 'fa-file-image text-purple';
 
                             const div = document.createElement('div');
                             div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';

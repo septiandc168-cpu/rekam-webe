@@ -75,15 +75,15 @@ class LaporanKegiatanRequest extends FormRequest
 
                 // Dokumentasi
                 'foto_kegiatan' => 'nullable|array',
-                'foto_kegiatan.*' => 'nullable|image|mimes:jpg,jpeg,png|max:3072',
+                'foto_kegiatan.*' => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,bmp,svg,heic,heif|max:51200',
                 'daftar_hadir' => 'nullable|array',
-                'daftar_hadir.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
+                'daftar_hadir.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp|max:51200',
                 'notulen' => 'nullable|array',
-                'notulen.*' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+                'notulen.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
                 'materi' => 'nullable|array',
-                'materi.*' => 'nullable|file|mimes:pdf,ppt,pptx,doc,docx|max:10240',
+                'materi.*' => 'nullable|file|mimes:pdf,ppt,pptx,doc,docx,xls,xlsx,txt,csv,rtf,zip,rar,7z|max:51200',
                 'berita_acara' => 'nullable|array',
-                'berita_acara.*' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+                'berita_acara.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
 
                 // Remove files (for edit)
                 'remove_foto_kegiatan' => 'nullable|array',
@@ -136,15 +136,15 @@ class LaporanKegiatanRequest extends FormRequest
 
             // Dokumentasi (Required saat diajukan)
             'foto_kegiatan' => $this->hasFileOrExisting('foto_kegiatan') ? 'nullable|array' : 'required|array|min:1',
-            'foto_kegiatan.*' => 'nullable|image|mimes:jpg,jpeg,png|max:3072',
+            'foto_kegiatan.*' => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,bmp,svg,heic,heif|max:51200',
             'daftar_hadir' => $this->hasFileOrExisting('daftar_hadir') ? 'nullable|array' : 'required|array|min:1',
-            'daftar_hadir.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
+            'daftar_hadir.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp|max:51200',
             'notulen' => 'nullable|array',
-            'notulen.*' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'notulen.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
             'materi' => $this->hasFileOrExisting('materi') ? 'nullable|array' : 'required|array|min:1',
-            'materi.*' => 'nullable|file|mimes:pdf,ppt,pptx,doc,docx|max:10240',
+            'materi.*' => 'nullable|file|mimes:pdf,ppt,pptx,doc,docx,xls,xlsx,txt,csv,rtf,zip,rar,7z|max:51200',
             'berita_acara' => $this->hasFileOrExisting('berita_acara') ? 'nullable|array' : 'required|array|min:1',
-            'berita_acara.*' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'berita_acara.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
 
             // Remove files (for edit)
             'remove_foto_kegiatan' => 'nullable|array',
@@ -220,21 +220,16 @@ class LaporanKegiatanRequest extends FormRequest
             'berita_acara.min' => 'Berita acara wajib diunggah minimal 1 file.',
 
             // Dokumentasi
-            'foto_kegiatan.*.image' => 'Foto kegiatan harus berupa gambar.',
-            'foto_kegiatan.*.mimes' => 'Format foto kegiatan harus jpg, jpeg, atau png.',
-            'foto_kegiatan.*.max' => 'Ukuran maksimal foto kegiatan 3MB.',
+            'foto_kegiatan.*.file' => 'Foto kegiatan harus berupa file yang valid.',
+            'foto_kegiatan.*.max' => 'Ukuran maksimal foto kegiatan 50MB.',
             'daftar_hadir.*.file' => 'Daftar hadir harus berupa file.',
-            'daftar_hadir.*.mimes' => 'Format daftar hadir harus pdf, doc, docx, xls, atau xlsx.',
-            'daftar_hadir.*.max' => 'Ukuran maksimal file daftar hadir 3MB.',
+            'daftar_hadir.*.max' => 'Ukuran maksimal file daftar hadir 50MB.',
             'notulen.*.file' => 'Notulen harus berupa file.',
-            'notulen.*.mimes' => 'Format notulen harus pdf, doc, atau docx.',
-            'notulen.*.max' => 'Ukuran maksimal file notulen 3MB.',
+            'notulen.*.max' => 'Ukuran maksimal file notulen 50MB.',
             'materi.*.file' => 'Materi harus berupa file.',
-            'materi.*.mimes' => 'Format materi harus pdf, ppt, pptx, doc, atau docx.',
-            'materi.*.max' => 'Ukuran maksimal file materi 3MB.',
+            'materi.*.max' => 'Ukuran maksimal file materi 50MB.',
             'berita_acara.*.file' => 'Berita acara harus berupa file.',
-            'berita_acara.*.mimes' => 'Format berita acara harus pdf, doc, atau docx.',
-            'berita_acara.*.max' => 'Ukuran maksimal file berita acara 3MB.',
+            'berita_acara.*.max' => 'Ukuran maksimal file berita acara 50MB.',
 
             // Rencana Kegiatan
             'rencana_kegiatan_id.required' => 'Rencana kegiatan wajib dipilih.',

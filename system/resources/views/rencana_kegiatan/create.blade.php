@@ -202,10 +202,10 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold text-dark mb-1">File Anggaran Kegiatan <span class="text-danger">*</span></label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
+                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" required>
                                 <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran...</label>
                             </div>
-                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file proposal/RAB kegiatan. Ukuran maksimal 5MB (PDF/DOC/XLS).</small>
+                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file proposal/RAB/rincian anggaran kegiatan. Bebas format dokumen (PDF, Word, Excel, ZIP, dll) hingga 50MB.</small>
                         </div>
                     </div>
                 </div>
@@ -218,19 +218,19 @@
                         <div class="mb-4">
                             <label class="form-label fw-bold">Media Publikasi (Foto/Banner)</label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="fotoInput" name="foto[]" class="custom-file-input" accept="image/jpeg,image/png" multiple>
+                                <input type="file" id="fotoInput" name="foto[]" class="custom-file-input" accept="image/*" multiple>
                                 <label class="custom-file-label" for="fotoInput">Pilih file foto/banner...</label>
                             </div>
-                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Unggah foto/banner terkait kegiatan sebagai media dokumentasi. Maksimal 5 foto (JPG/PNG), ukuran maks. 5MB/foto.</small>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Unggah foto/banner terkait kegiatan. Bebas format gambar & jumlah file, foto berukuran besar akan otomatis dikompres oleh sistem.</small>
                             <div id="image-preview-container" class="row mt-2"></div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Dokumen Pendukung (Opsional)</label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="dokumenInput" name="dokumen[]" class="custom-file-input" accept=".pdf,.doc,.docx" multiple>
+                                <input type="file" id="dokumenInput" name="dokumen[]" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple>
                                 <label class="custom-file-label" for="dokumenInput">Pilih file dokumen...</label>
                             </div>
-                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Lampirkan dokumen pendukung seperti surat izin, proposal, atau jadwal kegiatan. Maks. 5 file (PDF/DOC), ukuran maks. 5MB/file.</small>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Lampirkan dokumen pendukung seperti surat izin, proposal, atau jadwal. Bebas format dokumen & jumlah file hingga 50MB/file.</small>
                             <div id="preview-dokumen" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
@@ -253,32 +253,10 @@
         let filesBuffer = [];
 
         fotoInput.addEventListener('change', function() {
-            const maxFiles = 5;
-            const maxSize = 5 * 1024 * 1024; // 5MB sesuai instruksi
-            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-            
-            if (filesBuffer.length + this.files.length > maxFiles) {
-                alert(`Maksimal ${maxFiles} file foto. Saat ini ada ${filesBuffer.length} file.`);
-                this.value = '';
-                return;
-            }
-            
             for (let file of this.files) {
                 if (!file.type.startsWith('image/')) continue;
                 
-                // Validasi ukuran file
-                if (file.size > maxSize) {
-                    alert(`File ${file.name} terlalu besar. Maksimal ukuran 5MB.`);
-                    continue;
-                }
-                
-                // Validasi tipe file
-                if (!allowedTypes.includes(file.type)) {
-                    alert(`File ${file.name} tidak valid. Hanya diperbolehkan JPG, JPEG, PNG.`);
-                    continue;
-                }
-
-                // hindari duplikasi
+                // Hindari duplikasi
                 if (!filesBuffer.some(f => f.name === file.name && f.size === file.size)) {
                     filesBuffer.push(file);
                 }
@@ -337,29 +315,12 @@
         let dokumenBuffer = [];
 
         dokumenInput.addEventListener('change', function() {
-            const maxFiles = 5;
-            const maxSize = 5 * 1024 * 1024; // 5MB
-            const allowedTypes = ['application/pdf', 'application/msword', 
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-            
-            if (dokumenBuffer.length + this.files.length > maxFiles) {
-                alert(`Maksimal ${maxFiles} file dokumen. Saat ini ada ${dokumenBuffer.length} file.`);
-                this.value = '';
-                return;
-            }
+            const maxSize = 50 * 1024 * 1024; // 50MB
             
             Array.from(this.files).forEach(file => {
-                if (!file.type.match(/pdf|word|officedocument/)) return;
-                
                 // Validasi ukuran file
                 if (file.size > maxSize) {
-                    alert(`File ${file.name} terlalu besar. Maksimal ukuran 5MB.`);
-                    return;
-                }
-                
-                // Validasi tipe file
-                if (!allowedTypes.includes(file.type)) {
-                    alert(`File ${file.name} tidak valid. Hanya diperbolehkan PDF, DOC, DOCX.`);
+                    alert(`File ${file.name} melebihi batas 50MB.`);
                     return;
                 }
 
@@ -386,7 +347,9 @@
                 const nameLower = file.name.toLowerCase();
                 if (nameLower.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
                 else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon = 'fa-file-word text-primary';
-                else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx')) icon = 'fa-file-excel text-success';
+                else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower.endsWith('.csv')) icon = 'fa-file-excel text-success';
+                else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon = 'fa-file-powerpoint text-warning';
+                else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z')) icon = 'fa-file-archive text-info';
 
                 const div = document.createElement('div');
                 div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
@@ -428,10 +391,7 @@
         let anggaranBuffer = [];
 
         anggaranKegiatanInput.addEventListener('change', function() {
-            const maxSize = 5 * 1024 * 1024; // 5MB
-            const allowedTypes = ['application/pdf', 'application/msword', 
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            const maxSize = 50 * 1024 * 1024; // 50MB
             
             if (this.files.length > 1) {
                 alert('Maksimal 1 file anggaran kegiatan.');
@@ -440,14 +400,8 @@
             }
 
             Array.from(this.files).forEach(file => {
-                if (!allowedTypes.includes(file.type)) {
-                    alert('Format file tidak diizinkan. Gunakan PDF, DOC, DOCX, XLS, atau XLSX.');
-                    this.value = '';
-                    return;
-                }
-
                 if (file.size > maxSize) {
-                    alert('Ukuran file maksimal 5MB.');
+                    alert('Ukuran file maksimal 50MB.');
                     this.value = '';
                     return;
                 }
@@ -462,16 +416,24 @@
             previewAnggaran.innerHTML = '';
 
             anggaranBuffer.forEach((file, index) => {
+                let icon = 'fa-file-alt text-secondary';
+                const nameLower = file.name.toLowerCase();
+                if (nameLower.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
+                else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon = 'fa-file-word text-primary';
+                else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower.endsWith('.csv')) icon = 'fa-file-excel text-success';
+                else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon = 'fa-file-powerpoint text-warning';
+                else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z')) icon = 'fa-file-archive text-info';
+
                 const div = document.createElement('div');
                 div.className = 'd-flex align-items-center border rounded p-2';
                 div.innerHTML = `
-            <i class="fas fa-file-excel text-success me-2"></i>
-            <div class="flex-grow-1">
-                <div class="fw-semibold">${file.name}</div>
+            <i class="fas ${icon} me-2" style="font-size:1.2rem; margin-right:8px;"></i>
+            <div class="flex-grow-1 text-truncate">
+                <div class="fw-semibold text-truncate" title="${file.name}">${file.name}</div>
                 <small class="text-muted">${(file.size/1024).toFixed(1)} KB</small>
             </div>
             <button type="button"
-                    class="btn btn-sm btn-danger"
+                    class="btn btn-sm btn-danger ml-2"
                     onclick="removeAnggaran(${index})"><i class="fas fa-times"></i></button>
         `;
 
