@@ -356,42 +356,8 @@
                     let nextStepId = $(this).data('next');
                     let nextIndex = parseInt(nextStepId.split('-')[1]);
                     
-                    let currentStep = $(this).closest('.wizard-step');
-                    let isValid = true;
-                    
-                    // 1. Validate normal required inputs/selects (visible ones)
-                    let requiredInputs = currentStep.find('input[required]:visible, select[required]:visible, textarea[required]:not(.summernote-editor)');
-                    requiredInputs.each(function() {
-                        if (!this.checkValidity()) {
-                            isValid = false;
-                            this.reportValidity();
-                            return false; // break loop
-                        }
-                    });
-
-                    if (!isValid) return false;
-
-                    // 2. Validate Summernote required editors in current step
-                    currentStep.find('textarea.summernote-editor[required]').each(function() {
-                        let $el = $(this);
-                        let code = $el.summernote('code');
-                        let cleanText = $('<div>').html(code).text().trim();
-                        if (!cleanText || cleanText === '') {
-                            isValid = false;
-                            $el.val('');
-                            let labelText = $el.closest('.mb-3').find('label.form-label').first().text().replace('*', '').trim() || 'Kolom isian';
-                            alert('Mohon lengkapi ' + labelText + ' terlebih dahulu.');
-                            $el.summernote('focus');
-                            return false; // break loop
-                        } else {
-                            $el.val(code);
-                        }
-                    });
-
-                    if (isValid) {
-                        currentStepIndex = nextIndex;
-                        showStep(currentStepIndex);
-                    }
+                    currentStepIndex = nextIndex;
+                    showStep(currentStepIndex);
                 });
 
                 $('.btn-save-draft').click(function(e) {
@@ -405,6 +371,11 @@
                         judulInput.focus();
                         return false;
                     }
+
+                    // Sinkronkan konten summernote ke textarea
+                    $('.summernote-editor').each(function() {
+                        $(this).val($(this).summernote('code'));
+                    });
 
                     $('#form-action').val('draft');
                     if (form) {
@@ -423,6 +394,53 @@
                     const actionVal = $('#form-action').val();
                     if (actionVal === 'draft') return true;
 
+                    // 1. Validasi field required dari Step 1 sampai Step 3
+                    for (let step = 1; step <= totalSteps; step++) {
+                        let stepEl = $('#step-' + step);
+                        let emptyRequired = null;
+
+                        // Periksa input / select / textarea standar
+                        stepEl.find('input[required], select[required], textarea[required]:not(.summernote-editor)').each(function() {
+                            if (!this.checkValidity()) {
+                                emptyRequired = this;
+                                return false; // break loop
+                            }
+                        });
+
+                        if (emptyRequired) {
+                            e.preventDefault();
+                            showStep(step);
+                            emptyRequired.reportValidity();
+                            emptyRequired.focus();
+                            return false;
+                        }
+
+                        // Periksa summernote-editor required
+                        let emptySummernote = null;
+                        let summernoteLabel = '';
+                        stepEl.find('textarea.summernote-editor[required]').each(function() {
+                            let $el = $(this);
+                            let code = $el.summernote('code');
+                            let cleanText = $('<div>').html(code).text().trim();
+                            if (!cleanText || cleanText === '') {
+                                emptySummernote = $el;
+                                summernoteLabel = $el.closest('.mb-3, .mb-4').find('label.form-label').first().text().replace('*', '').trim() || 'Kolom isian';
+                                return false; // break loop
+                            } else {
+                                $el.val(code);
+                            }
+                        });
+
+                        if (emptySummernote) {
+                            e.preventDefault();
+                            showStep(step);
+                            alert('Mohon lengkapi ' + summernoteLabel + ' terlebih dahulu.');
+                            emptySummernote.summernote('focus');
+                            return false;
+                        }
+                    }
+
+                    // 2. Validasi file lampiran wajib di Step 3
                     const requiredFiles = [
                         { key: 'foto_kegiatan', name: 'Foto Kegiatan', inputId: 'fotoInput' },
                         { key: 'daftar_hadir', name: 'Daftar Hadir', inputId: 'daftarHadirInput' },
