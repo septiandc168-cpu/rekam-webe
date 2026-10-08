@@ -80,9 +80,9 @@ class NotificationController extends Controller
 
         // Redirect based on notification data: Prioritize Laporan if id_laporan exists
         if (!empty($laporanUuid)) {
-            $laporan = \App\Models\LaporanKegiatan::where('uuid', $laporanUuid)
-                ->orWhere('id', $laporanUuid)
-                ->first();
+            $laporan = is_numeric($laporanUuid)
+                ? \App\Models\LaporanKegiatan::where('id', $laporanUuid)->first()
+                : \App\Models\LaporanKegiatan::where('uuid', $laporanUuid)->first();
 
             if ($laporan) {
                 return redirect()->route('laporan_kegiatan.show', $laporan->uuid ?? $laporan->id);
@@ -92,9 +92,9 @@ class NotificationController extends Controller
         }
 
         if (!empty($kegiatanUuid)) {
-            $kegiatan = \App\Models\RencanaKegiatan::where('uuid', $kegiatanUuid)
-                ->orWhere('id', $kegiatanUuid)
-                ->first();
+            $kegiatan = is_numeric($kegiatanUuid)
+                ? \App\Models\RencanaKegiatan::where('id', $kegiatanUuid)->first()
+                : \App\Models\RencanaKegiatan::where('uuid', $kegiatanUuid)->first();
 
             if ($kegiatan) {
                 return redirect()->route('rencana_kegiatan.show', $kegiatan->uuid ?? $kegiatan->id);

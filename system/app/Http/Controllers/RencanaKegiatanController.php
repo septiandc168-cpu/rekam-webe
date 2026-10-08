@@ -958,7 +958,9 @@ class RencanaKegiatanController extends Controller
 
     public function setujuiRencana(Request $request, $id)
     {
-        $rencana = RencanaKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        $rencana = is_numeric($id)
+            ? RencanaKegiatan::where('id', $id)->firstOrFail()
+            : RencanaKegiatan::where('uuid', $id)->firstOrFail();
         $this->authorize('updateStatus', $rencana);
 
         // Validasi transisi status: hanya rencana berstatus 'diajukan' yang bisa disetujui
@@ -995,7 +997,9 @@ class RencanaKegiatanController extends Controller
 
     public function revisiRencana(Request $request, $id)
     {
-        $rencana = RencanaKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        $rencana = is_numeric($id)
+            ? RencanaKegiatan::where('id', $id)->firstOrFail()
+            : RencanaKegiatan::where('uuid', $id)->firstOrFail();
         $this->authorize('updateStatus', $rencana);
 
         $request->validate([
@@ -1037,7 +1041,9 @@ class RencanaKegiatanController extends Controller
 
     public function tolakRencana(Request $request, $id)
     {
-        $rencana = RencanaKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        $rencana = is_numeric($id)
+            ? RencanaKegiatan::where('id', $id)->firstOrFail()
+            : RencanaKegiatan::where('uuid', $id)->firstOrFail();
         $this->authorize('updateStatus', $rencana);
 
         $request->validate([
@@ -1325,7 +1331,9 @@ class RencanaKegiatanController extends Controller
      */
     public function ajukanRencana(Request $request, $id)
     {
-        $rencanaKegiatan = RencanaKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        $rencanaKegiatan = is_numeric($id)
+            ? RencanaKegiatan::where('id', $id)->firstOrFail()
+            : RencanaKegiatan::where('uuid', $id)->firstOrFail();
         
         // Authorization check: User can only submit their own draft/revisi
         if ($rencanaKegiatan->user_id !== auth()->id() || !in_array($rencanaKegiatan->status, [RencanaKegiatan::STATUS_DRAFT, RencanaKegiatan::STATUS_REVISI])) {

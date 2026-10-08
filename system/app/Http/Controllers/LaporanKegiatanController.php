@@ -936,7 +936,9 @@ class LaporanKegiatanController extends Controller
      */
     public function ajukanLaporan(Request $request, $id)
     {
-        $laporanKegiatan = LaporanKegiatan::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+        $laporanKegiatan = is_numeric($id)
+            ? LaporanKegiatan::where('id', $id)->firstOrFail()
+            : LaporanKegiatan::where('uuid', $id)->firstOrFail();
         
         // Authorization check: User can only submit their own draft/revisi
         if ($laporanKegiatan->user_id !== auth()->id() || !in_array($laporanKegiatan->status, [LaporanKegiatan::STATUS_DRAFT, LaporanKegiatan::STATUS_REVISI])) {
