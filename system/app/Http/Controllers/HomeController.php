@@ -28,7 +28,7 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $isAdmin = $user && $user->isAdmin();
+        $isAdmin = $user && $user->role && $user->role->role_name === 'admin';
 
         // === Widget Counts ===
         if ($isAdmin) {
@@ -37,9 +37,7 @@ class HomeController extends Controller
             $totalDiajukan  = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DIAJUKAN)->count();
             $totalDisetujui = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_DISETUJUI)->count();
             $totalLaporan   = LaporanKegiatan::whereNotIn('status', [LaporanKegiatan::STATUS_DRAFT, LaporanKegiatan::STATUS_FINAL])->count();
-            $totalUsers     = User::where(function($q) {
-                $q->whereHas('role', fn($r) => $r->whereRaw('LOWER(role_name) = ?', ['anggota']))->orWhere('role_id', 2);
-            })->count();
+            $totalUsers     = User::whereHas('role', fn($q) => $q->where('role_name', 'anggota'))->count();
         } else {
             // Anggota melihat rencana miliknya yang belum disetujui/selesai & laporan yang belum final
             $totalRencana   = RencanaKegiatan::where('user_id', $user->id)
@@ -165,7 +163,7 @@ class HomeController extends Controller
     public function events()
     {
         $user = auth()->user();
-        $isAdmin = $user && $user->isAdmin();
+        $isAdmin = $user && $user->role && $user->role->role_name === 'admin';
 
         // Kalender hanya menampilkan rencana kegiatan berstatus DISETUJUI (scoped by user for anggota)
         $query = RencanaKegiatan::with('user')

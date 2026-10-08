@@ -20,10 +20,8 @@ class LaporanKegiatanController extends Controller
      */
     private function notifyAdmins($notification)
     {
-        $admins = User::where(function ($query) {
-            $query->whereHas('role', function ($q) {
-                $q->whereRaw('LOWER(role_name) = ?', ['admin']);
-            })->orWhere('role_id', 1);
+        $admins = User::whereHas('role', function($query) {
+            $query->where('role_name', 'admin');
         })->get();
 
         foreach ($admins as $admin) {
@@ -37,7 +35,7 @@ class LaporanKegiatanController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $isAdmin = $user->isAdmin();
+        $isAdmin = $user->role->role_name === 'admin';
         
         // Filter data berdasarkan peran
         if ($isAdmin) {
@@ -86,8 +84,8 @@ class LaporanKegiatanController extends Controller
             $laporans = $query->orderBy('updated_at', 'desc')->get();
             
             // Get all anggota users for filter
-            $users = User::where(function($q) {
-                $q->whereHas('role', fn($r) => $r->whereRaw('LOWER(role_name) = ?', ['anggota']))->orWhere('role_id', 2);
+            $users = User::whereHas('role', function($q) {
+                $q->where('role_name', 'anggota');
             })->orderBy('name')->get();
         } else {
             // Anggota hanya melihat datanya sendiri yang berstatus draft, diajukan, revisi (mengecualikan final)
@@ -218,7 +216,7 @@ class LaporanKegiatanController extends Controller
         $this->authorize('create', LaporanKegiatan::class);
         
         $user = auth()->user();
-        $isAnggota = $user->isAnggota();
+        $isAnggota = $user->role->role_name === 'anggota';
         $isLaporanLangsung = $request->input('is_laporan_langsung') == '1';
         $rencanaKegiatan = null;
 
@@ -349,8 +347,8 @@ class LaporanKegiatanController extends Controller
             'status' => $status,
         ]);
 
-        // Kirim notifikasi jika laporan diajukan
-        if ($status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
+        // Kirim notifikasi ke admin jika anggota yang mengajukan
+        if ($isAnggota && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
             if ($rencanaKegiatan) {
                 $rencanaKegiatan->update([
                     'status' => \App\Models\RencanaKegiatan::STATUS_SELESAI,
@@ -358,33 +356,17 @@ class LaporanKegiatanController extends Controller
                 ]);
             }
 
-            $namaJudul = $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($request->judul_kegiatan ?? 'Laporan Langsung');
-
-            // Notifikasi ke admin
-            $adminNotif = new LaporanActivityNotification(
+            $notification = new LaporanActivityNotification(
                 $laporan->uuid,
                 $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
-                $namaJudul,
-                $namaJudul,
+                $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($request->judul_kegiatan ?? 'Laporan Darurat'),
+                $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($request->judul_kegiatan ?? 'Laporan Darurat'),
                 'diajukan',
                 $user->name,
                 null,
                 now()
             );
-            $this->notifyAdmins($adminNotif);
-
-            // Notifikasi konfirmasi ke anggota pembuat
-            $user->notify(new LaporanActivityNotification(
-                $laporan->uuid,
-                $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
-                $namaJudul,
-                $namaJudul,
-                'diajukan',
-                $user->name,
-                null,
-                now(),
-                "Laporan kegiatan '{$namaJudul}' berhasil diajukan dan sedang menunggu verifikasi admin."
-            ));
+            $this->notifyAdmins($notification);
         }
 
         $message = $status === \App\Models\LaporanKegiatan::STATUS_DRAFT 
@@ -404,7 +386,7 @@ class LaporanKegiatanController extends Controller
         $this->authorize('view', $laporanKegiatan);
         
         // Security Proteksi: Anggota tidak boleh melihat draft orang lain
-        if (auth()->user()->isAnggota() && $laporanKegiatan->user_id != auth()->id()) {
+        if (auth()->user()->role->role_name === 'anggota' && $laporanKegiatan->user_id != auth()->id()) {
             if (in_array($laporanKegiatan->status, ['draft', 'revisi'])) {
                 abort(403, 'Akses Ditolak. Anda tidak bisa melihat draf milik pengguna lain.');
             }
@@ -423,7 +405,7 @@ class LaporanKegiatanController extends Controller
         $this->authorize('update', $laporanKegiatan);
         
         // Transparansi Terkontrol: Cegah bypass edit data orang lain
-        if ($laporanKegiatan->user_id != auth()->id() && !auth()->user()->isAdmin()) {
+        if ($laporanKegiatan->user_id != auth()->id() && auth()->user()->role->role_name !== 'admin') {
             abort(403, 'Anda tidak memiliki akses untuk mengubah dokumen milik orang lain.');
         }
         
@@ -449,7 +431,7 @@ class LaporanKegiatanController extends Controller
             abort(403, 'Dokumen terkunci dan tidak dapat diperbarui.');
         }
         $user = auth()->user();
-        $isAnggota = $user->isAnggota();
+        $isAnggota = $user->role->role_name === 'anggota';
 
         // Handle file removals
         $currentFotoKegiatan = $laporanKegiatan->foto_kegiatan ?? [];
@@ -693,8 +675,8 @@ class LaporanKegiatanController extends Controller
 
         $laporanKegiatan->update($updateData);
 
-        // Kirim notifikasi jika laporan diajukan / diajukan ulang
-        if ($status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
+        // Kirim notifikasi ke admin jika anggota yang mengajukan ulang
+        if ($isAnggota && $status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN) {
             $rencanaKegiatan = $laporanKegiatan->rencanaKegiatan;
             if ($rencanaKegiatan) {
                 $rencanaKegiatan->update([
@@ -703,31 +685,17 @@ class LaporanKegiatanController extends Controller
                 ]);
             }
 
-            $namaJudul = $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Langsung');
-
-            $adminNotif = new LaporanActivityNotification(
+            $notification = new LaporanActivityNotification(
                 $laporanKegiatan->uuid,
                 $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
-                $namaJudul,
-                $namaJudul,
+                $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Darurat'),
+                $rencanaKegiatan ? $rencanaKegiatan->nama_kegiatan : ($laporanKegiatan->judul_kegiatan ?? 'Laporan Darurat'),
                 'diajukan',
                 $user->name,
                 null,
                 now()
             );
-            $this->notifyAdmins($adminNotif);
-
-            $user->notify(new LaporanActivityNotification(
-                $laporanKegiatan->uuid,
-                $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
-                $namaJudul,
-                $namaJudul,
-                'diajukan',
-                $user->name,
-                null,
-                now(),
-                "Laporan kegiatan '{$namaJudul}' berhasil diajukan dan sedang menunggu verifikasi admin."
-            ));
+            $this->notifyAdmins($notification);
         }
 
         $message = match(true) {
@@ -751,7 +719,7 @@ class LaporanKegiatanController extends Controller
         $this->authorize('delete', $laporanKegiatan);
         
         // Transparansi Terkontrol: Cegah bypass delete data orang lain
-        if ($laporanKegiatan->user_id != auth()->id() && !auth()->user()->isAdmin()) {
+        if ($laporanKegiatan->user_id != auth()->id() && auth()->user()->role->role_name !== 'admin') {
             abort(403, 'Anda tidak memiliki akses untuk menghapus dokumen milik orang lain.');
         }
 
@@ -760,7 +728,7 @@ class LaporanKegiatanController extends Controller
             abort(403, 'Dokumen terkunci dan tidak dapat dihapus.');
         }
         $user = auth()->user();
-        $isAnggota = $user->isAnggota();
+        $isAnggota = $user->role->role_name === 'anggota';
 
         // Simpan data untuk notifikasi sebelum dihapus
         $laporanUuid = $laporanKegiatan->uuid;
@@ -841,7 +809,7 @@ class LaporanKegiatanController extends Controller
 
     public function terimaLaporan(Request $request, $id)
     {
-        if (!auth()->user()->isAdmin()) {
+        if (auth()->user()->role->role_name !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
 
@@ -894,7 +862,7 @@ class LaporanKegiatanController extends Controller
 
     public function revisiLaporan(Request $request, $id)
     {
-        if (!auth()->user()->isAdmin()) {
+        if (auth()->user()->role->role_name !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
         $request->validate(['catatan_evaluasi' => 'required|string']);
@@ -1038,21 +1006,6 @@ class LaporanKegiatanController extends Controller
             now()
         );
         $this->notifyAdmins($notification);
-
-        // Notifikasi konfirmasi ke pembuat laporan
-        if (auth()->check()) {
-            auth()->user()->notify(new LaporanActivityNotification(
-                $laporanKegiatan->uuid,
-                $rencanaKegiatan ? $rencanaKegiatan->uuid : null,
-                $namaJudul,
-                $namaJudul,
-                'diajukan',
-                auth()->user()->name,
-                null,
-                now(),
-                "Laporan kegiatan '{$namaJudul}' berhasil diajukan dan sedang menunggu verifikasi admin."
-            ));
-        }
         
         toast('Laporan kegiatan berhasil diajukan!', 'success');
         return redirect()->back();

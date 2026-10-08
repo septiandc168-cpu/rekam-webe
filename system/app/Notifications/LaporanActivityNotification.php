@@ -15,22 +15,20 @@ class LaporanActivityNotification extends Notification
     public $user_name;
     public $keterangan;
     public $created_at;
-    public $message;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($laporanUuid, $kegiatanUuid, $judul_laporan, $judul_kegiatan, $aksi, $user_name, $keterangan = null, $created_at = null, $customMessage = null)
+    public function __construct($laporanUuid, $kegiatanUuid, $judul_laporan, $judul_kegiatan, $aksi, $user_name, $keterangan = null, $created_at = null)
     {
         $this->id_laporan = $laporanUuid;
         $this->id_kegiatan = $kegiatanUuid;
         $this->judul_laporan = $judul_laporan;
         $this->judul_kegiatan = $judul_kegiatan;
-        $this->aksi = $aksi; // 'ditambahkan', 'diedit', 'dihapus', 'diajukan'
+        $this->aksi = $aksi; // 'ditambahkan', 'diedit', 'dihapus'
         $this->user_name = $user_name;
         $this->keterangan = $keterangan;
         $this->created_at = $created_at ?? now();
-        $this->message = $customMessage;
     }
 
     /**
@@ -54,7 +52,7 @@ class LaporanActivityNotification extends Notification
             ? $this->judul_laporan 
             : (!empty(trim($this->judul_kegiatan ?? '')) ? $this->judul_kegiatan : 'Laporan Kegiatan');
 
-        $message = $this->message ?: "Laporan kegiatan '{$judulDisplay}' {$this->aksi} oleh {$this->user_name}";
+        $message = "Laporan kegiatan '{$judulDisplay}' {$this->aksi} oleh {$this->user_name}";
         
         return [
             'id_laporan' => $this->id_laporan,

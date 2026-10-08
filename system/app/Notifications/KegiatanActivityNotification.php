@@ -15,22 +15,20 @@ class KegiatanActivityNotification extends Notification
     public $created_at;
     public $jenis_kegiatan;
     public $tanggal_kegiatan;
-    public $message;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($kegiatanUuid, $judul_kegiatan, $aksi, $user_name, $keterangan = null, $created_at = null, $jenis_kegiatan = null, $tanggal_kegiatan = null, $customMessage = null)
+    public function __construct($kegiatanUuid, $judul_kegiatan, $aksi, $user_name, $keterangan = null, $created_at = null, $jenis_kegiatan = null, $tanggal_kegiatan = null)
     {
         $this->id_kegiatan = $kegiatanUuid;
         $this->judul_kegiatan = $judul_kegiatan;
-        $this->aksi = $aksi; // 'ditambahkan', 'diedit', 'dihapus', 'diajukan'
+        $this->aksi = $aksi; // 'ditambahkan', 'diedit', 'dihapus'
         $this->user_name = $user_name;
         $this->keterangan = $keterangan;
         $this->created_at = $created_at ?? now();
         $this->jenis_kegiatan = $jenis_kegiatan;
         $this->tanggal_kegiatan = $tanggal_kegiatan;
-        $this->message = $customMessage;
     }
 
     /**
@@ -50,7 +48,7 @@ class KegiatanActivityNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        $message = $this->message ?: "Rencana kegiatan '{$this->judul_kegiatan}' {$this->aksi} oleh {$this->user_name}";
+        $message = "Rencana kegiatan '{$this->judul_kegiatan}' {$this->aksi} oleh {$this->user_name}";
         
         return [
             'id_kegiatan' => $this->id_kegiatan,
