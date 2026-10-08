@@ -72,4 +72,14 @@ class User extends Authenticatable
     {
         return $this->morphMany(DatabaseNotification::class, 'notifiable')->whereNull('read_at');
     }
+
+    public function isAdmin(): bool
+    {
+        return ($this->role && strtolower($this->role->role_name) === 'admin') || $this->role_id === 1;
+    }
+
+    public function isAnggota(): bool
+    {
+        return ($this->role && strtolower($this->role->role_name) === 'anggota') || $this->role_id === 2 || !$this->isAdmin();
+    }
 }

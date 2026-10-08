@@ -23,8 +23,10 @@ class RencanaKegiatanController extends Controller
      */
     private function notifyAdmins($notification)
     {
-        $admins = User::whereHas('role', function ($query) {
-            $query->where('role_name', 'admin');
+        $admins = User::where(function ($query) {
+            $query->whereHas('role', function ($q) {
+                $q->whereRaw('LOWER(role_name) = ?', ['admin']);
+            })->orWhere('role_id', 1);
         })->get();
 
         foreach ($admins as $admin) {
@@ -35,7 +37,7 @@ class RencanaKegiatanController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'admin';
+        $isAdmin = $user->isAdmin();
         
         // Handle filter_status parameter from dashboard
         $filterStatus = $request->get('filter_status');
@@ -67,8 +69,8 @@ class RencanaKegiatanController extends Controller
             $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->get();
             
             // Get all anggota users for filter
-            $users = User::whereHas('role', function($query) {
-                $query->where('role_name', 'anggota');
+            $users = User::where(function($query) {
+                $query->whereHas('role', fn($r) => $r->whereRaw('LOWER(role_name) = ?', ['anggota']))->orWhere('role_id', 2);
             })->orderBy('name')->get();
         } else {
             // Anggota hanya melihat datanya sendiri, kecuali yang berstatus disetujui dan selesai
@@ -123,7 +125,7 @@ class RencanaKegiatanController extends Controller
     public function historyRealisasi(Request $request)
     {
         $user    = auth()->user();
-        $isAdmin = $user->role->role_name === 'admin';
+        $isAdmin = $user->isAdmin();
 
         // History Realisasi menampilkan semua kegiatan ber-Laporan (Final, Diajukan, maupun Revisi)
         $query = \App\Models\LaporanKegiatan::with(['rencanaKegiatan', 'user'])
@@ -212,7 +214,9 @@ class RencanaKegiatanController extends Controller
 
         // User list for filter (admin only)
         $users = $isAdmin
-            ? \App\Models\User::whereHas('role', fn($q) => $q->where('role_name', 'anggota'))->orderBy('name')->get()
+            ? \App\Models\User::where(function($q) {
+                $q->whereHas('role', fn($r) => $r->whereRaw('LOWER(role_name) = ?', ['anggota']))->orWhere('role_id', 2);
+            })->orderBy('name')->get()
             : collect();
 
         return view('history_realisasi.index', compact(
@@ -232,8 +236,8 @@ class RencanaKegiatanController extends Controller
         $this->authorize('create', RencanaKegiatan::class);
         
         $user = auth()->user();
-        $isAnggota = $user->role->role_name === 'anggota';
-        $isAdmin   = $user->role->role_name === 'admin';
+        $isAnggota = $user->isAnggota();
+        $isAdmin   = $user->isAdmin();
 
         $isDraft = $request->input('action') === 'draft';
 
@@ -449,17 +453,31 @@ class RencanaKegiatanController extends Controller
 
         $rencanaKegiatan = RencanaKegiatan::create($data);
 
-        // Kirim notifikasi ke admin jika anggota yang menambahkan dan bukan draft
-        if ($user->role->role_name === 'anggota' && $data['status'] !== 'draft') {
-            $notification = new KegiatanActivityNotification(
+        // Kirim notifikasi jika rencana diajukan (bukan draft)
+        if ($data['status'] !== 'draft') {
+            // Notifikasi ke admin
+            $adminNotif = new KegiatanActivityNotification(
                 $rencanaKegiatan->uuid,
                 $rencanaKegiatan->nama_kegiatan,
-                'ditambahkan',
+                'diajukan',
                 $user->name,
                 null,
                 now()
             );
-            $this->notifyAdmins($notification);
+            $this->notifyAdmins($adminNotif);
+
+            // Notifikasi konfirmasi ke anggota pembuat
+            $user->notify(new KegiatanActivityNotification(
+                $rencanaKegiatan->uuid,
+                $rencanaKegiatan->nama_kegiatan,
+                'diajukan',
+                $user->name,
+                null,
+                now(),
+                null,
+                null,
+                "Rencana kegiatan '{$rencanaKegiatan->nama_kegiatan}' berhasil diajukan dan sedang menunggu persetujuan admin."
+            ));
         }
 
         if ($data['status'] === 'draft') {
@@ -476,7 +494,7 @@ class RencanaKegiatanController extends Controller
     public function frontIndex()
     {
         $user = auth()->user();
-        $isAdmin = $user ? $user->role->role_name === 'admin' : false;
+        $isAdmin = $user ? $user->isAdmin() : false;
         
         // Filter data berdasarkan peran untuk public map view
         if ($isAdmin) {
@@ -503,7 +521,7 @@ class RencanaKegiatanController extends Controller
         
         $rencana_kegiatan->load('laporanKegiatan');
         $user = auth()->user();
-        $isAnggota = $user && $user->role && $user->role->role_name === 'anggota';
+        $isAnggota = $user && $user->isAnggota();
 
         // Hitung missing fields untuk anggota pemilik rencana draft/revisi
         $missingFields = [];
@@ -530,8 +548,8 @@ class RencanaKegiatanController extends Controller
         $this->authorize('update', $rencana_kegiatan);
 
         $user = auth()->user();
-        $isAnggota = $user->role->role_name === 'anggota';
-        $isAdmin   = $user->role->role_name === 'admin';
+        $isAnggota = $user->isAnggota();
+        $isAdmin   = $user->isAdmin();
         Log::info('RencanaKegiatanController@update called', ['id' => $rencana_kegiatan->id, 'input' => $request->all()]);
 
         $previousStatus = $rencana_kegiatan->status;
@@ -848,9 +866,9 @@ class RencanaKegiatanController extends Controller
 
         $rencana_kegiatan->update($data);
 
-        // Kirim notifikasi ke admin hanya jika anggota resmi mengajukan / mengajukan ulang (status === 'diajukan')
-        if ($isAnggota && ($data['status'] ?? null) === RencanaKegiatan::STATUS_DIAJUKAN) {
-            $notification = new KegiatanActivityNotification(
+        // Kirim notifikasi jika rencana diajukan / diajukan ulang (status === 'diajukan')
+        if (($data['status'] ?? null) === RencanaKegiatan::STATUS_DIAJUKAN) {
+            $adminNotif = new KegiatanActivityNotification(
                 $rencana_kegiatan->uuid,
                 $rencana_kegiatan->nama_kegiatan,
                 'diajukan',
@@ -858,7 +876,19 @@ class RencanaKegiatanController extends Controller
                 null,
                 now()
             );
-            $this->notifyAdmins($notification);
+            $this->notifyAdmins($adminNotif);
+
+            $user->notify(new KegiatanActivityNotification(
+                $rencana_kegiatan->uuid,
+                $rencana_kegiatan->nama_kegiatan,
+                'diajukan',
+                $user->name,
+                null,
+                now(),
+                null,
+                null,
+                "Rencana kegiatan '{$rencana_kegiatan->nama_kegiatan}' berhasil diajukan dan sedang menunggu persetujuan admin."
+            ));
         }
 
         $message = match(true) {
@@ -881,7 +911,7 @@ class RencanaKegiatanController extends Controller
         $this->authorize('updateStatus', $rencana_kegiatan);
 
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'admin';
+        $isAdmin = $user->isAdmin();
 
         if (!$isAdmin) {
             abort(403, 'Unauthorized action.');
@@ -1068,7 +1098,7 @@ class RencanaKegiatanController extends Controller
         $this->authorize('delete', $rencana_kegiatan);
 
         $user = auth()->user();
-        $isAdmin = $user->role->role_name === 'admin';
+        $isAdmin = $user->isAdmin();
 
         // Simpan data untuk notifikasi sebelum dihapus
         $kegiatanUuid = $rencana_kegiatan->uuid;
@@ -1157,7 +1187,7 @@ class RencanaKegiatanController extends Controller
         }
 
         $rencanaStatus = $rencana_kegiatan->status;
-        $isAnggota = $user->role && $user->role->role_name === 'anggota';
+        $isAnggota = $user && $user->isAnggota();
 
         $rencana_kegiatan->delete();
 
@@ -1185,7 +1215,7 @@ class RencanaKegiatanController extends Controller
     public function exportExcel(Request $request)
     {
         // Only admin can access this method
-        if (auth()->user()->role->role_name !== 'admin') {
+        if (!auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -1329,8 +1359,8 @@ class RencanaKegiatanController extends Controller
             'keterangan_status' => null // Reset keterangan
         ]);
         
-        // Send notification to supervisors
-        $notification = new \App\Notifications\KegiatanActivityNotification(
+        // Send notification to admin
+        $adminNotif = new \App\Notifications\KegiatanActivityNotification(
             $rencanaKegiatan->uuid,
             $rencanaKegiatan->nama_kegiatan,
             'diajukan',
@@ -1338,7 +1368,20 @@ class RencanaKegiatanController extends Controller
             null,
             now()
         );
-        $this->notifyAdmins($notification);
+        $this->notifyAdmins($adminNotif);
+
+        // Send confirmation notification to anggota
+        auth()->user()->notify(new \App\Notifications\KegiatanActivityNotification(
+            $rencanaKegiatan->uuid,
+            $rencanaKegiatan->nama_kegiatan,
+            'diajukan',
+            auth()->user()->name,
+            null,
+            now(),
+            null,
+            null,
+            "Rencana kegiatan '{$rencanaKegiatan->nama_kegiatan}' berhasil diajukan dan sedang menunggu persetujuan admin."
+        ));
         
         toast('Rencana kegiatan berhasil diajukan!', 'success');
         return redirect()->back();

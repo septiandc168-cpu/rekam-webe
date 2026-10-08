@@ -14,7 +14,7 @@ class RencanaKegiatanPolicy
     public function viewAny(User $user): bool
     {
         // Both admin and supervisor can view list
-        return in_array($user->role->role_name, ['anggota', 'admin']);
+        return $user->isAdmin() || $user->isAnggota();
     }
 
     /**
@@ -23,12 +23,12 @@ class RencanaKegiatanPolicy
     public function view(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
         // Admin can view rencana kegiatan except draft
-        if ($user->role->role_name === 'admin') {
+        if ($user->isAdmin()) {
             return $rencanaKegiatan->status !== \App\Models\RencanaKegiatan::STATUS_DRAFT;
         }
 
         // Anggota can only view their own rencana kegiatan
-        if ($user->role->role_name === 'anggota') {
+        if ($user->isAnggota()) {
             if ($rencanaKegiatan->user_id === $user->id) {
                 return true;
             }
@@ -44,8 +44,8 @@ class RencanaKegiatanPolicy
      */
     public function create(User $user): bool
     {
-        // Only admin can create rencana kegiatan
-        return $user->role->role_name === 'anggota';
+        // Only anggota can create rencana kegiatan
+        return $user->isAnggota();
     }
 
     /**
@@ -53,14 +53,14 @@ class RencanaKegiatanPolicy
      */
     public function update(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        // Supervisor can update any rencana kegiatan
-        if ($user->role->role_name === 'admin') {
+        // Admin can update any rencana kegiatan
+        if ($user->isAdmin()) {
             return true;
         }
 
         // Anggota can only update their own rencana kegiatan
-        // with status 'diajukan', 'ditolak', or 'revisi'
-        if ($user->role->role_name === 'anggota') {
+        // with status 'draft' or 'revisi'
+        if ($user->isAnggota()) {
             return $rencanaKegiatan->user_id === $user->id && 
                    in_array($rencanaKegiatan->status, [
                        RencanaKegiatan::STATUS_DRAFT,
@@ -76,8 +76,8 @@ class RencanaKegiatanPolicy
      */
     public function changeStatus(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        // Only supervisor can change status
-        return $user->role->role_name === 'admin';
+        // Only admin can change status
+        return $user->isAdmin();
     }
 
     /**
@@ -85,8 +85,8 @@ class RencanaKegiatanPolicy
      */
     public function updateStatus(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        // Only supervisor can update status
-        return $user->role->role_name === 'admin';
+        // Only admin can update status
+        return $user->isAdmin();
     }
 
     /**
@@ -96,13 +96,7 @@ class RencanaKegiatanPolicy
      */
     public function delete(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        // Statuses that are locked and cannot be deleted by anggota
-        $lockedStatuses = [
-            RencanaKegiatan::STATUS_DISETUJUI,
-            RencanaKegiatan::STATUS_SELESAI,
-        ];
-
-        if ($user->role->role_name === 'anggota') {
+        if ($user->isAnggota()) {
             return $rencanaKegiatan->user_id === $user->id
                 && $rencanaKegiatan->status === RencanaKegiatan::STATUS_DRAFT;
         }
@@ -115,7 +109,7 @@ class RencanaKegiatanPolicy
      */
     public function restore(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        if ($user->role->role_name === 'anggota') {
+        if ($user->isAnggota()) {
             return $rencanaKegiatan->user_id === $user->id;
         }
 
@@ -128,12 +122,7 @@ class RencanaKegiatanPolicy
      */
     public function forceDelete(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        $lockedStatuses = [
-            RencanaKegiatan::STATUS_DISETUJUI,
-            RencanaKegiatan::STATUS_SELESAI,
-        ];
-
-        if ($user->role->role_name === 'anggota') {
+        if ($user->isAnggota()) {
             return $rencanaKegiatan->user_id === $user->id
                 && $rencanaKegiatan->status === RencanaKegiatan::STATUS_DRAFT;
         }
