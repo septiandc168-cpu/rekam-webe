@@ -197,7 +197,7 @@
                         <div class="mb-4">
                             <label class="form-label fw-bold text-dark mb-1">Rincian Kebutuhan <span class="text-danger">*</span></label>
                             <textarea name="rincian_kebutuhan" id="summernote-rincian" class="form-control summernote" rows="4" placeholder="Tuliskan rincian kebutuhan kegiatan..." required>{!! old('rincian_kebutuhan') !!}</textarea>
-                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan rincian kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau rincian anggaran yang dibutuhkan.</small>
+                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan rincian kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau rincian anggaran yang dibutuhkan. Jika rincian kebutuhan sudah tertera pada file atau in-kind, cukup tuliskan keterangan singkat (contoh: "Tertera pada file" atau "In-kind").</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold text-dark mb-1">File Anggaran Kegiatan <span class="text-danger">*</span></label>
