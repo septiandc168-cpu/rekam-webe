@@ -761,8 +761,14 @@ class RencanaKegiatanController extends Controller
         
         if ($removeAnggaran) {
             if ($currentAnggaran) {
-                $anggaranPath = is_array($currentAnggaran) ? $currentAnggaran['path'] : $currentAnggaran;
-                Storage::disk('public')->delete($anggaranPath);
+                $anggaranPath = is_array($currentAnggaran) ? ($currentAnggaran['path'] ?? null) : $currentAnggaran;
+                if (is_string($currentAnggaran) && str_starts_with($currentAnggaran, '{')) {
+                    $decoded = json_decode($currentAnggaran, true);
+                    $anggaranPath = $decoded['path'] ?? $currentAnggaran;
+                }
+                if ($anggaranPath && Storage::disk('public')->exists($anggaranPath)) {
+                    Storage::disk('public')->delete($anggaranPath);
+                }
                 $currentAnggaran = null;
             }
         }
@@ -780,6 +786,19 @@ class RencanaKegiatanController extends Controller
                 'path' => $path,
                 'original_name' => $originalName
             ];
+
+            // Bersihkan file lama jika ada penggantian file baru
+            if ($currentAnggaran) {
+                $oldPath = is_array($currentAnggaran) ? ($currentAnggaran['path'] ?? null) : $currentAnggaran;
+                if (is_string($currentAnggaran) && str_starts_with($currentAnggaran, '{')) {
+                    $decoded = json_decode($currentAnggaran, true);
+                    $oldPath = $decoded['path'] ?? $currentAnggaran;
+                }
+                if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $currentAnggaran = null;
+            }
         }
 
         // Merge existing and new files

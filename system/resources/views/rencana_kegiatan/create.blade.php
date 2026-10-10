@@ -206,6 +206,7 @@
                                 <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran...</label>
                             </div>
                             <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file proposal/RAB/rincian anggaran kegiatan. Bebas format dokumen (PDF, Word, Excel, ZIP, dll) hingga 50MB.</small>
+                            <div id="preview-anggaran" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
                 </div>
@@ -413,6 +414,7 @@
         });
 
         function renderAnggaranPreview() {
+            if (!previewAnggaran) return;
             previewAnggaran.innerHTML = '';
 
             anggaranBuffer.forEach((file, index) => {
@@ -425,26 +427,37 @@
                 else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z')) icon = 'fa-file-archive text-info';
 
                 const div = document.createElement('div');
-                div.className = 'd-flex align-items-center border rounded p-2';
+                div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
+                div.style.paddingRight = '25px';
                 div.innerHTML = `
-            <i class="fas ${icon} me-2" style="font-size:1.2rem; margin-right:8px;"></i>
-            <div class="flex-grow-1 text-truncate">
-                <div class="fw-semibold text-truncate" title="${file.name}">${file.name}</div>
-                <small class="text-muted">${(file.size/1024).toFixed(1)} KB</small>
-            </div>
-            <button type="button"
-                    class="btn btn-sm btn-danger ml-2"
-                    onclick="removeAnggaran(${index})"><i class="fas fa-times"></i></button>
-        `;
+                    <div class="d-flex align-items-center text-truncate mr-2" style="max-width: 90%;">
+                        <i class="fas ${icon} mr-2" style="font-size:1.2rem;"></i>
+                        <div class="text-truncate">
+                            <div class="text-truncate font-weight-bold" style="font-size:0.85rem;" title="${file.name}">${file.name}</div>
+                            <small class="text-muted">${(file.size/1024).toFixed(1)} KB</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-danger position-absolute shadow"
+                            style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                            onclick="removeAnggaran(${index})" title="Hapus file ini">
+                        <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                    </button>
+                `;
 
                 previewAnggaran.appendChild(div);
             });
         }
 
         function removeAnggaran(index) {
-            anggaranBuffer.splice(index, 1);
-            anggaranKegiatanInput.value = '';
+            anggaranBuffer = [];
+            if (anggaranKegiatanInput) {
+                anggaranKegiatanInput.value = '';
+            }
             renderAnggaranPreview();
+            const label = document.querySelector('label[for="anggaranKegiatanInput"]');
+            if (label) {
+                label.innerText = 'Pilih file anggaran...';
+            }
         }
     </script>
 

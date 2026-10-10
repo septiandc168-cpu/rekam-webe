@@ -245,15 +245,24 @@
                                 @endphp
                                 @if($anggaranPath)
                                     <div class="mb-2">
-                                        <a href="/public/storage/app/{{ $anggaranPath }}" target="_blank" class="badge bg-navy text-white p-2"><i class="fas fa-file-download mr-1"></i> Lihat File Saat Ini</a>
+                                        <div class="d-inline-block position-relative mr-2 mb-2 existing-anggaran-item">
+                                            <a href="/public/storage/app/{{ $anggaranPath }}" target="_blank" class="badge bg-navy text-white p-2"><i class="fas fa-file-download mr-1"></i> Lihat File Saat Ini</a>
+                                            <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-anggaran"
+                                                    data-path="{{ $anggaranPath }}"
+                                                    style="top:-5px; right:-5px; border-radius:50%; width:20px; height:20px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                    title="Hapus file anggaran ini">
+                                                <i class="fas fa-times" style="font-size:10px;"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 @endif
                             @endif
                             <div class="custom-file mb-1">
                                 <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" @if(!$rencana_kegiatan->anggaran_kegiatan) required @endif>
-                                <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran @if($rencana_kegiatan->anggaran_kegiatan)(kosongkan jika tidak diubah)@endif...</label>
+                                <label class="custom-file-label" for="anggaranKegiatanInput" id="anggaranKegiatanLabel">Pilih file anggaran @if($rencana_kegiatan->anggaran_kegiatan)(kosongkan jika tidak diubah)@endif...</label>
                             </div>
                             <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file proposal/RAB/rincian anggaran kegiatan. Bebas format dokumen (PDF, Word, Excel, ZIP, dll) hingga 50MB.</small>
+                            <div id="preview-anggaran" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
                 </div>
@@ -334,7 +343,7 @@
                         <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
                         <div class="float-right d-flex">
                             @if (in_array($rencana_kegiatan->status, ['draft', 'revisi']))
-                                <button type="submit" name="action" value="draft" class="btn btn-secondary text-white mr-2"><i class="fas fa-save mr-1"></i> Simpan Draft</button>
+                                <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft"><i class="fas fa-save mr-1"></i> Simpan Draft</button>
                                 <button type="submit" name="action" value="diajukan" class="btn bg-navy text-white"><i class="fas fa-paper-plane mr-1"></i> Kirim Rencana</button>
                             @else
                                 <button type="submit" name="action" value="simpan" class="btn btn-secondary text-white mr-2"><i class="fas fa-save mr-1"></i> Simpan Perubahan</button>
@@ -516,6 +525,7 @@
         });
 
         function renderAnggaranPreview() {
+            if (!previewAnggaran) return;
             previewAnggaran.innerHTML = '';
 
             anggaranBuffer.forEach((file, index) => {
@@ -528,26 +538,38 @@
                 else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z')) icon = 'fa-file-archive text-info';
 
                 const div = document.createElement('div');
-                div.className = 'd-flex align-items-center border rounded p-2';
+                div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
+                div.style.paddingRight = '25px';
                 div.innerHTML = `
-            <i class="fas ${icon} me-2" style="font-size:1.2rem; margin-right:8px;"></i>
-            <div class="flex-grow-1 text-truncate">
-                <div class="fw-semibold text-truncate" title="${file.name}">${file.name}</div>
-                <small class="text-muted">${(file.size/1024).toFixed(1)} KB</small>
-            </div>
-            <button type="button"
-                    class="btn btn-sm btn-danger ml-2"
-                    onclick="removeAnggaran(${index})"><i class="fas fa-times"></i></button>
-        `;
+                    <div class="d-flex align-items-center text-truncate mr-2" style="max-width: 90%;">
+                        <i class="fas ${icon} mr-2" style="font-size:1.2rem;"></i>
+                        <div class="text-truncate">
+                            <div class="text-truncate font-weight-bold" style="font-size:0.85rem;" title="${file.name}">${file.name}</div>
+                            <small class="text-muted">${(file.size/1024).toFixed(1)} KB</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-danger position-absolute shadow"
+                            style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                            onclick="removeAnggaran(${index})" title="Hapus file ini">
+                        <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                    </button>
+                `;
 
                 previewAnggaran.appendChild(div);
             });
         }
 
         function removeAnggaran(index) {
-            anggaranBuffer.splice(index, 1);
-            anggaranKegiatanInput.value = '';
+            anggaranBuffer = [];
+            if (anggaranKegiatanInput) {
+                anggaranKegiatanInput.value = '';
+            }
             renderAnggaranPreview();
+            const label = document.getElementById('anggaranKegiatanLabel');
+            if (label) {
+                const hasExisting = $('.existing-anggaran-item').length > 0;
+                label.innerText = hasExisting ? 'Pilih file anggaran (kosongkan jika tidak diubah)...' : 'Pilih file anggaran...';
+            }
         }
     </script>
 
@@ -987,6 +1009,37 @@
                         
                         // Efek visual hilang perlahan
                         $(this).closest('.existing-dokumen-item').fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                    }
+                });
+
+                // Logika Hapus File Existing (File Anggaran Kegiatan)
+                $('.btn-delete-existing-anggaran').click(function(e) {
+                    e.preventDefault();
+                    if(confirm('Hapus file anggaran ini? File akan terhapus saat Anda klik Perbarui Rencana Kegiatan.')) {
+                        let path = $(this).data('path');
+                        // Tambahkan hidden input untuk backend (RencanaKegiatanController)
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'remove_anggaran_kegiatan',
+                            value: path || '1'
+                        }).appendTo('form');
+                        
+                        // Sesuaikan label input file anggaran
+                        const label = document.getElementById('anggaranKegiatanLabel');
+                        if (label) {
+                            label.innerText = 'Pilih file anggaran...';
+                        }
+                        
+                        // Sesuaikan atribut required pada input anggaran
+                        const inputAnggaran = document.getElementById('anggaranKegiatanInput');
+                        if (inputAnggaran) {
+                            inputAnggaran.setAttribute('required', 'required');
+                        }
+
+                        // Efek visual hilang perlahan
+                        $(this).closest('.existing-anggaran-item').fadeOut(300, function() {
                             $(this).remove();
                         });
                     }
