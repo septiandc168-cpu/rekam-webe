@@ -91,18 +91,20 @@ class RencanaKegiatanPolicy
 
     /**
      * Determine whether user can delete model.
-     * Anggota can delete their own draft or ditolak rencana.
-     * Admin can delete rencana.
+     * Anggota CANNOT delete rencana that are already approved, completed,
+     * or pending verification — these are considered "locked" states.
      */
     public function delete(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        if ($user->role->role_name === 'admin') {
-            return true;
-        }
+        // Statuses that are locked and cannot be deleted by anggota
+        $lockedStatuses = [
+            RencanaKegiatan::STATUS_DISETUJUI,
+            RencanaKegiatan::STATUS_SELESAI,
+        ];
 
         if ($user->role->role_name === 'anggota') {
             return $rencanaKegiatan->user_id === $user->id
-                && in_array($rencanaKegiatan->status, [RencanaKegiatan::STATUS_DRAFT, RencanaKegiatan::STATUS_DITOLAK]);
+                && $rencanaKegiatan->status === RencanaKegiatan::STATUS_DRAFT;
         }
 
         return false;
@@ -113,10 +115,6 @@ class RencanaKegiatanPolicy
      */
     public function restore(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        if ($user->role->role_name === 'admin') {
-            return true;
-        }
-
         if ($user->role->role_name === 'anggota') {
             return $rencanaKegiatan->user_id === $user->id;
         }
@@ -126,16 +124,18 @@ class RencanaKegiatanPolicy
 
     /**
      * Determine whether user can permanently delete model.
+     * Same locked-status protection as soft delete.
      */
     public function forceDelete(User $user, RencanaKegiatan $rencanaKegiatan): bool
     {
-        if ($user->role->role_name === 'admin') {
-            return true;
-        }
+        $lockedStatuses = [
+            RencanaKegiatan::STATUS_DISETUJUI,
+            RencanaKegiatan::STATUS_SELESAI,
+        ];
 
         if ($user->role->role_name === 'anggota') {
             return $rencanaKegiatan->user_id === $user->id
-                && in_array($rencanaKegiatan->status, [RencanaKegiatan::STATUS_DRAFT, RencanaKegiatan::STATUS_DITOLAK]);
+                && $rencanaKegiatan->status === RencanaKegiatan::STATUS_DRAFT;
         }
 
         return false;
