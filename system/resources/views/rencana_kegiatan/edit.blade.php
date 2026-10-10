@@ -259,7 +259,7 @@
                             @endif
                             <div class="custom-file mb-1">
                                 <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" @if(!$rencana_kegiatan->anggaran_kegiatan) required @endif>
-                                <label class="custom-file-label" for="anggaranKegiatanInput" id="anggaranKegiatanLabel">Pilih file anggaran @if($rencana_kegiatan->anggaran_kegiatan)(kosongkan jika tidak diubah)@endif...</label>
+                                <label class="custom-file-label" for="anggaranKegiatanInput" id="anggaranKegiatanLabel">Pilih file anggaran...</label>
                             </div>
                             <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file proposal/RAB/rincian anggaran kegiatan. Bebas format dokumen (PDF, Word, Excel, ZIP, dll) hingga 50MB.</small>
                             <div id="preview-anggaran" class="d-flex flex-column mt-2"></div>
@@ -567,8 +567,7 @@
             renderAnggaranPreview();
             const label = document.getElementById('anggaranKegiatanLabel');
             if (label) {
-                const hasExisting = $('.existing-anggaran-item').length > 0;
-                label.innerText = hasExisting ? 'Pilih file anggaran (kosongkan jika tidak diubah)...' : 'Pilih file anggaran...';
+                label.innerText = 'Pilih file anggaran...';
             }
         }
     </script>
