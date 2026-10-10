@@ -173,12 +173,25 @@
                             <tr class="border-bottom">
                                 <td class="text-center text-muted">{{ $i + 1 }}</td>
                                 <td class="text-center">
-                                    <a class="btn btn-sm bg-navy text-white shadow-sm rounded"
-                                        style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
-                                        href="{{ route('rencana_kegiatan.show', $rencanaKegiatan) }}"
-                                        title="Lihat Detail">
-                                        <i class="fas fa-info" style="font-size: 12px;"></i>
-                                    </a>
+                                    <div class="d-flex justify-content-center align-items-center" style="gap: 4px;">
+                                        <a class="btn btn-sm bg-navy text-white shadow-sm rounded"
+                                            style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
+                                            href="{{ route('rencana_kegiatan.show', $rencanaKegiatan) }}"
+                                            title="Lihat Detail">
+                                            <i class="fas fa-info" style="font-size: 12px;"></i>
+                                        </a>
+                                        @can('delete', $rencanaKegiatan)
+                                            <form action="{{ route('rencana_kegiatan.destroy', $rencanaKegiatan->uuid ?? $rencanaKegiatan->id) }}" method="POST" class="d-inline m-0" data-confirm-delete="true">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger shadow-sm rounded"
+                                                    style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
+                                                    title="Hapus Rencana Kegiatan">
+                                                    <i class="fas fa-trash" style="font-size: 12px;"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </div>
                                 </td>
                                 <td class="py-3">
                                     <a href="{{ route('rencana_kegiatan.show', $rencanaKegiatan) }}" class="text-dark text-wrap d-block" style="max-width: 300px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-decoration: none;" title="{{ $rencanaKegiatan->nama_kegiatan ?? ($rencanaKegiatan->judul ?? '-') }}">

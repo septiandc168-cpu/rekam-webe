@@ -226,17 +226,18 @@
                         </a>
                     @endif
                     
-                    @if ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DRAFT)
-                        <form action="{{ route('rencana_kegiatan.destroy', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2" data-confirm-delete="true">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash mr-1"></i> Hapus
-                            </button>
-                        </form>
-                    @endif
                 @endif
             @endif
+
+            @can('delete', $rencana_kegiatan)
+                <form action="{{ route('rencana_kegiatan.destroy', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2" data-confirm-delete="true">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm shadow-sm">
+                        <i class="fas fa-trash mr-1"></i> Hapus
+                    </button>
+                </form>
+            @endcan
             
             {{-- Tombol Lihat Laporan Kegiatan (Khusus Anggota jika sudah ada laporan) --}}
             @if(auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id())
