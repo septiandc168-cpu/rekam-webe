@@ -60,12 +60,12 @@
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 <label class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
-                                <input type="text" name="nama_kegiatan" class="form-control" placeholder="Contoh: Penanaman 1000 Bibit Mangrove" value="{{ old('nama_kegiatan') }}" required>
+                                <input type="text" name="nama_kegiatan" class="form-control" placeholder="Masukkan nama kegiatan..." value="{{ old('nama_kegiatan') }}" required>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan nama kegiatan yang jelas dan spesifik agar mudah diidentifikasi oleh Admin.</small>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Estimasi Jumlah Peserta <span class="text-danger">*</span></label>
-                                <input type="number" name="estimasi_peserta" class="form-control" placeholder="Contoh: 50" value="{{ old('estimasi_peserta') }}" required>
+                                <input type="number" name="estimasi_peserta" class="form-control" placeholder="Masukkan estimasi jumlah peserta..." value="{{ old('estimasi_peserta') }}" required>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Perkiraan jumlah peserta yang akan hadir dalam kegiatan.</small>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Kelompok / Komunitas Pelaksana <span class="text-danger">*</span></label>
-                                <input type="text" name="kelompok" class="form-control" placeholder="Contoh: Kelompok Tani Harapan Jaya" value="{{ old('kelompok') }}" required>
+                                <input type="text" name="kelompok" class="form-control" placeholder="Masukkan nama kelompok / komunitas pelaksana..." value="{{ old('kelompok') }}" required>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Nama kelompok, komunitas, atau lembaga yang bertanggung jawab melaksanakan kegiatan.</small>
                             </div>
                         </div>
@@ -96,19 +96,19 @@
                             </div>
                             <div class="col-md-6 mb-3" id="jenis_kegiatan_lainnya_row" style="display: {{ old('jenis_kegiatan') == 'lainnya' ? 'block' : 'none' }};">
                                 <label class="form-label">Deskripsi Jenis Kegiatan Lainnya <span class="text-danger">*</span></label>
-                                <input type="text" name="jenis_kegiatan_lainnya" class="form-control" placeholder="Contoh: Monitoring Terumbu Karang & Bersih Pantai (Beach Cleanup)" value="{{ old('jenis_kegiatan_lainnya') }}">
+                                <input type="text" name="jenis_kegiatan_lainnya" class="form-control" placeholder="Masukkan jenis kegiatan lainnya..." value="{{ old('jenis_kegiatan_lainnya') }}">
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan secara singkat jenis kegiatan yang tidak tercantum dalam daftar pilihan.</small>
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Deskripsi Kegiatan <span class="text-danger">*</span></label>
-                                <textarea name="deskripsi" class="form-control" id="summernote-deskripsi" rows="3" placeholder="Contoh: Kegiatan ini difokuskan pada perbaikan ekosistem...">{!! old('deskripsi') !!}</textarea>
+                                <textarea name="deskripsi" class="form-control" id="summernote-deskripsi" rows="3" placeholder="Masukkan deskripsi kegiatan...">{!! old('deskripsi') !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan gambaran umum kegiatan: apa yang dilakukan, di mana, dan bagaimana pelaksanaannya.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tujuan Kegiatan <span class="text-danger">*</span></label>
-                                <textarea name="tujuan" class="form-control" id="summernote-tujuan" rows="2" placeholder="Contoh: 1. Mencegah abrasi; 2. Membuka lahan baru...">{!! old('tujuan') !!}</textarea>
+                                <textarea name="tujuan" class="form-control" id="summernote-tujuan" rows="2" placeholder="Masukkan tujuan kegiatan...">{!! old('tujuan') !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan tujuan utama kegiatan secara jelas. Gunakan format poin jika lebih dari satu tujuan.</small>
                             </div>
                         </div>
@@ -164,7 +164,7 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label">Desa / Wilayah <span class="text-danger">*</span></label>
-                            <input type="text" name="desa" class="form-control" placeholder="Contoh: Pesisir Desa Suka Maju" value="{{ old('desa') }}" required>
+                            <input type="text" name="desa" class="form-control" placeholder="Masukkan nama desa / wilayah..." value="{{ old('desa') }}" required>
                             <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Tuliskan nama desa atau wilayah tempat kegiatan akan dilaksanakan.</small>
                         </div>
                         <div class="mb-3">
