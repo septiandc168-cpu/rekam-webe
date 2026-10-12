@@ -118,19 +118,19 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Realisasi Jumlah Peserta <span class="text-danger">*</span></label>
-                                <input type="number" name="realisasi_peserta" class="form-control" placeholder="Contoh: 45" min="0" required value="{{ old('realisasi_peserta', $laporanKegiatan->realisasi_peserta) }}">
+                                <input type="number" name="realisasi_peserta" class="form-control" placeholder="Masukkan realisasi jumlah peserta..." min="0" required value="{{ old('realisasi_peserta', $laporanKegiatan->realisasi_peserta) }}">
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jumlah peserta yang benar-benar hadir berdasarkan daftar hadir.</small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Rangkaian Kegiatan / Alur Acara <span class="text-danger">*</span></label>
-                                <textarea name="rangkaian_kegiatan" class="form-control summernote-editor" rows="4" placeholder="Contoh: Kegiatan diawali dengan sambutan..." required>{!! old('rangkaian_kegiatan', $laporanKegiatan->rangkaian_kegiatan) !!}</textarea>
+                                <textarea name="rangkaian_kegiatan" class="form-control summernote-editor" rows="4" placeholder="Masukkan rangkaian kegiatan..." required>{!! old('rangkaian_kegiatan', $laporanKegiatan->rangkaian_kegiatan) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Uraikan urutan acara dari awal hingga akhir, termasuk waktu dan kegiatan di setiap sesi.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Profil Peserta <span class="text-danger">*</span></label>
-                                <textarea name="profil_peserta" class="form-control summernote-editor" rows="3" placeholder="Contoh: Mayoritas adalah nelayan lokal..." required>{!! old('profil_peserta', $laporanKegiatan->profil_peserta) !!}</textarea>
+                                <textarea name="profil_peserta" class="form-control summernote-editor" rows="3" placeholder="Masukkan profil peserta..." required>{!! old('profil_peserta', $laporanKegiatan->profil_peserta) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan latar belakang peserta: profesi, asal daerah, rentang usia, atau kelompok sasaran.</small>
                             </div>
                         </div>
@@ -148,17 +148,17 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Hasil yang Dicapai <span class="text-danger">*</span></label>
-                                <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4" placeholder="Contoh: Seluruh bibit berhasil ditanam dengan metode baru..." required>{!! old('hasil_dicapai', $laporanKegiatan->hasil_dicapai) !!}</textarea>
+                                <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4" placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai', $laporanKegiatan->hasil_dicapai) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan pencapaian utama yang diperoleh dari pelaksanaan kegiatan ini.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Output Nyata <span class="text-danger">*</span></label>
-                                <textarea name="output_nyata" class="form-control summernote-editor" rows="4" placeholder="Contoh: Tersedianya 1000 bibit tertanam dan dokumen kesepakatan warga..." required>{!! old('output_nyata', $laporanKegiatan->output_nyata) !!}</textarea>
+                                <textarea name="output_nyata" class="form-control summernote-editor" rows="4" placeholder="Masukkan output nyata..." required>{!! old('output_nyata', $laporanKegiatan->output_nyata) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan produk/hasil fisik yang dihasilkan, seperti dokumen, data, atau barang yang terukur.</small>
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Dampak Awal yang Terlihat <span class="text-danger">*</span></label>
-                                <textarea name="dampak_awal" class="form-control summernote-editor" rows="4" placeholder="Contoh: Warga mulai secara mandiri menjaga area tanam..." required>{!! old('dampak_awal', $laporanKegiatan->dampak_awal) !!}</textarea>
+                                <textarea name="dampak_awal" class="form-control summernote-editor" rows="4" placeholder="Masukkan dampak awal yang terlihat..." required>{!! old('dampak_awal', $laporanKegiatan->dampak_awal) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Deskripsikan perubahan awal yang sudah terlihat di masyarakat atau lingkungan setelah kegiatan.</small>
                             </div>
                         </div>
@@ -189,17 +189,17 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Kendala yang Dihadapi <span class="text-danger">*</span></label>
-                                <textarea name="kendala" class="form-control summernote-editor" rows="4" placeholder="Contoh: Cuaca buruk sempat menunda penanaman selama 2 jam..." required>{!! old('kendala', $laporanKegiatan->kendala) !!}</textarea>
+                                <textarea name="kendala" class="form-control summernote-editor" rows="4" placeholder="Masukkan kendala yang dihadapi..." required>{!! old('kendala', $laporanKegiatan->kendala) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan hambatan atau masalah yang muncul selama pelaksanaan kegiatan. Isi "Tidak ada" jika tidak ada kendala.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Solusi yang Dilakukan <span class="text-danger">*</span></label>
-                                <textarea name="solusi" class="form-control summernote-editor" rows="4" placeholder="Contoh: Memindahkan area tanam sementara ke sisi timur pantai..." required>{!! old('solusi', $laporanKegiatan->solusi) !!}</textarea>
+                                <textarea name="solusi" class="form-control summernote-editor" rows="4" placeholder="Masukkan solusi yang dilakukan..." required>{!! old('solusi', $laporanKegiatan->solusi) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan langkah-langkah yang diambil untuk mengatasi kendala tersebut.</small>
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Catatan Evaluasi & Rekomendasi <span class="text-danger">*</span></label>
-                                <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="4" placeholder="Contoh: Ke depannya perlu persiapan terpal untuk antisipasi hujan..." required>{!! old('evaluasi_rekomendasi', $laporanKegiatan->evaluasi_rekomendasi) !!}</textarea>
+                                <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="4" placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi', $laporanKegiatan->evaluasi_rekomendasi) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
                             </div>
                         </div>
