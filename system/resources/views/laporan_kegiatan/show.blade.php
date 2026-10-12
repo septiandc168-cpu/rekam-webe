@@ -135,7 +135,10 @@
     <!-- Header & Action Bar -->
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4 pb-3 border-bottom">
         <div class="d-flex flex-column mb-3 mb-lg-0 pr-lg-3" style="flex: 1; min-width: 0;">
-            <div class="d-flex align-items-center flex-wrap mb-2" style="gap: 8px;">
+            <h4 class="mb-0 fw-bold text-dark" style="line-height: 1.4;">
+                {{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}
+            </h4>
+            <div class="d-flex align-items-center flex-wrap mt-2" style="gap: 8px;">
                 @if($laporanKegiatan->isDarurat())
                     <span class="d-inline-flex align-items-center" style="background:#f1f5f9; color:#334155; padding:3px 10px; border-radius:4px; font-size:0.75rem; font-weight:600; border:1px solid #e2e8f0; white-space:nowrap; flex-shrink:0;">
                         Laporan Langsung
@@ -145,9 +148,6 @@
                     {!! $laporanKegiatan->status_badge !!}
                 </div>
             </div>
-            <h4 class="mb-0 fw-bold text-dark" style="line-height: 1.4;">
-                {{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}
-            </h4>
         </div>
 
         @php
