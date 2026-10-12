@@ -207,9 +207,6 @@
                             </div>
                             <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Klik langsung pada peta atau gunakan kotak pencarian untuk menentukan titik lokasi kegiatan secara akurat.</small>
                         </div>
-                        <div class="alert alert-info py-2 mb-3">
-                            <i class="fas fa-info-circle mr-1"></i> <strong>Petunjuk:</strong> Gunakan kotak pencarian di dalam peta atau klik langsung pada peta untuk mendapatkan titik presisi kegiatan.
-                        </div>
                         <div class="mb-3" id="map-create" style="width:100%; height:400px; border:1px solid #ddd; border-radius:4px;"></div>
                     </div>
                     <div class="card-footer bg-white clearfix">
