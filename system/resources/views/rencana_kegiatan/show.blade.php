@@ -206,36 +206,41 @@
             {{-- missingFields dihitung oleh controller --}}
 
             @if(auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->user_id == auth()->id())
-                @if ($rencana_kegiatan->user_id == auth()->id())
-                    @if (in_array($rencana_kegiatan->status, [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]))
-                        @if(empty($missingFields))
-                            <form action="{{ route('rencana_kegiatan.ajukan', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn bg-navy text-white btn-sm shadow-sm fw-bold">
-                                    <i class="fas fa-paper-plane mr-1"></i> {{ $rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_REVISI ? 'Ajukan Revisi Sekarang' : 'Ajukan Sekarang' }}
-                                </button>
-                            </form>
-                        @else
-                            <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Data Belum Lengkap!', text: 'Rencana kegiatan ini belum dapat diajukan karena ada {{ count($missingFields ?? []) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
+                @if (in_array($rencana_kegiatan->status, [\App\Models\RencanaKegiatan::STATUS_DRAFT, \App\Models\RencanaKegiatan::STATUS_REVISI]))
+                    @if(empty($missingFields))
+                        <form action="{{ route('rencana_kegiatan.ajukan', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn bg-navy text-white btn-sm shadow-sm fw-bold">
                                 <i class="fas fa-paper-plane mr-1"></i> {{ $rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_REVISI ? 'Ajukan Revisi Sekarang' : 'Ajukan Sekarang' }}
                             </button>
-                        @endif
-                        <a href="{{ route('rencana_kegiatan.edit', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" class="btn btn-warning btn-sm mr-2 shadow-sm text-dark">
-                            <i class="fas fa-edit mr-1"></i> Edit Rencana
-                        </a>
-                    @endif
-                    
-                    @if ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DRAFT)
-                        <form action="{{ route('rencana_kegiatan.destroy', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2" data-confirm-delete="true">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash mr-1"></i> Hapus
-                            </button>
                         </form>
+                    @else
+                        <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Data Belum Lengkap!', text: 'Rencana kegiatan ini belum dapat diajukan karena ada {{ count($missingFields ?? []) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
+                            <i class="fas fa-paper-plane mr-1"></i> {{ $rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_REVISI ? 'Ajukan Revisi Sekarang' : 'Ajukan Sekarang' }}
+                        </button>
                     @endif
+                    <a href="{{ route('rencana_kegiatan.edit', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" class="btn btn-warning btn-sm mr-2 shadow-sm text-dark">
+                        <i class="fas fa-edit mr-1"></i> Edit Rencana
+                    </a>
                 @endif
+                
+                @if ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DRAFT)
+                    <form action="{{ route('rencana_kegiatan.destroy', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2" data-confirm-delete="true">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash mr-1"></i> Hapus
+                        </button>
+                    </form>
+                @endif
+            @endif
+
+            {{-- Tombol Buat Laporan Kegiatan (Khusus Anggota jika status disetujui dan belum ada laporan) --}}
+            @if(auth()->user()->role->role_name === 'anggota' && $rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DISETUJUI && !$rencana_kegiatan->hasLaporan())
+                <a href="{{ route('laporan_kegiatan.create', ['rencana_kegiatan_id' => $rencana_kegiatan->uuid ?? $rencana_kegiatan->id]) }}" class="btn btn-sm bg-navy text-white mr-2 shadow-sm fw-bold">
+                    <i class="fas fa-file-alt mr-1"></i> Buat Laporan
+                </a>
             @endif
             
             {{-- Tombol Lihat Laporan Kegiatan (Khusus Anggota jika sudah ada laporan) --}}
