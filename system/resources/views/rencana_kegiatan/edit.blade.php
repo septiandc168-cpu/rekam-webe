@@ -627,6 +627,7 @@
 
                             // Summernote untuk rincian kebutuhan
                             $('#summernote-rincian').summernote({
+                                placeholder: $('#summernote-rincian').attr('placeholder'),
                                 toolbar: [
                                     ['style', ['style']],
                                     ['font', ['bold', 'underline', 'clear']],
@@ -636,7 +637,13 @@
                                 ],
                                 height: 120,
                                 callbacks: {
-                                    onInit: function() { syncSummernoteValue('summernote-rincian'); },
+                                    onInit: function() {
+                                        var $el = $('#summernote-rincian');
+                                        if ($el.summernote('isEmpty') || $el.val().trim() === '<p><br></p>' || $el.val().trim() === '') {
+                                            $el.summernote('empty');
+                                        }
+                                        syncSummernoteValue('summernote-rincian');
+                                    },
                                     onChange: function() { syncSummernoteValue('summernote-rincian'); },
                                     onBlur: function() { syncSummernoteValue('summernote-rincian'); }
                                 }
@@ -645,6 +652,7 @@
 
                             // Summernote untuk deskripsi
                             $('#summernote-deskripsi').summernote({
+                                placeholder: $('#summernote-deskripsi').attr('placeholder'),
                                 toolbar: [
                                     ['style', ['style']],
                                     ['font', ['bold', 'underline', 'clear']],
@@ -654,7 +662,13 @@
                                 ],
                                 height: 120,
                                 callbacks: {
-                                    onInit: function() { syncSummernoteValue('summernote-deskripsi'); },
+                                    onInit: function() {
+                                        var $el = $('#summernote-deskripsi');
+                                        if ($el.summernote('isEmpty') || $el.val().trim() === '<p><br></p>' || $el.val().trim() === '') {
+                                            $el.summernote('empty');
+                                        }
+                                        syncSummernoteValue('summernote-deskripsi');
+                                    },
                                     onChange: function() { syncSummernoteValue('summernote-deskripsi'); },
                                     onBlur: function() { syncSummernoteValue('summernote-deskripsi'); }
                                 }
@@ -663,6 +677,7 @@
 
                             // Summernote untuk tujuan
                             $('#summernote-tujuan').summernote({
+                                placeholder: $('#summernote-tujuan').attr('placeholder'),
                                 toolbar: [
                                     ['style', ['style']],
                                     ['font', ['bold', 'underline', 'clear']],
@@ -672,7 +687,13 @@
                                 ],
                                 height: 120,
                                 callbacks: {
-                                    onInit: function() { syncSummernoteValue('summernote-tujuan'); },
+                                    onInit: function() {
+                                        var $el = $('#summernote-tujuan');
+                                        if ($el.summernote('isEmpty') || $el.val().trim() === '<p><br></p>' || $el.val().trim() === '') {
+                                            $el.summernote('empty');
+                                        }
+                                        syncSummernoteValue('summernote-tujuan');
+                                    },
                                     onChange: function() { syncSummernoteValue('summernote-tujuan'); },
                                     onBlur: function() { syncSummernoteValue('summernote-tujuan'); }
                                 }
