@@ -31,29 +31,90 @@
             @if(!empty($rencana_kegiatan->keterangan_status))
                 @php
                     $st = $rencana_kegiatan->status;
-                    $alertClass = match($st) {
-                        'disetujui', 'selesai' => 'alert-success',
-                        'ditolak' => 'alert-danger',
-                        'revisi' => 'alert-warning',
-                        default => 'alert-info'
-                    };
-                    $iconClass = match($st) {
-                        'disetujui', 'selesai' => 'fa-check-circle',
-                        'ditolak' => 'fa-times-circle',
-                        'revisi' => 'fa-exclamation-triangle',
-                        default => 'fa-info-circle'
-                    };
-                    $titleText = match($st) {
-                        'revisi' => 'Catatan Revisi:',
-                        'disetujui' => 'Catatan Persetujuan:',
-                        'ditolak' => 'Catatan Penolakan:',
-                        'selesai' => 'Catatan Penyelesaian / Verifikasi Laporan:',
-                        default => 'Catatan Status:'
+                    $theme = match($st) {
+                        'disetujui' => [
+                            'bg' => '#f3faf7',
+                            'border' => '#0e9f6e',
+                            'icon' => 'fa-check-circle',
+                            'iconBg' => 'bg-success text-white',
+                            'title' => 'Rencana Disetujui',
+                            'badge' => 'Catatan Persetujuan',
+                            'badgeClass' => 'bg-success text-white',
+                            'borderColor' => '#bcf0da',
+                            'desc' => 'Rencana kegiatan telah disetujui oleh admin.'
+                        ],
+                        'selesai' => [
+                            'bg' => '#f0fdf4',
+                            'border' => '#22c55e',
+                            'icon' => 'fa-check-circle',
+                            'iconBg' => 'bg-success text-white',
+                            'title' => 'Kegiatan Selesai',
+                            'badge' => 'Catatan Verifikasi',
+                            'badgeClass' => 'bg-success text-white',
+                            'borderColor' => '#bbf7d0',
+                            'desc' => 'Kegiatan telah diverifikasi dan selesai.'
+                        ],
+                        'ditolak' => [
+                            'bg' => '#fdf2f2',
+                            'border' => '#e02424',
+                            'icon' => 'fa-times-circle',
+                            'iconBg' => 'bg-danger text-white',
+                            'title' => 'Rencana Ditolak',
+                            'badge' => 'Catatan Penolakan',
+                            'badgeClass' => 'bg-danger text-white',
+                            'borderColor' => '#fbd5d5',
+                            'desc' => 'Rencana kegiatan ini ditolak oleh admin dengan catatan berikut.'
+                        ],
+                        'revisi' => [
+                            'bg' => '#fff8e6',
+                            'border' => '#ffc107',
+                            'icon' => 'fa-exclamation-triangle',
+                            'iconBg' => 'bg-warning text-dark',
+                            'title' => 'Rencana Perlu Revisi',
+                            'badge' => 'Catatan dari Admin',
+                            'badgeClass' => 'bg-warning text-dark',
+                            'borderColor' => '#ffe8a1',
+                            'desc' => 'Silakan lakukan perbaikan pada rencana kegiatan ini sesuai catatan berikut sebelum diajukan kembali.'
+                        ],
+                        default => [
+                            'bg' => '#f0f4f8',
+                            'border' => '#17a2b8',
+                            'icon' => 'fa-info-circle',
+                            'iconBg' => 'bg-info text-white',
+                            'title' => 'Catatan Status',
+                            'badge' => 'Informasi',
+                            'badgeClass' => 'bg-info text-white',
+                            'borderColor' => '#bee5eb',
+                            'desc' => 'Catatan status terkait rencana kegiatan ini.'
+                        ]
                     };
                 @endphp
-                <div class="alert {{ $alertClass }} mb-4 shadow-sm border-0">
-                    <i class="fas {{ $iconClass }} mr-1"></i> <strong>{{ $titleText }}</strong><br>
-                    <span class="d-block mt-1">{!! nl2br(e($rencana_kegiatan->keterangan_status)) !!}</span>
+                <div class="alert alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: {{ $theme['bg'] }}; border-left: 4px solid {{ $theme['border'] }} !important;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="top: 10px; right: 15px; opacity: 0.7;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="d-flex align-items-start pr-4">
+                        <div class="rounded-circle {{ $theme['iconBg'] }} d-flex align-items-center justify-content-center mr-3 mt-1" style="width: 36px; height: 36px; flex-shrink: 0;">
+                            <i class="fas {{ $theme['icon'] }}"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                                <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">{{ $theme['title'] }}</h6>
+                                <span class="badge {{ $theme['badgeClass'] }} font-weight-bold" style="font-size: 0.75rem;">{{ $theme['badge'] }}</span>
+                            </div>
+                            <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
+                                {{ $theme['desc'] }}
+                            </p>
+                            <div class="mt-2 p-2 rounded bg-white border" style="border-color: {{ $theme['borderColor'] }} !important;">
+                                <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">
+                                    <i class="fas fa-comment-dots mr-1" style="color: {{ $theme['border'] }};"></i> Catatan:
+                                </strong>
+                                <div class="text-dark" style="font-size: 0.88rem; line-height: 1.5;">
+                                    {!! nl2br(e($rencana_kegiatan->keterangan_status)) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endif
 
