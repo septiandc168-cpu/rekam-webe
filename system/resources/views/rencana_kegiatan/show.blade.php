@@ -169,9 +169,9 @@
 
 <div class="container-fluid text-sm">
     <!-- Header & Action Bar -->
-    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4 pb-3 border-bottom">
-        <div class="d-flex flex-column mb-3 mb-lg-0 pr-lg-3" style="flex: 1; min-width: 0;">
-            <h4 class="mb-0 fw-bold text-dark" style="line-height: 1.4;" title="{{ $rencana_kegiatan->nama_kegiatan }}">{{ $rencana_kegiatan->nama_kegiatan }}</h4>
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start mb-4 pb-3 border-bottom">
+        <div class="d-flex flex-column mb-3 mb-lg-0 pr-lg-4" style="flex: 1; min-width: 0;">
+            <h4 class="mb-0 fw-bold text-dark text-break" style="line-height: 1.4; overflow-wrap: anywhere; word-break: break-word;" title="{{ $rencana_kegiatan->nama_kegiatan }}">{{ $rencana_kegiatan->nama_kegiatan }}</h4>
             <div class="d-flex align-items-center flex-wrap mt-2" style="gap: 8px;">
                 <div class="flex-shrink-0 d-inline-flex align-items-center">
                     {!! $rencana_kegiatan->status_badge !!}
@@ -179,7 +179,7 @@
             </div>
         </div>
         
-        <div class="d-flex align-items-center flex-wrap flex-shrink-0">
+        <div class="d-flex align-items-center flex-wrap flex-shrink-0 mt-1 mt-lg-0">
             @if(auth()->user()->role->role_name === 'admin' && $rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DIAJUKAN)
                 <!-- Tombol Setujui Langsung -->
                 <form action="{{ route('rencana_kegiatan.setujui', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2">
