@@ -418,7 +418,16 @@
                 function showStep(stepIndex) {
                     currentStepIndex = stepIndex;
                     $('.wizard-step').hide();
-                    $('#step-' + stepIndex).fadeIn(300);
+                    $('#step-' + stepIndex).fadeIn(300, function() {
+                        $(this).find('.summernote-editor').each(function() {
+                            const $t = $(this);
+                            if (typeof $t.summernote === 'function') {
+                                if ($t.summernote('isEmpty') || $t.val().trim() === '<p><br></p>' || $t.val().trim() === '') {
+                                    $t.summernote('empty');
+                                }
+                            }
+                        });
+                    });
                     updateProgressUI(stepIndex);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
@@ -719,34 +728,61 @@
                 });
             });
 
-            // Wait for jQuery & Initialize Summernote
-            function waitForJQuery() {
-                if (typeof $ !== 'undefined') {
-                    $.getScript('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js', function() {
-                        $('.summernote-editor').each(function() {
-                            $(this).summernote({
-                                placeholder: $(this).attr('placeholder'),
-                                toolbar: [
-                                    ['style', ['style']],
-                                    ['font', ['bold', 'underline', 'clear']],
-                                    ['fontname', ['fontname']],
-                                    ['color', ['color']],
-                                    ['para', ['ul', 'ol', 'paragraph']]
-                                ],
-                                height: 120,
-                                callbacks: {
-                                    onInit: function() { if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
-                                    onChange: function() { if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
-                                    onBlur: function() { if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); }
+            // Inisialisasi Summernote Editor
+            function initializeSummernoteEditors() {
+                function setupEditors() {
+                    $('.summernote-editor').each(function() {
+                        var $el = $(this);
+                        // Hancurkan instance lama jika sudah terlanjur diinisialisasi dengan konfigurasi default
+                        if ($el.next().hasClass('note-editor') || $el.data('summernote')) {
+                            try { $el.summernote('destroy'); } catch(e) {}
+                        }
+
+                        $el.summernote({
+                            placeholder: $el.attr('placeholder') || 'Masukkan isian...',
+                            toolbar: [
+                                ['style', ['style']],
+                                ['font', ['bold', 'underline', 'clear']],
+                                ['fontname', ['fontname']],
+                                ['color', ['color']],
+                                ['para', ['ul', 'ol', 'paragraph']]
+                            ],
+                            height: 120,
+                            callbacks: {
+                                onInit: function() {
+                                    var $target = $(this);
+                                    if ($target.summernote('isEmpty') || $target.val().trim() === '<p><br></p>' || $target.val().trim() === '') {
+                                        $target.summernote('empty');
+                                    }
+                                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
+                                },
+                                onChange: function() {
+                                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
+                                },
+                                onBlur: function() {
+                                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                                 }
-                            });
+                            }
                         });
                     });
+                }
+
+                if (typeof $ !== 'undefined' && typeof $.fn.summernote !== 'undefined') {
+                    setupEditors();
+                } else if (typeof $ !== 'undefined') {
+                    $.getScript('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js', function() {
+                        setupEditors();
+                    });
                 } else {
-                    setTimeout(waitForJQuery, 100);
+                    setTimeout(initializeSummernoteEditors, 100);
                 }
             }
-            waitForJQuery();
+
+            if (typeof $ !== 'undefined') {
+                $(document).ready(initializeSummernoteEditors);
+            } else {
+                initializeSummernoteEditors();
+            }
         </script>
     @endpush
 @endsection
