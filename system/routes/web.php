@@ -29,9 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class)->middleware('isSupervisor');
 });
 
-// Public/front map (full-screen map with markers)
-Route::get('/front_rencana_kegiatan', [App\Http\Controllers\RencanaKegiatanController::class, 'frontIndex'])->name('rencana_kegiatan.front');
-
 Route::middleware('auth')->group(function () {
     Route::get('/rencana_kegiatan', [App\Http\Controllers\RencanaKegiatanController::class, 'index'])->name('rencana_kegiatan.index');
     Route::get('/rencana_kegiatan/create', [App\Http\Controllers\RencanaKegiatanController::class, 'create'])

@@ -470,32 +470,6 @@ class RencanaKegiatanController extends Controller
         return redirect()->route('rencana_kegiatan.index');
     }
 
-    /**
-     * Public front map view showing markers.
-     */
-    public function frontIndex()
-    {
-        $user = auth()->user();
-        $isAdmin = $user ? $user->role->role_name === 'admin' : false;
-        
-        // Filter data berdasarkan peran untuk public map view
-        if ($isAdmin) {
-            // Admin melihat semua data
-            $rencanaKegiatans = RencanaKegiatan::whereNotNull('lat')->whereNotNull('lng')->get();
-        } elseif ($user) {
-            // Admin hanya melihat datanya sendiri
-            $rencanaKegiatans = RencanaKegiatan::where('user_id', $user->id)
-                ->whereNotNull('lat')
-                ->whereNotNull('lng')
-                ->get();
-        } else {
-            // Guest tidak melihat data apa-apa atau bisa disesuaikan
-            $rencanaKegiatans = collect();
-        }
-        
-        return view('rencana_kegiatan.front_index', compact('rencanaKegiatans'));
-    }
-
     public function show(RencanaKegiatan $rencana_kegiatan)
     {
         // Check authorization
