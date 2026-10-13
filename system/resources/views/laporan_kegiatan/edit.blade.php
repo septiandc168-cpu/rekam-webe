@@ -58,17 +58,17 @@
                         <div class="progress-bar bg-primary" id="wizard-progress" role="progressbar" style="width: 0%;"></div>
                     </div>
 
-                    <div class="step-indicator text-center position-relative active" style="z-index: 2; width: 33%;" id="indicator-1">
+                    <div class="step-indicator text-center position-relative active" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
                         <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
                         <span class="fw-bold text-primary d-block step-text">Realisasi Kegiatan</span>
                     </div>
 
-                    <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%;" id="indicator-2">
+                    <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
                         <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
                         <span class="fw-bold text-muted d-block step-text">Evaluasi</span>
                     </div>
 
-                    <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%;" id="indicator-3">
+                    <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-3">
                         <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">3</div>
                         <span class="fw-bold text-muted d-block step-text">Lampiran Bukti</span>
                     </div>
@@ -418,7 +418,9 @@
     @push('css')
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
         <style>
-            .step-circle { transition: all 0.3s ease; }
+            .step-indicator { cursor: pointer; user-select: none; transition: transform 0.2s ease; }
+            .step-indicator:hover .step-circle { transform: scale(1.08); }
+            .step-circle { transition: all 0.25s ease; }
             .step-text { font-size: 0.85rem; margin-top: 5px; }
             .progress { overflow: visible; background-color: #e9ecef; }
             .preview-img-wrapper { position: relative; display: inline-block; margin-right: 10px; margin-bottom: 10px; }
@@ -436,38 +438,183 @@
             document.addEventListener('DOMContentLoaded', function() {
                 bsCustomFileInput.init();
 
+                // --- FILE UPLOAD BUFFER & PREVIEW MANAGER ---
+                const fileBuffers = {
+                    foto_kegiatan: [],
+                    daftar_hadir: [],
+                    notulen: [],
+                    materi: [],
+                    berita_acara: []
+                };
+
+                const inputIdMap = {
+                    foto_kegiatan: 'fotoInput',
+                    daftar_hadir: 'daftarHadirInput',
+                    notulen: 'notulenInput',
+                    materi: 'materiInput',
+                    berita_acara: 'beritaAcaraInput'
+                };
+
+                const fieldConfigs = {
+                    foto_kegiatan: { maxFiles: 100, maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
+                    daftar_hadir:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
+                    notulen:       { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
+                    materi:        { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
+                    berita_acara:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' }
+                };
+
                 // --- WIZARD NAVIGATION ---
                 let currentStepIndex = 1;
                 const totalSteps = 3;
 
+                // Helper untuk cek apakah konten Summernote/Textarea terisi
+                function isSummernoteFilled(el) {
+                    const $el = $(el);
+                    if ($el.length && typeof $el.summernote === 'function') {
+                        try {
+                            if ($el.summernote('isEmpty')) return false;
+                            const code = $el.summernote('code');
+                            const cleanText = $('<div>').html(code).text().replace(/\u00a0/g, ' ').trim();
+                            return cleanText.length > 0;
+                        } catch(e) {}
+                    }
+                    const rawEl = typeof el === 'string' ? document.querySelector(el) : el;
+                    if (rawEl && rawEl.value) {
+                        const cleanText = rawEl.value.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+                        return cleanText.length > 0;
+                    }
+                    return false;
+                }
+
+                // Cek apakah seluruh kolom wajib pada tahap laporan sudah terisi
+                function isStepComplete(stepNum) {
+                    if (stepNum === 1) {
+                        // Tahap 1: Realisasi Kegiatan
+                        const isLangsung = document.querySelector('input[name="is_laporan_langsung"]');
+                        if (isLangsung) {
+                            const judul = (document.querySelector('input[name="judul_kegiatan"]')?.value || '').trim();
+                            const lokasi = (document.querySelector('input[name="lokasi_kegiatan"]')?.value || '').trim();
+                            if (!judul || !lokasi) return false;
+                        }
+
+                        const tglMulai = (document.querySelector('input[name="realisasi_tanggal_mulai"]')?.value || '').trim();
+                        const tglSelesai = (document.querySelector('input[name="realisasi_tanggal_selesai"]')?.value || '').trim();
+                        const peserta = (document.querySelector('input[name="realisasi_peserta"]')?.value || '').trim();
+                        if (!tglMulai || !tglSelesai || !peserta) return false;
+
+                        const summernoteFields = ['rangkaian_kegiatan', 'profil_peserta', 'hasil_dicapai', 'output_nyata', 'dampak_awal'];
+                        for (let name of summernoteFields) {
+                            if (!isSummernoteFilled(`textarea[name="${name}"]`)) return false;
+                        }
+                        return true;
+                    } else if (stepNum === 2) {
+                        // Tahap 2: Evaluasi & Kendala
+                        const summernoteFields = ['kendala', 'solusi', 'evaluasi_rekomendasi'];
+                        for (let name of summernoteFields) {
+                            if (!isSummernoteFilled(`textarea[name="${name}"]`)) return false;
+                        }
+                        return true;
+                    } else if (stepNum === 3) {
+                        // Tahap 3: Lampiran Bukti
+                        const requiredFiles = [
+                            { key: 'foto_kegiatan', inputId: 'fotoInput' },
+                            { key: 'daftar_hadir', inputId: 'daftarHadirInput' },
+                            { key: 'materi', inputId: 'materiInput' },
+                            { key: 'berita_acara', inputId: 'beritaAcaraInput' }
+                        ];
+
+                        for (let req of requiredFiles) {
+                            const hasBuffer = typeof fileBuffers !== 'undefined' && fileBuffers[req.key] && fileBuffers[req.key].length > 0;
+                            const inputEl = document.getElementById(req.inputId);
+                            const hasInput = inputEl && inputEl.files && inputEl.files.length > 0;
+                            const hasExisting = $(`.existing-${req.key === 'foto_kegiatan' ? 'foto' : 'dokumen'}-item:visible`).length > 0;
+                            if (!hasBuffer && !hasInput && !hasExisting) return false;
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+
                 function showStep(stepIndex) {
+                    currentStepIndex = stepIndex;
                     $('.wizard-step').hide();
                     $('#step-' + stepIndex).fadeIn(300);
+                    updateProgressUI(stepIndex);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
 
+                function updateProgressUI(stepIndex) {
                     for (let i = 1; i <= totalSteps; i++) {
                         let indicator = $('#indicator-' + i);
                         let circle = indicator.find('.step-circle');
                         let text = indicator.find('.step-text');
+                        let complete = isStepComplete(i);
+                        let isCurrent = (i === stepIndex);
 
-                        if (i < stepIndex) {
-                            circle.removeClass('bg-secondary bg-primary text-muted').addClass('bg-success text-white');
-                            circle.html('<i class="fas fa-check"></i>');
-                            text.removeClass('text-muted text-primary').addClass('text-success');
-                        } else if (i === stepIndex) {
-                            circle.removeClass('bg-secondary bg-success text-muted').addClass('bg-primary text-white');
-                            circle.html(i);
-                            text.removeClass('text-muted text-success').addClass('text-primary');
+                        if (isCurrent) {
+                            indicator.addClass('active');
+                            if (complete) {
+                                circle.removeClass('bg-secondary bg-primary text-muted').addClass('bg-success text-white shadow');
+                                circle.html('<i class="fas fa-check"></i>');
+                                circle.css('box-shadow', '0 0 0 4px rgba(0, 123, 255, 0.45)');
+                                text.removeClass('text-muted text-success').addClass('text-primary');
+                                indicator.attr('title', 'Tahap ' + i + ': Sudah terisi lengkap (sedang aktif)');
+                            } else {
+                                circle.removeClass('bg-secondary bg-success text-muted').addClass('bg-primary text-white shadow');
+                                circle.html(i);
+                                circle.css('box-shadow', '0 0 0 4px rgba(0, 123, 255, 0.25)');
+                                text.removeClass('text-muted text-success').addClass('text-primary');
+                                indicator.attr('title', 'Tahap ' + i + ': Belum lengkap (sedang aktif)');
+                            }
                         } else {
-                            circle.removeClass('bg-primary bg-success text-white').addClass('bg-secondary text-white');
-                            circle.html(i);
-                            text.removeClass('text-primary text-success').addClass('text-muted');
+                            indicator.removeClass('active');
+                            circle.css('box-shadow', 'none');
+                            if (complete) {
+                                circle.removeClass('bg-secondary bg-primary text-muted').addClass('bg-success text-white');
+                                circle.html('<i class="fas fa-check"></i>');
+                                text.removeClass('text-muted text-primary').addClass('text-success');
+                                indicator.attr('title', 'Tahap ' + i + ': Sudah terisi lengkap');
+                            } else {
+                                circle.removeClass('bg-primary bg-success text-white').addClass('bg-secondary text-white');
+                                circle.html(i);
+                                text.removeClass('text-primary text-success').addClass('text-muted');
+                                indicator.attr('title', 'Tahap ' + i + ': Belum lengkap');
+                            }
                         }
                     }
 
-                    let progressPercent = ((stepIndex - 1) / (totalSteps - 1)) * 100;
+                    let progressPercent = 0;
+                    if (isStepComplete(1) && isStepComplete(2)) {
+                        progressPercent = 100;
+                    } else if (isStepComplete(1)) {
+                        progressPercent = 50;
+                    } else {
+                        progressPercent = 0;
+                    }
                     $('#wizard-progress').css('width', progressPercent + '%');
+                }
 
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Klik indikator langsung menuju tahap
+                for (let i = 1; i <= totalSteps; i++) {
+                    $('#indicator-' + i).css('cursor', 'pointer').on('click', function() {
+                        showStep(i);
+                    });
+                }
+
+                // Realtime update listener
+                let updateTimeout = null;
+                function scheduleUpdateProgress() {
+                    if (updateTimeout) clearTimeout(updateTimeout);
+                    updateTimeout = setTimeout(() => {
+                        updateProgressUI(currentStepIndex);
+                    }, 100);
+                }
+                window.scheduleUpdateProgress = scheduleUpdateProgress;
+
+                const laporanForm = document.getElementById('laporan-kegiatan-form');
+                if (laporanForm) {
+                    laporanForm.addEventListener('input', scheduleUpdateProgress);
+                    laporanForm.addEventListener('change', scheduleUpdateProgress);
                 }
 
                 $('.btn-next').click(function() {
@@ -582,31 +729,6 @@
 
                 showStep(currentStepIndex);
 
-                // --- FILE UPLOAD BUFFER & PREVIEW MANAGER ---
-                const fileBuffers = {
-                    foto_kegiatan: [],
-                    daftar_hadir: [],
-                    notulen: [],
-                    materi: [],
-                    berita_acara: []
-                };
-
-                const inputIdMap = {
-                    foto_kegiatan: 'fotoInput',
-                    daftar_hadir: 'daftarHadirInput',
-                    notulen: 'notulenInput',
-                    materi: 'materiInput',
-                    berita_acara: 'beritaAcaraInput'
-                };
-
-                const fieldConfigs = {
-                    foto_kegiatan: { maxFiles: 100, maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    daftar_hadir:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    notulen:       { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    materi:        { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    berita_acara:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' }
-                };
-
                 function handleFileUpload(fieldName, inputElement, isImage) {
                     const files = Array.from(inputElement.files);
                     const config = fieldConfigs[fieldName] || { maxFiles: 10, maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' };
@@ -633,6 +755,7 @@
                     });
 
                     syncInputAndRender(fieldName, inputElement, isImage);
+                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 }
 
                 window.removeFileFromBuffer = function(fieldName, index) {
@@ -641,6 +764,7 @@
                     if (inputElement) {
                         syncInputAndRender(fieldName, inputElement, fieldName === 'foto_kegiatan');
                     }
+                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 };
 
                 function syncInputAndRender(fieldName, inputElement, isImage) {
@@ -702,16 +826,20 @@
                             previewContainer.appendChild(div);
                         });
                     }
+
+                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 }
 
                 $('.custom-img-input').on('change', function() {
                     const fieldName = $(this).attr('name').replace('[]', '');
                     handleFileUpload(fieldName, this, true);
+                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 });
 
                 $('.custom-doc-input').on('change', function() {
                     const fieldName = $(this).attr('name').replace('[]', '');
                     handleFileUpload(fieldName, this, false);
+                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 });
             });
 
@@ -730,6 +858,7 @@
 
                         $(this).closest('.existing-foto-item').fadeOut(300, function() {
                             $(this).remove();
+                            if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                         });
                     }
                 });
@@ -738,8 +867,6 @@
                     e.preventDefault();
                     if(confirm('Hapus dokumen ini? File akan terhapus saat Anda menekan tombol simpan.')) {
                         const path = $(this).data('path');
-                        // Determine which type of document based on parent wrapper context or just map it
-                        // For simplicity, we just use a generic matcher based on folder path
                         let inputName = 'remove_daftar_hadir[]';
                         if(path.includes('notulen')) inputName = 'remove_notulen[]';
                         else if(path.includes('materi')) inputName = 'remove_materi[]';
@@ -753,6 +880,7 @@
 
                         $(this).closest('.existing-dokumen-item').fadeOut(300, function() {
                             $(this).remove();
+                            if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                         });
                     }
                 });
@@ -764,13 +892,18 @@
                             $(this).summernote({
                                 placeholder: $(this).attr('placeholder'),
                                 toolbar: [
-                                ['style', ['style']],
-                                ['font', ['bold', 'underline', 'clear']],
-                                ['fontname', ['fontname']],
-                                ['color', ['color']],
-                                ['para', ['ul', 'ol', 'paragraph']]
-                            ],
-                            height: 120
+                                    ['style', ['style']],
+                                    ['font', ['bold', 'underline', 'clear']],
+                                    ['fontname', ['fontname']],
+                                    ['color', ['color']],
+                                    ['para', ['ul', 'ol', 'paragraph']]
+                                ],
+                                height: 120,
+                                callbacks: {
+                                    onInit: function() { if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
+                                    onChange: function() { if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
+                                    onBlur: function() { if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); }
+                                }
                             });
                         });
                     });

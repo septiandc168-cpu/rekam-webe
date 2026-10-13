@@ -125,15 +125,15 @@
                         <div class="progress position-absolute" style="height: 4px; top: 20px; left: 10%; right: 10%; z-index: 1;">
                             <div class="progress-bar bg-success" id="wizard-progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <div class="step-indicator active text-center position-relative" style="z-index: 2; width: 33%;" id="indicator-1">
+                        <div class="step-indicator active text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
                             <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
                             <span class="fw-bold d-block step-text text-primary">Detail Kegiatan</span>
                         </div>
-                        <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%;" id="indicator-2">
+                        <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
                             <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
                             <span class="fw-bold text-muted d-block step-text">Waktu & Lokasi</span>
                         </div>
-                        <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%;" id="indicator-3">
+                        <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-3">
                             <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">3</div>
                             <span class="fw-bold text-muted d-block step-text">Dokumen Pendukung</span>
                         </div>
@@ -580,6 +580,7 @@
             });
 
             renderAnggaranPreview();
+            if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
         });
 
         function renderAnggaranPreview() {
@@ -627,6 +628,7 @@
             if (label) {
                 label.innerText = 'Pilih file anggaran...';
             }
+            if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
         }
     </script>
 
@@ -704,9 +706,10 @@
                                             $el.summernote('empty');
                                         }
                                         syncSummernoteValue('summernote-rincian');
+                                        if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                                     },
-                                    onChange: function() { syncSummernoteValue('summernote-rincian'); },
-                                    onBlur: function() { syncSummernoteValue('summernote-rincian'); }
+                                    onChange: function() { syncSummernoteValue('summernote-rincian'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
+                                    onBlur: function() { syncSummernoteValue('summernote-rincian'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); }
                                 }
                             });
                             console.log('Summernote rincian initialized');
@@ -729,9 +732,10 @@
                                             $el.summernote('empty');
                                         }
                                         syncSummernoteValue('summernote-deskripsi');
+                                        if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                                     },
-                                    onChange: function() { syncSummernoteValue('summernote-deskripsi'); },
-                                    onBlur: function() { syncSummernoteValue('summernote-deskripsi'); }
+                                    onChange: function() { syncSummernoteValue('summernote-deskripsi'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
+                                    onBlur: function() { syncSummernoteValue('summernote-deskripsi'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); }
                                 }
                             });
                             console.log('Summernote deskripsi initialized');
@@ -754,9 +758,10 @@
                                             $el.summernote('empty');
                                         }
                                         syncSummernoteValue('summernote-tujuan');
+                                        if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                                     },
-                                    onChange: function() { syncSummernoteValue('summernote-tujuan'); },
-                                    onBlur: function() { syncSummernoteValue('summernote-tujuan'); }
+                                    onChange: function() { syncSummernoteValue('summernote-tujuan'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
+                                    onBlur: function() { syncSummernoteValue('summernote-tujuan'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); }
                                 }
                             });
                             console.log('Summernote tujuan initialized');
@@ -800,6 +805,21 @@
             #map-create {
                 background: #f7fafc;
             }
+            .step-indicator {
+                cursor: pointer;
+                user-select: none;
+                transition: transform 0.2s ease;
+            }
+            .step-indicator:hover .step-circle {
+                transform: scale(1.08);
+            }
+            .step-circle {
+                transition: all 0.25s ease;
+            }
+            .progress {
+                overflow: visible;
+                background-color: #e9ecef;
+            }
         </style>
     @endpush
 
@@ -830,6 +850,7 @@
                 function updateLatLngInputs(lat, lng) {
                     document.getElementById('location_lat').value = lat.toFixed(6);
                     document.getElementById('location_lng').value = lng.toFixed(6);
+                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 }
 
                 // Tambahkan Marker Default dari Database/Old Input
@@ -891,6 +912,70 @@
                 
                 // Elemen Progress
                 const progressBar = document.getElementById('wizard-progress');
+
+                // Helper untuk cek apakah konten Summernote/Textarea terisi
+                function isSummernoteFilled(selector) {
+                    const $el = $(selector);
+                    if ($el.length && typeof $el.summernote === 'function') {
+                        try {
+                            if ($el.summernote('isEmpty')) return false;
+                            const code = $el.summernote('code');
+                            const cleanText = $('<div>').html(code).text().replace(/\u00a0/g, ' ').trim();
+                            return cleanText.length > 0;
+                        } catch(e) {}
+                    }
+                    const rawEl = typeof selector === 'string' ? document.querySelector(selector) : selector;
+                    if (rawEl && rawEl.value) {
+                        const cleanText = rawEl.value.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+                        return cleanText.length > 0;
+                    }
+                    return false;
+                }
+
+                // Cek apakah seluruh kolom wajib pada tahap tertentu sudah terisi
+                function isStepComplete(stepIdx) {
+                    if (stepIdx === 0) {
+                        // Tahap 1: Detail Kegiatan
+                        const nama = (document.querySelector('input[name="nama_kegiatan"]')?.value || '').trim();
+                        const estimasi = (document.querySelector('input[name="estimasi_peserta"]')?.value || '').trim();
+                        const pj = (document.querySelector('input[name="penanggung_jawab"]')?.value || '').trim();
+                        const kelompok = (document.querySelector('input[name="kelompok"]')?.value || '').trim();
+                        const jenisSelect = document.querySelector('select[name="jenis_kegiatan"]');
+                        const jenis = (jenisSelect?.value || '').trim();
+                        
+                        let jenisValid = jenis !== '';
+                        if (jenis === 'lainnya') {
+                            const jenisLainnya = (document.querySelector('input[name="jenis_kegiatan_lainnya"]')?.value || '').trim();
+                            jenisValid = jenisLainnya !== '';
+                        }
+
+                        const deskripsiValid = isSummernoteFilled('#summernote-deskripsi');
+                        const tujuanValid = isSummernoteFilled('#summernote-tujuan');
+
+                        return !!(nama && estimasi && pj && kelompok && jenisValid && deskripsiValid && tujuanValid);
+                    } else if (stepIdx === 1) {
+                        // Tahap 2: Waktu & Lokasi
+                        const tglMulai = (document.querySelector('input[name="tanggal_mulai"]')?.value || '').trim();
+                        const tglSelesai = (document.querySelector('input[name="tanggal_selesai"]')?.value || '').trim();
+                        const waktuMulai = (document.querySelector('input[name="waktu_mulai"]')?.value || '').trim();
+                        const waktuSelesai = (document.querySelector('input[name="waktu_selesai"]')?.value || '').trim();
+                        const desa = (document.querySelector('input[name="desa"]')?.value || '').trim();
+                        const lat = (document.querySelector('input[name="lat"]')?.value || '').trim();
+                        const lng = (document.querySelector('input[name="lng"]')?.value || '').trim();
+
+                        return !!(tglMulai && tglSelesai && waktuMulai && waktuSelesai && desa && lat && lng);
+                    } else if (stepIdx === 2) {
+                        // Tahap 3: Kebutuhan & Dokumen
+                        const rincianValid = isSummernoteFilled('#summernote-rincian');
+                        const anggaranInput = document.getElementById('anggaranKegiatanInput');
+                        const hasNewFile = (anggaranInput && anggaranInput.files && anggaranInput.files.length > 0) || (typeof anggaranBuffer !== 'undefined' && anggaranBuffer.length > 0);
+                        const hasExistingFile = $('.existing-anggaran-item:visible').length > 0 && !document.querySelector('input[name="remove_anggaran_kegiatan"]');
+                        const anggaranValid = hasNewFile || hasExistingFile;
+
+                        return !!(rincianValid && anggaranValid);
+                    }
+                    return false;
+                }
                 
                 function showStep(index) {
                     currentStepIndex = index;
@@ -914,32 +999,95 @@
                 }
                 
                 function updateProgressUI(index) {
-                    // Update Bar Width (0%, 50%, 100%)
-                    const progressPercentage = (index / (steps.length - 1)) * 100;
-                    if(progressBar) progressBar.style.width = progressPercentage + '%';
-                    
-                    // Update Circles and Texts
+                    // Update Circles and Texts sesuai kelengkapan kolom yang terisi
                     for(let i=0; i<steps.length; i++) {
                         const indicator = document.getElementById('indicator-' + (i+1));
                         if(!indicator) continue;
                         const circle = indicator.querySelector('.step-circle');
                         const text = indicator.querySelector('.step-text');
-                        
-                        if (i < index) {
-                            // Completed Steps
-                            circle.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle';
-                            text.className = 'fw-bold text-success d-block step-text';
-                        } else if (i === index) {
-                            // Current Active Step
-                            circle.className = 'rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle';
-                            text.className = 'fw-bold text-primary d-block step-text';
+                        const complete = isStepComplete(i);
+                        const isCurrent = (i === index);
+
+                        if (isCurrent) {
+                            indicator.classList.add('active');
+                            if (complete) {
+                                // Tahap aktif dan sudah lengkap terisi
+                                circle.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle shadow';
+                                circle.innerHTML = '<i class="fas fa-check"></i>';
+                                circle.style.boxShadow = '0 0 0 4px rgba(0, 123, 255, 0.45)';
+                                text.className = 'fw-bold text-primary d-block step-text';
+                                indicator.setAttribute('title', 'Tahap ' + (i+1) + ': Sudah terisi lengkap (sedang aktif)');
+                            } else {
+                                // Tahap aktif dan belum lengkap
+                                circle.className = 'rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle shadow';
+                                circle.innerHTML = (i+1);
+                                circle.style.boxShadow = '0 0 0 4px rgba(0, 123, 255, 0.25)';
+                                text.className = 'fw-bold text-primary d-block step-text';
+                                indicator.setAttribute('title', 'Tahap ' + (i+1) + ': Belum lengkap (sedang aktif)');
+                            }
                         } else {
-                            // Future Steps
-                            circle.className = 'rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle';
-                            text.className = 'fw-bold text-muted d-block step-text';
+                            indicator.classList.remove('active');
+                            circle.style.boxShadow = 'none';
+                            if (complete) {
+                                // Tahap tidak aktif dan sudah lengkap terisi
+                                circle.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle';
+                                circle.innerHTML = '<i class="fas fa-check"></i>';
+                                text.className = 'fw-bold text-success d-block step-text';
+                                indicator.setAttribute('title', 'Tahap ' + (i+1) + ': Sudah terisi lengkap');
+                            } else {
+                                // Tahap tidak aktif dan belum lengkap
+                                circle.className = 'rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle';
+                                circle.innerHTML = (i+1);
+                                text.className = 'fw-bold text-muted d-block step-text';
+                                indicator.setAttribute('title', 'Tahap ' + (i+1) + ': Belum lengkap');
+                            }
                         }
                     }
+
+                    // Update lebar bar garis penghubung sesuai tahap yang terisi
+                    let progressPercentage = 0;
+                    if (isStepComplete(0) && isStepComplete(1)) {
+                        progressPercentage = 100;
+                    } else if (isStepComplete(0)) {
+                        progressPercentage = 50;
+                    } else {
+                        progressPercentage = 0;
+                    }
+                    if(progressBar) {
+                        progressBar.style.width = progressPercentage + '%';
+                        progressBar.style.transition = 'width 0.3s ease';
+                    }
                 }
+
+                // Klik langsung pada lingkaran / label indikator untuk navigasi ke tahap tersebut
+                for(let i=0; i<steps.length; i++) {
+                    const indicator = document.getElementById('indicator-' + (i+1));
+                    if(indicator) {
+                        indicator.style.cursor = 'pointer';
+                        indicator.addEventListener('click', function() {
+                            showStep(i);
+                            window.scrollTo(0, 0);
+                        });
+                    }
+                }
+
+                // Pembaruan realtime saat form diinput / diubah
+                let updateTimeout = null;
+                function scheduleUpdateProgress() {
+                    if (updateTimeout) clearTimeout(updateTimeout);
+                    updateTimeout = setTimeout(() => {
+                        updateProgressUI(currentStepIndex);
+                    }, 100);
+                }
+                window.scheduleUpdateProgress = scheduleUpdateProgress;
+
+                if (form) {
+                    form.addEventListener('input', scheduleUpdateProgress);
+                    form.addEventListener('change', scheduleUpdateProgress);
+                }
+
+                // Inisialisasi awal
+                updateProgressUI(0);
                 
                 // Event Listener Tombol "Simpan Draft" di semua bagian
                 document.querySelectorAll('.btn-save-draft').forEach(btn => {
@@ -1119,6 +1267,7 @@
                         // Efek visual hilang perlahan
                         $(this).closest('.existing-anggaran-item').fadeOut(300, function() {
                             $(this).remove();
+                            if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                         });
                     }
                 });
