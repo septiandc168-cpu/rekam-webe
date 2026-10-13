@@ -170,10 +170,12 @@
 <div class="container-fluid text-sm">
     <!-- Header & Action Bar -->
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4 pb-3 border-bottom">
-        <div class="d-flex align-items-center mb-3 mb-lg-0 pr-lg-3" style="flex: 1; min-width: 0;">
-            <h4 class="mb-0 mr-3 fw-bold text-dark" style="line-height: 1.4;" title="{{ $rencana_kegiatan->nama_kegiatan }}">{{ $rencana_kegiatan->nama_kegiatan }}</h4>
-            <div class="flex-shrink-0 mt-2 mt-sm-0">
-                {!! $rencana_kegiatan->status_badge !!}
+        <div class="d-flex flex-column mb-3 mb-lg-0 pr-lg-3" style="flex: 1; min-width: 0;">
+            <h4 class="mb-0 fw-bold text-dark" style="line-height: 1.4;" title="{{ $rencana_kegiatan->nama_kegiatan }}">{{ $rencana_kegiatan->nama_kegiatan }}</h4>
+            <div class="d-flex align-items-center flex-wrap mt-2" style="gap: 8px;">
+                <div class="flex-shrink-0 d-inline-flex align-items-center">
+                    {!! $rencana_kegiatan->status_badge !!}
+                </div>
             </div>
         </div>
         
