@@ -6,7 +6,6 @@
     <div class="container pb-5 text-sm">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="mb-0 fw-bold text-dark">
-                <i class="fas fa-file-signature text-dark mr-2"></i> 
                 {{ isset($isLaporanLangsung) && $isLaporanLangsung ? 'Buat Laporan Langsung' : 'Form Laporan Kegiatan' }}
             </h5>
         </div>
