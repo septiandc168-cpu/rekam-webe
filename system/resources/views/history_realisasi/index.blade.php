@@ -247,6 +247,15 @@
                                     <td class="text-center text-muted">{{ $laporans->firstItem() + $i }}</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center" style="gap: 4px;">
+                                            {{-- Lihat Rencana --}}
+                                            @if($rencana)
+                                                <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'history']) }}"
+                                                   class="btn btn-sm bg-navy text-white shadow-sm rounded"
+                                                   style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
+                                                   title="Lihat Detail Rencana">
+                                                    <i class="fas fa-calendar" style="font-size: 12px;"></i>
+                                                </a>
+                                            @endif
                                             {{-- Lihat Laporan --}}
                                             <a href="{{ route('laporan_kegiatan.show', [$laporan->uuid ?? $laporan->id, 'from' => 'history']) }}"
                                                class="btn btn-sm bg-navy text-white shadow-sm rounded"
@@ -254,15 +263,6 @@
                                                title="Lihat Detail Laporan">
                                                 <i class="fas fa-file-alt" style="font-size: 12px;"></i>
                                             </a>
-                                            {{-- Lihat Rencana --}}
-                                            @if($rencana)
-                                                <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'history']) }}"
-                                                   class="btn btn-sm bg-navy text-white shadow-sm rounded"
-                                                   style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
-                                                   title="Lihat Detail Rencana">
-                                                    <i class="fas fa-calendar-check" style="font-size: 12px;"></i>
-                                                </a>
-                                            @endif
                                         </div>
                                     </td>
                                     <td class="py-3">
