@@ -207,8 +207,8 @@ class RencanaKegiatanController extends Controller
         $totalDenganLaporan = $totalSelesai;
         $totalTanpaLaporan  = 0;
 
-        // Paginate 6 data per halaman (2 baris x 3 kolom card)
-        $laporans = $query->orderBy('updated_at', 'desc')->paginate(6)->withQueryString();
+        // Paginate 15 data per halaman (table layout)
+        $laporans = $query->orderBy('updated_at', 'desc')->paginate(15)->withQueryString();
 
         // User list for filter (admin only)
         $users = $isAdmin

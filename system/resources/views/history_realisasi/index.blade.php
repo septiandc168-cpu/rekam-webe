@@ -2,120 +2,19 @@
 
 @section('content_title', 'History Realisasi Kegiatan')
 
-@push('styles')
-<style>
-    .history-card {
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        transition: box-shadow 0.2s ease, transform 0.2s ease;
-        overflow: hidden;
-    }
-    .history-card:hover {
-        box-shadow: 0 8px 24px rgba(0,31,63,0.10) !important;
-        transform: translateY(-2px);
-    }
-    .history-card .card-header-custom {
-        background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
-        padding: 14px 18px;
-        min-height: 105px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    .history-card .title-text {
-        font-size: 0.9rem;
-        line-height: 1.4;
-        min-height: 42px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    .badge-jenis {
-        font-size: 0.68rem;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-weight: 500;
-        letter-spacing: 0.2px;
-        background: rgba(255, 255, 255, 0.14);
-        color: #e2e8f0;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-    }
-    .badge-jenis-konservasi,
-    .badge-jenis-edukasi,
-    .badge-jenis-usaha,
-    .badge-jenis-lainnya {
-        background: rgba(255, 255, 255, 0.14);
-        color: #e2e8f0;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-    }
-    .badge-laporan-final      { background: #def7ec; color: #03543f; border: 1px solid #bcf0da; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
-    .badge-laporan-diajukan   { background: #e8f0fe; color: #1a56db; border: 1px solid #c7d8f9; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
-    .badge-laporan-revisi     { background: #fff3cd; color: #856404; border: 1px solid #ffebaa; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
-    .badge-laporan-draft      { background: #f1f3f5; color: #495057; border: 1px solid #dee2e6; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
-    .badge-laporan-none       { background: #f1f3f5; color: #495057; border: 1px solid #dee2e6; padding: 2px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; }
-    .info-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 8px;
-        margin-bottom: 5px;
-        font-size: 0.82rem;
-    }
-    .info-row i {
-        width: 16px;
-        color: #64748b;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-    .info-row span {
-        color: #334155;
-    }
-    .stat-mini {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 8px 12px;
-        background: #f8fafc;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        flex: 1;
-        min-width: 0;
-    }
-    .stat-mini .stat-val {
-        font-size: 1rem;
-        font-weight: 700;
-        color: #001f3f;
-    }
-    .stat-mini .stat-lbl {
-        font-size: 0.68rem;
-        color: #64748b;
-        text-align: center;
-    }
-    .filter-section {
-        background: #fff;
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
-    }
-    .summary-bar {
-        background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
-        border-radius: 10px;
-        color: white;
-        padding: 18px 24px;
-    }
-    .summary-bar .s-num { font-size: 1.6rem; font-weight: 700; }
-    .summary-bar .s-lbl { font-size: 0.78rem; opacity: 0.8; }
-</style>
-@endpush
-
 @section('content')
-<div class="text-sm">
+<div class="card shadow-sm elevation-1 text-sm">
+    <div class="card-header bg-white">
+        <h6 class="card-title fw-bold text-dark mt-1 mb-0" style="font-size: 0.95rem;">History Realisasi Kegiatan</h6>
+    </div>
 
     {{-- Filter Section --}}
-    <div class="filter-section shadow-sm mb-4 p-3">
+    <div class="card-body border-bottom bg-light py-2 px-3">
         <form action="{{ route('history_realisasi.index') }}" method="GET" class="mb-0 no-loader" id="filter-form">
+            {{-- Desktop Layout --}}
             <div class="d-none d-lg-flex input-group input-group-sm align-items-center">
                 <span class="mr-2 text-muted fw-bold"><i class="fas fa-filter mr-1"></i> Filter:</span>
-                <select name="bulan" class="form-control mr-2 rounded" style="min-width: 130px;">
+                <select name="bulan" class="form-control mr-2 rounded" style="min-width: 120px;">
                     <option value="">Semua Bulan</option>
                     @foreach(['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'] as $idx => $bln)
                         <option value="{{ $idx + 1 }}" {{ request('bulan') == $idx + 1 ? 'selected' : '' }}>{{ $bln }}</option>
@@ -138,12 +37,12 @@
                     <option value="final"    {{ request('status_laporan') === 'final'    ? 'selected' : '' }}>Laporan Final</option>
                 </select>
                 @if(auth()->user()->role->role_name === 'admin')
-                <select name="user_id" class="form-control mr-2 rounded" style="min-width: 160px;">
-                    <option value="">Semua Anggota</option>
-                    @foreach($users as $u)
-                        <option value="{{ $u->id }}" {{ request('user_id') == $u->id ? 'selected' : '' }}>{{ $u->name }}</option>
-                    @endforeach
-                </select>
+                    <select name="user_id" class="form-control mr-2 rounded" style="min-width: 160px;">
+                        <option value="">Semua Anggota</option>
+                        @foreach($users as $u)
+                            <option value="{{ $u->id }}" {{ request('user_id') == $u->id ? 'selected' : '' }}>{{ $u->name }}</option>
+                        @endforeach
+                    </select>
                 @endif
                 <button type="submit" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1">
                     <i class="fas fa-filter mr-1"></i> Filter
@@ -160,7 +59,7 @@
                 @endif
             </div>
 
-            {{-- Mobile --}}
+            {{-- Mobile Layout --}}
             <div class="d-lg-none">
                 <div class="row g-2">
                     <div class="col-6 mt-2">
@@ -178,11 +77,11 @@
                     <div class="col-6 mt-2">
                         <select name="jenis" class="form-control form-control-sm rounded">
                             <option value="">Semua Jenis</option>
-                            <option value="konservasi" {{ request('jenis') === 'konservasi' ? 'selected' : '' }}>Konservasi</option>
-                            <option value="edukasi" {{ request('jenis') === 'edukasi' ? 'selected' : '' }}>Edukasi</option>
+                            <option value="konservasi"       {{ request('jenis') === 'konservasi'       ? 'selected' : '' }}>Konservasi</option>
+                            <option value="edukasi"          {{ request('jenis') === 'edukasi'          ? 'selected' : '' }}>Edukasi</option>
                             <option value="usaha masyarakat" {{ request('jenis') === 'usaha masyarakat' ? 'selected' : '' }}>Usaha Masyarakat</option>
-                            <option value="lainnya" {{ request('jenis') === 'lainnya' ? 'selected' : '' }}>Lainnya</option>
-                            <option value="langsung" {{ request('jenis') === 'langsung' ? 'selected' : '' }}>Laporan Langsung</option>
+                            <option value="lainnya"          {{ request('jenis') === 'lainnya'          ? 'selected' : '' }}>Lainnya</option>
+                            <option value="langsung"         {{ request('jenis') === 'langsung'         ? 'selected' : '' }}>Laporan Langsung</option>
                         </select>
                     </div>
                     <div class="col-6 mt-2">
@@ -194,14 +93,14 @@
                         </select>
                     </div>
                     @if(auth()->user()->role->role_name === 'admin')
-                    <div class="col-12 mt-2">
-                        <select name="user_id" class="form-control form-control-sm rounded">
-                            <option value="">Semua Anggota</option>
-                            @foreach($users as $u)
-                                <option value="{{ $u->id }}" {{ request('user_id') == $u->id ? 'selected' : '' }}>{{ $u->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div class="col-12 mt-2">
+                            <select name="user_id" class="form-control form-control-sm rounded">
+                                <option value="">Semua Anggota</option>
+                                @foreach($users as $u)
+                                    <option value="{{ $u->id }}" {{ request('user_id') == $u->id ? 'selected' : '' }}>{{ $u->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     @endif
                     <div class="col-12 mt-2 d-flex" style="gap:8px;">
                         <button type="submit" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm">
@@ -225,210 +124,211 @@
                 document.addEventListener('DOMContentLoaded', function() {
                     const form = document.getElementById('filter-form');
                     if (!form) return;
-
                     const desktopFields = form.querySelectorAll('.d-none.d-lg-flex select, .d-none.d-lg-flex input');
-                    const mobileFields = form.querySelectorAll('.d-lg-none select, .d-lg-none input');
-                    
-                    // Sync desktop to mobile
+                    const mobileFields  = form.querySelectorAll('.d-lg-none select, .d-lg-none input');
                     desktopFields.forEach((desktopField, index) => {
                         if (mobileFields[index]) {
-                            desktopField.addEventListener('change', function() {
-                                mobileFields[index].value = this.value;
-                            });
+                            desktopField.addEventListener('change', function() { mobileFields[index].value = this.value; });
                         }
                     });
-                    
-                    // Sync mobile to desktop
                     mobileFields.forEach((mobileField, index) => {
                         if (desktopFields[index]) {
-                            mobileField.addEventListener('change', function() {
-                                desktopFields[index].value = this.value;
-                            });
+                            mobileField.addEventListener('change', function() { desktopFields[index].value = this.value; });
                         }
                     });
-                    
-                    // Prevent duplicate name conflict on form submit
                     form.addEventListener('submit', function() {
-                        mobileFields.forEach(field => {
-                            field.removeAttribute('name');
-                        });
+                        mobileFields.forEach(field => field.removeAttribute('name'));
                     });
                 });
             </script>
         </form>
     </div>
 
-    {{-- Content --}}
-    @if($laporans->isEmpty() && !request()->filled('search'))
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <div class="empty-state py-5">
-                    <i class="fas fa-box-open text-muted" style="font-size:3.5rem;"></i>
-                    <h5 class="mt-3 text-muted">Belum Ada Data</h5>
-                    <p class="text-muted">Belum ada kegiatan yang berstatus <strong>Selesai</strong> atau Laporan <strong>Final</strong> sesuai filter yang dipilih.</p>
-                </div>
-            </div>
-        </div>
-    @else
-        <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-            <small class="text-muted mb-2 mb-md-0">
-                <i class="fas fa-list mr-1"></i> Menampilkan <strong>{{ $laporans->firstItem() ?? 0 }} - {{ $laporans->lastItem() ?? 0 }}</strong> dari <strong>{{ $laporans->total() }}</strong> kegiatan
-            </small>
-
-            {{-- Kolom Pencarian Gaya DataTables --}}
-            <div class="d-inline-flex align-items-center">
-                <label class="mb-0 text-muted font-weight-normal mr-2" style="font-size: 0.875rem;">Cari:</label>
-                <div class="input-group input-group-sm" style="width: 230px;">
-                    <input type="text" name="search" form="filter-form" class="form-control form-control-sm rounded-left" placeholder="Nama / Lokasi / PJ..." value="{{ request('search') }}">
-                    <div class="input-group-append">
-                        <button type="submit" form="filter-form" class="btn bg-navy text-white shadow-sm" title="Cari Data">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @if($laporans->isEmpty() && request()->filled('search'))
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="empty-state py-5 text-center">
-                        <i class="fas fa-search text-muted" style="font-size:3.5rem;"></i>
-                        <h5 class="mt-3 text-muted">Data Tidak Ditemukan</h5>
-                        <p class="text-muted">Tidak ditemukan kegiatan yang cocok dengan kata kunci "<strong>{{ request('search') }}</strong>".</p>
-                        <a href="{{ route('history_realisasi.index') }}" class="btn bg-navy text-white btn-sm mt-2">
-                            <i class="fas fa-undo mr-1"></i> Reset Pencarian
-                        </a>
-                    </div>
-                </div>
+    {{-- Table Content --}}
+    <div class="card-body">
+        @if ($laporans->isEmpty() && !request()->filled('search'))
+            <div class="text-center py-5">
+                <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Belum Ada Data</h5>
+                <p class="text-muted">Belum ada kegiatan yang berstatus <strong>Selesai</strong> atau Laporan <strong>Final</strong> sesuai filter yang dipilih.</p>
             </div>
         @else
-        <div class="row">
-            @foreach($laporans as $laporan)
-                @php
-                    $rencana = $laporan->rencanaKegiatan;
-                    $isLaporanLangsung = is_null($laporan->rencana_kegiatan_id);
+            {{-- Row Info & Search --}}
+            <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                <small class="text-muted mb-2 mb-md-0">
+                    <i class="fas fa-list mr-1"></i> Menampilkan
+                    <strong>{{ $laporans->firstItem() ?? 0 }} - {{ $laporans->lastItem() ?? 0 }}</strong>
+                    dari <strong>{{ $laporans->total() }}</strong> kegiatan
+                </small>
 
-                    $namaKegiatan = $rencana ? $rencana->nama_kegiatan : ($laporan->judul_kegiatan ?: 'Laporan Langsung');
-
-                    if ($rencana) {
-                        $jenisLabel = $rencana->getJenisKegiatanLabel();
-                        $jenisBadge = match($rencana->jenis_kegiatan) {
-                            'konservasi'       => 'badge-jenis-konservasi',
-                            'edukasi'          => 'badge-jenis-edukasi',
-                            'usaha masyarakat' => 'badge-jenis-usaha',
-                            default            => 'badge-jenis-lainnya',
-                        };
-                    } else {
-                        $jenisLabel = 'Laporan Langsung';
-                        $jenisBadge = 'badge-jenis-lainnya';
-                    }
-
-                    $laporanBadgeClass = match($laporan->status) {
-                        'final'    => 'badge-laporan-final',
-                        'diajukan' => 'badge-laporan-diajukan',
-                        'revisi'   => 'badge-laporan-revisi',
-                        default    => 'badge-laporan-draft',
-                    };
-                    $laporanBadgeLabel = match($laporan->status) {
-                        'final'    => 'Laporan Final',
-                        'diajukan' => 'Laporan Diajukan',
-                        'revisi'   => 'Laporan Revisi',
-                        default    => 'Laporan Draft',
-                    };
-
-                    $userName = $laporan->user ? $laporan->user->name : ($rencana && $rencana->user ? $rencana->user->name : '-');
-                    $lokasi = $laporan->lokasi_kegiatan ?: ($rencana ? ($rencana->desa ?: '-') : '-');
-
-                    $tglMulaiRaw = $laporan->realisasi_tanggal_mulai ?: ($rencana ? $rencana->tanggal_mulai : $laporan->created_at);
-                    $tglSelesaiRaw = $laporan->realisasi_tanggal_selesai ?: ($rencana ? $rencana->tanggal_selesai : null);
-
-                    $tglMulaiFormatted = $tglMulaiRaw ? \Carbon\Carbon::parse($tglMulaiRaw)->translatedFormat('d M Y') : '-';
-                    $tglSelesaiFormatted = $tglSelesaiRaw ? \Carbon\Carbon::parse($tglSelesaiRaw)->translatedFormat('d M Y') : null;
-
-                    $targetPeserta = $laporan->target_peserta ?: ($rencana ? ($rencana->estimasi_peserta ?: '-') : '-');
-                @endphp
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card history-card shadow-sm h-100">
-                        {{-- Card Header --}}
-                        <div class="history-card card-header-custom">
-                            <h6 class="mb-2 text-white fw-bold title-text" title="{{ $namaKegiatan }}">
-                                {{ $namaKegiatan }}
-                            </h6>
-                            <div class="d-flex flex-wrap align-items-center" style="gap: 6px;">
-                                <span class="badge-jenis {{ $jenisBadge }}">{{ $jenisLabel }}</span>
-                                <span class="{{ $laporanBadgeClass }}">{{ $laporanBadgeLabel }}</span>
-                            </div>
-                        </div>
-
-                        {{-- Card Body --}}
-                        <div class="card-body pb-2">
-                            <div class="info-row">
-                                <i class="fas fa-user"></i>
-                                <span>{{ $userName }}</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>{{ Str::limit($lokasi, 45) }}</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>
-                                    {{ $tglMulaiFormatted }}
-                                    @if($tglSelesaiFormatted && $tglMulaiFormatted != $tglSelesaiFormatted)
-                                        &ndash; {{ $tglSelesaiFormatted }}
-                                    @endif
-                                </span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-users"></i>
-                                <span>Target: <strong>{{ $targetPeserta }} orang</strong></span>
-                            </div>
-
-                            {{-- Laporan Stats --}}
-                            <hr class="my-2">
-                            <div class="d-flex" style="gap:8px;">
-                                <div class="stat-mini">
-                                    <div class="stat-val">{{ $laporan->realisasi_peserta ?? '-' }}</div>
-                                    <div class="stat-lbl">Realisasi Peserta</div>
-                                </div>
-                                <div class="stat-mini">
-                                    <div class="stat-val" style="font-size:0.8rem;">
-                                        {{ $laporan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporan->realisasi_tanggal_mulai)->translatedFormat('d M Y') : '-' }}
-                                    </div>
-                                    <div class="stat-lbl">Tgl Realisasi</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Card Footer --}}
-                        <div class="card-footer bg-white border-top-0 pt-0 pb-3 px-3">
-                            <div class="d-flex" style="gap:8px;">
-                                @if($rencana)
-                                    <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'history']) }}"
-                                       class="btn btn-sm bg-navy text-white flex-fill shadow-sm">
-                                        <i class="fas fa-calendar-check mr-1"></i> Lihat Rencana
-                                    </a>
-                                @endif
-                                <a href="{{ route('laporan_kegiatan.show', [$laporan->uuid ?? $laporan->id, 'from' => 'history']) }}"
-                                   class="btn btn-sm bg-navy text-white flex-fill shadow-sm">
-                                    <i class="fas fa-file-alt mr-1"></i> Lihat Laporan
-                                </a>
-                            </div>
+                {{-- Kolom Pencarian --}}
+                <div class="d-inline-flex align-items-center">
+                    <label class="mb-0 text-muted font-weight-normal mr-2" style="font-size: 0.875rem;">Cari:</label>
+                    <div class="input-group input-group-sm" style="width: 230px;">
+                        <input type="text" name="search" form="filter-form" class="form-control form-control-sm rounded-left"
+                               placeholder="Nama / Lokasi / Anggota..." value="{{ request('search') }}">
+                        <div class="input-group-append">
+                            <button type="submit" form="filter-form" class="btn bg-navy text-white shadow-sm" title="Cari Data">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
-            @endforeach
-        </div>
-
-        {{-- Navigasi Pagination --}}
-        @if (method_exists($laporans, 'links'))
-            <div class="d-flex justify-content-center mt-4 mb-3">
-                {{ $laporans->links() }}
             </div>
-        @endif
-        @endif
-    @endif
 
+            @if($laporans->isEmpty() && request()->filled('search'))
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Data Tidak Ditemukan</h5>
+                    <p class="text-muted">Tidak ditemukan kegiatan yang cocok dengan kata kunci "<strong>{{ request('search') }}</strong>".</p>
+                    <a href="{{ route('history_realisasi.index') }}" class="btn bg-navy text-white btn-sm mt-2">
+                        <i class="fas fa-undo mr-1"></i> Reset Pencarian
+                    </a>
+                </div>
+            @else
+                <div class="table-responsive">
+                    <table class="table table-hover table-borderless align-middle w-100" id="table-history">
+                        <thead class="bg-navy text-white text-nowrap">
+                            <tr>
+                                <th class="align-middle text-center" style="width: 50px;">No</th>
+                                <th class="align-middle text-center" style="width: 100px;">Aksi</th>
+                                <th class="align-middle" style="width: 30%;">Nama Kegiatan</th>
+                                <th class="align-middle" style="width: 15%;">Anggota</th>
+                                <th class="align-middle" style="width: 15%;">Lokasi</th>
+                                <th class="align-middle text-nowrap" style="width: 18%;">Tgl Realisasi</th>
+                                <th class="align-middle text-center" style="width: 80px;">Peserta</th>
+                                <th class="align-middle text-center" style="width: 120px;">Status Laporan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($laporans as $i => $laporan)
+                                @php
+                                    $rencana          = $laporan->rencanaKegiatan;
+                                    $isLaporanLangsung = is_null($laporan->rencana_kegiatan_id);
+
+                                    $namaKegiatan = $rencana
+                                        ? $rencana->nama_kegiatan
+                                        : ($laporan->judul_kegiatan ?: 'Laporan Langsung');
+
+                                    $jenisLabel = $rencana
+                                        ? $rencana->getJenisKegiatanLabel()
+                                        : 'Laporan Langsung';
+
+                                    $userName = $laporan->user
+                                        ? $laporan->user->name
+                                        : ($rencana && $rencana->user ? $rencana->user->name : '-');
+
+                                    $lokasi = $laporan->lokasi_kegiatan
+                                        ?: ($rencana ? ($rencana->desa ?: '-') : '-');
+
+                                    $tglMulai   = $laporan->realisasi_tanggal_mulai
+                                        ?: ($rencana ? $rencana->tanggal_mulai : null);
+                                    $tglSelesai = $laporan->realisasi_tanggal_selesai
+                                        ?: ($rencana ? $rencana->tanggal_selesai : null);
+
+                                    $tglMulaiFmt   = $tglMulai   ? \Carbon\Carbon::parse($tglMulai)->translatedFormat('d M Y') : '-';
+                                    $tglSelesaiFmt = $tglSelesai ? \Carbon\Carbon::parse($tglSelesai)->translatedFormat('d M Y') : null;
+
+                                    $statusStyles = [
+                                        'draft'    => 'background:#f1f3f5; color:#495057;',
+                                        'diajukan' => 'background:#e8f0fe; color:#1a56db;',
+                                        'revisi'   => 'background:#fff3cd; color:#856404;',
+                                        'final'    => 'background:#def7ec; color:#03543f;',
+                                    ];
+                                    $badgeStyle = $statusStyles[$laporan->status] ?? 'background:#f1f3f5; color:#495057;';
+                                    $statusLabel = [
+                                        'draft'    => 'Draft',
+                                        'diajukan' => 'Diajukan',
+                                        'revisi'   => 'Revisi',
+                                        'final'    => 'Final',
+                                    ][$laporan->status] ?? ucfirst($laporan->status);
+                                @endphp
+                                <tr class="border-bottom">
+                                    <td class="text-center text-muted">{{ $laporans->firstItem() + $i }}</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center" style="gap: 4px;">
+                                            {{-- Lihat Laporan --}}
+                                            <a href="{{ route('laporan_kegiatan.show', [$laporan->uuid ?? $laporan->id, 'from' => 'history']) }}"
+                                               class="btn btn-sm bg-navy text-white shadow-sm rounded"
+                                               style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
+                                               title="Lihat Detail Laporan">
+                                                <i class="fas fa-file-alt" style="font-size: 12px;"></i>
+                                            </a>
+                                            {{-- Lihat Rencana --}}
+                                            @if($rencana)
+                                                <a href="{{ route('rencana_kegiatan.show', [$rencana->uuid ?? $rencana->id, 'from' => 'history']) }}"
+                                                   class="btn btn-sm bg-navy text-white shadow-sm rounded"
+                                                   style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;"
+                                                   title="Lihat Detail Rencana">
+                                                    <i class="fas fa-calendar-check" style="font-size: 12px;"></i>
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="py-3">
+                                        <a href="{{ route('laporan_kegiatan.show', [$laporan->uuid ?? $laporan->id, 'from' => 'history']) }}"
+                                           class="text-dark text-wrap d-block"
+                                           style="max-width: 320px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-decoration: none;"
+                                           title="{{ $namaKegiatan }}">
+                                            <strong>{{ $namaKegiatan }}</strong>
+                                        </a>
+                                        @if($isLaporanLangsung)
+                                            <span style="background:#e2e8f0; color:#334155; padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:500;">
+                                                Laporan Langsung
+                                            </span>
+                                        @else
+                                            <small class="text-muted text-truncate d-block" style="max-width: 260px;" title="{{ $jenisLabel }}">
+                                                <i class="fas fa-tags mr-1"></i>{{ $jenisLabel }}
+                                            </small>
+                                        @endif
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-truncate d-block" style="max-width: 150px;" title="{{ $userName }}">
+                                            {{ $userName }}
+                                        </span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-truncate d-block" style="max-width: 160px;" title="{{ $lokasi }}">
+                                            {{ $lokasi }}
+                                        </span>
+                                    </td>
+                                    <td class="align-middle text-nowrap">
+                                        @if($tglMulaiFmt !== '-')
+                                            <span class="text-dark">
+                                                <i class="far fa-calendar-alt mr-1 text-muted"></i>{{ $tglMulaiFmt }}
+                                            </span>
+                                            @if($tglSelesaiFmt && $tglSelesaiFmt !== $tglMulaiFmt)
+                                                <br><small class="text-muted">s/d {{ $tglSelesaiFmt }}</small>
+                                            @endif
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <strong>{{ $laporan->realisasi_peserta ?? '-' }}</strong>
+                                        @if($laporan->realisasi_peserta)
+                                            <small class="text-muted d-block">orang</small>
+                                        @endif
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <span style="{{ $badgeStyle }} padding: 3px 10px; border-radius: 4px; font-size: 0.78rem; font-weight: 600;">
+                                            {{ $statusLabel }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- Pagination --}}
+                @if (method_exists($laporans, 'links'))
+                    <div class="d-flex justify-content-center mt-3">
+                        {{ $laporans->links() }}
+                    </div>
+                @endif
+            @endif
+        @endif
+    </div>
 </div>
 @endsection
