@@ -151,23 +151,44 @@
         </div>
         
         @php
-            $missingFieldsShow = [];
-            if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DRAFT && auth()->user()->role->role_name === 'anggota' && $laporanKegiatan->user_id == auth()->id()) {
-                if ($laporanKegiatan->isDarurat()) {
-                    if (empty(trim($laporanKegiatan->judul_kegiatan ?? ''))) $missingFieldsShow[] = 'Judul Kegiatan';
-                    if (empty(trim($laporanKegiatan->lokasi_kegiatan ?? ''))) $missingFieldsShow[] = 'Lokasi Kegiatan';
+            if (!isset($missingFieldsShow)) {
+                $missingFieldsShow = [];
+                $user = auth()->user();
+                $isAnggota = $user && $user->role && $user->role->role_name === 'anggota';
+                if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DRAFT, \App\Models\LaporanKegiatan::STATUS_REVISI]) && $isAnggota && $laporanKegiatan->user_id == $user->id) {
+                    if ($laporanKegiatan->isDarurat()) {
+                        if (empty(trim($laporanKegiatan->judul_kegiatan ?? ''))) $missingFieldsShow[] = 'Judul Kegiatan';
+                        if (empty(trim($laporanKegiatan->lokasi_kegiatan ?? ''))) $missingFieldsShow[] = 'Lokasi Kegiatan';
+                    }
+                    if (empty($laporanKegiatan->realisasi_tanggal_mulai)) $missingFieldsShow[] = 'Realisasi Tanggal Mulai';
+                    if (empty($laporanKegiatan->realisasi_tanggal_selesai)) $missingFieldsShow[] = 'Realisasi Tanggal Selesai';
+                    if (empty(trim(strip_tags($laporanKegiatan->rangkaian_kegiatan ?? '')))) $missingFieldsShow[] = 'Rangkaian Kegiatan';
+                    if (empty($laporanKegiatan->realisasi_peserta)) $missingFieldsShow[] = 'Realisasi Jumlah Peserta';
+                    if (empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? '')))) $missingFieldsShow[] = 'Profil Peserta';
+                    if (empty(trim(strip_tags($laporanKegiatan->hasil_dicapai ?? '')))) $missingFieldsShow[] = 'Hasil yang Dicapai';
+                    if (empty(trim(strip_tags($laporanKegiatan->output_nyata ?? '')))) $missingFieldsShow[] = 'Output Nyata';
+                    if (empty(trim(strip_tags($laporanKegiatan->dampak_awal ?? '')))) $missingFieldsShow[] = 'Dampak Awal';
+                    if (empty(trim(strip_tags($laporanKegiatan->kendala ?? '')))) $missingFieldsShow[] = 'Kendala yang Dihadapi';
+                    if (empty(trim(strip_tags($laporanKegiatan->solusi ?? '')))) $missingFieldsShow[] = 'Solusi yang Dilakukan';
+                    if (empty(trim(strip_tags($laporanKegiatan->evaluasi_rekomendasi ?? '')))) $missingFieldsShow[] = 'Catatan Evaluasi & Rekomendasi';
+
+                    $checkFilesEmpty = function ($files) {
+                        if (empty($files)) return true;
+                        if (is_string($files)) $files = json_decode($files, true) ?? [];
+                        if (!is_array($files)) return true;
+                        return count(array_filter($files, function($f) {
+                            if (empty($f)) return false;
+                            if (is_string($f)) return trim($f) !== '';
+                            if (is_array($f)) return !empty($f['path']) || !empty($f['original_name']);
+                            return true;
+                        })) === 0;
+                    };
+
+                    if ($checkFilesEmpty($laporanKegiatan->foto_kegiatan)) $missingFieldsShow[] = 'Foto Kegiatan';
+                    if ($checkFilesEmpty($laporanKegiatan->daftar_hadir)) $missingFieldsShow[] = 'Daftar Hadir';
+                    if ($checkFilesEmpty($laporanKegiatan->materi)) $missingFieldsShow[] = 'Materi';
+                    if ($checkFilesEmpty($laporanKegiatan->berita_acara)) $missingFieldsShow[] = 'Berita Acara';
                 }
-                if (empty($laporanKegiatan->realisasi_tanggal_mulai)) $missingFieldsShow[] = 'Realisasi Tanggal Mulai';
-                if (empty($laporanKegiatan->realisasi_tanggal_selesai)) $missingFieldsShow[] = 'Realisasi Tanggal Selesai';
-                if (empty(trim(strip_tags($laporanKegiatan->rangkaian_kegiatan ?? '')))) $missingFieldsShow[] = 'Rangkaian Kegiatan';
-                if (empty($laporanKegiatan->realisasi_peserta)) $missingFieldsShow[] = 'Realisasi Jumlah Peserta';
-                if (empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? '')))) $missingFieldsShow[] = 'Profil Peserta';
-                if (empty(trim(strip_tags($laporanKegiatan->hasil_dicapai ?? '')))) $missingFieldsShow[] = 'Hasil yang Dicapai';
-                if (empty(trim(strip_tags($laporanKegiatan->output_nyata ?? '')))) $missingFieldsShow[] = 'Output Nyata';
-                if (empty(trim(strip_tags($laporanKegiatan->dampak_awal ?? '')))) $missingFieldsShow[] = 'Dampak Awal';
-                if (empty(trim(strip_tags($laporanKegiatan->kendala ?? '')))) $missingFieldsShow[] = 'Kendala yang Dihadapi';
-                if (empty(trim(strip_tags($laporanKegiatan->solusi ?? '')))) $missingFieldsShow[] = 'Solusi yang Dilakukan';
-                if (empty(trim(strip_tags($laporanKegiatan->evaluasi_rekomendasi ?? '')))) $missingFieldsShow[] = 'Catatan Evaluasi & Rekomendasi';
             }
         @endphp
 
@@ -261,7 +282,7 @@
                 </div>
                 <div class="flex-grow-1">
                     <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
-                        <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">Draft Belum Lengkap</h6>
+                        <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">{{ $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_REVISI ? 'Laporan Belum Lengkap' : 'Draft Belum Lengkap' }}</h6>
                         <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFieldsShow ?? []) }} Data Wajib Belum Terisi</span>
                     </div>
                     <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
@@ -531,42 +552,73 @@
 
             <!-- Foto Kegiatan -->
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white py-2 px-3">
+                <div class="card-header bg-white py-2 px-3 d-flex justify-content-between align-items-center">
                     <h6 class="fw-bold text-dark mb-0"><i class="fas fa-images mr-1"></i> Foto Kegiatan</h6>
+                    @if(in_array('Foto Kegiatan', $missingFieldsShow ?? []))
+                        <span class="badge bg-danger text-white" style="font-size: 0.72rem;">Wajib Diunggah</span>
+                    @endif
                 </div>
                 <div class="card-body p-2">
-                    @if (!empty($laporanKegiatan->foto_kegiatan))
+                    @php
+                        $fotos = $laporanKegiatan->foto_kegiatan;
+                        if (is_string($fotos)) $fotos = json_decode($fotos, true) ?? [];
+                        $hasFotoItems = is_array($fotos) && count(array_filter($fotos)) > 0;
+                    @endphp
+                    @if ($hasFotoItems)
                         <div class="row">
-                            @foreach ($laporanKegiatan->foto_kegiatan as $foto)
+                            @foreach ($fotos as $foto)
                                 @php
-                                    $filePath = is_array($foto) ? $foto['path'] : $foto;
+                                    $filePath = is_array($foto) ? ($foto['path'] ?? '') : $foto;
                                 @endphp
-                                <div class="col-6 mb-2 px-2">
-                                    <a href="/public/storage/app/{{ $filePath }}" target="_blank">
-                                        <img src="/public/storage/app/{{ $filePath }}" class="gallery-img border shadow-sm" style="height: 120px; width: 100%; object-fit: cover;">
-                                    </a>
-                                </div>
+                                @if(!empty($filePath))
+                                    <div class="col-6 mb-2 px-2">
+                                        <a href="/public/storage/app/{{ $filePath }}" target="_blank">
+                                            <img src="/public/storage/app/{{ $filePath }}" class="gallery-img border shadow-sm" style="height: 120px; width: 100%; object-fit: cover;">
+                                        </a>
+                                    </div>
+                                @endif
                             @endforeach
                         </div>
                     @else
-                        <div class="text-center text-muted py-3">Tidak ada foto kegiatan</div>
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-image fa-2x mb-2 text-secondary d-block"></i>
+                            Tidak ada foto kegiatan
+                            @if(in_array('Foto Kegiatan', $missingFieldsShow ?? []))
+                                <div class="text-danger small mt-1 font-weight-bold"><i class="fas fa-exclamation-circle mr-1"></i>Foto kegiatan wajib diunggah</div>
+                            @endif
+                        </div>
                     @endif
                 </div>
             </div>
 
             <!-- Dokumen Lampiran -->
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white py-2 px-3">
+                <div class="card-header bg-white py-2 px-3 d-flex justify-content-between align-items-center">
                     <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Lampiran</h6>
+                    @php
+                        $missingDocs = array_intersect(['Daftar Hadir', 'Materi', 'Berita Acara'], $missingFieldsShow ?? []);
+                    @endphp
+                    @if(count($missingDocs) > 0)
+                        <span class="badge bg-danger text-white" style="font-size: 0.72rem;">{{ count($missingDocs) }} Dokumen Wajib Belum Ada</span>
+                    @endif
                 </div>
                 <div class="card-body py-2 px-3">
                     @php
-                        $renderFileItem = function($files, $title, $iconClass) {
-                            if(empty($files)) return '';
+                        $renderFileItem = function($files, $title, $iconClass, $isRequired = false, $missingKey = null) use ($missingFieldsShow) {
+                            $isMissing = $isRequired && in_array($missingKey, $missingFieldsShow ?? []);
+                            if(empty($files) || (is_array($files) && count(array_filter($files)) === 0)) {
+                                if ($isMissing) {
+                                    return "<div class='mb-2 pb-1 border-bottom'><div class='text-muted font-weight-bold d-flex justify-content-between align-items-center' style='font-size:0.75rem;'><span>{$title}</span><span class='badge bg-warning text-dark' style='font-size:0.68rem;'>Wajib Diisi</span></div><small class='text-danger d-block font-italic'><i class='fas fa-exclamation-circle mr-1'></i>Belum diunggah</small></div>";
+                                }
+                                return '';
+                            }
+                            if(is_string($files)) $files = json_decode($files, true) ?? [];
                             $html = "<div class='text-muted font-weight-bold mb-1' style='font-size:0.75rem;'>{$title}</div>";
                             foreach($files as $file) {
-                                $path = is_array($file) ? $file['path'] : $file;
-                                $name = is_array($file) ? $file['original_name'] : basename($file);
+                                if(empty($file)) continue;
+                                $path = is_array($file) ? ($file['path'] ?? '') : $file;
+                                $name = is_array($file) ? ($file['original_name'] ?? basename($path)) : basename($file);
+                                if(empty($path)) continue;
                                 $url = asset('public/storage/app/' . $path);
                                 $html .= "<a href='{$url}' target='_blank' class='btn btn-sm bg-navy text-white btn-block text-left mb-2 text-truncate' title='{$name}' style='font-size:0.78rem;'><i class='{$iconClass} mr-1'></i> {$name}</a>";
                             }
@@ -576,13 +628,16 @@
                         $hasFiles = !empty($laporanKegiatan->daftar_hadir) || !empty($laporanKegiatan->notulen) || !empty($laporanKegiatan->materi) || !empty($laporanKegiatan->berita_acara);
                     @endphp
 
-                    @if($hasFiles)
-                        {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
-                        {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
-                        {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint') !!}
-                        {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf') !!}
+                    @if($hasFiles || count($missingDocs) > 0)
+                        {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf', true, 'Daftar Hadir') !!}
+                        {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word', false, 'Notulen') !!}
+                        {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint', true, 'Materi') !!}
+                        {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf', true, 'Berita Acara') !!}
                     @else
-                        <div class="text-center text-muted py-3">Belum ada dokumen yang dilampirkan</div>
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-file-alt fa-2x mb-2 text-secondary d-block"></i>
+                            Belum ada dokumen yang dilampirkan
+                        </div>
                     @endif
                 </div>
             </div>

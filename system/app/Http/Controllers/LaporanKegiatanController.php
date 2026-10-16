@@ -393,7 +393,19 @@ class LaporanKegiatanController extends Controller
         }
         
         $laporanKegiatan->load('rencanaKegiatan');
-        return view('laporan_kegiatan.show', compact('laporanKegiatan'));
+
+        $user = auth()->user();
+        $isAnggota = $user && $user->role && $user->role->role_name === 'anggota';
+
+        // Hitung missing fields untuk anggota pemilik laporan draft/revisi
+        $missingFieldsShow = [];
+        if ($isAnggota && $laporanKegiatan->user_id == $user->id &&
+            in_array($laporanKegiatan->status, [LaporanKegiatan::STATUS_DRAFT, LaporanKegiatan::STATUS_REVISI])
+        ) {
+            $missingFieldsShow = $this->getMissingFields($laporanKegiatan);
+        }
+
+        return view('laporan_kegiatan.show', compact('laporanKegiatan', 'missingFieldsShow'));
     }
 
     /**
@@ -893,6 +905,34 @@ class LaporanKegiatanController extends Controller
     }
 
     /**
+     * Check if a file list (foto or dokumen) is empty.
+     */
+    private function isFileListEmpty($files): bool
+    {
+        if (empty($files)) {
+            return true;
+        }
+        if (is_string($files)) {
+            $decoded = json_decode($files, true);
+            if (is_array($decoded)) {
+                $files = $decoded;
+            } else {
+                return trim($files) === '' || trim($files) === '[]';
+            }
+        }
+        if (!is_array($files)) {
+            return true;
+        }
+        $filtered = array_filter($files, function ($item) {
+            if (empty($item)) return false;
+            if (is_string($item)) return trim($item) !== '';
+            if (is_array($item)) return !empty($item['path']) || !empty($item['original_name']);
+            return true;
+        });
+        return count($filtered) === 0;
+    }
+
+    /**
      * Helper to get list of missing mandatory fields for a LaporanKegiatan.
      */
     private function getMissingFields(LaporanKegiatan $laporan): array
@@ -941,16 +981,16 @@ class LaporanKegiatanController extends Controller
             $missing[] = 'Catatan Evaluasi & Rekomendasi';
         }
 
-        if (empty($laporan->foto_kegiatan)) {
+        if ($this->isFileListEmpty($laporan->foto_kegiatan)) {
             $missing[] = 'Foto Kegiatan';
         }
-        if (empty($laporan->daftar_hadir)) {
+        if ($this->isFileListEmpty($laporan->daftar_hadir)) {
             $missing[] = 'Daftar Hadir';
         }
-        if (empty($laporan->materi)) {
+        if ($this->isFileListEmpty($laporan->materi)) {
             $missing[] = 'Materi';
         }
-        if (empty($laporan->berita_acara)) {
+        if ($this->isFileListEmpty($laporan->berita_acara)) {
             $missing[] = 'Berita Acara';
         }
 
