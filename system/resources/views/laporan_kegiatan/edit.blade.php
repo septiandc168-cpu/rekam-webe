@@ -20,9 +20,70 @@
         @endif
 
         @if(!empty($laporanKegiatan->catatan_evaluasi))
-            <div class="alert alert-warning mb-4 shadow-sm border-0">
-                <i class="fas fa-exclamation-triangle mr-1"></i> <strong>Catatan Revisi:</strong><br>
-                <span class="d-block mt-1">{!! nl2br(e($laporanKegiatan->catatan_evaluasi)) !!}</span>
+            @php
+                $lapSt = $laporanKegiatan->status;
+                $theme = match($lapSt) {
+                    'final' => [
+                        'bg' => '#f0fdf4',
+                        'border' => '#22c55e',
+                        'icon' => 'fa-check-circle',
+                        'iconBg' => 'bg-success text-white',
+                        'title' => 'Laporan Diterima / Final',
+                        'badge' => 'Catatan Verifikasi',
+                        'badgeClass' => 'bg-success text-white',
+                        'borderColor' => '#bbf7d0',
+                        'desc' => 'Laporan kegiatan telah diverifikasi dan disetujui oleh admin.'
+                    ],
+                    'revisi' => [
+                        'bg' => '#fff8e6',
+                        'border' => '#ffc107',
+                        'icon' => 'fa-exclamation-triangle',
+                        'iconBg' => 'bg-warning text-dark',
+                        'title' => 'Laporan Perlu Revisi',
+                        'badge' => 'Catatan Revisi',
+                        'badgeClass' => 'bg-warning text-dark',
+                        'borderColor' => '#ffe8a1',
+                        'desc' => 'Silakan lakukan perbaikan pada laporan kegiatan ini sesuai catatan berikut sebelum diajukan kembali.'
+                    ],
+                    default => [
+                        'bg' => '#f0f4f8',
+                        'border' => '#17a2b8',
+                        'icon' => 'fa-info-circle',
+                        'iconBg' => 'bg-info text-white',
+                        'title' => 'Catatan Evaluasi / Admin',
+                        'badge' => 'Informasi',
+                        'badgeClass' => 'bg-info text-white',
+                        'borderColor' => '#bee5eb',
+                        'desc' => 'Catatan evaluasi terkait laporan kegiatan ini.'
+                    ]
+                };
+            @endphp
+            <div class="alert alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: {{ $theme['bg'] }}; border-left: 4px solid {{ $theme['border'] }} !important;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="top: 10px; right: 15px; opacity: 0.7;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="d-flex align-items-start pr-4">
+                    <div class="rounded-circle {{ $theme['iconBg'] }} d-flex align-items-center justify-content-center mr-3 mt-1" style="width: 36px; height: 36px; flex-shrink: 0;">
+                        <i class="fas {{ $theme['icon'] }}"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                            <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">{{ $theme['title'] }}</h6>
+                            <span class="badge {{ $theme['badgeClass'] }} font-weight-bold" style="font-size: 0.75rem;">{{ $theme['badge'] }}</span>
+                        </div>
+                        <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
+                            {{ $theme['desc'] }}
+                        </p>
+                        <div class="mt-2 p-2 rounded bg-white border" style="border-color: {{ $theme['borderColor'] }} !important;">
+                            <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">
+                                <i class="fas fa-comment-dots mr-1" style="color: {{ $theme['border'] }};"></i> Catatan:
+                            </strong>
+                            <div class="text-dark" style="font-size: 0.88rem; line-height: 1.5;">
+                                {!! nl2br(e($laporanKegiatan->catatan_evaluasi)) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         @endif
 
