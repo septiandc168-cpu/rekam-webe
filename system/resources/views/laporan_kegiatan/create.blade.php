@@ -310,6 +310,11 @@
             .preview-file-item > i:first-child { font-size: 1.2rem; color: #6c757d; margin-right: 10px; }
             .gap-2 { gap: 0.5rem; }
             .gap-1 { gap: 0.25rem; }
+            .note-editor .note-placeholder {
+                color: #6c757d !important;
+                font-style: normal !important;
+                pointer-events: none;
+            }
         </style>
     @endpush
 

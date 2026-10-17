@@ -194,12 +194,12 @@
                         <div class="row mt-3">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Deskripsi Kegiatan <span class="text-danger">*</span></label>
-                                <textarea name="deskripsi" class="form-control" id="summernote-deskripsi" rows="3" placeholder="Masukkan deskripsi kegiatan...">{!! old('deskripsi', $rencana_kegiatan->deskripsi) !!}</textarea>
+                                <textarea name="deskripsi" class="form-control summernote-editor" id="summernote-deskripsi" rows="3" placeholder="Masukkan deskripsi kegiatan...">{!! old('deskripsi', $rencana_kegiatan->deskripsi) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan gambaran umum kegiatan: apa yang dilakukan, di mana, dan bagaimana pelaksanaannya.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tujuan Kegiatan <span class="text-danger">*</span></label>
-                                <textarea name="tujuan" class="form-control" id="summernote-tujuan" rows="2" placeholder="Masukkan tujuan kegiatan...">{!! old('tujuan', $rencana_kegiatan->tujuan) !!}</textarea>
+                                <textarea name="tujuan" class="form-control summernote-editor" id="summernote-tujuan" rows="2" placeholder="Masukkan tujuan kegiatan...">{!! old('tujuan', $rencana_kegiatan->tujuan) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan tujuan utama kegiatan secara jelas. Gunakan format poin jika lebih dari satu tujuan.</small>
                             </div>
                         </div>
@@ -291,7 +291,7 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <label class="form-label fw-bold text-dark mb-1">Rincian Kebutuhan <span class="text-danger">*</span></label>
-                            <textarea name="rincian_kebutuhan" id="summernote-rincian" class="form-control summernote" rows="4" placeholder="Tuliskan rincian kebutuhan kegiatan..." required>{!! old('rincian_kebutuhan', $rencana_kegiatan->rincian_kebutuhan) !!}</textarea>
+                            <textarea name="rincian_kebutuhan" id="summernote-rincian" class="form-control summernote-editor" rows="4" placeholder="Tuliskan rincian kebutuhan kegiatan..." required>{!! old('rincian_kebutuhan', $rencana_kegiatan->rincian_kebutuhan) !!}</textarea>
                             <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan rincian kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau rincian anggaran yang dibutuhkan. Jika rincian kebutuhan sudah tertera pada file atau in-kind, cukup tuliskan keterangan singkat (contoh: "Tertera pada file" atau "In-kind").</small>
                         </div>
                         <div class="mb-3">
@@ -654,150 +654,6 @@
         });
     </script>
 
-    @push('js')
-        <script>
-            // Wait for jQuery to be available for Summernote
-            function waitForJQuery() {
-                if (typeof $ !== 'undefined') {
-                    console.log('jQuery loaded:', typeof $ !== 'undefined');
-                    initializeSummernote();
-                } else {
-                    setTimeout(waitForJQuery, 100);
-                }
-            }
-
-            function initializeSummernote() {
-                // Initialize Summernote editors
-                $(document).ready(function() {
-                    console.log('Document ready, initializing Summernote...');
-                    
-                    // Check if elements exist
-                    console.log('Element rincian:', $('#summernote-rincian').length);
-                    console.log('Element deskripsi:', $('#summernote-deskripsi').length);
-                    console.log('Element tujuan:', $('#summernote-tujuan').length);
-                    
-                    // Load Summernote from CDN
-                    $.getScript('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js', function() {
-                        console.log('Summernote loaded:', typeof $.summernote !== 'undefined');
-                        
-                        try {
-                            // Helper: sync Summernote value back to underlying textarea
-                            function syncSummernoteValue(id) {
-                                var $el = $('#' + id);
-                                var code = $el.summernote('code');
-                                $el.val(code);
-                            }
-
-                            // Summernote untuk rincian kebutuhan
-                            $('#summernote-rincian').summernote({
-                                placeholder: $('#summernote-rincian').attr('placeholder'),
-                                toolbar: [
-                                    ['style', ['style']],
-                                    ['font', ['bold', 'underline', 'clear']],
-                                    ['fontname', ['fontname']],
-                                    ['color', ['color']],
-                                    ['para', ['ul', 'ol', 'paragraph']]
-                                ],
-                                height: 120,
-                                callbacks: {
-                                    onInit: function() {
-                                        var $el = $('#summernote-rincian');
-                                        if ($el.summernote('isEmpty') || $el.val().trim() === '<p><br></p>' || $el.val().trim() === '') {
-                                            $el.summernote('empty');
-                                        }
-                                        syncSummernoteValue('summernote-rincian');
-                                        if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
-                                    },
-                                    onChange: function() { syncSummernoteValue('summernote-rincian'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
-                                    onBlur: function() { syncSummernoteValue('summernote-rincian'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); }
-                                }
-                            });
-                            console.log('Summernote rincian initialized');
-
-                            // Summernote untuk deskripsi
-                            $('#summernote-deskripsi').summernote({
-                                placeholder: $('#summernote-deskripsi').attr('placeholder'),
-                                toolbar: [
-                                    ['style', ['style']],
-                                    ['font', ['bold', 'underline', 'clear']],
-                                    ['fontname', ['fontname']],
-                                    ['color', ['color']],
-                                    ['para', ['ul', 'ol', 'paragraph']]
-                                ],
-                                height: 120,
-                                callbacks: {
-                                    onInit: function() {
-                                        var $el = $('#summernote-deskripsi');
-                                        if ($el.summernote('isEmpty') || $el.val().trim() === '<p><br></p>' || $el.val().trim() === '') {
-                                            $el.summernote('empty');
-                                        }
-                                        syncSummernoteValue('summernote-deskripsi');
-                                        if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
-                                    },
-                                    onChange: function() { syncSummernoteValue('summernote-deskripsi'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
-                                    onBlur: function() { syncSummernoteValue('summernote-deskripsi'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); }
-                                }
-                            });
-                            console.log('Summernote deskripsi initialized');
-
-                            // Summernote untuk tujuan
-                            $('#summernote-tujuan').summernote({
-                                placeholder: $('#summernote-tujuan').attr('placeholder'),
-                                toolbar: [
-                                    ['style', ['style']],
-                                    ['font', ['bold', 'underline', 'clear']],
-                                    ['fontname', ['fontname']],
-                                    ['color', ['color']],
-                                    ['para', ['ul', 'ol', 'paragraph']]
-                                ],
-                                height: 120,
-                                callbacks: {
-                                    onInit: function() {
-                                        var $el = $('#summernote-tujuan');
-                                        if ($el.summernote('isEmpty') || $el.val().trim() === '<p><br></p>' || $el.val().trim() === '') {
-                                            $el.summernote('empty');
-                                        }
-                                        syncSummernoteValue('summernote-tujuan');
-                                        if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
-                                    },
-                                    onChange: function() { syncSummernoteValue('summernote-tujuan'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); },
-                                    onBlur: function() { syncSummernoteValue('summernote-tujuan'); if (window.scheduleUpdateProgress) window.scheduleUpdateProgress(); }
-                                }
-                            });
-                            console.log('Summernote tujuan initialized');
-
-                            // Sync semua nilai Summernote ke textarea sebelum form submit
-                            $('form').on('submit', function() {
-                                ['summernote-rincian', 'summernote-deskripsi', 'summernote-tujuan'].forEach(function(id) {
-                                    var $el = $('#' + id);
-                                    if ($el.length && typeof $el.summernote === 'function') {
-                                        $el.val($el.summernote('code'));
-                                    }
-                                });
-                            });
-                            
-                        } catch (error) {
-                            console.error('Error initializing Summernote:', error);
-                        }
-                    }).fail(function() {
-                        console.error('Failed to load Summernote from CDN');
-                    });
-                });
-            }
-
-            // Start waiting for jQuery
-            waitForJQuery();
-
-            // CodeMirror
-            $(function() {
-                CodeMirror.fromTextArea(document.getElementById("codeMirrorDemo"), {
-                    mode: "htmlmixed",
-                    theme: "monokai"
-                });
-            });
-        </script>
-    @endpush
-
     @push('styles')
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.css" />
@@ -819,6 +675,11 @@
             .progress {
                 overflow: visible;
                 background-color: #e9ecef;
+            }
+            .note-editor .note-placeholder {
+                color: #6c757d !important;
+                font-style: normal !important;
+                pointer-events: none;
             }
         </style>
     @endpush
@@ -987,7 +848,17 @@
                     
                     // Show current step
                     const currentEl = document.getElementById(steps[index]);
-                    if (currentEl) currentEl.style.display = 'block';
+                    if (currentEl) {
+                        currentEl.style.display = 'block';
+                        $(currentEl).find('.summernote-editor').each(function() {
+                            const $t = $(this);
+                            if (typeof $t.summernote === 'function') {
+                                if ($t.summernote('isEmpty') || $t.val().trim() === '<p><br></p>' || $t.val().trim() === '') {
+                                    $t.summernote('empty');
+                                }
+                            }
+                        });
+                    }
                     
                     // Khusus Step 2: Trigger Leaflet agar me-render ulang ukuran container
                     if (steps[index] === 'step-2' && typeof window.map !== 'undefined') {
@@ -1102,6 +973,15 @@
                             return false;
                         }
 
+                        // Sinkronkan summernote ke textarea
+                        if (typeof $ !== 'undefined') {
+                            $('.summernote-editor').each(function() {
+                                if (typeof $(this).summernote === 'function') {
+                                    $(this).val($(this).summernote('code'));
+                                }
+                            });
+                        }
+
                         const actionInput = document.getElementById('form-action');
                         if (actionInput) actionInput.value = 'draft';
                         if (form) {
@@ -1151,6 +1031,15 @@
                         const actionVal = document.getElementById('form-action').value;
                         if (actionVal === 'draft') {
                             return true;
+                        }
+
+                        // Sinkronkan summernote ke textarea
+                        if (typeof $ !== 'undefined') {
+                            $('.summernote-editor').each(function() {
+                                if (typeof $(this).summernote === 'function') {
+                                    $(this).val($(this).summernote('code'));
+                                }
+                            });
                         }
 
                         // Check if coordinates are filled
@@ -1278,6 +1167,62 @@
                 // ---------------------------------
 
             });
+
+            // Inisialisasi Summernote Editor
+            function initializeSummernoteEditors() {
+                function setupEditors() {
+                    $('.summernote-editor').each(function() {
+                        var $el = $(this);
+                        // Hancurkan instance lama jika sudah terlanjur diinisialisasi dengan konfigurasi default
+                        if ($el.next().hasClass('note-editor') || $el.data('summernote')) {
+                            try { $el.summernote('destroy'); } catch(e) {}
+                        }
+
+                        $el.summernote({
+                            placeholder: $el.attr('placeholder') || 'Masukkan isian...',
+                            toolbar: [
+                                ['style', ['style']],
+                                ['font', ['bold', 'underline', 'clear']],
+                                ['fontname', ['fontname']],
+                                ['color', ['color']],
+                                ['para', ['ul', 'ol', 'paragraph']]
+                            ],
+                            height: 120,
+                            callbacks: {
+                                onInit: function() {
+                                    var $target = $(this);
+                                    if ($target.summernote('isEmpty') || $target.val().trim() === '<p><br></p>' || $target.val().trim() === '') {
+                                        $target.summernote('empty');
+                                    }
+                                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
+                                },
+                                onChange: function() {
+                                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
+                                },
+                                onBlur: function() {
+                                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
+                                }
+                            }
+                        });
+                    });
+                }
+
+                if (typeof $ !== 'undefined' && typeof $.fn.summernote !== 'undefined') {
+                    setupEditors();
+                } else if (typeof $ !== 'undefined') {
+                    $.getScript('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js', function() {
+                        setupEditors();
+                    });
+                } else {
+                    setTimeout(initializeSummernoteEditors, 100);
+                }
+            }
+
+            if (typeof $ !== 'undefined') {
+                $(document).ready(initializeSummernoteEditors);
+            } else {
+                initializeSummernoteEditors();
+            }
         </script>
     @endpush
 @endsection
