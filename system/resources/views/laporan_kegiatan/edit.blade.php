@@ -297,7 +297,7 @@
                                         <div class="d-flex flex-wrap gap-2">
                                             @foreach($fotos as $foto)
                                                 @php $path = is_array($foto) ? $foto['path'] : $foto; @endphp
-                                                <div class="position-relative preview-img-wrapper existing-foto-item" style="margin:0;">
+                                                <div class="position-relative preview-img-wrapper existing-foto-item existing-foto_kegiatan-item" style="margin:0;">
                                                     <a href="/public/storage/app/{{ $path }}" target="_blank">
                                                         <img src="/public/storage/app/{{ $path }}" style="max-width: 100px; height: 75px;">
                                                     </a>
@@ -332,13 +332,13 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item existing-daftar_hadir-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
-                                                         data-path="{{ $path }}" data-type="dokumen"
+                                                         data-path="{{ $path }}" data-type="dokumen" data-field="daftar_hadir"
                                                          style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
-                                                 </button>
+                                                      <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
@@ -363,13 +363,13 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item existing-notulen-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
-                                                         data-path="{{ $path }}" data-type="dokumen"
+                                                         data-path="{{ $path }}" data-type="dokumen" data-field="notulen"
                                                          style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
-                                                 </button>
+                                                      <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
@@ -396,13 +396,13 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item existing-materi-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
-                                                         data-path="{{ $path }}" data-type="dokumen"
+                                                         data-path="{{ $path }}" data-type="dokumen" data-field="materi"
                                                          style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
-                                                 </button>
+                                                      <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
@@ -428,13 +428,13 @@
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item pr-5">
+                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item existing-berita_acara-item pr-5">
                                                 <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
-                                                         data-path="{{ $path }}" data-type="dokumen"
+                                                         data-path="{{ $path }}" data-type="dokumen" data-field="berita_acara"
                                                          style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
                                                          title="Hapus dokumen ini">
-                                                     <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
-                                                 </button>
+                                                      <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                                                  </button>
                                                 <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
@@ -588,7 +588,7 @@
                             const hasBuffer = typeof fileBuffers !== 'undefined' && fileBuffers[req.key] && fileBuffers[req.key].length > 0;
                             const inputEl = document.getElementById(req.inputId);
                             const hasInput = inputEl && inputEl.files && inputEl.files.length > 0;
-                            const hasExisting = $(`.existing-${req.key === 'foto_kegiatan' ? 'foto' : 'dokumen'}-item:visible`).length > 0;
+                            const hasExisting = $(`.existing-${req.key}-item:not(.deleted-item)`).length > 0;
                             if (!hasBuffer && !hasInput && !hasExisting) return false;
                         }
                         return true;
@@ -785,9 +785,11 @@
 
                     for (let req of requiredFiles) {
                         const hasBuffer = fileBuffers[req.key] && fileBuffers[req.key].length > 0;
-                        const hasExisting = $(this).find(`.existing-${req.key === 'foto_kegiatan' ? 'foto' : 'dokumen'}-item:visible`).length > 0;
+                        const inputEl = document.getElementById(req.inputId);
+                        const hasInput = inputEl && inputEl.files && inputEl.files.length > 0;
+                        const hasExisting = $(this).find(`.existing-${req.key}-item:not(.deleted-item)`).length > 0;
 
-                        if (!hasBuffer && !hasExisting) {
+                        if (!hasBuffer && !hasInput && !hasExisting) {
                             e.preventDefault();
                             alert(`Mohon unggah ${req.name} terlebih dahulu.`);
                             showStep(3);
@@ -805,7 +807,7 @@
                     const currentBuffer = fileBuffers[fieldName];
 
                     // Count existing files if editing
-                    const existingCount = $(inputElement).closest('.mb-4').find('.existing-foto-item, .existing-dokumen-item:visible').length;
+                    const existingCount = $(inputElement).closest('.mb-4').find('.existing-foto-item:not(.deleted-item), .existing-dokumen-item:not(.deleted-item)').length;
 
                     if (existingCount + currentBuffer.length + files.length > config.maxFiles) {
                         alert(`Maksimal ${config.maxFiles} file. Saat ini ada ${existingCount + currentBuffer.length} file.`);
@@ -926,10 +928,12 @@
                             value: path
                         }).appendTo('form');
 
-                        $(this).closest('.existing-foto-item').fadeOut(300, function() {
+                        const $item = $(this).closest('.existing-foto-item');
+                        $item.addClass('deleted-item').fadeOut(300, function() {
                             $(this).remove();
                             if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                         });
+                        if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                     }
                 });
 
@@ -937,10 +941,17 @@
                     e.preventDefault();
                     if(confirm('Hapus dokumen ini? File akan terhapus saat Anda menekan tombol simpan.')) {
                         const path = $(this).data('path');
+                        const field = $(this).data('field');
                         let inputName = 'remove_daftar_hadir[]';
-                        if(path.includes('notulen')) inputName = 'remove_notulen[]';
-                        else if(path.includes('materi')) inputName = 'remove_materi[]';
-                        else if(path.includes('berita_acara')) inputName = 'remove_berita_acara[]';
+                        if(field) {
+                            inputName = `remove_${field}[]`;
+                        } else if(path.includes('notulen')) {
+                            inputName = 'remove_notulen[]';
+                        } else if(path.includes('materi')) {
+                            inputName = 'remove_materi[]';
+                        } else if(path.includes('berita_acara')) {
+                            inputName = 'remove_berita_acara[]';
+                        }
 
                         $('<input>').attr({
                             type: 'hidden',
@@ -948,10 +959,12 @@
                             value: path
                         }).appendTo('form');
 
-                        $(this).closest('.existing-dokumen-item').fadeOut(300, function() {
+                        const $item = $(this).closest('.existing-dokumen-item');
+                        $item.addClass('deleted-item').fadeOut(300, function() {
                             $(this).remove();
                             if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                         });
+                        if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                     }
                 });
 

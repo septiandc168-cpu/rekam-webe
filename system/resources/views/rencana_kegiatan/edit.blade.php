@@ -969,7 +969,7 @@
                         const rincianValid = isSummernoteFilled('#summernote-rincian');
                         const anggaranInput = document.getElementById('anggaranKegiatanInput');
                         const hasNewFile = (anggaranInput && anggaranInput.files && anggaranInput.files.length > 0) || (typeof anggaranBuffer !== 'undefined' && anggaranBuffer.length > 0);
-                        const hasExistingFile = $('.existing-anggaran-item:visible').length > 0 && !document.querySelector('input[name="remove_anggaran_kegiatan"]');
+                        const hasExistingFile = $('.existing-anggaran-item:not(.deleted-item)').length > 0 && !document.querySelector('input[name="remove_anggaran_kegiatan"]');
                         const anggaranValid = hasNewFile || hasExistingFile;
 
                         return !!(rincianValid && anggaranValid);
@@ -1265,10 +1265,12 @@
                         }
 
                         // Efek visual hilang perlahan
-                        $(this).closest('.existing-anggaran-item').fadeOut(300, function() {
+                        const $item = $(this).closest('.existing-anggaran-item');
+                        $item.addClass('deleted-item').fadeOut(300, function() {
                             $(this).remove();
                             if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                         });
+                        if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                     }
                 });
                 // ---------------------------------

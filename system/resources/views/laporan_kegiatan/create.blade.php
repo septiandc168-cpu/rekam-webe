@@ -604,9 +604,10 @@
 
                     for (let req of requiredFiles) {
                         const hasBuffer = fileBuffers[req.key] && fileBuffers[req.key].length > 0;
-                        const hasExisting = $(this).find(`.existing-${req.key === 'foto_kegiatan' ? 'foto' : 'dokumen'}-item:visible`).length > 0;
+                        const inputEl = document.getElementById(req.inputId);
+                        const hasInput = inputEl && inputEl.files && inputEl.files.length > 0;
 
-                        if (!hasBuffer && !hasExisting) {
+                        if (!hasBuffer && !hasInput) {
                             e.preventDefault();
                             alert(`Mohon unggah ${req.name} terlebih dahulu.`);
                             showStep(3);
