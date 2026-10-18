@@ -662,19 +662,8 @@
                                 $path = is_array($file) ? ($file['path'] ?? '') : $file;
                                 $name = is_array($file) ? ($file['original_name'] ?? basename($path)) : basename($file);
                                 if(empty($path)) continue;
-                                $cleanPath = ltrim($path, '/');
-                                $url = "/public/storage/app/{$cleanPath}";
-                                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-                                $itemIcon = match($ext) {
-                                    'pdf' => 'fas fa-file-pdf',
-                                    'doc', 'docx' => 'fas fa-file-word',
-                                    'xls', 'xlsx', 'csv' => 'fas fa-file-excel',
-                                    'ppt', 'pptx' => 'fas fa-file-powerpoint',
-                                    'zip', 'rar', '7z' => 'fas fa-file-archive',
-                                    'jpg', 'jpeg', 'png', 'webp' => 'fas fa-file-image',
-                                    default => $iconClass ?: 'fas fa-file-alt'
-                                };
-                                $html .= "<a href='{$url}' target='_blank' class='btn btn-sm bg-navy text-white btn-block text-left mb-2 text-truncate' title='{$name}' style='font-size:0.78rem;'><i class='{$itemIcon} mr-1'></i> {$name}</a>";
+                                $url = asset('public/storage/app/' . $path);
+                                $html .= "<a href='{$url}' target='_blank' class='btn btn-sm bg-navy text-white btn-block text-left mb-2 text-truncate' title='{$name}' style='font-size:0.78rem;'><i class='{$iconClass} mr-1'></i> {$name}</a>";
                             }
                             return $html;
                         };

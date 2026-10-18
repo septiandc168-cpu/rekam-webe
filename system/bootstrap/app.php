@@ -11,7 +11,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->trustProxies(at: '*');
         $middleware->alias([
             'isSupervisor' => \App\Http\Middleware\VerifyIsSupervisor::class,
             'isAdmin' => \App\Http\Middleware\IsAdmin::class,
