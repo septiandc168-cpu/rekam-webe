@@ -609,15 +609,38 @@
                     @endphp
                     @if ($hasFotoItems)
                         <div class="row">
-                            @foreach ($fotos as $foto)
+                            @foreach ($fotos as $index => $foto)
                                 @php
-                                    $filePath = is_array($foto) ? ($foto['path'] ?? '') : $foto;
+                                    if (is_array($foto)) {
+                                        $filePath = $foto['path'] ?? '';
+                                        $fileName = $foto['original_name'] ?? ('Foto Kegiatan ' . ($index + 1));
+                                    } else {
+                                        $filePath = $foto;
+                                        $fileName = 'Foto Kegiatan ' . ($index + 1);
+                                    }
                                 @endphp
                                 @if(!empty($filePath))
                                     <div class="col-6 mb-2 px-2">
-                                        <a href="/public/storage/app/{{ $filePath }}" target="_blank">
-                                            <img src="/public/storage/app/{{ $filePath }}" class="gallery-img border shadow-sm" style="height: 120px; width: 100%; object-fit: cover;">
-                                        </a>
+                                        <div class="gallery-img-wrapper border shadow-sm" style="height: 120px; border-radius: 4px;" data-toggle="modal" data-target="#imageModal{{ $index }}">
+                                            <img src="/public/storage/app/{{ $filePath }}" class="gallery-img" alt="{{ $fileName }}" style="height: 120px; width: 100%; object-fit: cover;">
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal for Image -->
+                                    <div class="modal fade" id="imageModal{{ $index }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header border-0">
+                                                    <h5 class="modal-title">{{ $fileName }}</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body text-center p-0 bg-dark">
+                                                    <img src="/public/storage/app/{{ $filePath }}" class="img-fluid" style="max-height: 80vh;" alt="{{ $fileName }}">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 @endif
                             @endforeach
