@@ -28,6 +28,7 @@
 # Database
 # ======================
 *.sql
+!dummy_draft_dido.sql
 
 # ======================
 # Testing & Cache

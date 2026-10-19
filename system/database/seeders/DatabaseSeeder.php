@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
         // call maps seeder
         $this->call(\Database\Seeders\RencanaKegiatanSeeder::class);
         $this->call(\Database\Seeders\DummySelesaiFinalSeeder::class);
+        $this->call(\Database\Seeders\DummyDraftRencanaDidoSeeder::class);
     }
 }

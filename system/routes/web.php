@@ -105,3 +105,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifications/delete-all', [App\Http\Controllers\NotificationController::class, 'deleteAll'])->name('notifications.deleteAll');
     Route::get('/api/notifications/unread-count', [App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
 });
+
+// Trigger route untuk menjalankan seeder draft dido di Railway
+Route::get('/seed-draft-dido', function () {
+    \Illuminate\Support\Facades\Artisan::call('db:seed', [
+        '--class' => 'Database\\Seeders\\DummyDraftRencanaDidoSeeder',
+        '--force' => true,
+    ]);
+    return response()->json([
+        'status' => 'success',
+        'message' => '10 data dummy rencana kegiatan berstatus draft untuk akun dido berhasil dimasukkan ke database Railway!',
+        'output' => trim(\Illuminate\Support\Facades\Artisan::output()),
+    ]);
+});
