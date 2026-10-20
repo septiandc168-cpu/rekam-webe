@@ -8,29 +8,29 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. Ambil ID user dido
 SET @dido_id = (SELECT `id` FROM `users` WHERE `name` = 'dido' OR `email` = 'dido@gmail.com' LIMIT 1);
 
--- 2. Ambil ID rencana kegiatan yang disetujui milik dido
-SET @rencana_1_id = (
-  SELECT `id` FROM `rencana_kegiatans` 
+-- 2. Ambil UUID rencana kegiatan yang disetujui milik dido
+SET @rencana_1_uuid = (
+  SELECT `uuid` FROM `rencana_kegiatans` 
   WHERE `user_id` = @dido_id 
     AND `nama_kegiatan` = 'Pelatihan Penanganan Mamalia Laut Terdampar' 
     AND `status` = 'disetujui'
   LIMIT 1
 );
 
-SET @rencana_2_id = (
-  SELECT `id` FROM `rencana_kegiatans` 
+SET @rencana_2_uuid = (
+  SELECT `uuid` FROM `rencana_kegiatans` 
   WHERE `user_id` = @dido_id 
     AND `nama_kegiatan` = 'Inisiasi Bank Sampah Pesisir Bersama Garda Emak' 
     AND `status` = 'disetujui'
   LIMIT 1
 );
 
--- Fallback jika nama kegiatan sedikit berbeda: ambil 2 rencana disetujui pertama milik dido
-SET @rencana_1_id = IFNULL(@rencana_1_id, (SELECT `id` FROM `rencana_kegiatans` WHERE `user_id` = @dido_id AND `status` = 'disetujui' ORDER BY `id` ASC LIMIT 1));
-SET @rencana_2_id = IFNULL(@rencana_2_id, (SELECT `id` FROM `rencana_kegiatans` WHERE `user_id` = @dido_id AND `status` = 'disetujui' AND `id` != @rencana_1_id ORDER BY `id` ASC LIMIT 1));
+-- Fallback jika ada perbedaan nama: ambil 2 rencana disetujui pertama milik dido
+SET @rencana_1_uuid = IFNULL(@rencana_1_uuid, (SELECT `uuid` FROM `rencana_kegiatans` WHERE `user_id` = @dido_id AND `status` = 'disetujui' ORDER BY `id` ASC LIMIT 1));
+SET @rencana_2_uuid = IFNULL(@rencana_2_uuid, (SELECT `uuid` FROM `rencana_kegiatans` WHERE `user_id` = @dido_id AND `status` = 'disetujui' AND `uuid` != @rencana_1_uuid ORDER BY `id` ASC LIMIT 1));
 
 -- 3. Hapus laporan sebelumnya untuk 2 rencana ini jika ada (mencegah duplikat)
-DELETE FROM `laporan_kegiatans` WHERE `rencana_kegiatan_id` IN (@rencana_1_id, @rencana_2_id);
+DELETE FROM `laporan_kegiatans` WHERE `rencana_kegiatan_id` IN (@rencana_1_uuid, @rencana_2_uuid);
 
 -- 4. Masukkan Laporan 1: Pelatihan Penanganan Mamalia Laut Terdampar
 INSERT INTO `laporan_kegiatans` (
@@ -44,7 +44,7 @@ INSERT INTO `laporan_kegiatans` (
   `created_at`, `updated_at`
 )
 SELECT 
-  @dido_id, UUID(), @rencana_1_id,
+  @dido_id, UUID(), @rencana_1_uuid,
   'Pelatihan Penanganan Mamalia Laut Terdampar',
   'Kendawangan, Kab. Ketapang',
   '2026-07-20', '2026-07-20',
@@ -60,7 +60,7 @@ SELECT
   NULL, NULL, NULL, NULL, NULL,
   'draft', NULL,
   NOW(), NOW()
-WHERE @rencana_1_id IS NOT NULL;
+WHERE @rencana_1_uuid IS NOT NULL;
 
 -- 5. Masukkan Laporan 2: Inisiasi Bank Sampah Pesisir Bersama Garda Emak
 INSERT INTO `laporan_kegiatans` (
@@ -74,7 +74,7 @@ INSERT INTO `laporan_kegiatans` (
   `created_at`, `updated_at`
 )
 SELECT 
-  @dido_id, UUID(), @rencana_2_id,
+  @dido_id, UUID(), @rencana_2_uuid,
   'Inisiasi Bank Sampah Pesisir Bersama Garda Emak',
   'Desa Cempedak Jaya, Kec. Kendawangan, Kab. Ketapang',
   '2026-07-01', '2026-07-03',
@@ -90,6 +90,6 @@ SELECT
   NULL, NULL, NULL, NULL, NULL,
   'draft', NULL,
   NOW(), NOW()
-WHERE @rencana_2_id IS NOT NULL;
+WHERE @rencana_2_uuid IS NOT NULL;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -96,14 +96,19 @@ class DummyDraftLaporanRencanaDidoSeeder extends Seeder
 
         foreach ($dummyReports as $item) {
             $rec = $item['rencana'];
+            if (!$rec) {
+                continue;
+            }
+
+            $recUuid = $rec->uuid ?? $rec->getKey();
 
             // Hapus laporan lama jika ada untuk rencana ini
-            LaporanKegiatan::where('rencana_kegiatan_id', $rec->id)->delete();
+            LaporanKegiatan::where('rencana_kegiatan_id', $recUuid)->delete();
 
             LaporanKegiatan::create([
                 'uuid' => (string) Str::uuid(),
                 'user_id' => $user->id,
-                'rencana_kegiatan_id' => $rec->id,
+                'rencana_kegiatan_id' => $recUuid,
                 'judul_kegiatan' => $item['judul'],
                 'lokasi_kegiatan' => $item['lokasi'],
                 'realisasi_tanggal_mulai' => $item['tgl_mulai'],
