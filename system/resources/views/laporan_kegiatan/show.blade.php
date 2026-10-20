@@ -286,12 +286,9 @@
                         <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFieldsShow ?? []) }} Data Wajib Belum Terisi</span>
                     </div>
                     <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
-                        Lengkapi data laporan kegiatan ini agar dapat diajukan ke admin. 
-                        <a href="javascript:void(0);" onclick="toggleMissingFieldsLaporan(event)" class="text-primary font-weight-bold ml-1" style="text-decoration: underline;">
-                            <i class="fas fa-chevron-down mr-1" id="icon-missing-chevron-lap"></i><span id="text-missing-toggle-lap">Lihat Selengkapnya</span>
-                        </a>
+                        Lengkapi data laporan kegiatan ini agar dapat diajukan ke admin:
                     </p>
-                    <div class="mt-2" id="collapseMissingFieldsLap" style="display: none;">
+                    <div class="mt-2">
                         <div class="p-2 rounded bg-white border" style="border-color: #ffe8a1 !important;">
                             <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">Daftar Kolom Wajib yang Belum Terisi:</strong>
                             <div class="d-flex flex-wrap" style="gap: 6px;">
@@ -754,27 +751,6 @@
 
     @push('scripts')
         <script>
-            function toggleMissingFieldsLaporan(event) {
-                if (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                var detailEl = document.getElementById('collapseMissingFieldsLap');
-                var chevron = document.getElementById('icon-missing-chevron-lap');
-                var textEl = document.getElementById('text-missing-toggle-lap');
-
-                if (!detailEl) return;
-
-                if (detailEl.style.display === 'none' || detailEl.style.display === '') {
-                    detailEl.style.display = 'block';
-                    if (chevron) chevron.className = 'fas fa-chevron-up mr-1';
-                    if (textEl) textEl.textContent = 'Sembunyikan';
-                } else {
-                    detailEl.style.display = 'none';
-                    if (chevron) chevron.className = 'fas fa-chevron-down mr-1';
-                    if (textEl) textEl.textContent = 'Lihat Selengkapnya';
-                }
-            }
 
             function printLaporan(url) {
                 // Membuka URL print di iframe tersembunyi
