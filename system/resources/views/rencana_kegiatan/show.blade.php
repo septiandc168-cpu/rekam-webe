@@ -730,25 +730,41 @@
             </div>
 
             <!-- Anggaran Kegiatan -->
-            @if (!empty($rencana_kegiatan->anggaran_kegiatan))
-                @php
-                    $anggaranFile = $rencana_kegiatan->anggaran_kegiatan;
-                    $anggaranPath = is_array($anggaranFile) ? $anggaranFile['path'] : $anggaranFile;
-                    $anggaranName = is_array($anggaranFile) ? $anggaranFile['original_name'] : basename($anggaranPath);
-                @endphp
-                <div class="card shadow-sm mb-3">
-                    <div class="card-header bg-white py-2 px-3">
-                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-invoice-dollar mr-1"></i> Anggaran Kegiatan</h6>
-                    </div>
-                    <div class="card-body py-2 px-3">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white py-2 px-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-invoice-dollar mr-1"></i> Anggaran Kegiatan</h6>
+                </div>
+                <div class="card-body py-2 px-3">
+                    @php
+                        $anggaranFile = $rencana_kegiatan->anggaran_kegiatan;
+                        $hasAnggaran = !empty($anggaranFile);
+                        if ($hasAnggaran && is_array($anggaranFile)) {
+                            $hasAnggaran = !empty($anggaranFile['path'] ?? null);
+                        }
+                    @endphp
+                    @if ($hasAnggaran)
+                        @php
+                            $anggaranPath = is_array($anggaranFile) ? $anggaranFile['path'] : $anggaranFile;
+                            $anggaranName = is_array($anggaranFile) ? ($anggaranFile['original_name'] ?? basename($anggaranPath)) : basename($anggaranPath);
+                            $ext = strtolower(pathinfo($anggaranName, PATHINFO_EXTENSION));
+                            $fileIcon = 'fas fa-file-alt';
+                            if (in_array($ext, ['xls', 'xlsx', 'csv'])) $fileIcon = 'fas fa-file-excel';
+                            elseif ($ext === 'pdf') $fileIcon = 'fas fa-file-pdf';
+                            elseif (in_array($ext, ['doc', 'docx'])) $fileIcon = 'fas fa-file-word';
+                        @endphp
                         <a href="/public/storage/app/{{ $anggaranPath }}" target="_blank"
                            class="btn btn-sm bg-navy text-white btn-block text-left mb-1 text-truncate"
                            title="{{ $anggaranName }}" style="font-size:0.78rem;">
-                            <i class="fas fa-file-excel mr-1"></i> {{ $anggaranName }}
+                            <i class="{{ $fileIcon }} mr-1"></i> {{ $anggaranName }}
                         </a>
-                    </div>
+                    @else
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-file-invoice-dollar fa-2x mb-2 text-secondary d-block"></i>
+                            Tidak ada anggaran kegiatan
+                        </div>
+                    @endif
                 </div>
-            @endif
+            </div>
 
             <!-- Dokumen Pendukung -->
             @php
