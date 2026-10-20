@@ -48,7 +48,9 @@ class DummyDraftLaporanRencanaDidoSeeder extends Seeder
                 ->get();
 
             if ($approved->count() < 2) {
-                $this->command->error("Tidak ditemukan minimal 2 rencana kegiatan disetujui milik dido.");
+                if (isset($this->command)) {
+                    $this->command->error("Tidak ditemukan minimal 2 rencana kegiatan disetujui milik dido.");
+                }
                 return;
             }
             $rencana1 = $rencana1 ?: $approved[0];

@@ -10,6 +10,6 @@
     "buildCommand": "cd system && composer install --no-dev --optimize-autoloader && npm install && npm run build && php artisan config:cache && php artisan route:cache"
   },
   "deploy": {
-    "startCommand": "mkdir -p \"${UPLOADS_PATH:-public/storage/app}\" && (cd system && php artisan db:seed --class=DummyDraftRencanaDidoSeeder --force && php artisan db:seed --class=DummyDraftLaporanLangsungDidoSeeder --force || true) && php -c system/php.ini -S 0.0.0.0:$PORT server.php"
+    "startCommand": "mkdir -p \"${UPLOADS_PATH:-public/storage/app}\" && (cd system && php artisan db:seed --class=DummyDraftRencanaDidoSeeder --force && php artisan db:seed --class=DummyDraftLaporanLangsungDidoSeeder --force && php artisan db:seed --class=DummyDraftLaporanRencanaDidoSeeder --force || true) && php -c system/php.ini -S 0.0.0.0:$PORT server.php"
   }
 }
