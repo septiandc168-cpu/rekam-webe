@@ -112,9 +112,26 @@ Route::get('/seed-draft-dido', function () {
         '--class' => 'Database\\Seeders\\DummyDraftRencanaDidoSeeder',
         '--force' => true,
     ]);
+    \Illuminate\Support\Facades\Artisan::call('db:seed', [
+        '--class' => 'Database\\Seeders\\DummyDraftLaporanLangsungDidoSeeder',
+        '--force' => true,
+    ]);
     return response()->json([
         'status' => 'success',
-        'message' => '10 data dummy rencana kegiatan berstatus draft untuk akun dido berhasil dimasukkan ke database Railway!',
+        'message' => 'Data dummy rencana kegiatan & laporan langsung berstatus draft untuk akun dido berhasil dimasukkan ke database Railway!',
         'output' => trim(\Illuminate\Support\Facades\Artisan::output()),
     ]);
 });
+
+Route::get('/seed-draft-laporan-langsung-dido', function () {
+    \Illuminate\Support\Facades\Artisan::call('db:seed', [
+        '--class' => 'Database\\Seeders\\DummyDraftLaporanLangsungDidoSeeder',
+        '--force' => true,
+    ]);
+    return response()->json([
+        'status' => 'success',
+        'message' => '2 data dummy laporan langsung berstatus draft untuk akun dido berhasil dimasukkan ke database Railway!',
+        'output' => trim(\Illuminate\Support\Facades\Artisan::output()),
+    ]);
+});
+

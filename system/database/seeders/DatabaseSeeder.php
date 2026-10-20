@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->call(\Database\Seeders\RencanaKegiatanSeeder::class);
         $this->call(\Database\Seeders\DummySelesaiFinalSeeder::class);
         $this->call(\Database\Seeders\DummyDraftRencanaDidoSeeder::class);
+        $this->call(\Database\Seeders\DummyDraftLaporanLangsungDidoSeeder::class);
     }
 }

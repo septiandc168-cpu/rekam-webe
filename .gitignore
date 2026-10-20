@@ -29,6 +29,7 @@
 # ======================
 *.sql
 !dummy_draft_dido.sql
+!dummy_draft_laporan_langsung_dido.sql
 
 # ======================
 # Testing & Cache
