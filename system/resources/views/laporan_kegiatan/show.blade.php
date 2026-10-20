@@ -595,11 +595,8 @@
 
             <!-- Foto Kegiatan -->
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white py-2 px-3 d-flex justify-content-between align-items-center">
+                <div class="card-header bg-white py-2 px-3">
                     <h6 class="fw-bold text-dark mb-0"><i class="fas fa-images mr-1"></i> Foto Kegiatan</h6>
-                    @if(in_array('Foto Kegiatan', $missingFieldsShow ?? []))
-                        <span class="badge bg-danger text-white" style="font-size: 0.72rem;">Wajib Diunggah</span>
-                    @endif
                 </div>
                 <div class="card-body p-2">
                     @php
@@ -649,9 +646,6 @@
                         <div class="text-center text-muted py-3">
                             <i class="fas fa-image fa-2x mb-2 text-secondary d-block"></i>
                             Tidak ada foto kegiatan
-                            @if(in_array('Foto Kegiatan', $missingFieldsShow ?? []))
-                                <div class="text-danger small mt-1 font-weight-bold"><i class="fas fa-exclamation-circle mr-1"></i>Foto kegiatan wajib diunggah</div>
-                            @endif
                         </div>
                     @endif
                 </div>
@@ -659,23 +653,13 @@
 
             <!-- Dokumen Lampiran -->
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white py-2 px-3 d-flex justify-content-between align-items-center">
+                <div class="card-header bg-white py-2 px-3">
                     <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Lampiran</h6>
-                    @php
-                        $missingDocs = array_intersect(['Daftar Hadir', 'Materi', 'Berita Acara'], $missingFieldsShow ?? []);
-                    @endphp
-                    @if(count($missingDocs) > 0)
-                        <span class="badge bg-danger text-white" style="font-size: 0.72rem;">{{ count($missingDocs) }} Dokumen Wajib Belum Ada</span>
-                    @endif
                 </div>
                 <div class="card-body py-2 px-3">
                     @php
-                        $renderFileItem = function($files, $title, $iconClass, $isRequired = false, $missingKey = null) use ($missingFieldsShow) {
-                            $isMissing = $isRequired && in_array($missingKey, $missingFieldsShow ?? []);
+                        $renderFileItem = function($files, $title, $iconClass) {
                             if(empty($files) || (is_array($files) && count(array_filter($files)) === 0)) {
-                                if ($isMissing) {
-                                    return "<div class='mb-2 pb-1 border-bottom'><div class='text-muted font-weight-bold d-flex justify-content-between align-items-center' style='font-size:0.75rem;'><span>{$title}</span><span class='badge bg-warning text-dark' style='font-size:0.68rem;'>Wajib Diisi</span></div><small class='text-danger d-block font-italic'><i class='fas fa-exclamation-circle mr-1'></i>Belum diunggah</small></div>";
-                                }
                                 return '';
                             }
                             if(is_string($files)) $files = json_decode($files, true) ?? [];
@@ -694,11 +678,11 @@
                         $hasFiles = !empty($laporanKegiatan->daftar_hadir) || !empty($laporanKegiatan->notulen) || !empty($laporanKegiatan->materi) || !empty($laporanKegiatan->berita_acara);
                     @endphp
 
-                    @if($hasFiles || count($missingDocs) > 0)
-                        {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf', true, 'Daftar Hadir') !!}
-                        {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word', false, 'Notulen') !!}
-                        {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint', true, 'Materi') !!}
-                        {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf', true, 'Berita Acara') !!}
+                    @if($hasFiles)
+                        {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
+                        {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
+                        {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint') !!}
+                        {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf') !!}
                     @else
                         <div class="text-center text-muted py-3">
                             <i class="fas fa-file-alt fa-2x mb-2 text-secondary d-block"></i>
