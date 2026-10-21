@@ -1,0 +1,7 @@
+{
+  "name": "rekam-webe",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  }
+}
