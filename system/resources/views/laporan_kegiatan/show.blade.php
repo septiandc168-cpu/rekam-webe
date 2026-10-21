@@ -746,34 +746,29 @@
             });
         });
     });
+
+    function printLaporan(url) {
+        // Membuka URL print di iframe tersembunyi
+        let iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0px';
+        iframe.style.height = '0px';
+        iframe.style.border = 'none';
+        iframe.src = url;
+
+        document.body.appendChild(iframe);
+
+        // Memastikan iframe sudah ter-load sebelum memicu print
+        iframe.onload = function() {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+
+            // Menghapus iframe setelah beberapa saat (memberi waktu jendela print tertutup)
+            setTimeout(function() {
+                document.body.removeChild(iframe);
+            }, 5000);
+        };
+    }
 </script>
 @endpush
-
-    @push('scripts')
-        <script>
-
-            function printLaporan(url) {
-                // Membuka URL print di iframe tersembunyi
-                let iframe = document.createElement('iframe');
-                iframe.style.position = 'absolute';
-                iframe.style.width = '0px';
-                iframe.style.height = '0px';
-                iframe.style.border = 'none';
-                iframe.src = url;
-
-                document.body.appendChild(iframe);
-
-                // Memastikan iframe sudah ter-load sebelum memicu print
-                iframe.onload = function() {
-                    iframe.contentWindow.focus();
-                    iframe.contentWindow.print();
-
-                    // Menghapus iframe setelah beberapa saat (memberi waktu jendela print tertutup)
-                    setTimeout(function() {
-                        document.body.removeChild(iframe);
-                    }, 5000);
-                };
-            }
-        </script>
-    @endpush
 @endsection

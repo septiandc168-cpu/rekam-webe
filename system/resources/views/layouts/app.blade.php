@@ -39,9 +39,6 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            {{-- <a href="{{ route('pegawai.index') }}" class="nav-link">Data Pegawai</a> --}}
-                        </li>
-                        <li class="nav-item">
                             <a href="{{ route('rencana_kegiatan.index') }}" class="nav-link">Rencana Kegiatan</a>
                         </li>
                     </ul>

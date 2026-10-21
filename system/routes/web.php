@@ -12,14 +12,9 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/dashboard/events', [App\Http\Controllers\HomeController::class, 'events'])->name('dashboard.events')->middleware('auth');
 
-Route::fallback(function () {
-    return view('404');
-});
-
 Route::middleware(['auth', 'isSupervisor'])->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::post('users', [UserController::class, 'store'])->name('users.store');
-    // Route::delete('users/{id}/destroy', [UserController::class, 'destroy'])->name('users.destroy');
     Route::post('users/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
     Route::post('user-update-role', [UserController::class, 'updateRole'])->name('users.update-role');
 });
@@ -106,57 +101,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/notifications/unread-count', [App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
 });
 
-// Trigger route untuk menjalankan seeder draft dido di Railway
-Route::get('/seed-draft-dido', function () {
-    \Illuminate\Support\Facades\Artisan::call('db:seed', [
-        '--class' => 'Database\\Seeders\\DummyDraftRencanaDidoSeeder',
-        '--force' => true,
-    ]);
-    \Illuminate\Support\Facades\Artisan::call('db:seed', [
-        '--class' => 'Database\\Seeders\\DummyDraftLaporanLangsungDidoSeeder',
-        '--force' => true,
-    ]);
-    \Illuminate\Support\Facades\Artisan::call('db:seed', [
-        '--class' => 'Database\\Seeders\\DummyDraftLaporanRencanaDidoSeeder',
-        '--force' => true,
-    ]);
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Semua data dummy rencana & laporan berstatus draft untuk akun dido berhasil dimasukkan ke database Railway!',
-        'output' => trim(\Illuminate\Support\Facades\Artisan::output()),
-    ]);
-});
-
-Route::get('/seed-draft-laporan-langsung-dido', function () {
-    \Illuminate\Support\Facades\Artisan::call('db:seed', [
-        '--class' => 'Database\\Seeders\\DummyDraftLaporanLangsungDidoSeeder',
-        '--force' => true,
-    ]);
-    return response()->json([
-        'status' => 'success',
-        'message' => '2 data dummy laporan langsung berstatus draft untuk akun dido berhasil dimasukkan ke database Railway!',
-        'output' => trim(\Illuminate\Support\Facades\Artisan::output()),
-    ]);
-});
-
-Route::get('/seed-draft-laporan-rencana-dido', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('db:seed', [
-            '--class' => 'Database\\Seeders\\DummyDraftLaporanRencanaDidoSeeder',
-            '--force' => true,
-        ]);
-        return response()->json([
-            'status' => 'success',
-            'message' => '2 data dummy laporan kegiatan draft dari rencana disetujui untuk akun dido berhasil dimasukkan ke database Railway!',
-            'output' => trim(\Illuminate\Support\Facades\Artisan::output()),
-        ]);
-    } catch (\Throwable $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-        ], 200);
-    }
+Route::fallback(function () {
+    return view('404');
 });
 

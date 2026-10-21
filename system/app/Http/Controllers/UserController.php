@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -93,10 +92,6 @@ class UserController extends Controller
         $request->validate([
             'old_password' => 'required',
             'password' => 'required|min:8|confirmed',
-            // 'password' => [Password::min(8)->
-            //     mixedCase()->
-            //     numbers()->
-            //     symbols(), 'confirmed'],
         ], [
             'old_password.required' => 'Password saat ini wajib diisi',
             'password.required' => 'Password baru wajib diisi',
