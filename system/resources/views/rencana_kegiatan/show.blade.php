@@ -684,16 +684,18 @@
 
                                     <!-- Modal for Image -->
                                     <div class="modal fade" id="imageModal{{ $index }}" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header border-0">
-                                                    <h5 class="modal-title">{{ $fotoName }}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <div class="modal-dialog modal-dialog-centered" style="max-width: fit-content; max-width: -moz-fit-content; width: auto; margin: 1.75rem auto;">
+                                            <div class="modal-content border-0 shadow-lg" style="width: auto; min-width: 320px; max-width: 92vw; border-radius: 8px; overflow: hidden;">
+                                                <div class="modal-header border-0 bg-white py-2 px-3 align-items-center">
+                                                    <h6 class="modal-title font-weight-bold text-dark text-truncate mb-0" style="max-width: calc(90vw - 60px);" title="{{ $fotoName }}">
+                                                        {{ $fotoName }}
+                                                    </h6>
+                                                    <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close" style="outline: none;">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <div class="modal-body text-center p-0 bg-dark">
-                                                    <img src="/public/storage/app/{{ $fotoPath }}" class="img-fluid" style="max-height: 80vh;" alt="{{ $fotoName }}">
+                                                <div class="modal-body text-center p-0" style="background-color: #1a1a1a; display: flex; justify-content: center; align-items: center;">
+                                                    <img src="/public/storage/app/{{ $fotoPath }}" class="img-fluid" style="max-height: 80vh; max-width: 90vw; width: auto; height: auto; display: block; object-fit: contain;" alt="{{ $fotoName }}">
                                                 </div>
                                             </div>
                                         </div>
