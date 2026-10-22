@@ -48,8 +48,8 @@
                     <i class="fas fa-filter mr-1"></i> Filter
                 </button>
                 @if(auth()->user()->role->role_name === 'admin')
-                    <button type="submit" formaction="{{ route('rencana_kegiatan.export.excel') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1" title="Export Excel Rekap Realisasi">
-                        <i class="fas fa-file-excel mr-1"></i> Export Rekap
+                    <button type="submit" formaction="{{ route('rencana_kegiatan.export.csv') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1" title="Export Rekap Realisasi (CSV)">
+                        <i class="fas fa-file-csv mr-1"></i> Export Rekap
                     </button>
                 @endif
                 @if(request()->hasAny(['bulan','tahun','jenis','status_laporan','user_id','search']))
@@ -107,8 +107,8 @@
                             <i class="fas fa-filter mr-1"></i> Filter
                         </button>
                         @if(auth()->user()->role->role_name === 'admin')
-                            <button type="submit" formaction="{{ route('rencana_kegiatan.export.excel') }}" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm">
-                                <i class="fas fa-file-excel mr-1"></i> Export Rekap
+                            <button type="submit" formaction="{{ route('rencana_kegiatan.export.csv') }}" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm" title="Export Rekap Realisasi (CSV)">
+                                <i class="fas fa-file-csv mr-1"></i> Export Rekap
                             </button>
                         @endif
                         @if(request()->hasAny(['bulan','tahun','jenis','status_laporan','user_id','search']))

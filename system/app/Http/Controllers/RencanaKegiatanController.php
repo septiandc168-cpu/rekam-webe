@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RencanaKegiatan;
+use App\Models\LaporanKegiatan;
 use App\Models\User;
 use App\Notifications\StatusKegiatanNotification;
 use App\Notifications\KegiatanActivityNotification;
@@ -1173,7 +1174,8 @@ class RencanaKegiatanController extends Controller
     }
 
     /**
-     * Export rekap kegiatan ke Excel (Admin only).
+     * Export rekap kegiatan ke CSV (Admin only).
+     * Menggunakan native PHP streamed response O(1) memory, tanpa dependensi ext-zip/ext-xmlwriter, 100% aman untuk cPanel.
      */
     public function exportExcel(Request $request)
     {
@@ -1201,14 +1203,132 @@ class RencanaKegiatanController extends Controller
         $bulan = $request->bulan;
         $tahun = $request->tahun;
         $jenis = $request->jenis;
-        $status = $request->status;
         $userId = $request->user_id;
         $search = $request->search;
         $statusLaporan = $request->status_laporan;
 
-        $fileName = 'Rekap_Rencana_Kegiatan_' . date('Ymd_His') . '.xlsx';
+        $query = LaporanKegiatan::with(['user', 'rencanaKegiatan'])
+            ->whereIn('status', [
+                LaporanKegiatan::STATUS_FINAL,
+                LaporanKegiatan::STATUS_DIAJUKAN,
+                LaporanKegiatan::STATUS_REVISI,
+            ]);
 
-        return Excel::download(new RencanaKegiatanExport($tahun, $bulan, $status, $userId, $jenis, $search, $statusLaporan), $fileName);
+        if ($tahun) {
+            $query->where(function ($q) use ($tahun) {
+                $q->whereYear('realisasi_tanggal_mulai', $tahun)
+                  ->orWhereHas('rencanaKegiatan', fn($r) => $r->whereYear('tanggal_mulai', $tahun));
+            });
+        }
+        if ($bulan) {
+            $query->where(function ($q) use ($bulan) {
+                $q->whereMonth('realisasi_tanggal_mulai', $bulan)
+                  ->orWhereHas('rencanaKegiatan', fn($r) => $r->whereMonth('tanggal_mulai', $bulan));
+            });
+        }
+        if ($jenis) {
+            if ($jenis === 'langsung') {
+                $query->whereNull('rencana_kegiatan_id');
+            } else {
+                $query->where(function ($q) use ($jenis) {
+                    $q->whereHas('rencanaKegiatan', fn($r) => $r->where('jenis_kegiatan', $jenis));
+                    if ($jenis === 'lainnya') {
+                        $q->orWhereNull('rencana_kegiatan_id');
+                    }
+                });
+            }
+        }
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+        if ($statusLaporan) {
+            $query->where('status', $statusLaporan);
+        }
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('judul_kegiatan', 'like', "%{$search}%")
+                  ->orWhere('lokasi_kegiatan', 'like', "%{$search}%")
+                  ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$search}%"))
+                  ->orWhereHas('rencanaKegiatan', function ($r) use ($search) {
+                      $r->where('nama_kegiatan', 'like', "%{$search}%")
+                        ->orWhere('desa', 'like', "%{$search}%")
+                        ->orWhere('penanggung_jawab', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $query->orderBy('created_at', 'asc');
+
+        $fileName = 'Rekap_Realisasi_Kegiatan_' . date('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($query) {
+            $handle = fopen('php://output', 'w');
+
+            // Sisipkan UTF-8 BOM agar Excel di Windows membaca UTF-8 dengan baik tanpa encoding berantakan
+            fputs($handle, "\xEF\xBB\xBF");
+
+            // Header kolom
+            fputcsv($handle, [
+                'No',
+                'Nama Kegiatan',
+                'Jenis Kegiatan',
+                'Desa/Lokasi',
+                'Tanggal Pelaksanaan',
+                'Penanggung Jawab / Anggota',
+                'Target Peserta',
+                'Realisasi Peserta',
+                'Status Laporan',
+            ]);
+
+            $no = 1;
+            $query->chunk(200, function ($laporans) use ($handle, &$no) {
+                foreach ($laporans as $laporan) {
+                    $rencana = $laporan->rencanaKegiatan;
+                    $namaKegiatan = $rencana ? $rencana->nama_kegiatan : ($laporan->judul_kegiatan ?: 'Laporan Langsung');
+                    $jenisKegiatan = $rencana ? $rencana->getJenisKegiatanLabel() : 'Laporan Langsung';
+                    $lokasi = $laporan->lokasi_kegiatan ?: ($rencana ? ($rencana->desa ?: '-') : '-');
+
+                    $tglMulai = $laporan->realisasi_tanggal_mulai ?: ($rencana ? $rencana->tanggal_mulai : $laporan->created_at);
+                    $tglSelesai = $laporan->realisasi_tanggal_selesai ?: ($rencana ? $rencana->tanggal_selesai : null);
+
+                    $tglPelaksanaan = $tglMulai ? Carbon::parse($tglMulai)->format('d/m/Y') : '-';
+                    if ($tglSelesai && Carbon::parse($tglSelesai)->format('d/m/Y') != $tglPelaksanaan) {
+                        $tglPelaksanaan .= ' - ' . Carbon::parse($tglSelesai)->format('d/m/Y');
+                    }
+
+                    $pembuat = $laporan->user ? $laporan->user->name : ($rencana && $rencana->user ? $rencana->user->name : '-');
+                    $target = (int) ($laporan->target_peserta ?: ($rencana ? ($rencana->estimasi_peserta ?: 0) : 0));
+                    $realisasi = (int) ($laporan->realisasi_peserta ?: 0);
+
+                    $statusText = match($laporan->status) {
+                        'final'    => 'Laporan Final',
+                        'diajukan' => 'Laporan Diajukan',
+                        'revisi'   => 'Laporan Revisi',
+                        default    => 'Draft',
+                    };
+
+                    fputcsv($handle, [
+                        $no++,
+                        $namaKegiatan,
+                        $jenisKegiatan,
+                        $lokasi,
+                        $tglPelaksanaan,
+                        $pembuat,
+                        $target,
+                        $realisasi,
+                        $statusText,
+                    ]);
+                }
+            });
+
+            fclose($handle);
+        }, $fileName, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
     }
 
     /**

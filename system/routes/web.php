@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/rencana_kegiatan/export/excel', [App\Http\Controllers\RencanaKegiatanController::class, 'exportExcel'])
         ->middleware('isSupervisor')
         ->name('rencana_kegiatan.export.excel');
+    Route::get('/rencana_kegiatan/export/csv', [App\Http\Controllers\RencanaKegiatanController::class, 'exportExcel'])
+        ->middleware('isSupervisor')
+        ->name('rencana_kegiatan.export.csv');
 
     // Routes that need authorization checks (show, update, destroy)
     Route::get('/rencana_kegiatan/{rencana_kegiatan}', [App\Http\Controllers\RencanaKegiatanController::class, 'show'])->name('rencana_kegiatan.show');
