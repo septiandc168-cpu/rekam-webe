@@ -26,18 +26,18 @@
             <div class="card shadow-sm mb-4 bg-white p-3" style="border: 1px solid #e2e8f0; border-radius: 8px;">
                 <h6 class="text-dark fw-bold mb-3"><i class="fas fa-info-circle mr-1 text-secondary"></i> Konteks Rencana Kegiatan</h6>
                 <div class="row">
-                    <div class="col-md-5 pr-md-4 pr-lg-5 mb-2 mb-md-0">
+                    <div class="col-md-4 pr-md-3 mb-2 mb-md-0">
                         <strong>Nama Kegiatan:</strong><br>
                         <span class="text-dark" style="line-height: 1.5;">{{ $rencanaKegiatan->nama_kegiatan }}</span>
                     </div>
-                    <div class="col-md-4 px-md-3 mb-2 mb-md-0">
+                    <div class="col-md-5 px-md-3 mb-2 mb-md-0">
                         <strong>Waktu & Lokasi Rencana:</strong><br>
                         <span class="text-dark" style="line-height: 1.5;">
                             {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}<br>
                             Di {{ $rencanaKegiatan->desa }}
                         </span>
                     </div>
-                    <div class="col-md-3 pl-md-3">
+                    <div class="col-md-3 pl-md-4 pl-lg-5">
                         <strong>Target Peserta:</strong><br>
                         <span class="text-dark">{{ $rencanaKegiatan->estimasi_peserta ?? '-' }} Orang</span>
                     </div>
