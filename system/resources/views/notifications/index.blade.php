@@ -13,21 +13,21 @@
                             <i class="fas fa-bell text-navy mr-2 style-icon"></i> Pusat Notifikasi
                         </h5>
 
-                        <div class="d-flex align-items-stretch align-items-sm-center flex-column flex-sm-row w-100 w-sm-auto ml-sm-auto" style="gap: 8px;">
+                        <div class="notification-header-actions d-flex align-items-center flex-wrap ml-auto" style="gap: 8px;">
                             @if ($unreadCount > 0)
-                                <form action="{{ route('notifications.readAll') }}" method="POST" class="mb-0 w-100 w-sm-auto">
+                                <form action="{{ route('notifications.readAll') }}" method="POST" class="mb-0">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm bg-navy text-white shadow-sm rounded px-3 py-2 py-sm-1 font-weight-bold w-100 w-sm-auto text-nowrap text-center">
+                                    <button type="submit" class="btn btn-sm bg-navy text-white shadow-sm rounded px-3 font-weight-bold">
                                         <i class="fas fa-check-double mr-1"></i> Tandai Semua Dibaca
                                     </button>
                                 </form>
                             @endif
 
                             @if ($totalCount > 0)
-                                <form action="{{ route('notifications.deleteAll') }}" method="POST" class="mb-0 w-100 w-sm-auto" data-confirm-delete="true">
+                                <form action="{{ route('notifications.deleteAll') }}" method="POST" class="mb-0" data-confirm-delete="true">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger text-white shadow-sm rounded px-3 py-2 py-sm-1 font-weight-bold border-0 w-100 w-sm-auto text-nowrap text-center">
+                                    <button type="submit" class="btn btn-sm btn-danger text-white shadow-sm rounded px-3 font-weight-bold border-0">
                                         <i class="fas fa-trash-alt mr-1"></i> Hapus Semua Notifikasi
                                     </button>
                                 </form>
@@ -240,6 +240,20 @@
         .transition-all:hover {
             box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
             transform: translateY(-1px);
+        }
+        @media (max-width: 575.98px) {
+            .notification-header-actions {
+                width: 100% !important;
+                margin-left: 0 !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .notification-header-actions form,
+            .notification-header-actions .btn {
+                width: 100% !important;
+                display: block !important;
+                text-align: center !important;
+            }
         }
     </style>
 @endpush
