@@ -1,359 +1,282 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- [Head] start -->
 
 <head>
-    <title>Register</title>
-    <!-- [Meta] -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description"
-        content="Mantis is made using Bootstrap 5 design framework. Download the free admin template & use it for your project.">
-    <meta name="keywords"
-        content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
-    <meta name="author" content="CodedThemes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daftar | Rekam WeBe</title>
 
-    <!-- [Favicon] icon -->
-    <link rel="icon" href="/public/template/dist/assets/images/favicon.svg" type="image/x-icon">
-    <!-- [Google Font] Family -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
-        id="main-font-link">
-    <!-- [Tabler Icons] https://tablericons.com -->
-    <link rel="stylesheet" href="/public/template/dist/assets/fonts/tabler-icons.min.css">
-    <!-- [Feather Icons] https://feathericons.com -->
-    <link rel="stylesheet" href="/public/template/dist/assets/fonts/feather.css">
-    <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
-    <link rel="stylesheet" href="/public/template/dist/assets/fonts/fontawesome.css">
-    <!-- [Material Icons] https://fonts.google.com/icons -->
-    <link rel="stylesheet" href="/public/template/dist/assets/fonts/material.css">
-    <!-- [Template CSS Files] -->
-    <link rel="stylesheet" href="/public/template/dist/assets/css/style.css" id="main-style-link">
-    <link rel="stylesheet" href="/public/template/dist/assets/css/style-preset.css">
-    @vite(['resources/js/app.js'])
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/public/logo_webe.png">
 
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/public/adminlte/plugins/fontawesome-free/css/all.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/public/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/public/adminlte/dist/css/adminlte.min.css">
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        /* Split-Screen Layout */
+        .split-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Left Side (Image & Branding) */
+        .split-left {
+            flex: 1;
+            background: url('/public/adminlte/dist/img/background_login1.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .split-left::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: linear-gradient(135deg, rgba(0, 31, 63, 0.85) 0%, rgba(0, 123, 255, 0.6) 100%);
+        }
+
+        .split-left-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+        }
+
+        .split-left-content h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .split-left-content p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* Right Side (Form) */
+        .split-right {
+            flex: 0 0 500px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+            z-index: 2;
+        }
+
+        .brand-logo {
+            width: 70px;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .register-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.25rem;
+        }
+
+        .register-subtitle {
+            font-size: 0.95rem;
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Custom Inputs */
+        .input-group-custom {
+            position: relative;
+        }
+
+        .form-control-custom {
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease-in-out;
+            height: auto;
+        }
+
+        .form-control-custom:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+            z-index: 10;
+            transition: color 0.2s;
+        }
+
+        .form-control-custom:focus + .input-icon,
+        .form-control-custom:not(:placeholder-shown) + .input-icon {
+            color: #007bff;
+        }
+
+        .btn-register {
+            background-color: #001f3f;
+            color: white;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 31, 63, 0.15);
+            width: 100%;
+            border: none;
+        }
+
+        .btn-register:hover {
+            background-color: #000814;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 31, 63, 0.25);
+        }
+
+        .text-error {
+            font-size: 0.85rem;
+            color: #dc3545;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+        @media (max-width: 992px) {
+            .split-right {
+                flex: 0 0 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .split-container {
+                flex-direction: column;
+            }
+            .split-left {
+                display: none;
+            }
+            .split-right {
+                flex: 1;
+                width: 100%;
+                padding: 2rem;
+            }
+        }
+    </style>
 </head>
-<!-- [Head] end -->
-<!-- [Body] Start -->
 
 <body>
-    <!-- [ Pre-loader ] start -->
-    <div class="loader-bg">
-        <div class="loader-track">
-            <div class="loader-fill"></div>
+    <div class="split-container">
+        
+        <!-- Left Side: Branding & Background -->
+        <div class="split-left">
+            <div class="split-left-content">
+                <h2>Selamat Datang di Rekam WeBe</h2>
+                <p>Platform terintegrasi Yayasan WeBe untuk pengelolaan kegiatan yang sistematis, produktif, dan terarah.</p>
+            </div>
         </div>
-    </div>
-    <!-- [ Pre-loader ] End -->
 
-    <div class="auth-main">
-        <div class="auth-wrapper v3">
-            <div class="auth-form">
-                <div class="auth-header">
-                    <a href="#"><img src="/public/template/dist/assets/images/logo-dark.svg"
-                            alt="img"></a>
+        <!-- Right Side: Register Form -->
+        <div class="split-right d-flex align-items-center justify-content-center min-vh-100 w-100">
+            <div style="max-width: 450px; width: 100%;">
+                <!-- Logo -->
+                <div class="text-center mb-3">
+                    <img src="/public/logo_webe.png" alt="Logo WeBe" class="brand-logo" style="width: 70px;">
                 </div>
-                <div class="card my-5">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-end mb-4">
-                            <h3 class="mb-0"><b>Sign up</b></h3>
-                            <a href="#" class="link-primary">Already have an account?</a>
+                
+                <!-- Welcome Text -->
+                <div class="text-center mb-3">
+                    <h2 class="register-title">Daftar Akun</h2>
+                    <p class="register-subtitle">Buat akun baru untuk mengakses Rekam WeBe</p>
+                </div>
+
+                <!-- Form -->
+                <form action="{{ route('register') }}" method="post">
+                    @csrf
+                    
+                    <!-- Nama Lengkap -->
+                    <div class="mb-3">
+                        <div class="input-group-custom">
+                            <input type="text" name="name" class="form-control form-control-custom @error('name') is-invalid @enderror" placeholder="Nama Lengkap" value="{{ old('name') }}" required autofocus>
+                            <i class="fas fa-user input-icon"></i>
                         </div>
-                        <form action="{{ route('register') }}" method="post">
-                            @csrf
-                            <div class="row">
-                                <div class="form-group mb-3">
-                                    <label class="form-label">Full Name*</label>
-                                    <input type="text" name="name"
-                                        class="form-control @error('name')
-                            is-invalid
-                        @enderror"
-                                        placeholder="Full Name">
-                                    @error('name')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label class="form-label">Email Address*</label>
-                                <input type="email" name="email"
-                                    class="form-control @error('email')
-                        is-invalid
-                    @enderror"
-                                    placeholder="Email Address" autocomplete="off">
-                                @error('email')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <div class="form-group mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" name="password"
-                                    class="form-control @error('password')
-                        is-invalid
-                    @enderror"
-                                    placeholder="Password">
-                                @error('password')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <div class="form-group mb-3">
-                                <label class="form-label">Password Konfirmasi</label>
-                                <input type="password" name="password_confirmation" class="form-control"
-                                    placeholder="Password">
-                            </div>
-                            <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#"
-                                    class="text-primary"> Terms of Service </a> and <a href="#"
-                                    class="text-primary"> Privacy Policy</a></p>
-                            <div class="d-grid mt-3">
-                                <button type="submit" class="btn btn-primary">Create Account</button>
-                            </div>
-                        </form>
+                        @error('name')
+                            <span class="text-error"><i class="fas fa-exclamation-circle mr-1"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
 
+                    <!-- Email Input -->
+                    <div class="mb-3">
+                        <div class="input-group-custom">
+                            <input type="email" name="email" class="form-control form-control-custom @error('email') is-invalid @enderror" placeholder="Alamat Email" value="{{ old('email') }}" required autocomplete="off">
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
+                        @error('email')
+                            <span class="text-error"><i class="fas fa-exclamation-circle mr-1"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
 
+                    <!-- Password Input -->
+                    <div class="mb-3">
+                        <div class="input-group-custom">
+                            <input type="password" name="password" class="form-control form-control-custom @error('password') is-invalid @enderror" placeholder="Password (min. 8 karakter)" required>
+                            <i class="fas fa-lock input-icon"></i>
+                        </div>
+                        @error('password')
+                            <span class="text-error"><i class="fas fa-exclamation-circle mr-1"></i> {{ $message }}</span>
+                        @enderror
                     </div>
-                </div>
-                <div class="auth-footer row">
-                    <div class="col my-1">
-                        <p class="m-0">Copyright © <a href="#">Codedthemes</a></p>
+
+                    <!-- Konfirmasi Password Input -->
+                    <div class="mb-4">
+                        <div class="input-group-custom">
+                            <input type="password" name="password_confirmation" class="form-control form-control-custom" placeholder="Konfirmasi Password" required>
+                            <i class="fas fa-check-circle input-icon"></i>
+                        </div>
                     </div>
-                    <div class="col my-1">
-                        <p class="m-0">Distributed by <a href="https://themewagon.com">ThemeWagon</a></p>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-register btn-block w-100 mb-3">
+                        <i class="fas fa-user-plus mr-2"></i> Daftar
+                    </button>
+
+                    <div class="text-center">
+                        <span class="text-muted">Sudah punya akun?</span>
+                        <a href="{{ route('login') }}" class="font-weight-bold ml-1" style="color: #001f3f;">Masuk</a>
                     </div>
-                </div>
+                </form>
+
             </div>
         </div>
     </div>
-    <!-- [ Main Content ] end -->
-    <!-- Required Js -->
-    <script src="/public/template/dist/assets/js/plugins/popper.min.js"></script>
-    <script src="/public/template/dist/assets/js/plugins/simplebar.min.js"></script>
-    <script src="/public/template/dist/assets/js/plugins/bootstrap.min.js"></script>
-    <script src="/public/template/dist/assets/js/fonts/custom-font.js"></script>
-    <script src="/public/template/dist/assets/js/pcoded.js"></script>
-    <script src="/public/template/dist/assets/js/plugins/feather.min.js"></script>
 
-
-
-
-
-    <script>
-        layout_change('light');
-    </script>
-
-
-
-
-    <script>
-        change_box_container('false');
-    </script>
-
-
-
-    <script>
-        layout_rtl_change('false');
-    </script>
-
-
-    <script>
-        preset_change("preset-1");
-    </script>
-
-
-    <script>
-        font_change("Public-Sans");
-    </script>
-
-
-    <div class="offcanvas pct-offcanvas offcanvas-end" tabindex="-1" id="offcanvas_pc_layout">
-        <div class="offcanvas-header bg-primary">
-            <h5 class="offcanvas-title text-white">Mantis Customizer</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                aria-label="Close"></button>
-        </div>
-        <div class="pct-body" style="height: calc(100% - 60px)">
-            <div class="offcanvas-body">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse1">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avtar avtar-xs bg-light-primary">
-                                        <i class="ti ti-layout-sidebar f-18"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-1">Theme Layout</h6>
-                                    <span>Choose your layout</span>
-                                </div>
-                                <i class="ti ti-chevron-down"></i>
-                            </div>
-                        </a>
-                        <div class="collapse show" id="pctcustcollapse1">
-                            <div class="pct-content">
-                                <div class="pc-rtl">
-                                    <p class="mb-1">Direction</p>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch"
-                                            id="layoutmodertl">
-                                        <label class="form-check-label" for="layoutmodertl">RTL</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse2">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avtar avtar-xs bg-light-primary">
-                                        <i class="ti ti-brush f-18"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-1">Theme Mode</h6>
-                                    <span>Choose light or dark mode</span>
-                                </div>
-                                <i class="ti ti-chevron-down"></i>
-                            </div>
-                        </a>
-                        <div class="collapse show" id="pctcustcollapse2">
-                            <div class="pct-content">
-                                <div class="theme-color themepreset-color theme-layout">
-                                    <a href="#!" class="active" onclick="layout_change('light')"
-                                        data-value="false"><span><img
-                                                src="/public/template/dist/assets/images/customization/default.svg"
-                                                alt="img"></span><span>Light</span></a>
-                                    <a href="#!" class="" onclick="layout_change('dark')"
-                                        data-value="true"><span><img
-                                                src="/public/template/dist/assets/images/customization/dark.svg"
-                                                alt="img"></span><span>Dark</span></a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse3">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avtar avtar-xs bg-light-primary">
-                                        <i class="ti ti-color-swatch f-18"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-1">Color Scheme</h6>
-                                    <span>Choose your primary theme color</span>
-                                </div>
-                                <i class="ti ti-chevron-down"></i>
-                            </div>
-                        </a>
-                        <div class="collapse show" id="pctcustcollapse3">
-                            <div class="pct-content">
-                                <div class="theme-color preset-color">
-                                    <a href="#!" class="active" data-value="preset-1"><span><img
-                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
-                                                alt="img"></span><span>Theme 1</span></a>
-                                    <a href="#!" class="" data-value="preset-2"><span><img
-                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
-                                                alt="img"></span><span>Theme 2</span></a>
-                                    <a href="#!" class="" data-value="preset-3"><span><img
-                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
-                                                alt="img"></span><span>Theme 3</span></a>
-                                    <a href="#!" class="" data-value="preset-4"><span><img
-                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
-                                                alt="img"></span><span>Theme 4</span></a>
-                                    <a href="#!" class="" data-value="preset-5"><span><img
-                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
-                                                alt="img"></span><span>Theme 5</span></a>
-                                    <a href="#!" class="" data-value="preset-6"><span><img
-                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
-                                                alt="img"></span><span>Theme 6</span></a>
-                                    <a href="#!" class="" data-value="preset-7"><span><img
-                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
-                                                alt="img"></span><span>Theme 7</span></a>
-                                    <a href="#!" class="" data-value="preset-8"><span><img
-                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
-                                                alt="img"></span><span>Theme 8</span></a>
-                                    <a href="#!" class="" data-value="preset-9"><span><img
-                                                src="/public/template/dist/assets/images/customization/theme-color.svg"
-                                                alt="img"></span><span>Theme 9</span></a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item pc-boxcontainer">
-                        <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse4">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avtar avtar-xs bg-light-primary">
-                                        <i class="ti ti-border-inner f-18"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-1">Layout Width</h6>
-                                    <span>Choose fluid or container layout</span>
-                                </div>
-                                <i class="ti ti-chevron-down"></i>
-                            </div>
-                        </a>
-                        <div class="collapse show" id="pctcustcollapse4">
-                            <div class="pct-content">
-                                <div class="theme-color themepreset-color boxwidthpreset theme-container">
-                                    <a href="#!" class="active" onclick="change_box_container('false')"
-                                        data-value="false"><span><img
-                                                src="/public/template/dist/assets/images/customization/default.svg"
-                                                alt="img"></span><span>Fluid</span></a>
-                                    <a href="#!" class="" onclick="change_box_container('true')"
-                                        data-value="true"><span><img
-                                                src="/public/template/dist/assets/images/customization/container.svg"
-                                                alt="img"></span><span>Container</span></a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse5">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avtar avtar-xs bg-light-primary">
-                                        <i class="ti ti-typography f-18"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-1">Font Family</h6>
-                                    <span>Choose your font family.</span>
-                                </div>
-                                <i class="ti ti-chevron-down"></i>
-                            </div>
-                        </a>
-                        <div class="collapse show" id="pctcustcollapse5">
-                            <div class="pct-content">
-                                <div class="theme-color fontpreset-color">
-                                    <a href="#!" class="active" onclick="font_change('Public-Sans')"
-                                        data-value="Public-Sans"><span>Aa</span><span>Public Sans</span></a>
-                                    <a href="#!" class="" onclick="font_change('Roboto')"
-                                        data-value="Roboto"><span>Aa</span><span>Roboto</span></a>
-                                    <a href="#!" class="" onclick="font_change('Poppins')"
-                                        data-value="Poppins"><span>Aa</span><span>Poppins</span></a>
-                                    <a href="#!" class="" onclick="font_change('Inter')"
-                                        data-value="Inter"><span>Aa</span><span>Inter</span></a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="collapse show">
-                            <div class="pct-content">
-                                <div class="d-grid">
-                                    <button class="btn btn-light-danger" id="layoutreset">Reset Layout</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <!-- Scripts -->
+    <script src="/public/adminlte/plugins/jquery/jquery.min.js"></script>
+    <script src="/public/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
-<!-- [Body] end -->
-
 </html>
