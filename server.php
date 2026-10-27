@@ -21,7 +21,6 @@ function serveUpload(string $relativePath): bool
     $roots = [
         $uploadRoot,
         __DIR__ . '/public/storage/app',           // current deployment layout
-        __DIR__ . '/system/public/storage/app',    // legacy upload layout
     ];
 
     foreach (array_unique($roots) as $root) {
