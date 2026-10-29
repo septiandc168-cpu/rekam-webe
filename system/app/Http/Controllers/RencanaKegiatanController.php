@@ -61,16 +61,8 @@ class RencanaKegiatanController extends Controller
             if ($request->filled('tahun')) {
                 $query->whereYear('tanggal_mulai', $request->tahun);
             }
-            if ($request->filled('user_id')) {
-                $query->where('user_id', $request->user_id);
-            }
             
             $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->get();
-            
-            // Get all anggota users for filter
-            $users = User::whereHas('role', function($query) {
-                $query->where('role_name', 'anggota');
-            })->orderBy('name')->get();
         } else {
             // Anggota hanya melihat datanya sendiri, kecuali yang berstatus disetujui dan selesai
             $query = RencanaKegiatan::with('laporanKegiatan', 'user')
@@ -89,8 +81,6 @@ class RencanaKegiatanController extends Controller
             }
             
             $rencanaKegiatans = $query->orderBy('updated_at', 'desc')->get();
-            
-            $users = null;
         }
         
         // Konfigurasi SweetAlert untuk delete dengan warna danger
@@ -107,7 +97,7 @@ class RencanaKegiatanController extends Controller
 
         session()->flash('alert.delete', json_encode($confirm, JSON_UNESCAPED_SLASHES));
 
-        return view('rencana_kegiatan.index', compact('rencanaKegiatans', 'users'));
+        return view('rencana_kegiatan.index', compact('rencanaKegiatans'));
     }
 
     public function create()

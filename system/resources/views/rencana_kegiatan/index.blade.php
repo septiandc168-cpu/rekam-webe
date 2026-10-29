@@ -43,22 +43,10 @@
                                 <option value="revisi" {{ (request('status') == 'revisi') ? 'selected' : '' }}>Revisi</option>
                                 <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
                             </select>
-                            @if(auth()->user()->role->role_name === 'admin')
-                                <select name="user_id" class="form-control mr-2 rounded" style="min-width: 150px;">
-                                    <option value="">Semua User</option>
-                                    @if(isset($users))
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->id }}" {{ (request('user_id') == $user->id) ? 'selected' : '' }}>
-                                                {{ $user->name }}
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            @endif
                             <button type="submit" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm mr-1" title="Filter Tabel">
                                 <i class="fas fa-filter mr-1"></i> Filter
                             </button>
-                            @if(request()->hasAny(['bulan','tahun','status','user_id','filter_status']))
+                            @if(request()->hasAny(['bulan','tahun','status','filter_status']))
                                 <a href="{{ route('rencana_kegiatan.index') }}" class="btn bg-navy text-white btn-sm flex-shrink-0 shadow-sm" title="Reset Filter">
                                     <i class="fas fa-undo mr-1"></i> Reset
                                 </a>
@@ -82,7 +70,7 @@
                                     <input type="number" name="tahun" class="form-control form-control-sm rounded" placeholder="Tahun" 
                                            value="{{ request('tahun') }}" min="2020" max="2030">
                                 </div>
-                                <div class="col-6 mt-2">
+                                <div class="col-12 mt-2">
                                     <select name="status" class="form-control form-control-sm rounded">
                                         <option value="">Status</option>
                                         @if(auth()->user()->role->role_name !== 'admin')
@@ -96,25 +84,11 @@
                                         <option value="ditolak" {{ (request('status') == 'ditolak') ? 'selected' : '' }}>Ditolak</option>
                                     </select>
                                 </div>
-                                @if(auth()->user()->role->role_name === 'admin')
-                                    <div class="col-6 mt-2">
-                                        <select name="user_id" class="form-control form-control-sm rounded">
-                                            <option value="">User</option>
-                                            @if(isset($users))
-                                                @foreach($users as $user)
-                                                    <option value="{{ $user->id }}" {{ (request('user_id') == $user->id) ? 'selected' : '' }}>
-                                                        {{ $user->name }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                @endif
                                 <div class="col-12 mt-2 d-flex" style="gap:8px;">
                                     <button type="submit" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm">
                                         <i class="fas fa-filter mr-1"></i> Filter
                                     </button>
-                                    @if(request()->hasAny(['bulan','tahun','status','user_id','filter_status']))
+                                    @if(request()->hasAny(['bulan','tahun','status','filter_status']))
                                         <a href="{{ route('rencana_kegiatan.index') }}" class="btn bg-navy text-white btn-sm flex-grow-1 shadow-sm text-center">
                                             <i class="fas fa-undo mr-1"></i> Reset
                                         </a>
