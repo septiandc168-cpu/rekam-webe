@@ -77,16 +77,7 @@ class LaporanKegiatanController extends Controller
                       });
                 });
             }
-            if ($request->filled('user_id')) {
-                $query->where('user_id', $request->user_id);
-            }
-
             $laporans = $query->orderBy('updated_at', 'desc')->get();
-            
-            // Get all anggota users for filter
-            $users = User::whereHas('role', function($q) {
-                $q->where('role_name', 'anggota');
-            })->orderBy('name')->get();
         } else {
             // Anggota hanya melihat datanya sendiri yang berstatus draft, diajukan, revisi (mengecualikan final)
             $query = LaporanKegiatan::with('rencanaKegiatan', 'user')
@@ -129,7 +120,6 @@ class LaporanKegiatanController extends Controller
             }
 
             $laporans = $query->orderBy('updated_at', 'desc')->get();
-            $users = null;
         }
         
         // Konfigurasi SweetAlert untuk delete dengan warna danger
@@ -150,17 +140,24 @@ class LaporanKegiatanController extends Controller
         // Hanya untuk anggota: rencana milik sendiri yang berstatus disetujui dan BELUM mengajukan/menyelesaikan laporan kegiatan (jika draft masih tetap tampil)
         $rencanaDisetujui = collect();
         if (!$isAdmin) {
-            $rencanaDisetujui = RencanaKegiatan::with(['user', 'laporanKegiatan'])
+            $rencanaDisetujuiQuery = RencanaKegiatan::with(['user', 'laporanKegiatan'])
                 ->where('user_id', $user->id)
                 ->where('status', RencanaKegiatan::STATUS_DISETUJUI)
                 ->whereDoesntHave('laporanKegiatan', function ($q) {
                     $q->whereIn('status', [LaporanKegiatan::STATUS_DIAJUKAN, LaporanKegiatan::STATUS_REVISI, LaporanKegiatan::STATUS_FINAL]);
-                })
-                ->orderBy('updated_at', 'desc')
-                ->get();
+                });
+
+            if ($request->filled('bulan_rencana')) {
+                $rencanaDisetujuiQuery->whereMonth('tanggal_mulai', $request->bulan_rencana);
+            }
+            if ($request->filled('tahun_rencana')) {
+                $rencanaDisetujuiQuery->whereYear('tanggal_mulai', $request->tahun_rencana);
+            }
+
+            $rencanaDisetujui = $rencanaDisetujuiQuery->orderBy('updated_at', 'desc')->get();
         }
 
-        return view('laporan_kegiatan.index', compact('laporans', 'users', 'rencanaDisetujui'));
+        return view('laporan_kegiatan.index', compact('laporans', 'rencanaDisetujui'));
     }
 
     /**
