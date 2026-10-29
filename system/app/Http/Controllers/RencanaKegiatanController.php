@@ -160,60 +160,13 @@ class RencanaKegiatanController extends Controller
                   });
             });
         }
-        if ($request->filled('jenis')) {
-            $jenis = $request->jenis;
-            if ($jenis === 'langsung') {
-                $query->whereNull('rencana_kegiatan_id');
-            } else {
-                $query->where(function ($q) use ($jenis) {
-                    $q->whereHas('rencanaKegiatan', fn($r) => $r->where('jenis_kegiatan', $jenis));
-                    if ($jenis === 'lainnya') {
-                        $q->orWhereNull('rencana_kegiatan_id');
-                    }
-                });
-            }
-        }
-        if ($request->filled('user_id') && $isAdmin) {
-            $query->where('user_id', $request->user_id);
-        }
         if ($request->filled('status_laporan')) {
             $query->where('status', $request->status_laporan);
         }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('judul_kegiatan', 'like', "%{$search}%")
-                  ->orWhere('lokasi_kegiatan', 'like', "%{$search}%")
-                  ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$search}%"))
-                  ->orWhereHas('rencanaKegiatan', function ($r) use ($search) {
-                      $r->where('nama_kegiatan', 'like', "%{$search}%")
-                        ->orWhere('desa', 'like', "%{$search}%")
-                        ->orWhere('penanggung_jawab', 'like', "%{$search}%");
-                  });
-            });
-        }
 
-        // Stats (hitung total dari seluruh data sebelum paginasi)
-        $totalSelesai       = (clone $query)->count();
-        $totalDenganLaporan = $totalSelesai;
-        $totalTanpaLaporan  = 0;
+        $laporans = $query->orderBy('updated_at', 'desc')->get();
 
-        // Paginate 15 data per halaman (table layout)
-        $laporans = $query->orderBy('updated_at', 'desc')->paginate(15)->withQueryString();
-
-        // User list for filter (admin only)
-        $users = $isAdmin
-            ? \App\Models\User::whereHas('role', fn($q) => $q->where('role_name', 'anggota'))->orderBy('name')->get()
-            : collect();
-
-        return view('history_realisasi.index', compact(
-            'laporans',
-            'users',
-            'totalSelesai',
-            'totalDenganLaporan',
-            'totalTanpaLaporan'
-        ));
-
+        return view('history_realisasi.index', compact('laporans'));
     }
 
 
