@@ -354,9 +354,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
             });
         });
     </script>
-    @stack('scripts')
+    <!-- HEIC to JPEG conversion library for iPhone photos -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script>
+        if (typeof heic2any === 'undefined') {
+            document.write('<script src="{{ asset('adminlte/plugins/heic2any/heic2any.min.js') }}"><\/script>');
+        }
+    </script>
     <script src="/public/adminlte/plugins/sweetalert2/sweetalert2.all.js"></script>
     @include('sweetalert::alert')
+    @stack('scripts')
     
     <script>
         $(document).ready(function() {

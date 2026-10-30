@@ -9,28 +9,31 @@
 
         <!-- Header Print (menggunakan CSS @page) -->
         @php
-    $bulan = [
-        'January' => 'Januari',
-        'February' => 'Februari',
-        'March' => 'Maret',
-        'April' => 'April',
-        'May' => 'Mei',
-        'June' => 'Juni',
-        'July' => 'Juli',
-        'August' => 'Agustus',
-        'September' => 'September',
-        'October' => 'Oktober',
-        'November' => 'November',
-        'December' => 'Desember'
-    ];
-    $tanggalIndo = now()->format('d') . ' ' . $bulan[now()->format('F')] . ' ' . now()->format('Y');
-@endphp
+            $bulan = [
+                'January' => 'Januari',
+                'February' => 'Februari',
+                'March' => 'Maret',
+                'April' => 'April',
+                'May' => 'Mei',
+                'June' => 'Juni',
+                'July' => 'Juli',
+                'August' => 'Agustus',
+                'September' => 'September',
+                'October' => 'Oktober',
+                'November' => 'November',
+                'December' => 'Desember',
+            ];
+            $tanggalIndo = now()->format('d') . ' ' . $bulan[now()->format('F')] . ' ' . now()->format('Y');
+        @endphp
 
         <!-- Header Web (tidak muncul saat print) -->
         <div class="web-header no-print mb-4">
             <div class="col-12 text-center">
-                <h2 class="text-dark" style="font-family: 'Times New Roman', Times, serif; font-weight: bold;">LAPORAN KEGIATAN</h2>
-                <h3 style="font-family: 'Times New Roman', Times, serif;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</h3>
+                <h2 class="text-dark" style="font-family: 'Times New Roman', Times, serif; font-weight: bold;">LAPORAN
+                    KEGIATAN</h2>
+                <h3 style="font-family: 'Times New Roman', Times, serif;">
+                    {{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}
+                </h3>
                 <p class="text-muted">Tanggal Cetak: {{ $tanggalIndo }}</p>
             </div>
         </div>
@@ -43,8 +46,12 @@
                     <img src="/public/adminlte/dist/img/logo_webe.png" alt="Logo" style="width: 100px;">
                 </td>
                 <td style="width: 85%; text-align: center; vertical-align: middle; padding-bottom: 10px;">
-                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 16pt; font-weight: bold; margin-bottom: 2px;">YAYASAN WEBE KONSERVASI KETAPANG</div>
-                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: bold; margin-bottom: 5px;">REKAM WEBE - SISTEM PELAPORAN KEGIATAN</div>
+                    <div
+                        style="font-family: 'Times New Roman', Times, serif; font-size: 16pt; font-weight: bold; margin-bottom: 2px;">
+                        YAYASAN WEBE KONSERVASI KETAPANG</div>
+                    <div
+                        style="font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: bold; margin-bottom: 5px;">
+                        REKAM WEBE - SISTEM PELAPORAN KEGIATAN</div>
                     <div style="font-family: 'Times New Roman', Times, serif; font-size: 11pt;">
                         Jl. RM Sudiono No.49A, Ketapang, Kalimantan Barat<br>
                         Email: yayasanwebe@gmail.com | Telp/WA: +62 813 6022 733
@@ -56,57 +63,72 @@
 
         <!-- Judul Surat -->
         <div class="print-title-section mb-4 text-center">
-            <h3 style="font-family: 'Times New Roman', Times, serif; text-decoration: underline; font-weight: bold; font-size: 14pt; margin-bottom: 5px; text-transform: uppercase;">LAPORAN PELAKSANAAN KEGIATAN</h3>
-            <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; text-transform: uppercase;">{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</div>
+            <h3
+                style="font-family: 'Times New Roman', Times, serif; text-decoration: underline; font-weight: bold; font-size: 14pt; margin-bottom: 5px; text-transform: uppercase;">
+                LAPORAN PELAKSANAAN KEGIATAN</h3>
+            <div
+                style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; text-transform: uppercase;">
+                {{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}
+            </div>
         </div>
 
-        @if(!$laporanKegiatan->isDarurat())
-        <!-- Informasi Rencana Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 20px;">Informasi Rencana Kegiatan</div>
-        <table class="table-borderless mb-4" style="width: 100%; border-collapse: collapse; margin-left: 30px;">
-            <tr>
-                <td style="width: 220px;">Nama Kegiatan</td>
-                <td style="width: 15px; text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rencanaKegiatan->nama_kegiatan !!}</td>
-            </tr>
-            <tr>
-                <td>Jenis Kegiatan</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() !!}</td>
-            </tr>
-            <tr>
-                <td>Tujuan</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) ?: '-' !!}</td>
-            </tr>
-            <tr>
-                <td>Penanggung Jawab</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' !!}</td>
-            </tr>
-            <tr>
-                <td>Kelompok</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' !!}</td>
-            </tr>
-            <tr>
-                <td>Tanggal Laporan</td>
-                <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
-            </tr>
-        </table>
+        @if (!$laporanKegiatan->isDarurat())
+            <!-- Informasi Rencana Kegiatan -->
+            <div
+                style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 20px;">
+                Informasi Rencana Kegiatan</div>
+            <table class="table-borderless mb-4" style="width: 100%; border-collapse: collapse; margin-left: 30px;">
+                <tr>
+                    <td style="width: 220px;">Nama Kegiatan</td>
+                    <td style="width: 15px; text-align: center;">:</td>
+                    <td>{!! $laporanKegiatan->rencanaKegiatan->nama_kegiatan !!}</td>
+                </tr>
+                <tr>
+                    <td>Jenis Kegiatan</td>
+                    <td style="text-align: center;">:</td>
+                    <td>{!! $laporanKegiatan->rencanaKegiatan->getJenisKegiatanLabel() !!}</td>
+                </tr>
+                <tr>
+                    <td>Tujuan</td>
+                    <td style="text-align: center;">:</td>
+                    <td>{!! strip_tags($laporanKegiatan->rencanaKegiatan->tujuan) ?: '-' !!}</td>
+                </tr>
+                <tr>
+                    <td>Penanggung Jawab</td>
+                    <td style="text-align: center;">:</td>
+                    <td>{!! $laporanKegiatan->rencanaKegiatan->penanggung_jawab ?: '-' !!}</td>
+                </tr>
+                <tr>
+                    <td>Kelompok</td>
+                    <td style="text-align: center;">:</td>
+                    <td>{!! $laporanKegiatan->rencanaKegiatan->kelompok ?: '-' !!}</td>
+                </tr>
+                <tr>
+                    <td>Tanggal Laporan</td>
+                    <td style="text-align: center;">:</td>
+                    <td>{{ $laporanKegiatan->created_at->format('d/m/Y') }}</td>
+                </tr>
+            </table>
         @endif
 
         <!-- Detail Pelaksanaan Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 15px;">Detail Pelaksanaan Kegiatan</div>
+        <div
+            style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 15px;">
+            Detail Pelaksanaan Kegiatan</div>
         <table class="table-borderless mb-4" style="width: 100%; border-collapse: collapse; margin-left: 30px;">
             <tr>
                 <td style="width: 220px;">Tanggal Pelaksanaan</td>
                 <td style="width: 15px; text-align: center;">:</td>
                 <td>
                     {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
-                    @if ($laporanKegiatan->isDarurat() ? ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai) : ($laporanKegiatan->rencanaKegiatan->tanggal_selesai && $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai))
-                        s/d {{ \Carbon\Carbon::parse($laporanKegiatan->isDarurat() ? $laporanKegiatan->realisasi_tanggal_selesai : $laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d F Y') }}
+                    @if (
+                        $laporanKegiatan->isDarurat()
+                            ? $laporanKegiatan->realisasi_tanggal_selesai &&
+                                $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai
+                            : $laporanKegiatan->rencanaKegiatan->tanggal_selesai &&
+                                $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai)
+                        s/d
+                        {{ \Carbon\Carbon::parse($laporanKegiatan->isDarurat() ? $laporanKegiatan->realisasi_tanggal_selesai : $laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d F Y') }}
                     @endif
                 </td>
             </tr>
@@ -115,15 +137,19 @@
                 <td style="text-align: center;">:</td>
                 <td>
                     {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
-                    @if ($laporanKegiatan->realisasi_tanggal_selesai && $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
-                        s/d {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->translatedFormat('d F Y') }}
+                    @if (
+                        $laporanKegiatan->realisasi_tanggal_selesai &&
+                            $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
+                        s/d
+                        {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->translatedFormat('d F Y') }}
                     @endif
                 </td>
             </tr>
             <tr>
                 <td>Lokasi</td>
                 <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</td>
+                <td>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}
+                </td>
             </tr>
             <tr>
                 <td>Waktu Pelaksanaan</td>
@@ -132,7 +158,8 @@
                     @if ($laporanKegiatan->isDarurat())
                         Menyesuaikan
                     @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai && $laporanKegiatan->rencanaKegiatan->waktu_selesai)
-                        {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_selesai)->format('H:i') }}
+                        {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }} -
+                        {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_selesai)->format('H:i') }}
                     @elseif ($laporanKegiatan->rencanaKegiatan->waktu_mulai)
                         {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->waktu_mulai)->format('H:i') }}
                     @else
@@ -147,7 +174,11 @@
                     @php
                         $rangkaianText = $laporanKegiatan->rangkaian_kegiatan ?? '-';
                         if (strip_tags($rangkaianText) === $rangkaianText) {
-                            $formattedRangkaian = preg_replace('/(?<=\S|\.)\s+(\d+[\.\)])\s+/', "<br>$1 ", $rangkaianText);
+                            $formattedRangkaian = preg_replace(
+                                '/(?<=\S|\.)\s+(\d+[\.\)])\s+/',
+                                "<br>$1 ",
+                                $rangkaianText,
+                            );
                             $formattedRangkaian = nl2br($formattedRangkaian);
                         } else {
                             $formattedRangkaian = $rangkaianText;
@@ -159,7 +190,8 @@
             <tr>
                 <td>Target Peserta</td>
                 <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->isDarurat() ? '-' : ($laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-') }} orang</td>
+                <td>{{ $laporanKegiatan->isDarurat() ? '-' : $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }}
+                    orang</td>
             </tr>
             <tr>
                 <td>Realisasi Peserta</td>
@@ -174,7 +206,9 @@
         </table>
 
         <!-- Hasil dan Output Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">Hasil dan Output Kegiatan</div>
+        <div
+            style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
+            Hasil dan Output Kegiatan</div>
 
         <div style="margin-bottom: 15px;">
             <div style="font-weight: bold; margin-bottom: 5px;">Hasil yang Dicapai</div>
@@ -192,23 +226,25 @@
         </div>
 
         <!-- Kendala dan Evaluasi -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">Kendala dan Evaluasi</div>
-        
-        @if($laporanKegiatan->kendala)
+        <div
+            style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
+            Kendala dan Evaluasi</div>
+
+        @if ($laporanKegiatan->kendala)
             <div style="margin-bottom: 15px;">
                 <div style="font-weight: bold; margin-bottom: 5px;">Kendala yang Dihadapi</div>
                 <div>{!! $laporanKegiatan->kendala !!}</div>
             </div>
         @endif
 
-        @if($laporanKegiatan->solusi)
+        @if ($laporanKegiatan->solusi)
             <div style="margin-bottom: 15px;">
                 <div style="font-weight: bold; margin-bottom: 5px;">Solusi yang Dilakukan</div>
                 <div>{!! $laporanKegiatan->solusi !!}</div>
             </div>
         @endif
 
-        @if($laporanKegiatan->evaluasi_rekomendasi)
+        @if ($laporanKegiatan->evaluasi_rekomendasi)
             <div style="margin-bottom: 15px;">
                 <div style="font-weight: bold; margin-bottom: 5px;">Evaluasi dan Rekomendasi</div>
                 <div>{!! $laporanKegiatan->evaluasi_rekomendasi !!}</div>
@@ -216,7 +252,9 @@
         @endif
 
         <!-- Dokumentasi Kegiatan -->
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">Dokumentasi Kegiatan</div>
+        <div
+            style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
+            Dokumentasi Kegiatan</div>
 
         @if (!empty($laporanKegiatan->foto_kegiatan))
             <div style="margin-bottom: 10px;">
@@ -225,11 +263,14 @@
                     @foreach ($laporanKegiatan->foto_kegiatan as $index => $foto_kegiatan)
                         @php
                             $filePath = is_array($foto_kegiatan) ? $foto_kegiatan['path'] : $foto_kegiatan;
-                            $fileName = is_array($foto_kegiatan) ? $foto_kegiatan['original_name'] : basename($foto_kegiatan);
+                            $fileName = is_array($foto_kegiatan)
+                                ? $foto_kegiatan['original_name']
+                                : basename($foto_kegiatan);
                         @endphp
                         <div class="doc-item">
                             <div class="doc-image-container">
-                                <img src="/public/storage/app/{{ $filePath }}" class="doc-image" alt="{{ $fileName }}">
+                                <img src="/public/storage/app/{{ $filePath }}" class="doc-image"
+                                    alt="{{ $fileName }}">
                             </div>
                             <div class="doc-caption">{{ $fileName }}</div>
                         </div>
@@ -245,10 +286,13 @@
                     @foreach ($laporanKegiatan->daftar_hadir as $index => $daftar_hadir)
                         @php
                             $filePath = is_array($daftar_hadir) ? $daftar_hadir['path'] : $daftar_hadir;
-                            $fileName = is_array($daftar_hadir) ? $daftar_hadir['original_name'] : basename($daftar_hadir);
+                            $fileName = is_array($daftar_hadir)
+                                ? $daftar_hadir['original_name']
+                                : basename($daftar_hadir);
                         @endphp
                         <div style="padding: 2px 0px;">
-                            <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                            <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
                         </div>
                     @endforeach
                 </div>
@@ -265,7 +309,8 @@
                             $fileName = is_array($notulen) ? $notulen['original_name'] : basename($notulen);
                         @endphp
                         <div style="padding: 2px 0px;">
-                            <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                            <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
                         </div>
                     @endforeach
                 </div>
@@ -282,7 +327,8 @@
                             $fileName = is_array($materi) ? $materi['original_name'] : basename($materi);
                         @endphp
                         <div style="padding: 2px 0px;">
-                            <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                            <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
                         </div>
                     @endforeach
                 </div>
@@ -296,10 +342,13 @@
                     @foreach ($laporanKegiatan->berita_acara as $index => $berita_acara)
                         @php
                             $filePath = is_array($berita_acara) ? $berita_acara['path'] : $berita_acara;
-                            $fileName = is_array($berita_acara) ? $berita_acara['original_name'] : basename($berita_acara);
+                            $fileName = is_array($berita_acara)
+                                ? $berita_acara['original_name']
+                                : basename($berita_acara);
                         @endphp
                         <div style="padding: 2px 0px;">
-                            <a href="/public/storage/app/{{ $filePath }}" target="_blank" style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                            <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
                         </div>
                     @endforeach
                 </div>
@@ -338,7 +387,7 @@
             max-height: 80vh;
         }
 
-/* Base styles for both print and screen */
+        /* Base styles for both print and screen */
 
         .garis-kop {
             border: none;
@@ -352,7 +401,8 @@
         }
 
         /* 4. Pengamanan Render WYSIWYG untuk gambar di dalam konten */
-        .content-box img, .value-field img {
+        .content-box img,
+        .value-field img {
             max-width: 100% !important;
             height: auto !important;
         }
@@ -376,7 +426,9 @@
             line-height: 1.2 !important;
         }
 
-        .value-field p, .value-field ul, .value-field ol {
+        .value-field p,
+        .value-field ul,
+        .value-field ol {
             margin: 0 !important;
             padding: 0 !important;
             line-height: 1.4 !important;
@@ -401,20 +453,23 @@
             padding-left: 0 !important;
             margin-left: 0 !important;
         }
-        
+
         /* Override any Summernote inline styles */
-        td.value-field ol, td.value-field ul {
+        td.value-field ol,
+        td.value-field ul {
             padding-left: 25px !important;
             margin-left: 0 !important;
         }
-        
+
         td.value-field li {
             margin-left: 0 !important;
             padding-left: 0 !important;
         }
+
         .table-borderless td {
             border: none !important;
-            padding: 0px 4px; /* Sangat rapat */
+            padding: 0px 4px;
+            /* Sangat rapat */
             font-family: 'Times New Roman', Times, serif;
             font-size: 11pt;
             vertical-align: top;
@@ -451,6 +506,7 @@
             margin-top: 15px;
             page-break-inside: auto;
         }
+
         .doc-item {
             text-align: center;
             page-break-inside: avoid;
@@ -490,6 +546,7 @@
         }
 
         @media print {
+
             /* Show watermark during print */
             .watermark-container {
                 display: block !important;
@@ -595,7 +652,10 @@
                 hyphens: auto !important;
                 line-height: 1.2 !important;
             }
-            .value-field p, .value-field ul, .value-field ol {
+
+            .value-field p,
+            .value-field ul,
+            .value-field ol {
                 margin: 0 !important;
                 padding: 0 !important;
                 line-height: 1.4 !important;
@@ -610,9 +670,11 @@
                 margin-bottom: 3px !important;
                 padding-left: 5px !important;
             }
+
             .table-borderless td {
                 border: none !important;
-                padding: 0px 4px; /* Sangat rapat */
+                padding: 0px 4px;
+                /* Sangat rapat */
                 font-family: 'Times New Roman', Times, serif;
                 font-size: 11pt;
                 vertical-align: top;
@@ -625,21 +687,21 @@
             }
 
             .content-box {
-            padding: 0 !important;
-            background-color: transparent !important;
-            border: none !important;
-            margin-bottom: 15px !important;
-            text-align: justify !important;
-            line-height: 1.2 !important;
-            word-wrap: break-word !important;
-            font-family: \'Times New Roman\', Times, serif;
-            font-size: 11pt;
+                padding: 0 !important;
+                background-color: transparent !important;
+                border: none !important;
+                margin-bottom: 15px !important;
+                text-align: justify !important;
+                line-height: 1.2 !important;
+                word-wrap: break-word !important;
+                font-family: \'Times New Roman\', Times, serif;
+                font-size: 11pt;
+            }
         }
-            }
 
-            .page-break-before {
-                page-break-before: always !important;
-            }
+        .page-break-before {
+            page-break-before: always !important;
+        }
 
 
 
@@ -650,6 +712,7 @@
             margin-top: 15px;
             page-break-inside: auto;
         }
+
         .doc-item {
             text-align: center;
             page-break-inside: avoid;
@@ -657,161 +720,162 @@
         }
 
 
-            .doc-image-container {
-                margin-bottom: 8px;
-            }
+        .doc-image-container {
+            margin-bottom: 8px;
+        }
 
-            .doc-image {
-                max-width: 100%;
-                height: 150px;
-                object-fit: cover;
-                border: none;
-            }
+        .doc-image {
+            max-width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border: none;
+        }
 
-            .doc-caption {
-                font-size: 10pt;
-                color: black;
-                font-style: italic;
-            }
+        .doc-caption {
+            font-size: 10pt;
+            color: black;
+            font-style: italic;
+        }
 
-            .file-list {
-                margin-top: 15px;
-            }
+        .file-list {
+            margin-top: 15px;
+        }
 
-            .file-item {
-                padding: 8px;
-                background-color: transparent;
-                border: none;
-                border-radius: 0;
-                margin-bottom: 6px;
-                font-size: 11pt;
-                page-break-inside: avoid;
-            }
+        .file-item {
+            padding: 8px;
+            background-color: transparent;
+            border: none;
+            border-radius: 0;
+            margin-bottom: 6px;
+            font-size: 11pt;
+            page-break-inside: avoid;
+        }
 
-            .img-fluid {
-                max-width: 100%;
-                height: auto;
-                border: none;
-            }
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+            border: none;
+        }
 
-            .no-print {
-                display: none !important;
-            }
+        .no-print {
+            display: none !important;
+        }
 
-            /* Print-specific overrides */
-            .text-muted,
-            .text-secondary,
-            .text-primary,
-            .text-success,
-            .text-white,
-            *[class*="text-"] {
+        /* Print-specific overrides */
+        .text-muted,
+        .text-secondary,
+        .text-primary,
+        .text-success,
+        .text-white,
+        *[class*="text-"] {
+            color: black !important;
+        }
+
+        /* Force all card header text to be black */
+        .card-header *,
+        .card-header h5,
+        .card-header .mb-0,
+        .card-header i {
+            color: black !important;
+        }
+
+        /* Badge colors for print */
+        .badge,
+        .badge.bg-success,
+        .badge.bg-primary,
+        .badge.bg-secondary {
+            background-color: #6c757d !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        /* Override card header colors for monochrome printing */
+        @media print and (monochrome) {
+
+            .card-header,
+            .card-header.bg-primary,
+            .card-header.bg-success,
+            .card-header.bg-info,
+            .card-header.bg-warning,
+            .card-header.bg-dark {
+                background-color: transparent !important;
                 color: black !important;
+                border: 2px solid black !important;
             }
 
-            /* Force all card header text to be black */
+            /* Force all text in card headers to be black */
             .card-header *,
             .card-header h5,
             .card-header .mb-0,
-            .card-header i {
+            .card-header i,
+            .card-header.text-white *,
+            .text-white {
                 color: black !important;
             }
 
-            /* Badge colors for print */
-            .badge,
-            .badge.bg-success,
-            .badge.bg-primary,
-            .badge.bg-secondary {
-                background-color: #6c757d !important;
-                color: white !important;
-                border: none !important;
+            .section-title {
+                border-bottom: none !important;
+            }
+        }
+
+        /* Page layout */
+        .print-title-section {
+            margin-bottom: 50px !important;
+            margin-top: 30px !important;
+            text-align: center;
+        }
+
+        .print-title-section h2 {
+            font-size: 18pt;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .print-title-section h3 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        @page {
+            margin: 2cm 1.5cm 2cm 1.5cm;
+            size: A4;
+
+            @top-left {
+                content: "{{ $tanggalIndo }}";
+                font-size: 11pt;
+                font-family: 'Times New Roman', Times, serif;
+                color: black;
+                margin: 0;
+                padding-bottom: 15px;
             }
 
-            /* Override card header colors for monochrome printing */
-            @media print and (monochrome) {
-                .card-header,
-                .card-header.bg-primary,
-                .card-header.bg-success,
-                .card-header.bg-info,
-                .card-header.bg-warning,
-                .card-header.bg-dark {
-                    background-color: transparent !important;
-                    color: black !important;
-                    border: 2px solid black !important;
-                }
-
-                /* Force all text in card headers to be black */
-                .card-header *,
-                .card-header h5,
-                .card-header .mb-0,
-                .card-header i,
-                .card-header.text-white *,
-                .text-white {
-                    color: black !important;
-                }
-
-                .section-title {
-                    border-bottom: none !important;
-                }
-            }
-
-            /* Page layout */
-            .print-title-section {
-                margin-bottom: 50px !important;
-                margin-top: 30px !important;
-                text-align: center;
-            }
-
-            .print-title-section h2 {
-                font-size: 18pt;
+            @top-right {
+                content: "Yayasan WeBe Konservasi Ketapang";
+                font-size: 11pt;
                 font-weight: bold;
-                margin-bottom: 10px;
+                font-family: 'Times New Roman', Times, serif;
+                color: black;
+                margin: 0;
+                padding-bottom: 15px;
             }
 
-            .print-title-section h3 {
-                font-size: 14pt;
-                font-weight: bold;
-                margin-bottom: 5px;
+            @bottom-left {
+                content: "Rekam WeBe";
+                font-size: 10pt;
+                font-family: 'Times New Roman', Times, serif;
+                color: black;
+                margin: 0;
             }
 
-            @page {
-                margin: 2cm 1.5cm 2cm 1.5cm;
-                size: A4;
-
-                @top-left {
-                    content: "{{ $tanggalIndo }}";
-                    font-size: 11pt;
-                    font-family: 'Times New Roman', Times, serif;
-                    color: black;
-                    margin: 0;
-                    padding-bottom: 15px;
-                }
-
-                @top-right {
-                    content: "Yayasan WeBe Konservasi Ketapang";
-                    font-size: 11pt;
-                    font-weight: bold;
-                    font-family: 'Times New Roman', Times, serif;
-                    color: black;
-                    margin: 0;
-                    padding-bottom: 15px;
-                }
-
-                @bottom-left {
-                    content: "Rekam WeBe";
-                    font-size: 10pt;
-                    font-family: 'Times New Roman', Times, serif;
-                    color: black;
-                    margin: 0;
-                }
-
-                @bottom-right {
-                    content: counter(page);
-                    font-size: 10pt;
-                    font-family: 'Times New Roman', Times, serif;
-                    color: black;
-                    margin: 0;
-                }
+            @bottom-right {
+                content: counter(page);
+                font-size: 10pt;
+                font-family: 'Times New Roman', Times, serif;
+                color: black;
+                margin: 0;
             }
+        }
         }
 
         /* Web styles (untuk tampilan browser) */
@@ -821,10 +885,44 @@
             }
 
             .card {
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
         }
     </style>
 
     <!-- Auto-print script removed from here as it is now handled by iframe in parent window -->
 @endsection
+
+@push('scripts')
+<script>
+    // Convert HEIC images to JPEG before printing
+    window.__heicDonePromise = (async function () {
+        if (typeof heic2any === 'undefined') return;
+        const heicImgs = Array.from(document.querySelectorAll('img[src*=".heic" i], img[src*=".heif" i]'));
+        if (heicImgs.length === 0) return;
+
+        const promiseMap = new Map();
+        const conversions = heicImgs.map(async (img) => {
+            const src = img.getAttribute('src');
+            if (!src) return;
+            try {
+                if (!promiseMap.has(src)) {
+                    promiseMap.set(src, (async () => {
+                        const resp = await fetch(src);
+                        if (!resp.ok) throw new Error('Fetch failed: ' + resp.status);
+                        const blob = await resp.blob();
+                        const converted = await heic2any({ blob: blob, toType: 'image/jpeg', quality: 0.85 });
+                        const finalBlob = Array.isArray(converted) ? converted[0] : converted;
+                        return URL.createObjectURL(finalBlob);
+                    })());
+                }
+                const objUrl = await promiseMap.get(src);
+                img.src = objUrl;
+            } catch (err) {
+                console.error('HEIC auto-render failed in print view:', src, err);
+            }
+        });
+        await Promise.all(conversions);
+    })();
+</script>
+@endpush

@@ -749,6 +749,36 @@
         });
     });
 
+    // Auto-render HEIC images in gallery & modal popups
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof heic2any === 'undefined') return;
+        const heicImgs = document.querySelectorAll('img[src*=".heic" i], img[src*=".heif" i]');
+        if (heicImgs.length === 0) return;
+
+        const promiseMap = new Map();
+        heicImgs.forEach((img) => {
+            const src = img.getAttribute('src');
+            if (!src) return;
+
+            if (!promiseMap.has(src)) {
+                promiseMap.set(src, (async () => {
+                    const resp = await fetch(src);
+                    if (!resp.ok) throw new Error('Fetch failed: ' + resp.status);
+                    const blob = await resp.blob();
+                    const converted = await heic2any({ blob: blob, toType: 'image/jpeg', quality: 0.85 });
+                    const finalBlob = Array.isArray(converted) ? converted[0] : converted;
+                    return URL.createObjectURL(finalBlob);
+                })());
+            }
+
+            promiseMap.get(src).then((objUrl) => {
+                img.src = objUrl;
+            }).catch((err) => {
+                console.error('HEIC auto-render failed for:', src, err);
+            });
+        });
+    });
+
     function printLaporan(url) {
         // Membuka URL print di iframe tersembunyi
         let iframe = document.createElement('iframe');
@@ -761,7 +791,15 @@
         document.body.appendChild(iframe);
 
         // Memastikan iframe sudah ter-load sebelum memicu print
-        iframe.onload = function() {
+        iframe.onload = async function() {
+            try {
+                if (iframe.contentWindow && iframe.contentWindow.__heicDonePromise) {
+                    await iframe.contentWindow.__heicDonePromise;
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+
             iframe.contentWindow.focus();
             iframe.contentWindow.print();
 

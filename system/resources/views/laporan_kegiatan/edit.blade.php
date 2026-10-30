@@ -19,10 +19,10 @@
             </div>
         @endif
 
-        @if(!empty($laporanKegiatan->catatan_evaluasi))
+        @if (!empty($laporanKegiatan->catatan_evaluasi))
             @php
                 $lapSt = $laporanKegiatan->status;
-                $theme = match($lapSt) {
+                $theme = match ($lapSt) {
                     'final' => [
                         'bg' => '#f0fdf4',
                         'border' => '#22c55e',
@@ -32,7 +32,7 @@
                         'badge' => 'Catatan Verifikasi',
                         'badgeClass' => 'bg-success text-white',
                         'borderColor' => '#bbf7d0',
-                        'desc' => 'Laporan kegiatan telah diverifikasi dan disetujui oleh admin.'
+                        'desc' => 'Laporan kegiatan telah diverifikasi dan disetujui oleh admin.',
                     ],
                     'revisi' => [
                         'bg' => '#fff8e6',
@@ -43,7 +43,8 @@
                         'badge' => 'Catatan Revisi',
                         'badgeClass' => 'bg-warning text-dark',
                         'borderColor' => '#ffe8a1',
-                        'desc' => 'Silakan lakukan perbaikan pada laporan kegiatan ini sesuai catatan berikut sebelum diajukan kembali.'
+                        'desc' =>
+                            'Silakan lakukan perbaikan pada laporan kegiatan ini sesuai catatan berikut sebelum diajukan kembali.',
                     ],
                     default => [
                         'bg' => '#f0f4f8',
@@ -54,27 +55,34 @@
                         'badge' => 'Informasi',
                         'badgeClass' => 'bg-info text-white',
                         'borderColor' => '#bee5eb',
-                        'desc' => 'Catatan evaluasi terkait laporan kegiatan ini.'
-                    ]
+                        'desc' => 'Catatan evaluasi terkait laporan kegiatan ini.',
+                    ],
                 };
             @endphp
-            <div class="alert alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: {{ $theme['bg'] }}; border-left: 4px solid {{ $theme['border'] }} !important;">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="top: 10px; right: 15px; opacity: 0.7;">
+            <div class="alert alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show"
+                role="alert"
+                style="background-color: {{ $theme['bg'] }}; border-left: 4px solid {{ $theme['border'] }} !important;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                    style="top: 10px; right: 15px; opacity: 0.7;">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <div class="d-flex align-items-start pr-4">
-                    <div class="rounded-circle {{ $theme['iconBg'] }} d-flex align-items-center justify-content-center mr-3 mt-1" style="width: 36px; height: 36px; flex-shrink: 0;">
+                    <div class="rounded-circle {{ $theme['iconBg'] }} d-flex align-items-center justify-content-center mr-3 mt-1"
+                        style="width: 36px; height: 36px; flex-shrink: 0;">
                         <i class="fas {{ $theme['icon'] }}"></i>
                     </div>
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
-                            <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">{{ $theme['title'] }}</h6>
-                            <span class="badge {{ $theme['badgeClass'] }} font-weight-bold" style="font-size: 0.75rem;">{{ $theme['badge'] }}</span>
+                            <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">{{ $theme['title'] }}
+                            </h6>
+                            <span class="badge {{ $theme['badgeClass'] }} font-weight-bold"
+                                style="font-size: 0.75rem;">{{ $theme['badge'] }}</span>
                         </div>
                         <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
                             {{ $theme['desc'] }}
                         </p>
-                        <div class="mt-2 p-2 rounded bg-white border" style="border-color: {{ $theme['borderColor'] }} !important;">
+                        <div class="mt-2 p-2 rounded bg-white border"
+                            style="border-color: {{ $theme['borderColor'] }} !important;">
                             <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">
                                 <i class="fas fa-comment-dots mr-1" style="color: {{ $theme['border'] }};"></i> Catatan:
                             </strong>
@@ -87,25 +95,30 @@
             </div>
         @endif
 
-        @if(!$laporanKegiatan->isDarurat())
+        @if (!$laporanKegiatan->isDarurat())
             <!-- CALLOUT: Header Konteks Rencana Kegiatan -->
             <div class="card shadow-sm mb-4 bg-white p-3" style="border: 1px solid #e2e8f0; border-radius: 8px;">
-                <h6 class="text-dark fw-bold mb-3"><i class="fas fa-info-circle mr-1 text-secondary"></i> Konteks Rencana Kegiatan</h6>
+                <h6 class="text-dark fw-bold mb-3"><i class="fas fa-info-circle mr-1 text-secondary"></i> Konteks Rencana
+                    Kegiatan</h6>
                 <div class="row">
                     <div class="col-md-4 pr-md-3 mb-2 mb-md-0">
                         <strong>Nama Kegiatan:</strong><br>
-                        <span class="text-dark" style="line-height: 1.5;">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</span>
+                        <span class="text-dark"
+                            style="line-height: 1.5;">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</span>
                     </div>
                     <div class="col-md-5 px-md-3 mb-2 mb-md-0">
                         <strong>Waktu & Lokasi Rencana:</strong><br>
                         <span class="text-dark" style="line-height: 1.5;">
-                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}<br>
+                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }}
+                            s/d
+                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}<br>
                             Di {{ $laporanKegiatan->rencanaKegiatan->desa }}
                         </span>
                     </div>
                     <div class="col-md-3 pl-md-4 pl-lg-5">
                         <strong>Target Peserta:</strong><br>
-                        <span class="text-dark">{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }} Orang</span>
+                        <span class="text-dark">{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }}
+                            Orang</span>
                     </div>
                 </div>
             </div>
@@ -115,32 +128,43 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="d-flex justify-content-between position-relative">
-                    <div class="progress position-absolute" style="height: 4px; top: 20px; left: 15%; right: 15%; z-index: 1;">
-                        <div class="progress-bar bg-primary" id="wizard-progress" role="progressbar" style="width: 0%;"></div>
+                    <div class="progress position-absolute"
+                        style="height: 4px; top: 20px; left: 15%; right: 15%; z-index: 1;">
+                        <div class="progress-bar bg-primary" id="wizard-progress" role="progressbar" style="width: 0%;">
+                        </div>
                     </div>
 
-                    <div class="step-indicator text-center position-relative active" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
-                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
+                    <div class="step-indicator text-center position-relative active"
+                        style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
+                            style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
                         <span class="fw-bold text-primary d-block step-text">Realisasi Kegiatan</span>
                     </div>
 
-                    <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
-                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
+                    <div class="step-indicator text-center position-relative"
+                        style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
+                            style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
                         <span class="fw-bold text-muted d-block step-text">Evaluasi</span>
                     </div>
 
-                    <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-3">
-                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">3</div>
+                    <div class="step-indicator text-center position-relative"
+                        style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-3">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
+                            style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">3</div>
                         <span class="fw-bold text-muted d-block step-text">Lampiran Bukti</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <form id="laporan-kegiatan-form" action="{{ route('laporan_kegiatan.update', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}" method="POST" enctype="multipart/form-data">
+        <form id="laporan-kegiatan-form"
+            action="{{ route('laporan_kegiatan.update', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}" method="POST"
+            enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            <input type="hidden" name="action" id="form-action" value="{{ in_array($laporanKegiatan->status, ['draft', 'revisi']) ? 'diajukan' : 'update' }}">
+            <input type="hidden" name="action" id="form-action"
+                value="{{ in_array($laporanKegiatan->status, ['draft', 'revisi']) ? 'diajukan' : 'update' }}">
 
             <!-- STEP 1: Realisasi Kegiatan -->
             <div class="wizard-step" id="step-1">
@@ -152,47 +176,69 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        @if($laporanKegiatan->isDarurat())
+                        @if ($laporanKegiatan->isDarurat())
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Judul Kegiatan <span class="text-danger">*</span></label>
-                                    <input type="text" name="judul_kegiatan" class="form-control" placeholder="Masukkan judul kegiatan..." required value="{{ old('judul_kegiatan', $laporanKegiatan->judul_kegiatan) }}">
-                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan judul kegiatan yang jelas dan spesifik sesuai pelaksanaan di lapangan.</small>
+                                    <input type="text" name="judul_kegiatan" class="form-control"
+                                        placeholder="Masukkan judul kegiatan..." required
+                                        value="{{ old('judul_kegiatan', $laporanKegiatan->judul_kegiatan) }}">
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan
+                                        judul kegiatan yang jelas dan spesifik sesuai pelaksanaan di lapangan.</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Lokasi Kegiatan <span class="text-danger">*</span></label>
-                                    <input type="text" name="lokasi_kegiatan" class="form-control" placeholder="Masukkan lokasi kejadian..." required value="{{ old('lokasi_kegiatan', $laporanKegiatan->lokasi_kegiatan) }}">
-                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan lokasi spesifik tempat kegiatan berlangsung (nama desa/kecamatan/kabupaten).</small>
+                                    <input type="text" name="lokasi_kegiatan" class="form-control"
+                                        placeholder="Masukkan lokasi kejadian..." required
+                                        value="{{ old('lokasi_kegiatan', $laporanKegiatan->lokasi_kegiatan) }}">
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan
+                                        lokasi spesifik tempat kegiatan berlangsung (nama desa/kecamatan/kabupaten).</small>
                                 </div>
                             </div>
                         @endif
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Realisasi Tanggal Mulai <span class="text-danger">*</span></label>
-                                <input type="date" name="realisasi_tanggal_mulai" class="form-control" required value="{{ old('realisasi_tanggal_mulai', $laporanKegiatan->realisasi_tanggal_mulai) }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal aktual kegiatan mulai dilaksanakan di lapangan.</small>
+                                <label class="form-label">Realisasi Tanggal Mulai <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" name="realisasi_tanggal_mulai" class="form-control" required
+                                    value="{{ old('realisasi_tanggal_mulai', $laporanKegiatan->realisasi_tanggal_mulai) }}">
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal
+                                    aktual kegiatan mulai dilaksanakan di lapangan.</small>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Realisasi Tanggal Selesai <span class="text-danger">*</span></label>
-                                <input type="date" name="realisasi_tanggal_selesai" class="form-control" required value="{{ old('realisasi_tanggal_selesai', $laporanKegiatan->realisasi_tanggal_selesai) }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal aktual kegiatan selesai. Jika 1 hari, isi sama dengan tanggal mulai.</small>
+                                <label class="form-label">Realisasi Tanggal Selesai <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" name="realisasi_tanggal_selesai" class="form-control" required
+                                    value="{{ old('realisasi_tanggal_selesai', $laporanKegiatan->realisasi_tanggal_selesai) }}">
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal
+                                    aktual kegiatan selesai. Jika 1 hari, isi sama dengan tanggal mulai.</small>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Realisasi Jumlah Peserta <span class="text-danger">*</span></label>
-                                <input type="number" name="realisasi_peserta" class="form-control" placeholder="Masukkan realisasi jumlah peserta..." min="0" required value="{{ old('realisasi_peserta', $laporanKegiatan->realisasi_peserta) }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jumlah peserta yang benar-benar hadir berdasarkan daftar hadir.</small>
+                                <label class="form-label">Realisasi Jumlah Peserta <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" name="realisasi_peserta" class="form-control"
+                                    placeholder="Masukkan realisasi jumlah peserta..." min="0" required
+                                    value="{{ old('realisasi_peserta', $laporanKegiatan->realisasi_peserta) }}">
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jumlah
+                                    peserta yang benar-benar hadir berdasarkan daftar hadir.</small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Rangkaian Kegiatan / Alur Acara <span class="text-danger">*</span></label>
-                                <textarea name="rangkaian_kegiatan" class="form-control summernote-editor" rows="4" placeholder="Masukkan rangkaian kegiatan..." required>{!! old('rangkaian_kegiatan', $laporanKegiatan->rangkaian_kegiatan) !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Uraikan urutan acara dari awal hingga akhir, termasuk waktu dan kegiatan di setiap sesi.</small>
+                                <label class="form-label">Rangkaian Kegiatan / Alur Acara <span
+                                        class="text-danger">*</span></label>
+                                <textarea name="rangkaian_kegiatan" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan rangkaian kegiatan..." required>{!! old('rangkaian_kegiatan', $laporanKegiatan->rangkaian_kegiatan) !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Uraikan
+                                    urutan acara dari awal hingga akhir, termasuk waktu dan kegiatan di setiap sesi.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Profil Peserta <span class="text-danger">*</span></label>
-                                <textarea name="profil_peserta" class="form-control summernote-editor" rows="3" placeholder="Masukkan profil peserta..." required>{!! old('profil_peserta', $laporanKegiatan->profil_peserta) !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan latar belakang peserta: profesi, asal daerah, rentang usia, atau kelompok sasaran.</small>
+                                <textarea name="profil_peserta" class="form-control summernote-editor" rows="3"
+                                    placeholder="Masukkan profil peserta..." required>{!! old('profil_peserta', $laporanKegiatan->profil_peserta) !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                    latar belakang peserta: profesi, asal daerah, rentang usia, atau kelompok
+                                    sasaran.</small>
                             </div>
                         </div>
                     </div>
@@ -209,30 +255,42 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Hasil yang Dicapai <span class="text-danger">*</span></label>
-                                <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4" placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai', $laporanKegiatan->hasil_dicapai) !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan pencapaian utama yang diperoleh dari pelaksanaan kegiatan ini.</small>
+                                <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai', $laporanKegiatan->hasil_dicapai) !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                    pencapaian utama yang diperoleh dari pelaksanaan kegiatan ini.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Output Nyata <span class="text-danger">*</span></label>
-                                <textarea name="output_nyata" class="form-control summernote-editor" rows="4" placeholder="Masukkan output nyata..." required>{!! old('output_nyata', $laporanKegiatan->output_nyata) !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan produk/hasil fisik yang dihasilkan, seperti dokumen, data, atau barang yang terukur.</small>
+                                <textarea name="output_nyata" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan output nyata..." required>{!! old('output_nyata', $laporanKegiatan->output_nyata) !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan
+                                    produk/hasil fisik yang dihasilkan, seperti dokumen, data, atau barang yang
+                                    terukur.</small>
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Dampak Awal yang Terlihat <span class="text-danger">*</span></label>
-                                <textarea name="dampak_awal" class="form-control summernote-editor" rows="4" placeholder="Masukkan dampak awal yang terlihat..." required>{!! old('dampak_awal', $laporanKegiatan->dampak_awal) !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Deskripsikan perubahan awal yang sudah terlihat di masyarakat atau lingkungan setelah kegiatan.</small>
+                                <label class="form-label">Dampak Awal yang Terlihat <span
+                                        class="text-danger">*</span></label>
+                                <textarea name="dampak_awal" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan dampak awal yang terlihat..." required>{!! old('dampak_awal', $laporanKegiatan->dampak_awal) !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Deskripsikan
+                                    perubahan awal yang sudah terlihat di masyarakat atau lingkungan setelah
+                                    kegiatan.</small>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer bg-white clearfix">
-                        <a href="{{ route('laporan_kegiatan.show', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}" class="btn btn-secondary text-white float-left"><i class="fas fa-arrow-left mr-1"></i> Kembali</a>
+                        <a href="{{ route('laporan_kegiatan.show', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}"
+                            class="btn btn-secondary text-white float-left"><i class="fas fa-arrow-left mr-1"></i>
+                            Kembali</a>
                         <div class="float-right d-flex">
-                            @if(in_array($laporanKegiatan->status, ['draft', 'revisi']))
+                            @if (in_array($laporanKegiatan->status, ['draft', 'revisi']))
                                 <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
                                     <i class="fas fa-save mr-1"></i> Simpan Draft
                                 </button>
                             @endif
-                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya
+                                <i class="fas fa-arrow-right ml-1"></i></button>
                         </div>
                     </div>
                 </div>
@@ -250,30 +308,40 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Kendala yang Dihadapi <span class="text-danger">*</span></label>
-                                <textarea name="kendala" class="form-control summernote-editor" rows="4" placeholder="Masukkan kendala yang dihadapi..." required>{!! old('kendala', $laporanKegiatan->kendala) !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan hambatan atau masalah yang muncul selama pelaksanaan kegiatan. Isi "Tidak ada" jika tidak ada kendala.</small>
+                                <textarea name="kendala" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan kendala yang dihadapi..." required>{!! old('kendala', $laporanKegiatan->kendala) !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan
+                                    hambatan atau masalah yang muncul selama pelaksanaan kegiatan. Isi "Tidak ada" jika
+                                    tidak ada kendala.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Solusi yang Dilakukan <span class="text-danger">*</span></label>
-                                <textarea name="solusi" class="form-control summernote-editor" rows="4" placeholder="Masukkan solusi yang dilakukan..." required>{!! old('solusi', $laporanKegiatan->solusi) !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan langkah-langkah yang diambil untuk mengatasi kendala tersebut.</small>
+                                <textarea name="solusi" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan solusi yang dilakukan..." required>{!! old('solusi', $laporanKegiatan->solusi) !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                    langkah-langkah yang diambil untuk mengatasi kendala tersebut.</small>
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Catatan Evaluasi & Rekomendasi <span class="text-danger">*</span></label>
-                                <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="4" placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi', $laporanKegiatan->evaluasi_rekomendasi) !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
+                                <label class="form-label">Catatan Evaluasi & Rekomendasi <span
+                                        class="text-danger">*</span></label>
+                                <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi', $laporanKegiatan->evaluasi_rekomendasi) !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan
+                                    penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer bg-white clearfix">
-                        <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-1"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
+                        <button type="button" class="btn btn-secondary text-white btn-prev float-left"
+                            data-prev="step-1"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
                         <div class="float-right d-flex">
-                            @if(in_array($laporanKegiatan->status, ['draft', 'revisi']))
+                            @if (in_array($laporanKegiatan->status, ['draft', 'revisi']))
                                 <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
                                     <i class="fas fa-save mr-1"></i> Simpan Draft
                                 </button>
                             @endif
-                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-3">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-3">Selanjutnya
+                                <i class="fas fa-arrow-right ml-1"></i></button>
                         </div>
                     </div>
                 </div>
@@ -291,20 +359,24 @@
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 @php $fotos = !empty($laporanKegiatan->foto_kegiatan) ? (is_string($laporanKegiatan->foto_kegiatan) ? json_decode($laporanKegiatan->foto_kegiatan, true) : $laporanKegiatan->foto_kegiatan) : []; @endphp
-                                @if(is_array($fotos) && count($fotos) > 0)
+                                @if (is_array($fotos) && count($fotos) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-camera text-navy mr-1"></i> Foto saat ini:</p>
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i
+                                                class="fas fa-camera text-navy mr-1"></i> Foto saat ini:</p>
                                         <div class="d-flex flex-wrap gap-2">
-                                            @foreach($fotos as $foto)
+                                            @foreach ($fotos as $foto)
                                                 @php $path = is_array($foto) ? $foto['path'] : $foto; @endphp
-                                                <div class="position-relative preview-img-wrapper existing-foto-item existing-foto_kegiatan-item" style="margin:0;">
+                                                <div class="position-relative preview-img-wrapper existing-foto-item existing-foto_kegiatan-item"
+                                                    style="margin:0;">
                                                     <a href="/public/storage/app/{{ $path }}" target="_blank">
-                                                        <img src="/public/storage/app/{{ $path }}" style="max-width: 100px; height: 75px;">
+                                                        <img src="/public/storage/app/{{ $path }}"
+                                                            style="max-width: 100px; height: 75px;">
                                                     </a>
-                                                    <button type="button" class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-foto"
-                                                            data-path="{{ $path }}"
-                                                            style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
-                                                            title="Hapus foto ini">
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-danger position-absolute shadow btn-delete-existing-foto"
+                                                        data-path="{{ $path }}"
+                                                        style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10;"
+                                                        title="Hapus foto ini">
                                                         <i class="fas fa-times" style="font-size:11px; margin:auto;"></i>
                                                     </button>
                                                 </div>
@@ -312,151 +384,209 @@
                                         </div>
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Foto Kegiatan <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mt-2">Foto Kegiatan <span
+                                        class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="foto_kegiatan[]" class="custom-file-input custom-img-input" id="fotoInput" accept="image/*" multiple {{ empty($fotos) ? 'required' : '' }}>
-                                    <label class="custom-file-label" for="fotoInput">Biarkan kosong jika tidak diubah...</label>
+                                    <input type="file" name="foto_kegiatan[]"
+                                        class="custom-file-input custom-img-input" id="fotoInput" accept="image/*,.heic,.heif"
+                                        multiple {{ empty($fotos) ? 'required' : '' }}>
+                                    <label class="custom-file-label" for="fotoInput">Biarkan kosong jika tidak
+                                        diubah...</label>
                                 </div>
-                                <small class="text-muted">Bebas format gambar & jumlah file, foto berukuran besar akan otomatis dikompres oleh sistem.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah foto dokumentasi pelaksanaan kegiatan seperti suasana acara, narasumber, dan peserta.</small>
+                                <small class="text-muted">Bebas format gambar & jumlah file, foto berukuran besar akan
+                                    otomatis dikompres oleh sistem.</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah foto
+                                    dokumentasi pelaksanaan kegiatan seperti suasana acara, narasumber, dan peserta.</small>
                                 <div id="preview-foto_kegiatan" class="d-flex flex-wrap gap-2 mt-2"></div>
                             </div>
 
                             <div class="col-md-6 mb-4">
                                 @php $daftar_hadir = !empty($laporanKegiatan->daftar_hadir) ? (is_string($laporanKegiatan->daftar_hadir) ? json_decode($laporanKegiatan->daftar_hadir, true) : $laporanKegiatan->daftar_hadir) : []; @endphp
-                                @if(is_array($daftar_hadir) && count($daftar_hadir) > 0)
+                                @if (is_array($daftar_hadir) && count($daftar_hadir) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
-                                        @foreach($daftar_hadir as $file)
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i
+                                                class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
+                                        @foreach ($daftar_hadir as $file)
                                             @php
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item existing-daftar_hadir-item pr-5">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
-                                                         data-path="{{ $path }}" data-type="dokumen" data-field="daftar_hadir"
-                                                         style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
-                                                         title="Hapus dokumen ini">
-                                                      <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
-                                                  </button>
-                                                <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                            <div
+                                                class="position-relative preview-file-item bg-white existing-dokumen-item existing-daftar_hadir-item pr-5">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
+                                                    data-path="{{ $path }}" data-type="dokumen"
+                                                    data-field="daftar_hadir"
+                                                    style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                    title="Hapus dokumen ini">
+                                                    <i class="fas fa-times text-white"
+                                                        style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                                                </button>
+                                                <i class="fas fa-file-pdf text-danger"></i> <a
+                                                    href="/public/storage/app/{{ $path }}" target="_blank"
+                                                    class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Daftar Hadir <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mt-2">Daftar Hadir <span
+                                        class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="daftar_hadir[]" class="custom-file-input custom-doc-input" id="daftarHadirInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*" multiple {{ empty($daftar_hadir) ? 'required' : '' }}>
-                                    <label class="custom-file-label" for="daftarHadirInput">Biarkan kosong jika tidak diubah...</label>
+                                    <input type="file" name="daftar_hadir[]"
+                                        class="custom-file-input custom-doc-input" id="daftarHadirInput"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*"
+                                        multiple {{ empty($daftar_hadir) ? 'required' : '' }}>
+                                    <label class="custom-file-label" for="daftarHadirInput">Biarkan kosong jika tidak
+                                        diubah...</label>
                                 </div>
-                                <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga 50MB/file.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan.</small>
+                                <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga
+                                    50MB/file.</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan.</small>
                                 <div id="preview-daftar_hadir" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 @php $notulen = !empty($laporanKegiatan->notulen) ? (is_string($laporanKegiatan->notulen) ? json_decode($laporanKegiatan->notulen, true) : $laporanKegiatan->notulen) : []; @endphp
-                                @if(is_array($notulen) && count($notulen) > 0)
+                                @if (is_array($notulen) && count($notulen) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
-                                        @foreach($notulen as $file)
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i
+                                                class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
+                                        @foreach ($notulen as $file)
                                             @php
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item existing-notulen-item pr-5">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
-                                                         data-path="{{ $path }}" data-type="dokumen" data-field="notulen"
-                                                         style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
-                                                         title="Hapus dokumen ini">
-                                                      <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
-                                                  </button>
-                                                <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                            <div
+                                                class="position-relative preview-file-item bg-white existing-dokumen-item existing-notulen-item pr-5">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
+                                                    data-path="{{ $path }}" data-type="dokumen"
+                                                    data-field="notulen"
+                                                    style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                    title="Hapus dokumen ini">
+                                                    <i class="fas fa-times text-white"
+                                                        style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                                                </button>
+                                                <i class="fas fa-file-pdf text-danger"></i> <a
+                                                    href="/public/storage/app/{{ $path }}" target="_blank"
+                                                    class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
                                     </div>
                                 @endif
                                 <label class="form-label fw-bold mt-2">Notulen</label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="notulen[]" class="custom-file-input custom-doc-input" id="notulenInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple>
-                                    <label class="custom-file-label" for="notulenInput">Biarkan kosong jika tidak diubah...</label>
+                                    <input type="file" name="notulen[]" class="custom-file-input custom-doc-input"
+                                        id="notulenInput"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                        multiple>
+                                    <label class="custom-file-label" for="notulenInput">Biarkan kosong jika tidak
+                                        diubah...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah catatan hasil rapat/diskusi selama kegiatan berlangsung (opsional).</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    catatan hasil rapat/diskusi selama kegiatan berlangsung (opsional).</small>
                                 <div id="preview-notulen" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
 
 
                             <div class="col-md-6 mb-4">
                                 @php $materi = !empty($laporanKegiatan->materi) ? (is_string($laporanKegiatan->materi) ? json_decode($laporanKegiatan->materi, true) : $laporanKegiatan->materi) : []; @endphp
-                                @if(is_array($materi) && count($materi) > 0)
+                                @if (is_array($materi) && count($materi) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
-                                        @foreach($materi as $file)
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i
+                                                class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
+                                        @foreach ($materi as $file)
                                             @php
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item existing-materi-item pr-5">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
-                                                         data-path="{{ $path }}" data-type="dokumen" data-field="materi"
-                                                         style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
-                                                         title="Hapus dokumen ini">
-                                                      <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
-                                                  </button>
-                                                <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                            <div
+                                                class="position-relative preview-file-item bg-white existing-dokumen-item existing-materi-item pr-5">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
+                                                    data-path="{{ $path }}" data-type="dokumen"
+                                                    data-field="materi"
+                                                    style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                    title="Hapus dokumen ini">
+                                                    <i class="fas fa-times text-white"
+                                                        style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                                                </button>
+                                                <i class="fas fa-file-pdf text-danger"></i> <a
+                                                    href="/public/storage/app/{{ $path }}" target="_blank"
+                                                    class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
                                     </div>
                                 @endif
                                 <label class="form-label fw-bold mt-2">Materi <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="materi[]" class="custom-file-input custom-doc-input" id="materiInput" accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple {{ empty($materi) ? 'required' : '' }}>
-                                    <label class="custom-file-label" for="materiInput">Biarkan kosong jika tidak diubah...</label>
+                                    <input type="file" name="materi[]" class="custom-file-input custom-doc-input"
+                                        id="materiInput"
+                                        accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                        multiple {{ empty($materi) ? 'required' : '' }}>
+                                    <label class="custom-file-label" for="materiInput">Biarkan kosong jika tidak
+                                        diubah...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen/presentasi hingga 50MB/file.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.</small>
                                 <div id="preview-materi" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
 
                             <div class="col-md-6 mb-4">
                                 @php $berita_acara = !empty($laporanKegiatan->berita_acara) ? (is_string($laporanKegiatan->berita_acara) ? json_decode($laporanKegiatan->berita_acara, true) : $laporanKegiatan->berita_acara) : []; @endphp
-                                @if(is_array($berita_acara) && count($berita_acara) > 0)
+                                @if (is_array($berita_acara) && count($berita_acara) > 0)
                                     <div class="mb-2">
-                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
-                                        @foreach($berita_acara as $file)
+                                        <p class="mb-1 fw-bold text-muted" style="font-size: 0.85rem;"><i
+                                                class="fas fa-file-alt text-navy mr-1"></i> Dokumen saat ini:</p>
+                                        @foreach ($berita_acara as $file)
                                             @php
                                                 $path = is_array($file) ? $file['path'] : $file;
                                                 $name = is_array($file) ? $file['original_name'] : basename($file);
                                             @endphp
-                                            <div class="position-relative preview-file-item bg-white existing-dokumen-item existing-berita_acara-item pr-5">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
-                                                         data-path="{{ $path }}" data-type="dokumen" data-field="berita_acara"
-                                                         style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
-                                                         title="Hapus dokumen ini">
-                                                      <i class="fas fa-times text-white" style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
-                                                  </button>
-                                                <i class="fas fa-file-pdf text-danger"></i> <a href="/public/storage/app/{{ $path }}" target="_blank" class="text-truncate">{{ $name }}</a>
+                                            <div
+                                                class="position-relative preview-file-item bg-white existing-dokumen-item existing-berita_acara-item pr-5">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger position-absolute shadow-sm btn-delete-existing-dokumen"
+                                                    data-path="{{ $path }}" data-type="dokumen"
+                                                    data-field="berita_acara"
+                                                    style="top:-6px; right:-6px; border-radius:50%; width:22px; height:22px; padding:0; display:flex; align-items:center; justify-content:center; z-index:10; background-color:#dc3545; border-color:#dc3545;"
+                                                    title="Hapus dokumen ini">
+                                                    <i class="fas fa-times text-white"
+                                                        style="color:#ffffff !important; font-size:11px !important; line-height:1 !important; margin:0 !important;"></i>
+                                                </button>
+                                                <i class="fas fa-file-pdf text-danger"></i> <a
+                                                    href="/public/storage/app/{{ $path }}" target="_blank"
+                                                    class="text-truncate">{{ $name }}</a>
                                             </div>
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Berita Acara <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mt-2">Berita Acara <span
+                                        class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="berita_acara[]" class="custom-file-input custom-doc-input" id="beritaAcaraInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple {{ empty($berita_acara) ? 'required' : '' }}>
-                                    <label class="custom-file-label" for="beritaAcaraInput">Biarkan kosong jika tidak diubah...</label>
+                                    <input type="file" name="berita_acara[]"
+                                        class="custom-file-input custom-doc-input" id="beritaAcaraInput"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                        multiple {{ empty($berita_acara) ? 'required' : '' }}>
+                                    <label class="custom-file-label" for="beritaAcaraInput">Biarkan kosong jika tidak
+                                        diubah...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah berita acara resmi pelaksanaan kegiatan.</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    berita acara resmi pelaksanaan kegiatan.</small>
                                 <div id="preview-berita_acara" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer bg-white clearfix">
-                        <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
+                        <button type="button" class="btn btn-secondary text-white btn-prev float-left"
+                            data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
 
 
                         <div class="float-right d-flex">
-                            @if($laporanKegiatan->status === 'draft' || $laporanKegiatan->status === 'revisi')
+                            @if ($laporanKegiatan->status === 'draft' || $laporanKegiatan->status === 'revisi')
                                 <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
                                     <i class="fas fa-save mr-1"></i> Simpan Draft
                                 </button>
@@ -479,17 +609,71 @@
     @push('css')
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
         <style>
-            .step-indicator { cursor: pointer; user-select: none; transition: transform 0.2s ease; }
-            .step-indicator:hover .step-circle { transform: scale(1.08); }
-            .step-circle { transition: all 0.25s ease; }
-            .step-text { font-size: 0.85rem; margin-top: 5px; }
-            .progress { overflow: visible; background-color: #e9ecef; }
-            .preview-img-wrapper { position: relative; display: inline-block; margin-right: 10px; margin-bottom: 10px; }
-            .preview-img-wrapper img { max-width: 150px; max-height: 110px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #ddd; }
-            .preview-file-item { display: flex; align-items: center; padding: 8px 12px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; margin-bottom: 5px; font-size: 0.9rem; }
-            .preview-file-item > i:first-child { font-size: 1.2rem; color: #6c757d; margin-right: 10px; }
-            .gap-2 { gap: 0.5rem; }
-            .gap-1 { gap: 0.25rem; }
+            .step-indicator {
+                cursor: pointer;
+                user-select: none;
+                transition: transform 0.2s ease;
+            }
+
+            .step-indicator:hover .step-circle {
+                transform: scale(1.08);
+            }
+
+            .step-circle {
+                transition: all 0.25s ease;
+            }
+
+            .step-text {
+                font-size: 0.85rem;
+                margin-top: 5px;
+            }
+
+            .progress {
+                overflow: visible;
+                background-color: #e9ecef;
+            }
+
+            .preview-img-wrapper {
+                position: relative;
+                display: inline-block;
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+
+            .preview-img-wrapper img {
+                max-width: 150px;
+                max-height: 110px;
+                object-fit: cover;
+                border-radius: 6px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                border: 1px solid #ddd;
+            }
+
+            .preview-file-item {
+                display: flex;
+                align-items: center;
+                padding: 8px 12px;
+                background: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 4px;
+                margin-bottom: 5px;
+                font-size: 0.9rem;
+            }
+
+            .preview-file-item>i:first-child {
+                font-size: 1.2rem;
+                color: #6c757d;
+                margin-right: 10px;
+            }
+
+            .gap-2 {
+                gap: 0.5rem;
+            }
+
+            .gap-1 {
+                gap: 0.25rem;
+            }
+
             .note-editor .note-placeholder {
                 color: #6c757d !important;
                 font-style: normal !important;
@@ -522,11 +706,31 @@
                 };
 
                 const fieldConfigs = {
-                    foto_kegiatan: { maxFiles: 100, maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    daftar_hadir:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    notulen:       { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    materi:        { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    berita_acara:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' }
+                    foto_kegiatan: {
+                        maxFiles: 100,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    },
+                    daftar_hadir: {
+                        maxFiles: 50,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    },
+                    notulen: {
+                        maxFiles: 50,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    },
+                    materi: {
+                        maxFiles: 50,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    },
+                    berita_acara: {
+                        maxFiles: 50,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    }
                 };
 
                 // --- WIZARD NAVIGATION ---
@@ -542,7 +746,7 @@
                             const code = $el.summernote('code');
                             const cleanText = $('<div>').html(code).text().replace(/\u00a0/g, ' ').trim();
                             return cleanText.length > 0;
-                        } catch(e) {}
+                        } catch (e) {}
                     }
                     const rawEl = typeof el === 'string' ? document.querySelector(el) : el;
                     if (rawEl && rawEl.value) {
@@ -559,16 +763,21 @@
                         const isLangsung = document.querySelector('input[name="is_laporan_langsung"]');
                         if (isLangsung) {
                             const judul = (document.querySelector('input[name="judul_kegiatan"]')?.value || '').trim();
-                            const lokasi = (document.querySelector('input[name="lokasi_kegiatan"]')?.value || '').trim();
+                            const lokasi = (document.querySelector('input[name="lokasi_kegiatan"]')?.value || '')
+                                .trim();
                             if (!judul || !lokasi) return false;
                         }
 
-                        const tglMulai = (document.querySelector('input[name="realisasi_tanggal_mulai"]')?.value || '').trim();
-                        const tglSelesai = (document.querySelector('input[name="realisasi_tanggal_selesai"]')?.value || '').trim();
+                        const tglMulai = (document.querySelector('input[name="realisasi_tanggal_mulai"]')?.value || '')
+                            .trim();
+                        const tglSelesai = (document.querySelector('input[name="realisasi_tanggal_selesai"]')?.value ||
+                            '').trim();
                         const peserta = (document.querySelector('input[name="realisasi_peserta"]')?.value || '').trim();
                         if (!tglMulai || !tglSelesai || !peserta) return false;
 
-                        const summernoteFields = ['rangkaian_kegiatan', 'profil_peserta', 'hasil_dicapai', 'output_nyata', 'dampak_awal'];
+                        const summernoteFields = ['rangkaian_kegiatan', 'profil_peserta', 'hasil_dicapai',
+                            'output_nyata', 'dampak_awal'
+                        ];
                         for (let name of summernoteFields) {
                             if (!isSummernoteFilled(`textarea[name="${name}"]`)) return false;
                         }
@@ -582,15 +791,27 @@
                         return true;
                     } else if (stepNum === 3) {
                         // Tahap 3: Lampiran Bukti
-                        const requiredFiles = [
-                            { key: 'foto_kegiatan', inputId: 'fotoInput' },
-                            { key: 'daftar_hadir', inputId: 'daftarHadirInput' },
-                            { key: 'materi', inputId: 'materiInput' },
-                            { key: 'berita_acara', inputId: 'beritaAcaraInput' }
+                        const requiredFiles = [{
+                                key: 'foto_kegiatan',
+                                inputId: 'fotoInput'
+                            },
+                            {
+                                key: 'daftar_hadir',
+                                inputId: 'daftarHadirInput'
+                            },
+                            {
+                                key: 'materi',
+                                inputId: 'materiInput'
+                            },
+                            {
+                                key: 'berita_acara',
+                                inputId: 'beritaAcaraInput'
+                            }
                         ];
 
                         for (let req of requiredFiles) {
-                            const hasBuffer = typeof fileBuffers !== 'undefined' && fileBuffers[req.key] && fileBuffers[req.key].length > 0;
+                            const hasBuffer = typeof fileBuffers !== 'undefined' && fileBuffers[req.key] && fileBuffers[
+                                req.key].length > 0;
                             const inputEl = document.getElementById(req.inputId);
                             const hasInput = inputEl && inputEl.files && inputEl.files.length > 0;
                             const hasExisting = $(`.existing-${req.key}-item:not(.deleted-item)`).length > 0;
@@ -608,14 +829,18 @@
                         $(this).find('.summernote-editor').each(function() {
                             const $t = $(this);
                             if (typeof $t.summernote === 'function') {
-                                if ($t.summernote('isEmpty') || $t.val().trim() === '<p><br></p>' || $t.val().trim() === '') {
+                                if ($t.summernote('isEmpty') || $t.val().trim() === '<p><br></p>' || $t
+                                    .val().trim() === '') {
                                     $t.summernote('empty');
                                 }
                             }
                         });
                     });
                     updateProgressUI(stepIndex);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                 }
 
                 function updateProgressUI(stepIndex) {
@@ -629,13 +854,15 @@
                         if (isCurrent) {
                             indicator.addClass('active');
                             if (complete) {
-                                circle.removeClass('bg-secondary bg-primary text-muted').addClass('bg-success text-white shadow');
+                                circle.removeClass('bg-secondary bg-primary text-muted').addClass(
+                                    'bg-success text-white shadow');
                                 circle.html('<i class="fas fa-check"></i>');
                                 circle.css('box-shadow', '0 0 0 4px rgba(0, 123, 255, 0.45)');
                                 text.removeClass('text-muted text-success').addClass('text-primary');
                                 indicator.attr('title', 'Tahap ' + i + ': Sudah terisi lengkap (sedang aktif)');
                             } else {
-                                circle.removeClass('bg-secondary bg-success text-muted').addClass('bg-primary text-white shadow');
+                                circle.removeClass('bg-secondary bg-success text-muted').addClass(
+                                    'bg-primary text-white shadow');
                                 circle.html(i);
                                 circle.css('box-shadow', '0 0 0 4px rgba(0, 123, 255, 0.25)');
                                 text.removeClass('text-muted text-success').addClass('text-primary');
@@ -645,12 +872,14 @@
                             indicator.removeClass('active');
                             circle.css('box-shadow', 'none');
                             if (complete) {
-                                circle.removeClass('bg-secondary bg-primary text-muted').addClass('bg-success text-white');
+                                circle.removeClass('bg-secondary bg-primary text-muted').addClass(
+                                    'bg-success text-white');
                                 circle.html('<i class="fas fa-check"></i>');
                                 text.removeClass('text-muted text-primary').addClass('text-success');
                                 indicator.attr('title', 'Tahap ' + i + ': Sudah terisi lengkap');
                             } else {
-                                circle.removeClass('bg-primary bg-success text-white').addClass('bg-secondary text-white');
+                                circle.removeClass('bg-primary bg-success text-white').addClass(
+                                    'bg-secondary text-white');
                                 circle.html(i);
                                 text.removeClass('text-primary text-success').addClass('text-muted');
                                 indicator.attr('title', 'Tahap ' + i + ': Belum lengkap');
@@ -678,6 +907,7 @@
 
                 // Realtime update listener
                 let updateTimeout = null;
+
                 function scheduleUpdateProgress() {
                     if (updateTimeout) clearTimeout(updateTimeout);
                     updateTimeout = setTimeout(() => {
@@ -704,7 +934,7 @@
                     e.preventDefault();
                     let form = document.getElementById('laporan-kegiatan-form');
                     let judulInput = document.querySelector('input[name="judul_kegiatan"]');
-                    
+
                     if (judulInput && !judulInput.value.trim()) {
                         alert('Mohon isi Judul Kegiatan terlebih dahulu untuk menyimpan sebagai draft.');
                         showStep(1);
@@ -740,12 +970,14 @@
                         let emptyRequired = null;
 
                         // Periksa input / select / textarea standar
-                        stepEl.find('input[required], select[required], textarea[required]:not(.summernote-editor)').each(function() {
-                            if (!this.checkValidity()) {
-                                emptyRequired = this;
-                                return false; // break loop
-                            }
-                        });
+                        stepEl.find(
+                                'input[required], select[required], textarea[required]:not(.summernote-editor)')
+                            .each(function() {
+                                if (!this.checkValidity()) {
+                                    emptyRequired = this;
+                                    return false; // break loop
+                                }
+                            });
 
                         if (emptyRequired) {
                             e.preventDefault();
@@ -764,7 +996,8 @@
                             let cleanText = $('<div>').html(code).text().trim();
                             if (!cleanText || cleanText === '') {
                                 emptySummernote = $el;
-                                summernoteLabel = $el.closest('.mb-3, .mb-4').find('label.form-label').first().text().replace('*', '').trim() || 'Kolom isian';
+                                summernoteLabel = $el.closest('.mb-3, .mb-4').find('label.form-label')
+                                    .first().text().replace('*', '').trim() || 'Kolom isian';
                                 return false; // break loop
                             } else {
                                 $el.val(code);
@@ -781,18 +1014,34 @@
                     }
 
                     // 2. Validasi file lampiran wajib di Step 3
-                    const requiredFiles = [
-                        { key: 'foto_kegiatan', name: 'Foto Kegiatan', inputId: 'fotoInput' },
-                        { key: 'daftar_hadir', name: 'Daftar Hadir', inputId: 'daftarHadirInput' },
-                        { key: 'materi', name: 'Materi', inputId: 'materiInput' },
-                        { key: 'berita_acara', name: 'Berita Acara', inputId: 'beritaAcaraInput' }
+                    const requiredFiles = [{
+                            key: 'foto_kegiatan',
+                            name: 'Foto Kegiatan',
+                            inputId: 'fotoInput'
+                        },
+                        {
+                            key: 'daftar_hadir',
+                            name: 'Daftar Hadir',
+                            inputId: 'daftarHadirInput'
+                        },
+                        {
+                            key: 'materi',
+                            name: 'Materi',
+                            inputId: 'materiInput'
+                        },
+                        {
+                            key: 'berita_acara',
+                            name: 'Berita Acara',
+                            inputId: 'beritaAcaraInput'
+                        }
                     ];
 
                     for (let req of requiredFiles) {
                         const hasBuffer = fileBuffers[req.key] && fileBuffers[req.key].length > 0;
                         const inputEl = document.getElementById(req.inputId);
                         const hasInput = inputEl && inputEl.files && inputEl.files.length > 0;
-                        const hasExisting = $(this).find(`.existing-${req.key}-item:not(.deleted-item)`).length > 0;
+                        const hasExisting = $(this).find(`.existing-${req.key}-item:not(.deleted-item)`)
+                            .length > 0;
 
                         if (!hasBuffer && !hasInput && !hasExisting) {
                             e.preventDefault();
@@ -806,23 +1055,115 @@
 
                 showStep(currentStepIndex);
 
-                function handleFileUpload(fieldName, inputElement, isImage) {
-                    const files = Array.from(inputElement.files);
-                    const config = fieldConfigs[fieldName] || { maxFiles: 10, maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' };
+                // Auto-render existing HEIC photos if any
+                if (typeof heic2any !== 'undefined') {
+                    document.querySelectorAll('.existing-foto-item img').forEach(async (img) => {
+                        if (img.src.match(/\.(heic|heif)$/i)) {
+                            try {
+                                const resp = await fetch(img.src);
+                                if (!resp.ok) return;
+                                const blob = await resp.blob();
+                                const converted = await heic2any({
+                                    blob: blob,
+                                    toType: 'image/jpeg',
+                                    quality: 0.85
+                                });
+                                const finalBlob = Array.isArray(converted) ? converted[0] : converted;
+                                const objUrl = URL.createObjectURL(finalBlob);
+                                img.src = objUrl;
+                                if (img.parentElement && img.parentElement.tagName === 'A') {
+                                    img.parentElement.href = objUrl;
+                                }
+                            } catch (e) {
+                                console.error('Gagal render foto HEIC lama:', img.src, e);
+                            }
+                        }
+                    });
+                }
+
+                async function handleFileUpload(fieldName, inputElement, isImage) {
+                    const rawFiles = Array.from(inputElement.files);
+                    if (!rawFiles || rawFiles.length === 0) return;
+
+                    const config = fieldConfigs[fieldName] || {
+                        maxFiles: 10,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    };
                     const currentBuffer = fileBuffers[fieldName];
 
                     // Count existing files if editing
-                    const existingCount = $(inputElement).closest('.mb-4').find('.existing-foto-item:not(.deleted-item), .existing-dokumen-item:not(.deleted-item)').length;
+                    const existingCount = $(inputElement).closest('.mb-4').find(
+                        '.existing-foto-item:not(.deleted-item), .existing-dokumen-item:not(.deleted-item)').length;
 
-                    if (existingCount + currentBuffer.length + files.length > config.maxFiles) {
-                        alert(`Maksimal ${config.maxFiles} file. Saat ini ada ${existingCount + currentBuffer.length} file.`);
+                    if (existingCount + currentBuffer.length + rawFiles.length > config.maxFiles) {
+                        alert(
+                            `Maksimal ${config.maxFiles} file. Saat ini ada ${existingCount + currentBuffer.length} file.`
+                        );
                         syncInputAndRender(fieldName, inputElement, isImage);
                         return;
                     }
 
-                    files.forEach(file => {
+                    // Deteksi jika ada file format HEIC/HEIF dari iPhone
+                    const heicFiles = rawFiles.filter(f => {
+                        const nameLower = f.name.toLowerCase();
+                        return nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || f.type === 'image/heic' || f.type === 'image/heif';
+                    });
+
+                    let filesToProcess = rawFiles;
+
+                    if (heicFiles.length > 0) {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                title: 'Mengonversi Foto HEIC...',
+                                html: `Sedang mengonversi <b>${heicFiles.length}</b> foto format iPhone (HEIC) ke JPG agar dapat ditampilkan di semua perangkat.<br><small class="text-muted">Proses berlangsung cepat di browser...</small>`,
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        }
+
+                        filesToProcess = [];
+                        for (let file of rawFiles) {
+                            const nameLower = file.name.toLowerCase();
+                            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || file.type === 'image/heic' || file.type === 'image/heif') {
+                                try {
+                                    if (typeof heic2any !== 'undefined') {
+                                        const convertedBlob = await heic2any({
+                                            blob: file,
+                                            toType: 'image/jpeg',
+                                            quality: 0.85
+                                        });
+                                        const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                                        const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+                                        const convertedFile = new File([blob], newName, {
+                                            type: 'image/jpeg',
+                                            lastModified: file.lastModified || Date.now()
+                                        });
+                                        filesToProcess.push(convertedFile);
+                                    } else {
+                                        filesToProcess.push(file);
+                                    }
+                                } catch (err) {
+                                    console.error('Konversi HEIC gagal, gunakan file asli:', file.name, err);
+                                    filesToProcess.push(file);
+                                }
+                            } else {
+                                filesToProcess.push(file);
+                            }
+                        }
+
+                        if (typeof Swal !== 'undefined') {
+                            Swal.close();
+                        }
+                    }
+
+                    filesToProcess.forEach(file => {
                         if (file.size > config.maxSize) {
-                            alert(`File "${file.name}" terlalu besar. Maksimal ukuran ${config.sizeLabel}/file.`);
+                            alert(
+                                `File "${file.name}" terlalu besar. Maksimal ukuran ${config.sizeLabel}/file.`
+                            );
                             return;
                         }
 
@@ -877,14 +1218,20 @@
                             let icon = 'fa-file-alt text-secondary';
                             const nameLower = file.name.toLowerCase();
                             if (nameLower.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
-                            else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon = 'fa-file-word text-primary';
-                            else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower.endsWith('.csv')) icon = 'fa-file-excel text-success';
-                            else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon = 'fa-file-powerpoint text-warning';
-                            else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z')) icon = 'fa-file-archive text-info';
-                            else if (nameLower.match(/\.(jpg|jpeg|png|webp|gif|bmp)$/)) icon = 'fa-file-image text-purple';
+                            else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon =
+                                'fa-file-word text-primary';
+                            else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower
+                                .endsWith('.csv')) icon = 'fa-file-excel text-success';
+                            else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon =
+                                'fa-file-powerpoint text-warning';
+                            else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower
+                                .endsWith('.7z')) icon = 'fa-file-archive text-info';
+                            else if (nameLower.match(/\.(jpg|jpeg|png|webp|gif|bmp)$/)) icon =
+                                'fa-file-image text-purple';
 
                             const div = document.createElement('div');
-                            div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
+                            div.className =
+                                'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
                             div.style.paddingRight = '25px';
                             div.innerHTML = `
                                 <div class="d-flex align-items-center text-truncate mr-2" style="max-width: 90%;">
@@ -907,71 +1254,71 @@
                     if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 }
 
-                $('.custom-img-input').on('change', function() {
+                $('.custom-img-input').on('change', async function() {
                     const fieldName = $(this).attr('name').replace('[]', '');
-                    handleFileUpload(fieldName, this, true);
+                    await handleFileUpload(fieldName, this, true);
                     if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 });
 
-                $('.custom-doc-input').on('change', function() {
+                $('.custom-doc-input').on('change', async function() {
                     const fieldName = $(this).attr('name').replace('[]', '');
-                    handleFileUpload(fieldName, this, false);
+                    await handleFileUpload(fieldName, this, false);
                     if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 });
             });
 
             // Wait for jQuery & Initialize Summernote
 
-                $('.btn-delete-existing-foto').click(function(e) {
-                    e.preventDefault();
-                    if(confirm('Hapus foto ini? File akan terhapus saat Anda menekan tombol simpan.')) {
-                        const path = $(this).data('path');
-                        // Insert hidden input
-                        $('<input>').attr({
-                            type: 'hidden',
-                            name: 'remove_foto_kegiatan[]',
-                            value: path
-                        }).appendTo('form');
+            $('.btn-delete-existing-foto').click(function(e) {
+                e.preventDefault();
+                if (confirm('Hapus foto ini? File akan terhapus saat Anda menekan tombol simpan.')) {
+                    const path = $(this).data('path');
+                    // Insert hidden input
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'remove_foto_kegiatan[]',
+                        value: path
+                    }).appendTo('form');
 
-                        const $item = $(this).closest('.existing-foto-item');
-                        $item.addClass('deleted-item').fadeOut(300, function() {
-                            $(this).remove();
-                            if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
-                        });
+                    const $item = $(this).closest('.existing-foto-item');
+                    $item.addClass('deleted-item').fadeOut(300, function() {
+                        $(this).remove();
                         if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
+                    });
+                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
+                }
+            });
+
+            $('.btn-delete-existing-dokumen').click(function(e) {
+                e.preventDefault();
+                if (confirm('Hapus dokumen ini? File akan terhapus saat Anda menekan tombol simpan.')) {
+                    const path = $(this).data('path');
+                    const field = $(this).data('field');
+                    let inputName = 'remove_daftar_hadir[]';
+                    if (field) {
+                        inputName = `remove_${field}[]`;
+                    } else if (path.includes('notulen')) {
+                        inputName = 'remove_notulen[]';
+                    } else if (path.includes('materi')) {
+                        inputName = 'remove_materi[]';
+                    } else if (path.includes('berita_acara')) {
+                        inputName = 'remove_berita_acara[]';
                     }
-                });
 
-                $('.btn-delete-existing-dokumen').click(function(e) {
-                    e.preventDefault();
-                    if(confirm('Hapus dokumen ini? File akan terhapus saat Anda menekan tombol simpan.')) {
-                        const path = $(this).data('path');
-                        const field = $(this).data('field');
-                        let inputName = 'remove_daftar_hadir[]';
-                        if(field) {
-                            inputName = `remove_${field}[]`;
-                        } else if(path.includes('notulen')) {
-                            inputName = 'remove_notulen[]';
-                        } else if(path.includes('materi')) {
-                            inputName = 'remove_materi[]';
-                        } else if(path.includes('berita_acara')) {
-                            inputName = 'remove_berita_acara[]';
-                        }
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: inputName,
+                        value: path
+                    }).appendTo('form');
 
-                        $('<input>').attr({
-                            type: 'hidden',
-                            name: inputName,
-                            value: path
-                        }).appendTo('form');
-
-                        const $item = $(this).closest('.existing-dokumen-item');
-                        $item.addClass('deleted-item').fadeOut(300, function() {
-                            $(this).remove();
-                            if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
-                        });
+                    const $item = $(this).closest('.existing-dokumen-item');
+                    $item.addClass('deleted-item').fadeOut(300, function() {
+                        $(this).remove();
                         if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
-                    }
-                });
+                    });
+                    if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
+                }
+            });
 
             // Inisialisasi Summernote Editor
             function initializeSummernoteEditors() {
@@ -980,7 +1327,9 @@
                         var $el = $(this);
                         // Hancurkan instance lama jika sudah terlanjur diinisialisasi dengan konfigurasi default
                         if ($el.next().hasClass('note-editor') || $el.data('summernote')) {
-                            try { $el.summernote('destroy'); } catch(e) {}
+                            try {
+                                $el.summernote('destroy');
+                            } catch (e) {}
                         }
 
                         $el.summernote({
@@ -996,7 +1345,8 @@
                             callbacks: {
                                 onInit: function() {
                                     var $target = $(this);
-                                    if ($target.summernote('isEmpty') || $target.val().trim() === '<p><br></p>' || $target.val().trim() === '') {
+                                    if ($target.summernote('isEmpty') || $target.val().trim() ===
+                                        '<p><br></p>' || $target.val().trim() === '') {
                                         $target.summernote('empty');
                                     }
                                     if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();

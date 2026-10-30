@@ -33,6 +33,46 @@ class ImageService
         $cleanOriginalName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $originalName);
         $fileName = time() . '_' . uniqid() . '_' . $cleanOriginalName;
         $targetPath = trim($directory, '/') . '/' . $fileName;
+        $realPath = $file->getRealPath();
+        $mime = $file->getMimeType();
+
+        // Defensive conversion for HEIC / HEIF files using Imagick if supported on server
+        if (in_array($ext, ['heic', 'heif']) || in_array($mime, ['image/heic', 'image/heif'])) {
+            if (extension_loaded('imagick')) {
+                try {
+                    $imagick = new \Imagick();
+                    $imagick->readImage($realPath);
+                    $imagick->setImageFormat('jpeg');
+                    $imagick->setImageCompressionQuality($quality);
+
+                    $origWidth = $imagick->getImageWidth();
+                    $origHeight = $imagick->getImageHeight();
+                    if ($origWidth > $maxWidth || $origHeight > $maxHeight) {
+                        $ratio = min($maxWidth / $origWidth, $maxHeight / $origHeight);
+                        $newWidth = (int) round($origWidth * $ratio);
+                        $newHeight = (int) round($origHeight * $ratio);
+                        $imagick->resizeImage($newWidth, $newHeight, \Imagick::FILTER_LANCZOS, 1);
+                    }
+
+                    $jpegBlob = $imagick->getImageBlob();
+                    $imagick->clear();
+                    $imagick->destroy();
+
+                    $fileNameJpg = time() . '_' . uniqid() . '_' . pathinfo($cleanOriginalName, PATHINFO_FILENAME) . '.jpg';
+                    $targetPathJpg = trim($directory, '/') . '/' . $fileNameJpg;
+                    $origNameJpg = pathinfo($originalName, PATHINFO_FILENAME) . '.jpg';
+
+                    Storage::disk($disk)->put($targetPathJpg, $jpegBlob);
+
+                    return [
+                        'path' => $targetPathJpg,
+                        'original_name' => $origNameJpg,
+                    ];
+                } catch (\Throwable $e) {
+                    // Imagick HEIC failed or unsupported delegate, continue to standard fallback
+                }
+            }
+        }
 
         // If GD extension is missing, safely fallback to storeAs
         if (!extension_loaded('gd')) {
@@ -43,7 +83,6 @@ class ImageService
             ];
         }
 
-        $realPath = $file->getRealPath();
         $image = null;
 
         try {

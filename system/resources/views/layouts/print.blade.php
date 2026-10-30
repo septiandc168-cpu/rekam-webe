@@ -229,6 +229,15 @@
 
 <body>
     @yield('content')
+
+    <!-- heic2any plugin for automatic HEIC to JPG conversion -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script>
+        if (typeof heic2any === 'undefined') {
+            document.write('<script src="{{ asset('adminlte/plugins/heic2any/heic2any.min.js') }}"><\/script>');
+        }
+    </script>
+    @stack('scripts')
 </body>
 
 </html>

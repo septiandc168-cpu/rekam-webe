@@ -226,7 +226,7 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Foto Kegiatan <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="foto_kegiatan[]" class="custom-file-input custom-img-input" id="fotoInput" accept="image/*" multiple required>
+                                    <input type="file" name="foto_kegiatan[]" class="custom-file-input custom-img-input" id="fotoInput" accept="image/*,.heic,.heif" multiple required>
                                     <label class="custom-file-label" for="fotoInput">Pilih foto...</label>
                                 </div>
                                 <small class="text-muted">Bebas format gambar & jumlah file, foto berukuran besar akan otomatis dikompres oleh sistem.</small>
@@ -624,18 +624,75 @@
 
                 showStep(currentStepIndex);
 
-                function handleFileUpload(fieldName, inputElement, isImage) {
-                    const files = Array.from(inputElement.files);
-                    const config = fieldConfigs[fieldName] || { maxFiles: 10, maxSize: 5 * 1024 * 1024, sizeLabel: '5MB' };
+                async function handleFileUpload(fieldName, inputElement, isImage) {
+                    const rawFiles = Array.from(inputElement.files);
+                    if (!rawFiles || rawFiles.length === 0) return;
+
+                    const config = fieldConfigs[fieldName] || { maxFiles: 10, maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' };
                     const currentBuffer = fileBuffers[fieldName];
 
-                    if (currentBuffer.length + files.length > config.maxFiles) {
+                    if (currentBuffer.length + rawFiles.length > config.maxFiles) {
                         alert(`Maksimal ${config.maxFiles} file. Saat ini ada ${currentBuffer.length} file.`);
                         syncInputAndRender(fieldName, inputElement, isImage);
                         return;
                     }
 
-                    files.forEach(file => {
+                    // Deteksi jika ada file format HEIC/HEIF dari iPhone
+                    const heicFiles = rawFiles.filter(f => {
+                        const nameLower = f.name.toLowerCase();
+                        return nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || f.type === 'image/heic' || f.type === 'image/heif';
+                    });
+
+                    let filesToProcess = rawFiles;
+
+                    if (heicFiles.length > 0) {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                title: 'Mengonversi Foto HEIC...',
+                                html: `Sedang mengonversi <b>${heicFiles.length}</b> foto format iPhone (HEIC) ke JPG agar dapat ditampilkan di semua perangkat.<br><small class="text-muted">Proses berlangsung cepat di browser...</small>`,
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        }
+
+                        filesToProcess = [];
+                        for (let file of rawFiles) {
+                            const nameLower = file.name.toLowerCase();
+                            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || file.type === 'image/heic' || file.type === 'image/heif') {
+                                try {
+                                    if (typeof heic2any !== 'undefined') {
+                                        const convertedBlob = await heic2any({
+                                            blob: file,
+                                            toType: 'image/jpeg',
+                                            quality: 0.85
+                                        });
+                                        const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                                        const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+                                        const convertedFile = new File([blob], newName, {
+                                            type: 'image/jpeg',
+                                            lastModified: file.lastModified || Date.now()
+                                        });
+                                        filesToProcess.push(convertedFile);
+                                    } else {
+                                        filesToProcess.push(file);
+                                    }
+                                } catch (err) {
+                                    console.error('Konversi HEIC gagal, gunakan file asli:', file.name, err);
+                                    filesToProcess.push(file);
+                                }
+                            } else {
+                                filesToProcess.push(file);
+                            }
+                        }
+
+                        if (typeof Swal !== 'undefined') {
+                            Swal.close();
+                        }
+                    }
+
+                    filesToProcess.forEach(file => {
                         if (file.size > config.maxSize) {
                             alert(`File "${file.name}" terlalu besar. Maksimal ukuran ${config.sizeLabel}/file.`);
                             return;
@@ -721,15 +778,15 @@
                     if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 }
 
-                $('.custom-img-input').on('change', function() {
+                $('.custom-img-input').on('change', async function() {
                     const fieldName = $(this).attr('name').replace('[]', '');
-                    handleFileUpload(fieldName, this, true);
+                    await handleFileUpload(fieldName, this, true);
                     if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 });
 
-                $('.custom-doc-input').on('change', function() {
+                $('.custom-doc-input').on('change', async function() {
                     const fieldName = $(this).attr('name').replace('[]', '');
-                    handleFileUpload(fieldName, this, false);
+                    await handleFileUpload(fieldName, this, false);
                     if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
                 });
             });
