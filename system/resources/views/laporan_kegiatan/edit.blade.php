@@ -388,8 +388,8 @@
                                         class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="foto_kegiatan[]"
-                                        class="custom-file-input custom-img-input" id="fotoInput" accept="image/*,.heic,.heif"
-                                        multiple {{ empty($fotos) ? 'required' : '' }}>
+                                        class="custom-file-input custom-img-input" id="fotoInput"
+                                        accept="image/*,.heic,.heif" multiple {{ empty($fotos) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="fotoInput">Biarkan kosong jika tidak
                                         diubah...</label>
                                 </div>
@@ -947,6 +947,18 @@
                         $(this).val($(this).summernote('code'));
                     });
 
+                    // Periksa total ukuran file yang akan diunggah
+                    let totalBytes = 0;
+                    for (let k in fileBuffers) {
+                        if (fileBuffers[k]) fileBuffers[k].forEach(f => totalBytes += (f.size || 0));
+                    }
+                    if (totalBytes > 25 * 1024 * 1024) {
+                        const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
+                        if (!confirm(`Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan draft dapat gagal. Tetap lanjutkan?`)) {
+                            return false;
+                        }
+                    }
+
                     $('#form-action').val('draft');
                     if (form) {
                         form.noValidate = true;
@@ -1051,6 +1063,19 @@
                             return false;
                         }
                     }
+
+                    // 3. Periksa total ukuran file yang akan diunggah
+                    let totalBytes = 0;
+                    for (let k in fileBuffers) {
+                        if (fileBuffers[k]) fileBuffers[k].forEach(f => totalBytes += (f.size || 0));
+                    }
+                    if (totalBytes > 25 * 1024 * 1024) {
+                        const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
+                        if (!confirm(`Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan dapat gagal. Tetap lanjutkan?`)) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
                 });
 
                 showStep(currentStepIndex);
@@ -1081,6 +1106,61 @@
                     });
                 }
 
+                // Helper kompresi gambar di sisi klien sebelum diupload ke server
+                function compressImageFile(file, maxWidth = 1920, maxHeight = 1920, quality = 0.82) {
+                    if (!file.type || !file.type.match(/^image\/(jpeg|jpg|png|webp)$/i)) {
+                        return Promise.resolve(file);
+                    }
+
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = new Image();
+                            img.onload = function() {
+                                let width = img.naturalWidth || img.width;
+                                let height = img.naturalHeight || img.height;
+
+                                // Jika file sudah <= 800KB dan dimensinya tidak melebihi 1920px, biarkan asli
+                                if (file.size <= 800 * 1024 && width <= maxWidth && height <= maxHeight) {
+                                    return resolve(file);
+                                }
+
+                                if (width > maxWidth || height > maxHeight) {
+                                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                                    width = Math.round(width * ratio);
+                                    height = Math.round(height * ratio);
+                                }
+
+                                const canvas = document.createElement('canvas');
+                                canvas.width = width;
+                                canvas.height = height;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, width, height);
+
+                                canvas.toBlob(function(blob) {
+                                    if (!blob || blob.size >= file.size) {
+                                        return resolve(file);
+                                    }
+                                    const newName = file.name.replace(/\.[^.]+$/, '.jpg');
+                                    const compressedFile = new File([blob], newName, {
+                                        type: 'image/jpeg',
+                                        lastModified: Date.now()
+                                    });
+                                    resolve(compressedFile);
+                                }, 'image/jpeg', quality);
+                            };
+                            img.onerror = function() {
+                                resolve(file);
+                            };
+                            img.src = e.target.result;
+                        };
+                        reader.onerror = function() {
+                            resolve(file);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+
                 async function handleFileUpload(fieldName, inputElement, isImage) {
                     const rawFiles = Array.from(inputElement.files);
                     if (!rawFiles || rawFiles.length === 0) return;
@@ -1094,7 +1174,8 @@
 
                     // Count existing files if editing
                     const existingCount = $(inputElement).closest('.mb-4').find(
-                        '.existing-foto-item:not(.deleted-item), .existing-dokumen-item:not(.deleted-item)').length;
+                            '.existing-foto-item:not(.deleted-item), .existing-dokumen-item:not(.deleted-item)')
+                        .length;
 
                     if (existingCount + currentBuffer.length + rawFiles.length > config.maxFiles) {
                         alert(
@@ -1104,19 +1185,14 @@
                         return;
                     }
 
-                    // Deteksi jika ada file format HEIC/HEIF dari iPhone
-                    const heicFiles = rawFiles.filter(f => {
-                        const nameLower = f.name.toLowerCase();
-                        return nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || f.type === 'image/heic' || f.type === 'image/heif';
-                    });
-
                     let filesToProcess = rawFiles;
 
-                    if (heicFiles.length > 0) {
+                    // Optimasi khusus gambar (HEIC conversion + client-side compression)
+                    if (isImage) {
                         if (typeof Swal !== 'undefined') {
                             Swal.fire({
-                                title: 'Mengonversi Foto HEIC...',
-                                html: `Sedang mengonversi <b>${heicFiles.length}</b> foto format iPhone (HEIC) ke JPG agar dapat ditampilkan di semua perangkat.<br><small class="text-muted">Proses berlangsung cepat di browser...</small>`,
+                                title: 'Mengoptimalkan Foto...',
+                                html: `Sedang memproses & mengompresi <b>${rawFiles.length}</b> foto agar ukuran efisien dan upload lancar.<br><small class="text-muted">Proses berlangsung otomatis di browser...</small>`,
                                 allowOutsideClick: false,
                                 didOpen: () => {
                                     Swal.showLoading();
@@ -1126,32 +1202,38 @@
 
                         filesToProcess = [];
                         for (let file of rawFiles) {
-                            const nameLower = file.name.toLowerCase();
-                            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || file.type === 'image/heic' || file.type === 'image/heif') {
+                            let currentFile = file;
+                            const nameLower = currentFile.name.toLowerCase();
+
+                            // 1. Konversi format HEIC/HEIF jika berasal dari iPhone
+                            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type === 'image/heic' || currentFile.type === 'image/heif') {
                                 try {
                                     if (typeof heic2any !== 'undefined') {
                                         const convertedBlob = await heic2any({
-                                            blob: file,
+                                            blob: currentFile,
                                             toType: 'image/jpeg',
                                             quality: 0.85
                                         });
                                         const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-                                        const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
-                                        const convertedFile = new File([blob], newName, {
+                                        const newName = currentFile.name.replace(/\.(heic|heif)$/i, '.jpg');
+                                        currentFile = new File([blob], newName, {
                                             type: 'image/jpeg',
-                                            lastModified: file.lastModified || Date.now()
+                                            lastModified: currentFile.lastModified || Date.now()
                                         });
-                                        filesToProcess.push(convertedFile);
-                                    } else {
-                                        filesToProcess.push(file);
                                     }
                                 } catch (err) {
-                                    console.error('Konversi HEIC gagal, gunakan file asli:', file.name, err);
-                                    filesToProcess.push(file);
+                                    console.error('Konversi HEIC gagal, gunakan file asli:', currentFile.name, err);
                                 }
-                            } else {
-                                filesToProcess.push(file);
                             }
+
+                            // 2. Kompresi & proporsional resize gambar di browser
+                            try {
+                                currentFile = await compressImageFile(currentFile);
+                            } catch (err) {
+                                console.error('Kompresi foto gagal:', currentFile.name, err);
+                            }
+
+                            filesToProcess.push(currentFile);
                         }
 
                         if (typeof Swal !== 'undefined') {

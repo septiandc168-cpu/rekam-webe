@@ -21,10 +21,11 @@
             </div>
         @endif
 
-        @if(!isset($isLaporanLangsung) || !$isLaporanLangsung)
+        @if (!isset($isLaporanLangsung) || !$isLaporanLangsung)
             <!-- CALLOUT: Header Konteks Rencana Kegiatan -->
             <div class="card shadow-sm mb-4 bg-white p-3" style="border: 1px solid #e2e8f0; border-radius: 8px;">
-                <h6 class="text-dark fw-bold mb-3"><i class="fas fa-info-circle mr-1 text-secondary"></i> Konteks Rencana Kegiatan</h6>
+                <h6 class="text-dark fw-bold mb-3"><i class="fas fa-info-circle mr-1 text-secondary"></i> Konteks Rencana
+                    Kegiatan</h6>
                 <div class="row">
                     <div class="col-md-4 pr-md-3 mb-2 mb-md-0">
                         <strong>Nama Kegiatan:</strong><br>
@@ -33,7 +34,8 @@
                     <div class="col-md-5 px-md-3 mb-2 mb-md-0">
                         <strong>Waktu & Lokasi Rencana:</strong><br>
                         <span class="text-dark" style="line-height: 1.5;">
-                            {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}<br>
+                            {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }} s/d
+                            {{ \Carbon\Carbon::parse($rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}<br>
                             Di {{ $rencanaKegiatan->desa }}
                         </span>
                     </div>
@@ -49,32 +51,41 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="d-flex justify-content-between position-relative">
-                    <div class="progress position-absolute" style="height: 4px; top: 20px; left: 15%; right: 15%; z-index: 1;">
-                        <div class="progress-bar bg-primary" id="wizard-progress" role="progressbar" style="width: 0%;"></div>
+                    <div class="progress position-absolute"
+                        style="height: 4px; top: 20px; left: 15%; right: 15%; z-index: 1;">
+                        <div class="progress-bar bg-primary" id="wizard-progress" role="progressbar" style="width: 0%;">
+                        </div>
                     </div>
-                    
-                    <div class="step-indicator text-center position-relative active" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
-                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
+
+                    <div class="step-indicator text-center position-relative active"
+                        style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
+                            style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
                         <span class="fw-bold text-primary d-block step-text">Realisasi Kegiatan</span>
                     </div>
-                    
-                    <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
-                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
+
+                    <div class="step-indicator text-center position-relative"
+                        style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
+                            style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
                         <span class="fw-bold text-muted d-block step-text">Evaluasi</span>
                     </div>
-                    
-                    <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-3">
-                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">3</div>
+
+                    <div class="step-indicator text-center position-relative"
+                        style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-3">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
+                            style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">3</div>
                         <span class="fw-bold text-muted d-block step-text">Lampiran Bukti</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <form id="laporan-kegiatan-form" action="{{ route('laporan_kegiatan.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="laporan-kegiatan-form" action="{{ route('laporan_kegiatan.store') }}" method="POST"
+            enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="action" id="form-action" value="diajukan">
-            @if(isset($isLaporanLangsung) && $isLaporanLangsung)
+            @if (isset($isLaporanLangsung) && $isLaporanLangsung)
                 <input type="hidden" name="is_laporan_langsung" value="1">
             @else
                 <input type="hidden" name="rencana_kegiatan_id" value="{{ $rencanaKegiatan?->uuid }}">
@@ -90,47 +101,68 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        @if(isset($isLaporanLangsung) && $isLaporanLangsung)
+                        @if (isset($isLaporanLangsung) && $isLaporanLangsung)
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Judul Kegiatan <span class="text-danger">*</span></label>
-                                    <input type="text" name="judul_kegiatan" class="form-control" placeholder="Masukkan judul kegiatan..." required value="{{ old('judul_kegiatan') }}">
-                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan judul kegiatan yang jelas dan spesifik sesuai pelaksanaan di lapangan.</small>
+                                    <input type="text" name="judul_kegiatan" class="form-control"
+                                        placeholder="Masukkan judul kegiatan..." required
+                                        value="{{ old('judul_kegiatan') }}">
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan
+                                        judul kegiatan yang jelas dan spesifik sesuai pelaksanaan di lapangan.</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Lokasi Kegiatan <span class="text-danger">*</span></label>
-                                    <input type="text" name="lokasi_kegiatan" class="form-control" placeholder="Masukkan lokasi kejadian..." required value="{{ old('lokasi_kegiatan') }}">
-                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan lokasi spesifik tempat kegiatan berlangsung (nama desa/kecamatan/kabupaten).</small>
+                                    <input type="text" name="lokasi_kegiatan" class="form-control"
+                                        placeholder="Masukkan lokasi kejadian..." required
+                                        value="{{ old('lokasi_kegiatan') }}">
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan
+                                        lokasi spesifik tempat kegiatan berlangsung (nama desa/kecamatan/kabupaten).</small>
                                 </div>
                             </div>
                         @endif
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Realisasi Tanggal Mulai <span class="text-danger">*</span></label>
-                                <input type="date" name="realisasi_tanggal_mulai" class="form-control" required value="{{ old('realisasi_tanggal_mulai') }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal aktual kegiatan mulai dilaksanakan di lapangan.</small>
+                                <input type="date" name="realisasi_tanggal_mulai" class="form-control" required
+                                    value="{{ old('realisasi_tanggal_mulai') }}">
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal aktual
+                                    kegiatan mulai dilaksanakan di lapangan.</small>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Realisasi Tanggal Selesai <span class="text-danger">*</span></label>
-                                <input type="date" name="realisasi_tanggal_selesai" class="form-control" required value="{{ old('realisasi_tanggal_selesai') }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal aktual kegiatan selesai. Jika 1 hari, isi sama dengan tanggal mulai.</small>
+                                <label class="form-label">Realisasi Tanggal Selesai <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" name="realisasi_tanggal_selesai" class="form-control" required
+                                    value="{{ old('realisasi_tanggal_selesai') }}">
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal
+                                    aktual kegiatan selesai. Jika 1 hari, isi sama dengan tanggal mulai.</small>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Realisasi Jumlah Peserta <span class="text-danger">*</span></label>
-                                <input type="number" name="realisasi_peserta" class="form-control" placeholder="Masukkan realisasi jumlah peserta..." min="0" required value="{{ old('realisasi_peserta') }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jumlah peserta yang benar-benar hadir berdasarkan daftar hadir.</small>
+                                <label class="form-label">Realisasi Jumlah Peserta <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" name="realisasi_peserta" class="form-control"
+                                    placeholder="Masukkan realisasi jumlah peserta..." min="0" required
+                                    value="{{ old('realisasi_peserta') }}">
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jumlah
+                                    peserta yang benar-benar hadir berdasarkan daftar hadir.</small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Rangkaian Kegiatan / Alur Acara <span class="text-danger">*</span></label>
-                                <textarea name="rangkaian_kegiatan" class="form-control summernote-editor" rows="4" placeholder="Masukkan rangkaian kegiatan..." required>{!! old('rangkaian_kegiatan') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Uraikan urutan acara dari awal hingga akhir, termasuk waktu dan kegiatan di setiap sesi.</small>
+                                <label class="form-label">Rangkaian Kegiatan / Alur Acara <span
+                                        class="text-danger">*</span></label>
+                                <textarea name="rangkaian_kegiatan" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan rangkaian kegiatan..." required>{!! old('rangkaian_kegiatan') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Uraikan
+                                    urutan acara dari awal hingga akhir, termasuk waktu dan kegiatan di setiap sesi.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Profil Peserta <span class="text-danger">*</span></label>
-                                <textarea name="profil_peserta" class="form-control summernote-editor" rows="3" placeholder="Masukkan profil peserta..." required>{!! old('profil_peserta') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan latar belakang peserta: profesi, asal daerah, rentang usia, atau kelompok sasaran.</small>
+                                <textarea name="profil_peserta" class="form-control summernote-editor" rows="3"
+                                    placeholder="Masukkan profil peserta..." required>{!! old('profil_peserta') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                    latar belakang peserta: profesi, asal daerah, rentang usia, atau kelompok
+                                    sasaran.</small>
                             </div>
                         </div>
                     </div>
@@ -147,28 +179,40 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Hasil yang Dicapai <span class="text-danger">*</span></label>
-                                <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4" placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan pencapaian utama yang diperoleh dari pelaksanaan kegiatan ini.</small>
+                                <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                    pencapaian utama yang diperoleh dari pelaksanaan kegiatan ini.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Output Nyata <span class="text-danger">*</span></label>
-                                <textarea name="output_nyata" class="form-control summernote-editor" rows="4" placeholder="Masukkan output nyata..." required>{!! old('output_nyata') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan produk/hasil fisik yang dihasilkan, seperti dokumen, data, atau barang yang terukur.</small>
+                                <textarea name="output_nyata" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan output nyata..." required>{!! old('output_nyata') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan
+                                    produk/hasil fisik yang dihasilkan, seperti dokumen, data, atau barang yang
+                                    terukur.</small>
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Dampak Awal yang Terlihat <span class="text-danger">*</span></label>
-                                <textarea name="dampak_awal" class="form-control summernote-editor" rows="4" placeholder="Masukkan dampak awal yang terlihat..." required>{!! old('dampak_awal') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Deskripsikan perubahan awal yang sudah terlihat di masyarakat atau lingkungan setelah kegiatan.</small>
+                                <label class="form-label">Dampak Awal yang Terlihat <span
+                                        class="text-danger">*</span></label>
+                                <textarea name="dampak_awal" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan dampak awal yang terlihat..." required>{!! old('dampak_awal') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Deskripsikan
+                                    perubahan awal yang sudah terlihat di masyarakat atau lingkungan setelah
+                                    kegiatan.</small>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer bg-white clearfix">
-                        <a href="{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? route('laporan_kegiatan.index') : route('rencana_kegiatan.show', $rencanaKegiatan?->uuid ?? $rencanaKegiatan?->id) }}" class="btn btn-secondary text-white float-left"><i class="fas fa-arrow-left mr-1"></i> Kembali</a>
+                        <a href="{{ isset($isLaporanLangsung) && $isLaporanLangsung ? route('laporan_kegiatan.index') : route('rencana_kegiatan.show', $rencanaKegiatan?->uuid ?? $rencanaKegiatan?->id) }}"
+                            class="btn btn-secondary text-white float-left"><i class="fas fa-arrow-left mr-1"></i>
+                            Kembali</a>
                         <div class="float-right d-flex">
                             <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
                                 <i class="fas fa-save mr-1"></i> Simpan Draft
                             </button>
-                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya
+                                <i class="fas fa-arrow-right ml-1"></i></button>
                         </div>
                     </div>
                 </div>
@@ -186,28 +230,38 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Kendala yang Dihadapi <span class="text-danger">*</span></label>
-                                <textarea name="kendala" class="form-control summernote-editor" rows="4" placeholder="Masukkan kendala yang dihadapi..." required>{!! old('kendala') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan hambatan atau masalah yang muncul selama pelaksanaan kegiatan. Isi "Tidak ada" jika tidak ada kendala.</small>
+                                <textarea name="kendala" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan kendala yang dihadapi..." required>{!! old('kendala') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan
+                                    hambatan atau masalah yang muncul selama pelaksanaan kegiatan. Isi "Tidak ada" jika
+                                    tidak ada kendala.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Solusi yang Dilakukan <span class="text-danger">*</span></label>
-                                <textarea name="solusi" class="form-control summernote-editor" rows="4" placeholder="Masukkan solusi yang dilakukan..." required>{!! old('solusi') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan langkah-langkah yang diambil untuk mengatasi kendala tersebut.</small>
+                                <textarea name="solusi" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan solusi yang dilakukan..." required>{!! old('solusi') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                    langkah-langkah yang diambil untuk mengatasi kendala tersebut.</small>
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Catatan Evaluasi & Rekomendasi <span class="text-danger">*</span></label>
-                                <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="4" placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
+                                <label class="form-label">Catatan Evaluasi & Rekomendasi <span
+                                        class="text-danger">*</span></label>
+                                <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="4"
+                                    placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan
+                                    penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer bg-white clearfix">
-                        <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-1"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
+                        <button type="button" class="btn btn-secondary text-white btn-prev float-left"
+                            data-prev="step-1"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
                         <div class="float-right d-flex">
                             <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
                                 <i class="fas fa-save mr-1"></i> Simpan Draft
                             </button>
-                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-3">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-3">Selanjutnya
+                                <i class="fas fa-arrow-right ml-1"></i></button>
                         </div>
                     </div>
                 </div>
@@ -226,62 +280,84 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Foto Kegiatan <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="foto_kegiatan[]" class="custom-file-input custom-img-input" id="fotoInput" accept="image/*,.heic,.heif" multiple required>
+                                    <input type="file" name="foto_kegiatan[]"
+                                        class="custom-file-input custom-img-input" id="fotoInput"
+                                        accept="image/*,.heic,.heif" multiple required>
                                     <label class="custom-file-label" for="fotoInput">Pilih foto...</label>
                                 </div>
-                                <small class="text-muted">Bebas format gambar & jumlah file, foto berukuran besar akan otomatis dikompres oleh sistem.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah foto dokumentasi pelaksanaan kegiatan seperti suasana acara, narasumber, dan peserta.</small>
+                                <small class="text-muted">Bebas format gambar & jumlah file, foto berukuran besar akan
+                                    otomatis dikompres oleh sistem.</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah foto
+                                    dokumentasi pelaksanaan kegiatan seperti suasana acara, narasumber, dan peserta.</small>
                                 <div id="preview-foto_kegiatan" class="d-flex flex-wrap gap-2 mt-2"></div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Daftar Hadir <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="daftar_hadir[]" class="custom-file-input custom-doc-input" id="daftarHadirInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*" multiple required>
+                                    <input type="file" name="daftar_hadir[]"
+                                        class="custom-file-input custom-doc-input" id="daftarHadirInput"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*"
+                                        multiple required>
                                     <label class="custom-file-label" for="daftarHadirInput">Pilih file...</label>
                                 </div>
-                                <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga 50MB/file.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan.</small>
+                                <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga
+                                    50MB/file.</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan.</small>
                                 <div id="preview-daftar_hadir" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Notulen</label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="notulen[]" class="custom-file-input custom-doc-input" id="notulenInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple>
+                                    <input type="file" name="notulen[]" class="custom-file-input custom-doc-input"
+                                        id="notulenInput"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                        multiple>
                                     <label class="custom-file-label" for="notulenInput">Pilih file...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah catatan hasil rapat/diskusi selama kegiatan berlangsung (opsional).</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    catatan hasil rapat/diskusi selama kegiatan berlangsung (opsional).</small>
                                 <div id="preview-notulen" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Materi <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="materi[]" class="custom-file-input custom-doc-input" id="materiInput" accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple required>
+                                    <input type="file" name="materi[]" class="custom-file-input custom-doc-input"
+                                        id="materiInput"
+                                        accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                        multiple required>
                                     <label class="custom-file-label" for="materiInput">Pilih file...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen/presentasi hingga 50MB/file.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.</small>
                                 <div id="preview-materi" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Berita Acara <span class="text-danger">*</span></label>
                                 <div class="custom-file mb-1">
-                                    <input type="file" name="berita_acara[]" class="custom-file-input custom-doc-input" id="beritaAcaraInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple required>
+                                    <input type="file" name="berita_acara[]"
+                                        class="custom-file-input custom-doc-input" id="beritaAcaraInput"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                        multiple required>
                                     <label class="custom-file-label" for="beritaAcaraInput">Pilih file...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah berita acara resmi pelaksanaan kegiatan.</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    berita acara resmi pelaksanaan kegiatan.</small>
                                 <div id="preview-berita_acara" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer bg-white clearfix">
-                        <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
-                        
+                        <button type="button" class="btn btn-secondary text-white btn-prev float-left"
+                            data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
+
                         <div class="float-right d-flex">
                             <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
                                 <i class="fas fa-save mr-1"></i> Simpan Draft
@@ -299,17 +375,71 @@
     @push('css')
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
         <style>
-            .step-indicator { cursor: pointer; user-select: none; transition: transform 0.2s ease; }
-            .step-indicator:hover .step-circle { transform: scale(1.08); }
-            .step-circle { transition: all 0.25s ease; }
-            .step-text { font-size: 0.85rem; margin-top: 5px; }
-            .progress { overflow: visible; background-color: #e9ecef; }
-            .preview-img-wrapper { position: relative; display: inline-block; margin-right: 10px; margin-bottom: 10px; }
-            .preview-img-wrapper img { max-width: 150px; max-height: 110px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #ddd; }
-            .preview-file-item { display: flex; align-items: center; padding: 8px 12px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; margin-bottom: 5px; font-size: 0.9rem; }
-            .preview-file-item > i:first-child { font-size: 1.2rem; color: #6c757d; margin-right: 10px; }
-            .gap-2 { gap: 0.5rem; }
-            .gap-1 { gap: 0.25rem; }
+            .step-indicator {
+                cursor: pointer;
+                user-select: none;
+                transition: transform 0.2s ease;
+            }
+
+            .step-indicator:hover .step-circle {
+                transform: scale(1.08);
+            }
+
+            .step-circle {
+                transition: all 0.25s ease;
+            }
+
+            .step-text {
+                font-size: 0.85rem;
+                margin-top: 5px;
+            }
+
+            .progress {
+                overflow: visible;
+                background-color: #e9ecef;
+            }
+
+            .preview-img-wrapper {
+                position: relative;
+                display: inline-block;
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+
+            .preview-img-wrapper img {
+                max-width: 150px;
+                max-height: 110px;
+                object-fit: cover;
+                border-radius: 6px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                border: 1px solid #ddd;
+            }
+
+            .preview-file-item {
+                display: flex;
+                align-items: center;
+                padding: 8px 12px;
+                background: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 4px;
+                margin-bottom: 5px;
+                font-size: 0.9rem;
+            }
+
+            .preview-file-item>i:first-child {
+                font-size: 1.2rem;
+                color: #6c757d;
+                margin-right: 10px;
+            }
+
+            .gap-2 {
+                gap: 0.5rem;
+            }
+
+            .gap-1 {
+                gap: 0.25rem;
+            }
+
             .note-editor .note-placeholder {
                 color: #6c757d !important;
                 font-style: normal !important;
@@ -319,7 +449,7 @@
     @endpush
 
     @push('scripts')
-        <script src="/public/adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+        <script src="/inwebe/rekam/public/adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 bsCustomFileInput.init();
@@ -342,11 +472,31 @@
                 };
 
                 const fieldConfigs = {
-                    foto_kegiatan: { maxFiles: 100, maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    daftar_hadir:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    notulen:       { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    materi:        { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' },
-                    berita_acara:  { maxFiles: 50,  maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' }
+                    foto_kegiatan: {
+                        maxFiles: 100,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    },
+                    daftar_hadir: {
+                        maxFiles: 50,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    },
+                    notulen: {
+                        maxFiles: 50,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    },
+                    materi: {
+                        maxFiles: 50,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    },
+                    berita_acara: {
+                        maxFiles: 50,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    }
                 };
 
                 // --- WIZARD NAVIGATION ---
@@ -362,7 +512,7 @@
                             const code = $el.summernote('code');
                             const cleanText = $('<div>').html(code).text().replace(/\u00a0/g, ' ').trim();
                             return cleanText.length > 0;
-                        } catch(e) {}
+                        } catch (e) {}
                     }
                     const rawEl = typeof el === 'string' ? document.querySelector(el) : el;
                     if (rawEl && rawEl.value) {
@@ -379,16 +529,21 @@
                         const isLangsung = document.querySelector('input[name="is_laporan_langsung"]');
                         if (isLangsung) {
                             const judul = (document.querySelector('input[name="judul_kegiatan"]')?.value || '').trim();
-                            const lokasi = (document.querySelector('input[name="lokasi_kegiatan"]')?.value || '').trim();
+                            const lokasi = (document.querySelector('input[name="lokasi_kegiatan"]')?.value || '')
+                                .trim();
                             if (!judul || !lokasi) return false;
                         }
 
-                        const tglMulai = (document.querySelector('input[name="realisasi_tanggal_mulai"]')?.value || '').trim();
-                        const tglSelesai = (document.querySelector('input[name="realisasi_tanggal_selesai"]')?.value || '').trim();
+                        const tglMulai = (document.querySelector('input[name="realisasi_tanggal_mulai"]')?.value || '')
+                            .trim();
+                        const tglSelesai = (document.querySelector('input[name="realisasi_tanggal_selesai"]')?.value ||
+                            '').trim();
                         const peserta = (document.querySelector('input[name="realisasi_peserta"]')?.value || '').trim();
                         if (!tglMulai || !tglSelesai || !peserta) return false;
 
-                        const summernoteFields = ['rangkaian_kegiatan', 'profil_peserta', 'hasil_dicapai', 'output_nyata', 'dampak_awal'];
+                        const summernoteFields = ['rangkaian_kegiatan', 'profil_peserta', 'hasil_dicapai',
+                            'output_nyata', 'dampak_awal'
+                        ];
                         for (let name of summernoteFields) {
                             if (!isSummernoteFilled(`textarea[name="${name}"]`)) return false;
                         }
@@ -402,15 +557,27 @@
                         return true;
                     } else if (stepNum === 3) {
                         // Tahap 3: Lampiran Bukti
-                        const requiredFiles = [
-                            { key: 'foto_kegiatan', inputId: 'fotoInput' },
-                            { key: 'daftar_hadir', inputId: 'daftarHadirInput' },
-                            { key: 'materi', inputId: 'materiInput' },
-                            { key: 'berita_acara', inputId: 'beritaAcaraInput' }
+                        const requiredFiles = [{
+                                key: 'foto_kegiatan',
+                                inputId: 'fotoInput'
+                            },
+                            {
+                                key: 'daftar_hadir',
+                                inputId: 'daftarHadirInput'
+                            },
+                            {
+                                key: 'materi',
+                                inputId: 'materiInput'
+                            },
+                            {
+                                key: 'berita_acara',
+                                inputId: 'beritaAcaraInput'
+                            }
                         ];
 
                         for (let req of requiredFiles) {
-                            const hasBuffer = typeof fileBuffers !== 'undefined' && fileBuffers[req.key] && fileBuffers[req.key].length > 0;
+                            const hasBuffer = typeof fileBuffers !== 'undefined' && fileBuffers[req.key] && fileBuffers[
+                                req.key].length > 0;
                             const inputEl = document.getElementById(req.inputId);
                             const hasInput = inputEl && inputEl.files && inputEl.files.length > 0;
                             if (!hasBuffer && !hasInput) return false;
@@ -427,14 +594,18 @@
                         $(this).find('.summernote-editor').each(function() {
                             const $t = $(this);
                             if (typeof $t.summernote === 'function') {
-                                if ($t.summernote('isEmpty') || $t.val().trim() === '<p><br></p>' || $t.val().trim() === '') {
+                                if ($t.summernote('isEmpty') || $t.val().trim() === '<p><br></p>' || $t
+                                    .val().trim() === '') {
                                     $t.summernote('empty');
                                 }
                             }
                         });
                     });
                     updateProgressUI(stepIndex);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                 }
 
                 function updateProgressUI(stepIndex) {
@@ -448,13 +619,15 @@
                         if (isCurrent) {
                             indicator.addClass('active');
                             if (complete) {
-                                circle.removeClass('bg-secondary bg-primary text-muted').addClass('bg-success text-white shadow');
+                                circle.removeClass('bg-secondary bg-primary text-muted').addClass(
+                                    'bg-success text-white shadow');
                                 circle.html('<i class="fas fa-check"></i>');
                                 circle.css('box-shadow', '0 0 0 4px rgba(0, 123, 255, 0.45)');
                                 text.removeClass('text-muted text-success').addClass('text-primary');
                                 indicator.attr('title', 'Tahap ' + i + ': Sudah terisi lengkap (sedang aktif)');
                             } else {
-                                circle.removeClass('bg-secondary bg-success text-muted').addClass('bg-primary text-white shadow');
+                                circle.removeClass('bg-secondary bg-success text-muted').addClass(
+                                    'bg-primary text-white shadow');
                                 circle.html(i);
                                 circle.css('box-shadow', '0 0 0 4px rgba(0, 123, 255, 0.25)');
                                 text.removeClass('text-muted text-success').addClass('text-primary');
@@ -464,12 +637,14 @@
                             indicator.removeClass('active');
                             circle.css('box-shadow', 'none');
                             if (complete) {
-                                circle.removeClass('bg-secondary bg-primary text-muted').addClass('bg-success text-white');
+                                circle.removeClass('bg-secondary bg-primary text-muted').addClass(
+                                    'bg-success text-white');
                                 circle.html('<i class="fas fa-check"></i>');
                                 text.removeClass('text-muted text-primary').addClass('text-success');
                                 indicator.attr('title', 'Tahap ' + i + ': Sudah terisi lengkap');
                             } else {
-                                circle.removeClass('bg-primary bg-success text-white').addClass('bg-secondary text-white');
+                                circle.removeClass('bg-primary bg-success text-white').addClass(
+                                    'bg-secondary text-white');
                                 circle.html(i);
                                 text.removeClass('text-primary text-success').addClass('text-muted');
                                 indicator.attr('title', 'Tahap ' + i + ': Belum lengkap');
@@ -497,6 +672,7 @@
 
                 // Realtime update listener
                 let updateTimeout = null;
+
                 function scheduleUpdateProgress() {
                     if (updateTimeout) clearTimeout(updateTimeout);
                     updateTimeout = setTimeout(() => {
@@ -514,7 +690,7 @@
                 $('.btn-next').click(function() {
                     let nextStepId = $(this).data('next');
                     let nextIndex = parseInt(nextStepId.split('-')[1]);
-                    
+
                     currentStepIndex = nextIndex;
                     showStep(currentStepIndex);
                 });
@@ -523,7 +699,7 @@
                     e.preventDefault();
                     let form = document.getElementById('laporan-kegiatan-form');
                     let judulInput = document.querySelector('input[name="judul_kegiatan"]');
-                    
+
                     if (judulInput && !judulInput.value.trim()) {
                         alert('Mohon isi Judul Kegiatan terlebih dahulu untuk menyimpan sebagai draft.');
                         showStep(1);
@@ -535,6 +711,18 @@
                     $('.summernote-editor').each(function() {
                         $(this).val($(this).summernote('code'));
                     });
+
+                    // Periksa total ukuran file yang akan diunggah
+                    let totalBytes = 0;
+                    for (let k in fileBuffers) {
+                        if (fileBuffers[k]) fileBuffers[k].forEach(f => totalBytes += (f.size || 0));
+                    }
+                    if (totalBytes > 25 * 1024 * 1024) {
+                        const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
+                        if (!confirm(`Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan draft dapat gagal. Tetap lanjutkan?`)) {
+                            return false;
+                        }
+                    }
 
                     $('#form-action').val('draft');
                     if (form) {
@@ -559,12 +747,14 @@
                         let emptyRequired = null;
 
                         // Periksa input / select / textarea standar
-                        stepEl.find('input[required], select[required], textarea[required]:not(.summernote-editor)').each(function() {
-                            if (!this.checkValidity()) {
-                                emptyRequired = this;
-                                return false; // break loop
-                            }
-                        });
+                        stepEl.find(
+                                'input[required], select[required], textarea[required]:not(.summernote-editor)')
+                            .each(function() {
+                                if (!this.checkValidity()) {
+                                    emptyRequired = this;
+                                    return false; // break loop
+                                }
+                            });
 
                         if (emptyRequired) {
                             e.preventDefault();
@@ -583,7 +773,8 @@
                             let cleanText = $('<div>').html(code).text().trim();
                             if (!cleanText || cleanText === '') {
                                 emptySummernote = $el;
-                                summernoteLabel = $el.closest('.mb-3, .mb-4').find('label.form-label').first().text().replace('*', '').trim() || 'Kolom isian';
+                                summernoteLabel = $el.closest('.mb-3, .mb-4').find('label.form-label')
+                                    .first().text().replace('*', '').trim() || 'Kolom isian';
                                 return false; // break loop
                             } else {
                                 $el.val(code);
@@ -600,11 +791,26 @@
                     }
 
                     // 2. Validasi file lampiran wajib di Step 3
-                    const requiredFiles = [
-                        { key: 'foto_kegiatan', name: 'Foto Kegiatan', inputId: 'fotoInput' },
-                        { key: 'daftar_hadir', name: 'Daftar Hadir', inputId: 'daftarHadirInput' },
-                        { key: 'materi', name: 'Materi', inputId: 'materiInput' },
-                        { key: 'berita_acara', name: 'Berita Acara', inputId: 'beritaAcaraInput' }
+                    const requiredFiles = [{
+                            key: 'foto_kegiatan',
+                            name: 'Foto Kegiatan',
+                            inputId: 'fotoInput'
+                        },
+                        {
+                            key: 'daftar_hadir',
+                            name: 'Daftar Hadir',
+                            inputId: 'daftarHadirInput'
+                        },
+                        {
+                            key: 'materi',
+                            name: 'Materi',
+                            inputId: 'materiInput'
+                        },
+                        {
+                            key: 'berita_acara',
+                            name: 'Berita Acara',
+                            inputId: 'beritaAcaraInput'
+                        }
                     ];
 
                     for (let req of requiredFiles) {
@@ -620,15 +826,87 @@
                             return false;
                         }
                     }
+
+                    // 3. Periksa total ukuran file yang akan diunggah
+                    let totalBytes = 0;
+                    for (let k in fileBuffers) {
+                        if (fileBuffers[k]) fileBuffers[k].forEach(f => totalBytes += (f.size || 0));
+                    }
+                    if (totalBytes > 25 * 1024 * 1024) {
+                        const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
+                        if (!confirm(`Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan dapat gagal. Tetap lanjutkan?`)) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
                 });
 
                 showStep(currentStepIndex);
+
+                // Helper kompresi gambar di sisi klien sebelum diupload ke server
+                function compressImageFile(file, maxWidth = 1920, maxHeight = 1920, quality = 0.82) {
+                    if (!file.type || !file.type.match(/^image\/(jpeg|jpg|png|webp)$/i)) {
+                        return Promise.resolve(file);
+                    }
+
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = new Image();
+                            img.onload = function() {
+                                let width = img.naturalWidth || img.width;
+                                let height = img.naturalHeight || img.height;
+
+                                // Jika file sudah <= 800KB dan dimensinya tidak melebihi 1920px, biarkan asli
+                                if (file.size <= 800 * 1024 && width <= maxWidth && height <= maxHeight) {
+                                    return resolve(file);
+                                }
+
+                                if (width > maxWidth || height > maxHeight) {
+                                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                                    width = Math.round(width * ratio);
+                                    height = Math.round(height * ratio);
+                                }
+
+                                const canvas = document.createElement('canvas');
+                                canvas.width = width;
+                                canvas.height = height;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, width, height);
+
+                                canvas.toBlob(function(blob) {
+                                    if (!blob || blob.size >= file.size) {
+                                        return resolve(file);
+                                    }
+                                    const newName = file.name.replace(/\.[^.]+$/, '.jpg');
+                                    const compressedFile = new File([blob], newName, {
+                                        type: 'image/jpeg',
+                                        lastModified: Date.now()
+                                    });
+                                    resolve(compressedFile);
+                                }, 'image/jpeg', quality);
+                            };
+                            img.onerror = function() {
+                                resolve(file);
+                            };
+                            img.src = e.target.result;
+                        };
+                        reader.onerror = function() {
+                            resolve(file);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
 
                 async function handleFileUpload(fieldName, inputElement, isImage) {
                     const rawFiles = Array.from(inputElement.files);
                     if (!rawFiles || rawFiles.length === 0) return;
 
-                    const config = fieldConfigs[fieldName] || { maxFiles: 10, maxSize: 50 * 1024 * 1024, sizeLabel: '50MB' };
+                    const config = fieldConfigs[fieldName] || {
+                        maxFiles: 10,
+                        maxSize: 50 * 1024 * 1024,
+                        sizeLabel: '50MB'
+                    };
                     const currentBuffer = fileBuffers[fieldName];
 
                     if (currentBuffer.length + rawFiles.length > config.maxFiles) {
@@ -637,19 +915,14 @@
                         return;
                     }
 
-                    // Deteksi jika ada file format HEIC/HEIF dari iPhone
-                    const heicFiles = rawFiles.filter(f => {
-                        const nameLower = f.name.toLowerCase();
-                        return nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || f.type === 'image/heic' || f.type === 'image/heif';
-                    });
-
                     let filesToProcess = rawFiles;
 
-                    if (heicFiles.length > 0) {
+                    // Optimasi khusus gambar (HEIC conversion + client-side compression)
+                    if (isImage) {
                         if (typeof Swal !== 'undefined') {
                             Swal.fire({
-                                title: 'Mengonversi Foto HEIC...',
-                                html: `Sedang mengonversi <b>${heicFiles.length}</b> foto format iPhone (HEIC) ke JPG agar dapat ditampilkan di semua perangkat.<br><small class="text-muted">Proses berlangsung cepat di browser...</small>`,
+                                title: 'Mengoptimalkan Foto...',
+                                html: `Sedang memproses & mengompresi <b>${rawFiles.length}</b> foto agar ukuran efisien dan upload lancar.<br><small class="text-muted">Proses berlangsung otomatis di browser...</small>`,
                                 allowOutsideClick: false,
                                 didOpen: () => {
                                     Swal.showLoading();
@@ -659,32 +932,38 @@
 
                         filesToProcess = [];
                         for (let file of rawFiles) {
-                            const nameLower = file.name.toLowerCase();
-                            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || file.type === 'image/heic' || file.type === 'image/heif') {
+                            let currentFile = file;
+                            const nameLower = currentFile.name.toLowerCase();
+
+                            // 1. Konversi format HEIC/HEIF jika berasal dari iPhone
+                            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type === 'image/heic' || currentFile.type === 'image/heif') {
                                 try {
                                     if (typeof heic2any !== 'undefined') {
                                         const convertedBlob = await heic2any({
-                                            blob: file,
+                                            blob: currentFile,
                                             toType: 'image/jpeg',
                                             quality: 0.85
                                         });
                                         const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-                                        const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
-                                        const convertedFile = new File([blob], newName, {
+                                        const newName = currentFile.name.replace(/\.(heic|heif)$/i, '.jpg');
+                                        currentFile = new File([blob], newName, {
                                             type: 'image/jpeg',
-                                            lastModified: file.lastModified || Date.now()
+                                            lastModified: currentFile.lastModified || Date.now()
                                         });
-                                        filesToProcess.push(convertedFile);
-                                    } else {
-                                        filesToProcess.push(file);
                                     }
                                 } catch (err) {
-                                    console.error('Konversi HEIC gagal, gunakan file asli:', file.name, err);
-                                    filesToProcess.push(file);
+                                    console.error('Konversi HEIC gagal, gunakan file asli:', currentFile.name, err);
                                 }
-                            } else {
-                                filesToProcess.push(file);
                             }
+
+                            // 2. Kompresi & proporsional resize gambar di browser
+                            try {
+                                currentFile = await compressImageFile(currentFile);
+                            } catch (err) {
+                                console.error('Kompresi foto gagal:', currentFile.name, err);
+                            }
+
+                            filesToProcess.push(currentFile);
                         }
 
                         if (typeof Swal !== 'undefined') {
@@ -694,7 +973,9 @@
 
                     filesToProcess.forEach(file => {
                         if (file.size > config.maxSize) {
-                            alert(`File "${file.name}" terlalu besar. Maksimal ukuran ${config.sizeLabel}/file.`);
+                            alert(
+                                `File "${file.name}" terlalu besar. Maksimal ukuran ${config.sizeLabel}/file.`
+                            );
                             return;
                         }
 
@@ -748,14 +1029,20 @@
                             let icon = 'fa-file-alt text-secondary';
                             const nameLower = file.name.toLowerCase();
                             if (nameLower.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
-                            else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon = 'fa-file-word text-primary';
-                            else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower.endsWith('.csv')) icon = 'fa-file-excel text-success';
-                            else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon = 'fa-file-powerpoint text-warning';
-                            else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z')) icon = 'fa-file-archive text-info';
-                            else if (nameLower.match(/\.(jpg|jpeg|png|webp|gif|bmp)$/)) icon = 'fa-file-image text-purple';
+                            else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon =
+                                'fa-file-word text-primary';
+                            else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower
+                                .endsWith('.csv')) icon = 'fa-file-excel text-success';
+                            else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon =
+                                'fa-file-powerpoint text-warning';
+                            else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower
+                                .endsWith('.7z')) icon = 'fa-file-archive text-info';
+                            else if (nameLower.match(/\.(jpg|jpeg|png|webp|gif|bmp)$/)) icon =
+                                'fa-file-image text-purple';
 
                             const div = document.createElement('div');
-                            div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
+                            div.className =
+                                'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
                             div.style.paddingRight = '25px';
                             div.innerHTML = `
                                 <div class="d-flex align-items-center text-truncate mr-2" style="max-width: 90%;">
@@ -798,7 +1085,9 @@
                         var $el = $(this);
                         // Hancurkan instance lama jika sudah terlanjur diinisialisasi dengan konfigurasi default
                         if ($el.next().hasClass('note-editor') || $el.data('summernote')) {
-                            try { $el.summernote('destroy'); } catch(e) {}
+                            try {
+                                $el.summernote('destroy');
+                            } catch (e) {}
                         }
 
                         $el.summernote({
@@ -814,7 +1103,8 @@
                             callbacks: {
                                 onInit: function() {
                                     var $target = $(this);
-                                    if ($target.summernote('isEmpty') || $target.val().trim() === '<p><br></p>' || $target.val().trim() === '') {
+                                    if ($target.summernote('isEmpty') || $target.val().trim() ===
+                                        '<p><br></p>' || $target.val().trim() === '') {
                                         $target.summernote('empty');
                                     }
                                     if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();

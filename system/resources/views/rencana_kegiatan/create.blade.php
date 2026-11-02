@@ -219,7 +219,7 @@
                         <div class="mb-4">
                             <label class="form-label fw-bold">Media Publikasi (Foto/Banner)</label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="fotoInput" name="foto[]" class="custom-file-input" accept="image/*" multiple>
+                                <input type="file" id="fotoInput" name="foto[]" class="custom-file-input" accept="image/*,.heic,.heif" multiple>
                                 <label class="custom-file-label" for="fotoInput">Pilih file foto/banner...</label>
                             </div>
                             <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Unggah foto/banner terkait kegiatan. Bebas format gambar & jumlah file, foto berukuran besar akan otomatis dikompres oleh sistem.</small>
@@ -253,13 +253,67 @@
 
         let filesBuffer = [];
 
-        fotoInput.addEventListener('change', function() {
+        function compressImageFile(file, maxWidth = 1920, maxHeight = 1920, quality = 0.82) {
+            if (!file.type || !file.type.match(/^image\/(jpeg|jpg|png|webp)$/i)) {
+                return Promise.resolve(file);
+            }
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        let width = img.naturalWidth || img.width;
+                        let height = img.naturalHeight || img.height;
+                        if (file.size <= 800 * 1024 && width <= maxWidth && height <= maxHeight) {
+                            return resolve(file);
+                        }
+                        if (width > maxWidth || height > maxHeight) {
+                            const ratio = Math.min(maxWidth / width, maxHeight / height);
+                            width = Math.round(width * ratio);
+                            height = Math.round(height * ratio);
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        canvas.toBlob(function(blob) {
+                            if (!blob || blob.size >= file.size) return resolve(file);
+                            const newName = file.name.replace(/\.[^.]+$/, '.jpg');
+                            resolve(new File([blob], newName, { type: 'image/jpeg', lastModified: Date.now() }));
+                        }, 'image/jpeg', quality);
+                    };
+                    img.onerror = () => resolve(file);
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => resolve(file);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        fotoInput.addEventListener('change', async function() {
             for (let file of this.files) {
-                if (!file.type.startsWith('image/')) continue;
-                
+                let currentFile = file;
+                const nameLower = currentFile.name.toLowerCase();
+                if (!currentFile.type.startsWith('image/') && !nameLower.endsWith('.heic') && !nameLower.endsWith('.heif')) continue;
+
+                if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type === 'image/heic') {
+                    if (typeof heic2any !== 'undefined') {
+                        try {
+                            const convertedBlob = await heic2any({ blob: currentFile, toType: 'image/jpeg', quality: 0.85 });
+                            const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                            currentFile = new File([blob], currentFile.name.replace(/\.(heic|heif)$/i, '.jpg'), { type: 'image/jpeg' });
+                        } catch(e) {}
+                    }
+                }
+
+                try {
+                    currentFile = await compressImageFile(currentFile);
+                } catch(e) {}
+
                 // Hindari duplikasi
-                if (!filesBuffer.some(f => f.name === file.name && f.size === file.size)) {
-                    filesBuffer.push(file);
+                if (!filesBuffer.some(f => f.name === currentFile.name && f.size === currentFile.size)) {
+                    filesBuffer.push(currentFile);
                 }
             }
 
