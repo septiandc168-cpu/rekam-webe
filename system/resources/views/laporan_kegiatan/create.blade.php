@@ -304,7 +304,7 @@
                                 <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga
                                     50MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
-                                    scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan.</small>
+                                    scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan. Jika kegiatannya tidak memiliki daftar hadir, upload foto pesertanya.</small>
                                 <div id="preview-daftar_hadir" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
 
@@ -319,7 +319,7 @@
                                 </div>
                                 <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
-                                    catatan hasil rapat/diskusi selama kegiatan berlangsung (opsional).</small>
+                                    catatan hasil rapat/diskusi selama kegiatan berlangsung. Jika kegiatan tidak berupa rapat, upload dokumen yang berisi proses pelaksanaan kegiatannya dan ini bersifat opsional.</small>
                                 <div id="preview-notulen" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
 
