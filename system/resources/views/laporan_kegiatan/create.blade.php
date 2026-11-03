@@ -449,7 +449,7 @@
     @endpush
 
     @push('scripts')
-        <script src="/inwebe/rekam/public/adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+        <script src="/public/adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 bsCustomFileInput.init();
@@ -719,7 +719,9 @@
                     }
                     if (totalBytes > 25 * 1024 * 1024) {
                         const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
-                        if (!confirm(`Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan draft dapat gagal. Tetap lanjutkan?`)) {
+                        if (!confirm(
+                                `Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan draft dapat gagal. Tetap lanjutkan?`
+                            )) {
                             return false;
                         }
                     }
@@ -834,7 +836,9 @@
                     }
                     if (totalBytes > 25 * 1024 * 1024) {
                         const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
-                        if (!confirm(`Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan dapat gagal. Tetap lanjutkan?`)) {
+                        if (!confirm(
+                                `Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan dapat gagal. Tetap lanjutkan?`
+                            )) {
                             e.preventDefault();
                             return false;
                         }
@@ -858,7 +862,8 @@
                                 let height = img.naturalHeight || img.height;
 
                                 // Jika file sudah <= 800KB dan dimensinya tidak melebihi 1920px, biarkan asli
-                                if (file.size <= 800 * 1024 && width <= maxWidth && height <= maxHeight) {
+                                if (file.size <= 800 * 1024 && width <= maxWidth && height <=
+                                    maxHeight) {
                                     return resolve(file);
                                 }
 
@@ -936,7 +941,8 @@
                             const nameLower = currentFile.name.toLowerCase();
 
                             // 1. Konversi format HEIC/HEIF jika berasal dari iPhone
-                            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type === 'image/heic' || currentFile.type === 'image/heif') {
+                            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type ===
+                                'image/heic' || currentFile.type === 'image/heif') {
                                 try {
                                     if (typeof heic2any !== 'undefined') {
                                         const convertedBlob = await heic2any({
@@ -944,7 +950,8 @@
                                             toType: 'image/jpeg',
                                             quality: 0.85
                                         });
-                                        const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                                        const blob = Array.isArray(convertedBlob) ? convertedBlob[0] :
+                                            convertedBlob;
                                         const newName = currentFile.name.replace(/\.(heic|heif)$/i, '.jpg');
                                         currentFile = new File([blob], newName, {
                                             type: 'image/jpeg',

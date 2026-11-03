@@ -13,11 +13,12 @@
             @csrf
             <input type="hidden" name="action" id="form-action" value="ajukan">
             <!-- ALERT ERROR VALIDASI -->
-            @if($errors->any())
+            @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong><i class="fas fa-exclamation-triangle mr-1"></i> Gagal Menyimpan!</strong> Silakan periksa kembali isian form Anda.
+                    <strong><i class="fas fa-exclamation-triangle mr-1"></i> Gagal Menyimpan!</strong> Silakan periksa
+                    kembali isian form Anda.
                     <ul class="mb-0 mt-2">
-                        @foreach($errors->all() as $error)
+                        @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -31,19 +32,27 @@
             <div class="row mb-5 mt-2">
                 <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center position-relative">
-                        <div class="progress position-absolute" style="height: 4px; top: 20px; left: 10%; right: 10%; z-index: 1;">
-                            <div class="progress-bar bg-success" id="wizard-progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress position-absolute"
+                            style="height: 4px; top: 20px; left: 10%; right: 10%; z-index: 1;">
+                            <div class="progress-bar bg-success" id="wizard-progress" role="progressbar" style="width: 0%;"
+                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <div class="step-indicator active text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
+                        <div class="step-indicator active text-center position-relative"
+                            style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
+                                style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
                             <span class="fw-bold d-block step-text text-primary">Detail Kegiatan</span>
                         </div>
-                        <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
-                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
+                        <div class="step-indicator text-center position-relative"
+                            style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
+                                style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
                             <span class="fw-bold text-muted d-block step-text">Waktu & Lokasi</span>
                         </div>
-                        <div class="step-indicator text-center position-relative" style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-3">
-                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle" style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">3</div>
+                        <div class="step-indicator text-center position-relative"
+                            style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-3">
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
+                                style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">3</div>
                             <span class="fw-bold text-muted d-block step-text">Dokumen Pendukung</span>
                         </div>
                     </div>
@@ -54,32 +63,45 @@
             <div class="wizard-step" id="step-1">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white">
-                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i> Informasi Dasar Kegiatan</h3>
+                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i> Informasi Dasar
+                            Kegiatan</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 <label class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
-                                <input type="text" name="nama_kegiatan" class="form-control" placeholder="Masukkan nama kegiatan..." value="{{ old('nama_kegiatan') }}" required>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan nama kegiatan yang jelas dan spesifik agar mudah diidentifikasi oleh Admin.</small>
+                                <input type="text" name="nama_kegiatan" class="form-control"
+                                    placeholder="Masukkan nama kegiatan..." value="{{ old('nama_kegiatan') }}" required>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan nama
+                                    kegiatan yang jelas dan spesifik agar mudah diidentifikasi oleh Admin.</small>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Estimasi Jumlah Peserta <span class="text-danger">*</span></label>
-                                <input type="number" name="estimasi_peserta" class="form-control" placeholder="Masukkan estimasi jumlah peserta..." value="{{ old('estimasi_peserta') }}" required>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Perkiraan jumlah peserta yang akan hadir dalam kegiatan.</small>
+                                <input type="number" name="estimasi_peserta" class="form-control"
+                                    placeholder="Masukkan estimasi jumlah peserta..." value="{{ old('estimasi_peserta') }}"
+                                    required>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Perkiraan
+                                    jumlah peserta yang akan hadir dalam kegiatan.</small>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Penanggung Jawab <span class="text-danger">*</span></label>
-                                <input type="text" name="penanggung_jawab" class="form-control" placeholder="Masukkan nama penanggung jawab..." value="{{ old('penanggung_jawab') }}" required>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Nama individu yang bertanggung jawab atas pelaksanaan kegiatan ini.</small>
+                                <input type="text" name="penanggung_jawab" class="form-control"
+                                    placeholder="Masukkan nama penanggung jawab..." value="{{ old('penanggung_jawab') }}"
+                                    required>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Nama individu
+                                    yang bertanggung jawab atas pelaksanaan kegiatan ini.</small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Kelompok / Komunitas Pelaksana <span class="text-danger">*</span></label>
-                                <input type="text" name="kelompok" class="form-control" placeholder="Masukkan nama kelompok / komunitas pelaksana..." value="{{ old('kelompok') }}" required>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Nama kelompok, komunitas, atau lembaga yang bertanggung jawab melaksanakan kegiatan.</small>
+                                <label class="form-label">Kelompok / Komunitas Pelaksana <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="kelompok" class="form-control"
+                                    placeholder="Masukkan nama kelompok / komunitas pelaksana..."
+                                    value="{{ old('kelompok') }}" required>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Nama kelompok,
+                                    komunitas, atau lembaga yang bertanggung jawab melaksanakan kegiatan.</small>
                             </div>
                         </div>
 
@@ -88,36 +110,53 @@
                                 <label class="form-label">Jenis Kegiatan <span class="text-danger">*</span></label>
                                 <select name="jenis_kegiatan" class="form-select" id="jenis_kegiatan_select" required>
                                     <option value="">-- Pilih Jenis Kegiatan --</option>
-                                    @foreach(\App\Models\RencanaKegiatan::getJenisKegiatanOptions() as $value => $label)
-                                        <option value="{{ $value }}" {{ old('jenis_kegiatan') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                                    @foreach (\App\Models\RencanaKegiatan::getJenisKegiatanOptions() as $value => $label)
+                                        <option value="{{ $value }}"
+                                            {{ old('jenis_kegiatan') == $value ? 'selected' : '' }}>{{ $label }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Pilih kategori yang paling sesuai dengan kegiatan yang akan dilaksanakan.</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Pilih
+                                    kategori yang paling sesuai dengan kegiatan yang akan dilaksanakan.</small>
                             </div>
-                            <div class="col-md-6 mb-3" id="jenis_kegiatan_lainnya_row" style="display: {{ old('jenis_kegiatan') == 'lainnya' ? 'block' : 'none' }};">
-                                <label class="form-label">Deskripsi Jenis Kegiatan Lainnya <span class="text-danger">*</span></label>
-                                <input type="text" name="jenis_kegiatan_lainnya" class="form-control" placeholder="Masukkan jenis kegiatan lainnya..." value="{{ old('jenis_kegiatan_lainnya') }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan secara singkat jenis kegiatan yang tidak tercantum dalam daftar pilihan.</small>
+                            <div class="col-md-6 mb-3" id="jenis_kegiatan_lainnya_row"
+                                style="display: {{ old('jenis_kegiatan') == 'lainnya' ? 'block' : 'none' }};">
+                                <label class="form-label">Deskripsi Jenis Kegiatan Lainnya <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="jenis_kegiatan_lainnya" class="form-control"
+                                    placeholder="Masukkan jenis kegiatan lainnya..."
+                                    value="{{ old('jenis_kegiatan_lainnya') }}">
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                    secara singkat jenis kegiatan yang tidak tercantum dalam daftar pilihan.</small>
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Deskripsi Kegiatan <span class="text-danger">*</span></label>
-                                <textarea name="deskripsi" class="form-control summernote-editor" id="summernote-deskripsi" rows="3" placeholder="Masukkan deskripsi kegiatan...">{!! old('deskripsi') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan gambaran umum kegiatan: apa yang dilakukan, di mana, dan bagaimana pelaksanaannya.</small>
+                                <textarea name="deskripsi" class="form-control summernote-editor" id="summernote-deskripsi" rows="3"
+                                    placeholder="Masukkan deskripsi kegiatan...">{!! old('deskripsi') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                    gambaran umum kegiatan: apa yang dilakukan, di mana, dan bagaimana
+                                    pelaksanaannya.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tujuan Kegiatan <span class="text-danger">*</span></label>
-                                <textarea name="tujuan" class="form-control summernote-editor" id="summernote-tujuan" rows="2" placeholder="Masukkan tujuan kegiatan...">{!! old('tujuan') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan tujuan utama kegiatan secara jelas. Gunakan format poin jika lebih dari satu tujuan.</small>
+                                <textarea name="tujuan" class="form-control summernote-editor" id="summernote-tujuan" rows="2"
+                                    placeholder="Masukkan tujuan kegiatan...">{!! old('tujuan') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan
+                                    tujuan utama kegiatan secara jelas. Gunakan format poin jika lebih dari satu
+                                    tujuan.</small>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer bg-white clearfix">
-                        <a href="{{ route('rencana_kegiatan.index') }}" class="btn btn-secondary text-white float-left"><i class="fas fa-times mr-1"></i> Batal</a>
+                        <a href="{{ route('rencana_kegiatan.index') }}"
+                            class="btn btn-secondary text-white float-left"><i class="fas fa-times mr-1"></i> Batal</a>
                         <div class="float-right d-flex">
-                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft"><i class="fas fa-save mr-1"></i> Simpan sebagai Draft</button>
-                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft"><i
+                                    class="fas fa-save mr-1"></i> Simpan sebagai Draft</button>
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya
+                                <i class="fas fa-arrow-right ml-1"></i></button>
                         </div>
                     </div>
                 </div>
@@ -127,31 +166,40 @@
             <div class="wizard-step" id="step-2" style="display: none;">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white">
-                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-calendar-alt mr-1"></i> Waktu Pelaksanaan</h3>
+                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-calendar-alt mr-1"></i> Waktu
+                            Pelaksanaan</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
-                                <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="form-control" value="{{ old('tanggal_mulai') }}" required>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal pertama kegiatan dimulai.</small>
+                                <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="form-control"
+                                    value="{{ old('tanggal_mulai') }}" required>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal
+                                    pertama kegiatan dimulai.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tanggal Selesai <span class="text-danger">*</span></label>
-                                <input type="date" name="tanggal_selesai" id="tanggal_selesai" class="form-control" value="{{ old('tanggal_selesai') }}" required>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal terakhir kegiatan berlangsung. Jika hanya 1 hari, isi sama dengan tanggal mulai.</small>
+                                <input type="date" name="tanggal_selesai" id="tanggal_selesai" class="form-control"
+                                    value="{{ old('tanggal_selesai') }}" required>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal
+                                    terakhir kegiatan berlangsung. Jika hanya 1 hari, isi sama dengan tanggal mulai.</small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Waktu Mulai <span class="text-danger">*</span></label>
-                                <input type="time" name="waktu_mulai" class="form-control" value="{{ old('waktu_mulai') }}" required>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jam kegiatan dimulai (format 24 jam, contoh: 08:00).</small>
+                                <input type="time" name="waktu_mulai" class="form-control"
+                                    value="{{ old('waktu_mulai') }}" required>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jam kegiatan
+                                    dimulai (format 24 jam, contoh: 08:00).</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Waktu Selesai <span class="text-danger">*</span></label>
-                                <input type="time" name="waktu_selesai" class="form-control" value="{{ old('waktu_selesai') }}" required>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Perkiraan jam kegiatan selesai (format 24 jam, contoh: 16:00).</small>
+                                <input type="time" name="waktu_selesai" class="form-control"
+                                    value="{{ old('waktu_selesai') }}" required>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Perkiraan
+                                    jam kegiatan selesai (format 24 jam, contoh: 16:00).</small>
                             </div>
                         </div>
                     </div>
@@ -159,29 +207,39 @@
 
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white">
-                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-map-marker-alt mr-1"></i> Lokasi Kegiatan</h3>
+                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-map-marker-alt mr-1"></i> Lokasi
+                            Kegiatan</h3>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label">Desa / Wilayah <span class="text-danger">*</span></label>
-                            <input type="text" name="desa" class="form-control" placeholder="Masukkan nama desa / wilayah..." value="{{ old('desa') }}" required>
-                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Tuliskan nama desa atau wilayah tempat kegiatan akan dilaksanakan.</small>
+                            <input type="text" name="desa" class="form-control"
+                                placeholder="Masukkan nama desa / wilayah..." value="{{ old('desa') }}" required>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Tuliskan nama desa atau
+                                wilayah tempat kegiatan akan dilaksanakan.</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Koordinat Lokasi <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input type="text" id="location_lat" name="lat" class="form-control" placeholder="Latitude" value="{{ old('lat') }}" readonly required>
-                                <input type="text" id="location_lng" name="lng" class="form-control" placeholder="Longitude" value="{{ old('lng') }}" readonly required>
+                                <input type="text" id="location_lat" name="lat" class="form-control"
+                                    placeholder="Latitude" value="{{ old('lat') }}" readonly required>
+                                <input type="text" id="location_lng" name="lng" class="form-control"
+                                    placeholder="Longitude" value="{{ old('lng') }}" readonly required>
                             </div>
-                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Klik langsung pada peta atau gunakan kotak pencarian untuk menentukan titik lokasi kegiatan secara akurat.</small>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Klik langsung pada peta atau
+                                gunakan kotak pencarian untuk menentukan titik lokasi kegiatan secara akurat.</small>
                         </div>
-                        <div class="mb-3" id="map-create" style="width:100%; height:400px; border:1px solid #ddd; border-radius:4px;"></div>
+                        <div class="mb-3" id="map-create"
+                            style="width:100%; height:400px; border:1px solid #ddd; border-radius:4px;"></div>
                     </div>
                     <div class="card-footer bg-white clearfix">
-                        <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-1"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
+                        <button type="button" class="btn btn-secondary text-white btn-prev float-left"
+                            data-prev="step-1"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
                         <div class="float-right d-flex">
-                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft"><i class="fas fa-save mr-1"></i> Simpan sebagai Draft</button>
-                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-3">Selanjutnya <i class="fas fa-arrow-right ml-1"></i></button>
+                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft"><i
+                                    class="fas fa-save mr-1"></i> Simpan sebagai Draft</button>
+                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-3">Selanjutnya
+                                <i class="fas fa-arrow-right ml-1"></i></button>
                         </div>
                     </div>
                 </div>
@@ -191,21 +249,33 @@
             <div class="wizard-step" id="step-3" style="display: none;">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white">
-                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-list-alt mr-1"></i> Rincian Kebutuhan & Anggaran</h3>
+                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-list-alt mr-1"></i> Rincian Kebutuhan &
+                            Anggaran</h3>
                     </div>
                     <div class="card-body">
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-dark mb-1">Rincian Kebutuhan <span class="text-danger">*</span></label>
-                            <textarea name="rincian_kebutuhan" id="summernote-rincian" class="form-control summernote-editor" rows="4" placeholder="Tuliskan rincian kebutuhan kegiatan..." required>{!! old('rincian_kebutuhan') !!}</textarea>
-                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan rincian kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau rincian anggaran yang dibutuhkan. Jika rincian kebutuhan sudah tertera pada file atau in-kind, cukup tuliskan keterangan singkat (contoh: "Tertera pada file" atau "In-kind").</small>
+                            <label class="form-label fw-bold text-dark mb-1">Rincian Kebutuhan <span
+                                    class="text-danger">*</span></label>
+                            <textarea name="rincian_kebutuhan" id="summernote-rincian" class="form-control summernote-editor" rows="4"
+                                placeholder="Tuliskan rincian kebutuhan kegiatan..." required>{!! old('rincian_kebutuhan') !!}</textarea>
+                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan rincian
+                                kebutuhan kegiatan seperti barang/alat, sewa, konsumsi, atau rincian anggaran yang
+                                dibutuhkan. Jika rincian kebutuhan sudah tertera pada file atau in-kind, cukup tuliskan
+                                keterangan singkat (contoh: "Tertera pada file" atau "In-kind").</small>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold text-dark mb-1">File Anggaran Kegiatan <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold text-dark mb-1">File Anggaran Kegiatan <span
+                                    class="text-danger">*</span></label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" required>
-                                <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file anggaran...</label>
+                                <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan"
+                                    class="custom-file-input"
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" required>
+                                <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file
+                                    anggaran...</label>
                             </div>
-                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file proposal/RAB/rincian anggaran kegiatan. Bebas format dokumen (PDF, Word, Excel, ZIP, dll) hingga 50MB.</small>
+                            <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file
+                                proposal/RAB/rincian anggaran kegiatan. Bebas format dokumen (PDF, Word, Excel, ZIP, dll)
+                                hingga 50MB.</small>
                             <div id="preview-anggaran" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
@@ -213,33 +283,43 @@
 
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white">
-                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-file-alt mr-1"></i> Media & Dokumen Pendukung</h3>
+                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-file-alt mr-1"></i> Media & Dokumen
+                            Pendukung</h3>
                     </div>
                     <div class="card-body">
                         <div class="mb-4">
                             <label class="form-label fw-bold">Media Publikasi (Foto/Banner)</label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="fotoInput" name="foto[]" class="custom-file-input" accept="image/*,.heic,.heif" multiple>
+                                <input type="file" id="fotoInput" name="foto[]" class="custom-file-input"
+                                    accept="image/*,.heic,.heif" multiple>
                                 <label class="custom-file-label" for="fotoInput">Pilih file foto/banner...</label>
                             </div>
-                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Unggah foto/banner terkait kegiatan. Bebas format gambar & jumlah file, foto berukuran besar akan otomatis dikompres oleh sistem.</small>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Unggah foto/banner terkait
+                                kegiatan. Bebas format gambar & jumlah file, foto berukuran besar akan otomatis dikompres
+                                oleh sistem.</small>
                             <div id="image-preview-container" class="row mt-2"></div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Dokumen Pendukung (Opsional)</label>
                             <div class="custom-file mb-1">
-                                <input type="file" id="dokumenInput" name="dokumen[]" class="custom-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple>
+                                <input type="file" id="dokumenInput" name="dokumen[]" class="custom-file-input"
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple>
                                 <label class="custom-file-label" for="dokumenInput">Pilih file dokumen...</label>
                             </div>
-                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Lampirkan dokumen pendukung seperti surat izin, proposal, atau jadwal. Bebas format dokumen & jumlah file hingga 50MB/file.</small>
+                            <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Lampirkan dokumen pendukung
+                                seperti surat izin, proposal, atau jadwal. Bebas format dokumen & jumlah file hingga
+                                50MB/file.</small>
                             <div id="preview-dokumen" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
                     <div class="card-footer bg-white clearfix">
-                        <button type="button" class="btn btn-secondary text-white btn-prev float-left" data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
+                        <button type="button" class="btn btn-secondary text-white btn-prev float-left"
+                            data-prev="step-2"><i class="fas fa-arrow-left mr-1"></i> Sebelumnya</button>
                         <div class="float-right d-flex">
-                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft"><i class="fas fa-save mr-1"></i> Simpan sebagai Draft</button>
-                            <button type="submit" name="action" value="ajukan" class="btn bg-navy text-white"><i class="fas fa-paper-plane mr-1"></i> Ajukan Rencana</button>
+                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft"><i
+                                    class="fas fa-save mr-1"></i> Simpan sebagai Draft</button>
+                            <button type="submit" name="action" value="ajukan" class="btn bg-navy text-white"><i
+                                    class="fas fa-paper-plane mr-1"></i> Ajukan Rencana</button>
                         </div>
                     </div>
                 </div>
@@ -280,7 +360,10 @@
                         canvas.toBlob(function(blob) {
                             if (!blob || blob.size >= file.size) return resolve(file);
                             const newName = file.name.replace(/\.[^.]+$/, '.jpg');
-                            resolve(new File([blob], newName, { type: 'image/jpeg', lastModified: Date.now() }));
+                            resolve(new File([blob], newName, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            }));
                         }, 'image/jpeg', quality);
                     };
                     img.onerror = () => resolve(file);
@@ -295,21 +378,30 @@
             for (let file of this.files) {
                 let currentFile = file;
                 const nameLower = currentFile.name.toLowerCase();
-                if (!currentFile.type.startsWith('image/') && !nameLower.endsWith('.heic') && !nameLower.endsWith('.heif')) continue;
+                if (!currentFile.type.startsWith('image/') && !nameLower.endsWith('.heic') && !nameLower
+                    .endsWith('.heif')) continue;
 
-                if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type === 'image/heic') {
+                if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type ===
+                    'image/heic') {
                     if (typeof heic2any !== 'undefined') {
                         try {
-                            const convertedBlob = await heic2any({ blob: currentFile, toType: 'image/jpeg', quality: 0.85 });
+                            const convertedBlob = await heic2any({
+                                blob: currentFile,
+                                toType: 'image/jpeg',
+                                quality: 0.85
+                            });
                             const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-                            currentFile = new File([blob], currentFile.name.replace(/\.(heic|heif)$/i, '.jpg'), { type: 'image/jpeg' });
-                        } catch(e) {}
+                            currentFile = new File([blob], currentFile.name.replace(/\.(heic|heif)$/i,
+                            '.jpg'), {
+                                type: 'image/jpeg'
+                            });
+                        } catch (e) {}
                     }
                 }
 
                 try {
                     currentFile = await compressImageFile(currentFile);
-                } catch(e) {}
+                } catch (e) {}
 
                 // Hindari duplikasi
                 if (!filesBuffer.some(f => f.name === currentFile.name && f.size === currentFile.size)) {
@@ -371,7 +463,7 @@
 
         dokumenInput.addEventListener('change', function() {
             const maxSize = 50 * 1024 * 1024; // 50MB
-            
+
             Array.from(this.files).forEach(file => {
                 // Validasi ukuran file
                 if (file.size > maxSize) {
@@ -401,10 +493,14 @@
                 let icon = 'fa-file-alt text-secondary';
                 const nameLower = file.name.toLowerCase();
                 if (nameLower.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
-                else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon = 'fa-file-word text-primary';
-                else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower.endsWith('.csv')) icon = 'fa-file-excel text-success';
-                else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon = 'fa-file-powerpoint text-warning';
-                else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z')) icon = 'fa-file-archive text-info';
+                else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon =
+                    'fa-file-word text-primary';
+                else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower.endsWith('.csv'))
+                    icon = 'fa-file-excel text-success';
+                else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon =
+                    'fa-file-powerpoint text-warning';
+                else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z'))
+                    icon = 'fa-file-archive text-info';
 
                 const div = document.createElement('div');
                 div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
@@ -447,7 +543,7 @@
 
         anggaranKegiatanInput.addEventListener('change', function() {
             const maxSize = 50 * 1024 * 1024; // 50MB
-            
+
             if (this.files.length > 1) {
                 alert('Maksimal 1 file anggaran kegiatan.');
                 this.value = '';
@@ -476,10 +572,14 @@
                 let icon = 'fa-file-alt text-secondary';
                 const nameLower = file.name.toLowerCase();
                 if (nameLower.endsWith('.pdf')) icon = 'fa-file-pdf text-danger';
-                else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon = 'fa-file-word text-primary';
-                else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower.endsWith('.csv')) icon = 'fa-file-excel text-success';
-                else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon = 'fa-file-powerpoint text-warning';
-                else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z')) icon = 'fa-file-archive text-info';
+                else if (nameLower.endsWith('.doc') || nameLower.endsWith('.docx')) icon =
+                    'fa-file-word text-primary';
+                else if (nameLower.endsWith('.xls') || nameLower.endsWith('.xlsx') || nameLower.endsWith('.csv'))
+                    icon = 'fa-file-excel text-success';
+                else if (nameLower.endsWith('.ppt') || nameLower.endsWith('.pptx')) icon =
+                    'fa-file-powerpoint text-warning';
+                else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z'))
+                    icon = 'fa-file-archive text-info';
 
                 const div = document.createElement('div');
                 div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
@@ -524,8 +624,9 @@
             if (jenisKegiatanSelect) {
                 jenisKegiatanSelect.addEventListener('change', function() {
                     const jenisKegiatanLainnyaRow = document.getElementById('jenis_kegiatan_lainnya_row');
-                    const jenisKegiatanLainnyaInput = document.querySelector('input[name="jenis_kegiatan_lainnya"]');
-                    
+                    const jenisKegiatanLainnyaInput = document.querySelector(
+                        'input[name="jenis_kegiatan_lainnya"]');
+
                     if (this.value === 'lainnya') {
                         jenisKegiatanLainnyaRow.style.display = 'block';
                         jenisKegiatanLainnyaInput.required = true;
@@ -546,21 +647,26 @@
             #map-create {
                 background: #f7fafc;
             }
+
             .step-indicator {
                 cursor: pointer;
                 user-select: none;
                 transition: transform 0.2s ease;
             }
+
             .step-indicator:hover .step-circle {
                 transform: scale(1.08);
             }
+
             .step-circle {
                 transition: all 0.25s ease;
             }
+
             .progress {
                 overflow: visible;
                 background-color: #e9ecef;
             }
+
             .note-editor .note-placeholder {
                 color: #6c757d !important;
                 font-style: normal !important;
@@ -581,7 +687,7 @@
             document.addEventListener('DOMContentLoaded', function() {
                 // 1. Inisialisasi Peta (Default View: Pontianak)
                 window.map = L.map('map-create').setView([-0.0227, 109.3323], 12);
-                
+
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '&copy; OpenStreetMap contributors'
@@ -602,7 +708,9 @@
                     if (pickMarker) {
                         pickMarker.setLatLng(latlng);
                     } else {
-                        pickMarker = L.marker(latlng, { draggable: true }).addTo(window.map);
+                        pickMarker = L.marker(latlng, {
+                            draggable: true
+                        }).addTo(window.map);
                         // Update lat/lng jika marker digeser manual (drag)
                         pickMarker.on('dragend', function(e) {
                             const pos = e.target.getLatLng();
@@ -616,7 +724,10 @@
                 let oldLat = document.getElementById('location_lat').value;
                 let oldLng = document.getElementById('location_lng').value;
                 if (oldLat && oldLng) {
-                    let oldLatLng = { lat: parseFloat(oldLat), lng: parseFloat(oldLng) };
+                    let oldLatLng = {
+                        lat: parseFloat(oldLat),
+                        lng: parseFloat(oldLng)
+                    };
                     window.map.setView(oldLatLng, 15); // Zoom lebih dekat
                     createOrMoveMarker(oldLatLng);
                 }
@@ -628,24 +739,24 @@
 
                 // 3. Inisialisasi Kotak Pencarian (Geocoder)
                 L.Control.geocoder({
-                    geocoder: L.Control.Geocoder.arcgis(),
-                    defaultMarkGeocode: false,
-                    placeholder: "Cari nama jalan, desa, kota...",
-                })
-                .on('markgeocode', function(e) {
-                    const center = e.geocode.center;
-                    
-                    // Geser kamera ke hasil pencarian
-                    window.map.fitBounds(e.geocode.bbox); 
-                    
-                    // Buat/pindahkan marker ke hasil pencarian
-                    createOrMoveMarker(center);    
-                })
-                .addTo(window.map);
+                        geocoder: L.Control.Geocoder.arcgis(),
+                        defaultMarkGeocode: false,
+                        placeholder: "Cari nama jalan, desa, kota...",
+                    })
+                    .on('markgeocode', function(e) {
+                        const center = e.geocode.center;
+
+                        // Geser kamera ke hasil pencarian
+                        window.map.fitBounds(e.geocode.bbox);
+
+                        // Buat/pindahkan marker ke hasil pencarian
+                        createOrMoveMarker(center);
+                    })
+                    .addTo(window.map);
 
                 // Fix render peta di dalam card Bootstrap
-                setTimeout(function() { 
-                    if(window.map) window.map.invalidateSize(); 
+                setTimeout(function() {
+                    if (window.map) window.map.invalidateSize();
                 }, 250);
             });
             // --- LOGIKA MULTI-STEP WIZARD & SUBMIT ---
@@ -653,7 +764,7 @@
                 const form = document.getElementById('rencana-kegiatan-form');
                 const steps = ['step-1', 'step-2', 'step-3'];
                 let currentStepIndex = 0;
-                
+
                 // Elemen Progress
                 const progressBar = document.getElementById('wizard-progress');
 
@@ -666,7 +777,7 @@
                             const code = $el.summernote('code');
                             const cleanText = $('<div>').html(code).text().replace(/\u00a0/g, ' ').trim();
                             return cleanText.length > 0;
-                        } catch(e) {}
+                        } catch (e) {}
                     }
                     const rawEl = typeof selector === 'string' ? document.querySelector(selector) : selector;
                     if (rawEl && rawEl.value) {
@@ -686,10 +797,11 @@
                         const kelompok = (document.querySelector('input[name="kelompok"]')?.value || '').trim();
                         const jenisSelect = document.querySelector('select[name="jenis_kegiatan"]');
                         const jenis = (jenisSelect?.value || '').trim();
-                        
+
                         let jenisValid = jenis !== '';
                         if (jenis === 'lainnya') {
-                            const jenisLainnya = (document.querySelector('input[name="jenis_kegiatan_lainnya"]')?.value || '').trim();
+                            const jenisLainnya = (document.querySelector('input[name="jenis_kegiatan_lainnya"]')
+                                ?.value || '').trim();
                             jenisValid = jenisLainnya !== '';
                         }
 
@@ -700,9 +812,11 @@
                     } else if (stepIdx === 1) {
                         // Tahap 2: Waktu & Lokasi
                         const tglMulai = (document.querySelector('input[name="tanggal_mulai"]')?.value || '').trim();
-                        const tglSelesai = (document.querySelector('input[name="tanggal_selesai"]')?.value || '').trim();
+                        const tglSelesai = (document.querySelector('input[name="tanggal_selesai"]')?.value || '')
+                    .trim();
                         const waktuMulai = (document.querySelector('input[name="waktu_mulai"]')?.value || '').trim();
-                        const waktuSelesai = (document.querySelector('input[name="waktu_selesai"]')?.value || '').trim();
+                        const waktuSelesai = (document.querySelector('input[name="waktu_selesai"]')?.value || '')
+                    .trim();
                         const desa = (document.querySelector('input[name="desa"]')?.value || '').trim();
                         const lat = (document.querySelector('input[name="lat"]')?.value || '').trim();
                         const lng = (document.querySelector('input[name="lng"]')?.value || '').trim();
@@ -712,13 +826,14 @@
                         // Tahap 3: Kebutuhan & Dokumen
                         const rincianValid = isSummernoteFilled('#summernote-rincian');
                         const anggaranInput = document.getElementById('anggaranKegiatanInput');
-                        const anggaranValid = (anggaranInput && anggaranInput.files && anggaranInput.files.length > 0) || (typeof anggaranBuffer !== 'undefined' && anggaranBuffer.length > 0);
+                        const anggaranValid = (anggaranInput && anggaranInput.files && anggaranInput.files.length >
+                            0) || (typeof anggaranBuffer !== 'undefined' && anggaranBuffer.length > 0);
 
                         return !!(rincianValid && anggaranValid);
                     }
                     return false;
                 }
-                
+
                 function showStep(index) {
                     currentStepIndex = index;
                     // Hide all steps
@@ -726,7 +841,7 @@
                         const el = document.getElementById(step);
                         if (el) el.style.display = 'none';
                     });
-                    
+
                     // Show current step
                     const currentEl = document.getElementById(steps[index]);
                     if (currentEl) {
@@ -734,27 +849,28 @@
                         $(currentEl).find('.summernote-editor').each(function() {
                             const $t = $(this);
                             if (typeof $t.summernote === 'function') {
-                                if ($t.summernote('isEmpty') || $t.val().trim() === '<p><br></p>' || $t.val().trim() === '') {
+                                if ($t.summernote('isEmpty') || $t.val().trim() === '<p><br></p>' || $t.val()
+                                    .trim() === '') {
                                     $t.summernote('empty');
                                 }
                             }
                         });
                     }
-                    
+
                     // Khusus Step 2: Trigger Leaflet agar me-render ulang ukuran container
                     if (steps[index] === 'step-2' && typeof window.map !== 'undefined') {
                         setTimeout(() => window.map.invalidateSize(), 300);
                     }
-                    
+
                     // Update UI Progress Bar
                     updateProgressUI(index);
                 }
-                
+
                 function updateProgressUI(index) {
                     // Update Circles and Texts sesuai kelengkapan kolom yang terisi
-                    for(let i=0; i<steps.length; i++) {
-                        const indicator = document.getElementById('indicator-' + (i+1));
-                        if(!indicator) continue;
+                    for (let i = 0; i < steps.length; i++) {
+                        const indicator = document.getElementById('indicator-' + (i + 1));
+                        if (!indicator) continue;
                         const circle = indicator.querySelector('.step-circle');
                         const text = indicator.querySelector('.step-text');
                         const complete = isStepComplete(i);
@@ -764,34 +880,39 @@
                             indicator.classList.add('active');
                             if (complete) {
                                 // Tahap aktif dan sudah lengkap terisi
-                                circle.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle shadow';
+                                circle.className =
+                                    'rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle shadow';
                                 circle.innerHTML = '<i class="fas fa-check"></i>';
                                 circle.style.boxShadow = '0 0 0 4px rgba(0, 123, 255, 0.45)';
                                 text.className = 'fw-bold text-primary d-block step-text';
-                                indicator.setAttribute('title', 'Tahap ' + (i+1) + ': Sudah terisi lengkap (sedang aktif)');
+                                indicator.setAttribute('title', 'Tahap ' + (i + 1) +
+                                    ': Sudah terisi lengkap (sedang aktif)');
                             } else {
                                 // Tahap aktif dan belum lengkap
-                                circle.className = 'rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle shadow';
-                                circle.innerHTML = (i+1);
+                                circle.className =
+                                    'rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle shadow';
+                                circle.innerHTML = (i + 1);
                                 circle.style.boxShadow = '0 0 0 4px rgba(0, 123, 255, 0.25)';
                                 text.className = 'fw-bold text-primary d-block step-text';
-                                indicator.setAttribute('title', 'Tahap ' + (i+1) + ': Belum lengkap (sedang aktif)');
+                                indicator.setAttribute('title', 'Tahap ' + (i + 1) + ': Belum lengkap (sedang aktif)');
                             }
                         } else {
                             indicator.classList.remove('active');
                             circle.style.boxShadow = 'none';
                             if (complete) {
                                 // Tahap tidak aktif dan sudah lengkap terisi
-                                circle.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle';
+                                circle.className =
+                                    'rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle';
                                 circle.innerHTML = '<i class="fas fa-check"></i>';
                                 text.className = 'fw-bold text-success d-block step-text';
-                                indicator.setAttribute('title', 'Tahap ' + (i+1) + ': Sudah terisi lengkap');
+                                indicator.setAttribute('title', 'Tahap ' + (i + 1) + ': Sudah terisi lengkap');
                             } else {
                                 // Tahap tidak aktif dan belum lengkap
-                                circle.className = 'rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle';
-                                circle.innerHTML = (i+1);
+                                circle.className =
+                                    'rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle';
+                                circle.innerHTML = (i + 1);
                                 text.className = 'fw-bold text-muted d-block step-text';
-                                indicator.setAttribute('title', 'Tahap ' + (i+1) + ': Belum lengkap');
+                                indicator.setAttribute('title', 'Tahap ' + (i + 1) + ': Belum lengkap');
                             }
                         }
                     }
@@ -805,16 +926,16 @@
                     } else {
                         progressPercentage = 0;
                     }
-                    if(progressBar) {
+                    if (progressBar) {
                         progressBar.style.width = progressPercentage + '%';
                         progressBar.style.transition = 'width 0.3s ease';
                     }
                 }
 
                 // Klik langsung pada lingkaran / label indikator untuk navigasi ke tahap tersebut
-                for(let i=0; i<steps.length; i++) {
-                    const indicator = document.getElementById('indicator-' + (i+1));
-                    if(indicator) {
+                for (let i = 0; i < steps.length; i++) {
+                    const indicator = document.getElementById('indicator-' + (i + 1));
+                    if (indicator) {
                         indicator.style.cursor = 'pointer';
                         indicator.addEventListener('click', function() {
                             showStep(i);
@@ -825,6 +946,7 @@
 
                 // Pembaruan realtime saat form diinput / diubah
                 let updateTimeout = null;
+
                 function scheduleUpdateProgress() {
                     if (updateTimeout) clearTimeout(updateTimeout);
                     updateTimeout = setTimeout(() => {
@@ -840,7 +962,7 @@
 
                 // Inisialisasi awal
                 updateProgressUI(0);
-                
+
                 // Event Listener Tombol "Simpan sebagai Draft" di semua bagian
                 document.querySelectorAll('.btn-save-draft').forEach(btn => {
                     btn.addEventListener('click', function(e) {
@@ -848,7 +970,8 @@
                         const namaKegiatanInput = document.querySelector('input[name="nama_kegiatan"]');
                         const namaKegiatan = namaKegiatanInput ? namaKegiatanInput.value.trim() : '';
                         if (!namaKegiatan) {
-                            alert('Mohon isi Nama Kegiatan terlebih dahulu untuk menyimpan sebagai draft.');
+                            alert(
+                                'Mohon isi Nama Kegiatan terlebih dahulu untuk menyimpan sebagai draft.');
                             showStep(0);
                             if (namaKegiatanInput) namaKegiatanInput.focus();
                             return false;
@@ -880,7 +1003,7 @@
                         window.scrollTo(0, 0); // Gulir ke atas
                     });
                 });
-                
+
                 // Event Listener Tombol "Sebelumnya"
                 document.querySelectorAll('.btn-prev').forEach(btn => {
                     btn.addEventListener('click', function() {
@@ -889,19 +1012,19 @@
                         window.scrollTo(0, 0);
                     });
                 });
-                
+
                 // --- LOGIKA SMART DATE RANGE ---
                 const tglMulai = document.getElementById('tanggal_mulai');
                 const tglSelesai = document.getElementById('tanggal_selesai');
-                
-                if(tglMulai && tglSelesai) {
+
+                if (tglMulai && tglSelesai) {
                     tglMulai.addEventListener('change', function() {
                         // Set attribut min (tanggal minimal) pada field tanggal selesai
                         tglSelesai.min = this.value;
-                        
+
                         // Reset tanggal selesai jika tanggalnya lebih kecil dari tanggal mulai yang baru
                         if (tglSelesai.value && tglSelesai.value < this.value) {
-                            tglSelesai.value = this.value; 
+                            tglSelesai.value = this.value;
                         }
                     });
                 }
@@ -961,7 +1084,7 @@
                         }
                     });
                 }
-                
+
                 // Init view awal
                 showStep(currentStepIndex);
             });
@@ -969,12 +1092,15 @@
             // Rincian Pengajuan Dynamic Table Logic
             // ---------------------------------
             function formatRupiah(number) {
-                return 'Rp ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(number || 0);
+                return 'Rp ' + new Intl.NumberFormat('id-ID', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(number || 0);
             }
         </script>
         <script src="/public/adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 bsCustomFileInput.init();
             });
 
@@ -985,7 +1111,9 @@
                         var $el = $(this);
                         // Hancurkan instance lama jika sudah terlanjur diinisialisasi dengan konfigurasi default
                         if ($el.next().hasClass('note-editor') || $el.data('summernote')) {
-                            try { $el.summernote('destroy'); } catch(e) {}
+                            try {
+                                $el.summernote('destroy');
+                            } catch (e) {}
                         }
 
                         $el.summernote({
@@ -1001,7 +1129,8 @@
                             callbacks: {
                                 onInit: function() {
                                     var $target = $(this);
-                                    if ($target.summernote('isEmpty') || $target.val().trim() === '<p><br></p>' || $target.val().trim() === '') {
+                                    if ($target.summernote('isEmpty') || $target.val().trim() ===
+                                        '<p><br></p>' || $target.val().trim() === '') {
                                         $target.summernote('empty');
                                     }
                                     if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();

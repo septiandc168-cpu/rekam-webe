@@ -180,23 +180,27 @@
         </div>
         
         <div class="d-flex align-items-center flex-wrap flex-shrink-0 mt-1 mt-lg-0">
-            @if(auth()->user()->role->role_name === 'admin' && $rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DIAJUKAN)
-                <!-- Tombol Setujui Langsung -->
-                <form action="{{ route('rencana_kegiatan.setujui', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2">
-                    @csrf
-                    @method('PUT')
-                    <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check mr-1"></i> Setujui</button>
-                </form>
+            @if(auth()->user()->role->role_name === 'admin' && in_array($rencana_kegiatan->status, [\App\Models\RencanaKegiatan::STATUS_DIAJUKAN, \App\Models\RencanaKegiatan::STATUS_DISETUJUI]))
+                @if($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DIAJUKAN)
+                    <!-- Tombol Setujui Langsung -->
+                    <form action="{{ route('rencana_kegiatan.setujui', $rencana_kegiatan->uuid ?? $rencana_kegiatan->id) }}" method="POST" class="d-inline mr-2">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check mr-1"></i> Setujui</button>
+                    </form>
+                @endif
 
                 <!-- Tombol Buka Modal Revisi -->
                 <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark" data-toggle="modal" data-target="#modal-revisi">
                     <i class="fas fa-edit mr-1"></i> Minta Revisi
                 </button>
                 
-                <!-- Tombol Buka Modal Tolak -->
-                <button type="button" class="btn btn-danger btn-sm mr-2" data-toggle="modal" data-target="#modal-tolak">
-                    <i class="fas fa-times mr-1"></i> Tolak
-                </button>
+                @if($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_DIAJUKAN)
+                    <!-- Tombol Buka Modal Tolak -->
+                    <button type="button" class="btn btn-danger btn-sm mr-2" data-toggle="modal" data-target="#modal-tolak">
+                        <i class="fas fa-times mr-1"></i> Tolak
+                    </button>
+                @endif
             @endif
 
             @if(auth()->user()->role->role_name === 'admin' && ($rencana_kegiatan->status === \App\Models\RencanaKegiatan::STATUS_SELESAI || ($rencana_kegiatan->hasLaporan() && $rencana_kegiatan->laporanKegiatan->status === 'final')))

@@ -921,11 +921,12 @@ class RencanaKegiatanController extends Controller
             'keterangan_status.required' => 'Catatan revisi wajib diisi.',
         ]);
 
-        // Validasi transisi status: hanya rencana berstatus 'diajukan' yang bisa direvisi
+        // Validasi transisi status: hanya rencana berstatus 'diajukan' atau 'disetujui' yang bisa direvisi
         if (!in_array($rencana->status, [
             RencanaKegiatan::STATUS_DIAJUKAN,
+            RencanaKegiatan::STATUS_DISETUJUI,
         ])) {
-            toast('Rencana kegiatan tidak dapat direvisi karena statusnya bukan "Diajukan".', 'error');
+            toast('Rencana kegiatan tidak dapat direvisi karena statusnya bukan "Diajukan" atau "Disetujui".', 'error');
             return redirect()->back();
         }
 

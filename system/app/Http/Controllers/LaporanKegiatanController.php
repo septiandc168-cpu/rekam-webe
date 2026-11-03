@@ -876,29 +876,56 @@ class LaporanKegiatanController extends Controller
         }
         $request->validate(['catatan_evaluasi' => 'required|string']);
 
-        $laporan = LaporanKegiatan::where('uuid', $id)->firstOrFail();
+        $laporan = is_numeric($id) 
+            ? LaporanKegiatan::with('rencanaKegiatan')->findOrFail($id) 
+            : LaporanKegiatan::with('rencanaKegiatan')->where('uuid', $id)->firstOrFail();
         
-        $laporan->update([
-            'status' => \App\Models\LaporanKegiatan::STATUS_REVISI,
-            'catatan_evaluasi' => $request->catatan_evaluasi,
-        ]);
-
-        // Kirim notifikasi ke pembuat laporan
-        if ($laporan->user_id !== auth()->id()) {
-            $pembuat = \App\Models\User::find($laporan->user_id);
-            if ($pembuat) {
-                $pembuat->notify(new \App\Notifications\StatusLaporanNotification(
-                    $laporan->uuid,
-                    $laporan->rencanaKegiatan->nama_kegiatan ?? 'Kegiatan',
-                    \App\Models\LaporanKegiatan::STATUS_REVISI,
-                    $request->catatan_evaluasi,
-                    now()
-                ));
-            }
+        // Validasi transisi status: hanya laporan berstatus 'diajukan' atau 'final' yang bisa direvisi
+        if (!in_array($laporan->status, [
+            \App\Models\LaporanKegiatan::STATUS_DIAJUKAN,
+            \App\Models\LaporanKegiatan::STATUS_FINAL,
+        ])) {
+            toast('Laporan kegiatan tidak dapat direvisi.', 'error');
+            return redirect()->back();
         }
 
-        toast('Permintaan revisi berhasil dikirim ke anggota.', 'success');
-        return redirect()->back();
+        try {
+            DB::transaction(function () use ($laporan, $request) {
+                $laporan->update([
+                    'status' => \App\Models\LaporanKegiatan::STATUS_REVISI,
+                    'catatan_evaluasi' => $request->catatan_evaluasi,
+                ]);
+
+                // Jika rencana kegiatan terkait berstatus selesai, kembalikan ke disetujui
+                if ($laporan->rencanaKegiatan && $laporan->rencanaKegiatan->status === \App\Models\RencanaKegiatan::STATUS_SELESAI) {
+                    $laporan->rencanaKegiatan->update([
+                        'status' => \App\Models\RencanaKegiatan::STATUS_DISETUJUI,
+                        'keterangan_status' => 'Rencana kembali berstatus disetujui karena laporan kegiatan diminta untuk direvisi.',
+                    ]);
+                }
+            });
+
+            // Kirim notifikasi ke pembuat laporan
+            if ($laporan->user_id !== auth()->id()) {
+                $pembuat = \App\Models\User::find($laporan->user_id);
+                if ($pembuat) {
+                    $pembuat->notify(new \App\Notifications\StatusLaporanNotification(
+                        $laporan->uuid,
+                        $laporan->rencanaKegiatan->nama_kegiatan ?? 'Kegiatan',
+                        \App\Models\LaporanKegiatan::STATUS_REVISI,
+                        $request->catatan_evaluasi,
+                        now()
+                    ));
+                }
+            }
+
+            toast('Permintaan revisi berhasil dikirim ke anggota.', 'success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error('Gagal meminta revisi laporan: ' . $e->getMessage());
+            toast('Terjadi kesalahan sistem saat meminta revisi laporan.', 'error');
+            return redirect()->back();
+        }
     }
 
     /**

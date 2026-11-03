@@ -202,7 +202,9 @@
                         <i class="fas fa-check-circle mr-1"></i> Terima & Finalisasi
                     </button>
                 </form>
+            @endif
 
+            @if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DIAJUKAN, \App\Models\LaporanKegiatan::STATUS_FINAL]) && auth()->user()->role->role_name === 'admin')
                 <!-- Tombol Buka Modal Revisi -->
                 <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark" data-toggle="modal" data-target="#modal-revisi">
                     <i class="fas fa-edit mr-1"></i> Minta Revisi
@@ -695,7 +697,7 @@
 </div>
 
 <!-- Modal Minta Revisi -->
-@if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN && auth()->user()->role->role_name === 'admin')
+@if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DIAJUKAN, \App\Models\LaporanKegiatan::STATUS_FINAL]) && auth()->user()->role->role_name === 'admin')
 <div class="modal fade" id="modal-revisi" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
