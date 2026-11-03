@@ -442,7 +442,8 @@
                                 <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga
                                     50MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
-                                    scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan. Jika kegiatannya tidak memiliki daftar hadir, upload foto pesertanya.</small>
+                                    scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan. Jika kegiatannya
+                                    tidak memiliki daftar hadir, upload foto pesertanya.</small>
                                 <div id="preview-daftar_hadir" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
                             <div class="col-md-6 mb-4">
@@ -485,7 +486,9 @@
                                 </div>
                                 <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
-                                    catatan hasil rapat/diskusi selama kegiatan berlangsung. Jika kegiatan tidak berupa rapat, upload dokumen yang berisi proses pelaksanaan kegiatannya dan ini bersifat opsional.</small>
+                                    catatan hasil rapat/diskusi selama kegiatan berlangsung. Jika kegiatan tidak berupa
+                                    rapat, upload dokumen yang berisi proses pelaksanaan kegiatannya dan ini bersifat
+                                    opsional.</small>
                                 <div id="preview-notulen" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
 
@@ -956,7 +959,7 @@
                         const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
                         if (!confirm(
                                 `Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan draft dapat gagal. Tetap lanjutkan?`
-                                )) {
+                            )) {
                             return false;
                         }
                     }
@@ -1075,7 +1078,7 @@
                         const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
                         if (!confirm(
                                 `Perhatian: Total ukuran seluruh file yang diunggah adalah ${totalMB} MB. Jika kapasitas upload server hosting terbatas, penyimpanan dapat gagal. Tetap lanjutkan?`
-                                )) {
+                            )) {
                             e.preventDefault();
                             return false;
                         }
@@ -1221,7 +1224,7 @@
                                             quality: 0.85
                                         });
                                         const blob = Array.isArray(convertedBlob) ? convertedBlob[0] :
-                                        convertedBlob;
+                                            convertedBlob;
                                         const newName = currentFile.name.replace(/\.(heic|heif)$/i, '.jpg');
                                         currentFile = new File([blob], newName, {
                                             type: 'image/jpeg',

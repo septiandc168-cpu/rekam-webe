@@ -10,12 +10,15 @@
             padding-left: 0;
             padding-right: 0;
         }
+
         .list-group-item:first-child {
             border-top: 0;
         }
+
         .list-group-item:last-child {
             border-bottom: 0;
         }
+
         .info-box-icon {
             width: 40px;
             height: 40px;
@@ -33,12 +36,14 @@
             height: 180px;
             width: 100%;
         }
+
         .gallery-img {
             transition: transform 0.3s ease;
             object-fit: cover;
             width: 100%;
             height: 100%;
         }
+
         .gallery-img-wrapper:hover .gallery-img {
             transform: scale(1.1);
         }
@@ -52,6 +57,7 @@
             margin-top: 1rem;
             padding: 0 20px;
         }
+
         .timeline-tracker::before {
             content: '';
             position: absolute;
@@ -62,12 +68,14 @@
             background: #e9ecef;
             z-index: 1;
         }
+
         .timeline-step {
             position: relative;
             z-index: 2;
             text-align: center;
             flex: 1;
         }
+
         .timeline-icon {
             width: 35px;
             height: 35px;
@@ -82,48 +90,66 @@
             border: 4px solid #fff;
             transition: all 0.3s;
         }
+
         .timeline-step.active .timeline-icon {
             background: #007bff;
             color: #fff;
             box-shadow: 0 0 0 3px #007bff;
         }
+
         .timeline-step.completed .timeline-icon {
             background: #28a745;
             color: #fff;
             box-shadow: 0 0 0 3px #28a745;
         }
+
         .timeline-step.rejected .timeline-icon {
             background: #ffc107;
             color: #212529;
             box-shadow: 0 0 0 3px #ffc107;
         }
+
         .timeline-label {
             font-size: 0.85rem;
             font-weight: 600;
             color: #6c757d;
         }
-        .timeline-step.active .timeline-label { color: #007bff; }
-        .timeline-step.completed .timeline-label { color: #28a745; }
-        .timeline-step.rejected .timeline-label { color: #d39e00; }
+
+        .timeline-step.active .timeline-label {
+            color: #007bff;
+        }
+
+        .timeline-step.completed .timeline-label {
+            color: #28a745;
+        }
+
+        .timeline-step.rejected .timeline-label {
+            color: #d39e00;
+        }
 
         /* Accordion polished */
         .accordion-toggle-icon {
             font-size: 0.75rem;
             transition: transform 0.3s;
         }
+
         .accordion-item-header {
             transition: background-color 0.2s ease;
         }
+
         .accordion-item-header:hover {
             background-color: #f0f4f8 !important;
         }
+
         .accordion-item-header.is-open {
             background-color: #eef2ff !important;
         }
+
         .accordion-item-header.is-open h6,
         .accordion-item-header.is-open .accordion-toggle-icon {
             color: #1a365d !important;
         }
+
         .accordion-item-header.is-open .accordion-toggle-icon {
             transform: rotate(180deg);
         }
@@ -131,686 +157,858 @@
 @endpush
 
 @section('content')
-<div class="container-fluid text-sm">
-    <!-- Header & Action Bar -->
-    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start mb-4 pb-3 border-bottom">
-        <div class="d-flex flex-column mb-3 mb-lg-0 pr-lg-4" style="flex: 1; min-width: 0;">
-            <h4 class="mb-0 fw-bold text-dark text-break" style="line-height: 1.4; overflow-wrap: anywhere; word-break: break-word;">
-                {{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}
-            </h4>
-            <div class="d-flex align-items-center flex-wrap mt-2" style="gap: 8px;">
-                @if($laporanKegiatan->isDarurat())
-                    <span class="d-inline-flex align-items-center" style="background:#f1f5f9; color:#334155; padding:3px 10px; border-radius:4px; font-size:0.75rem; font-weight:600; border:1px solid #e2e8f0; white-space:nowrap; flex-shrink:0;">
-                        Laporan Langsung
-                    </span>
-                @endif
-                <div class="flex-shrink-0 d-inline-flex align-items-center">
-                    {!! $laporanKegiatan->status_badge !!}
+    <div class="container-fluid text-sm">
+        <!-- Header & Action Bar -->
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start mb-4 pb-3 border-bottom">
+            <div class="d-flex flex-column mb-3 mb-lg-0 pr-lg-4" style="flex: 1; min-width: 0;">
+                <h4 class="mb-0 fw-bold text-dark text-break"
+                    style="line-height: 1.4; overflow-wrap: anywhere; word-break: break-word;">
+                    {{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->judul_kegiatan : $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}
+                </h4>
+                <div class="d-flex align-items-center flex-wrap mt-2" style="gap: 8px;">
+                    @if ($laporanKegiatan->isDarurat())
+                        <span class="d-inline-flex align-items-center"
+                            style="background:#f1f5f9; color:#334155; padding:3px 10px; border-radius:4px; font-size:0.75rem; font-weight:600; border:1px solid #e2e8f0; white-space:nowrap; flex-shrink:0;">
+                            Laporan Langsung
+                        </span>
+                    @endif
+                    <div class="flex-shrink-0 d-inline-flex align-items-center">
+                        {!! $laporanKegiatan->status_badge !!}
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        @php
-            if (!isset($missingFieldsShow)) {
-                $missingFieldsShow = [];
-                $user = auth()->user();
-                $isAnggota = $user && $user->role && $user->role->role_name === 'anggota';
-                if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DRAFT, \App\Models\LaporanKegiatan::STATUS_REVISI]) && $isAnggota && $laporanKegiatan->user_id == $user->id) {
-                    if ($laporanKegiatan->isDarurat()) {
-                        if (empty(trim($laporanKegiatan->judul_kegiatan ?? ''))) $missingFieldsShow[] = 'Judul Kegiatan';
-                        if (empty(trim($laporanKegiatan->lokasi_kegiatan ?? ''))) $missingFieldsShow[] = 'Lokasi Kegiatan';
-                    }
-                    if (empty($laporanKegiatan->realisasi_tanggal_mulai)) $missingFieldsShow[] = 'Realisasi Tanggal Mulai';
-                    if (empty($laporanKegiatan->realisasi_tanggal_selesai)) $missingFieldsShow[] = 'Realisasi Tanggal Selesai';
-                    if (empty(trim(strip_tags($laporanKegiatan->rangkaian_kegiatan ?? '')))) $missingFieldsShow[] = 'Rangkaian Kegiatan';
-                    if (empty($laporanKegiatan->realisasi_peserta)) $missingFieldsShow[] = 'Realisasi Jumlah Peserta';
-                    if (empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? '')))) $missingFieldsShow[] = 'Profil Peserta';
-                    if (empty(trim(strip_tags($laporanKegiatan->hasil_dicapai ?? '')))) $missingFieldsShow[] = 'Hasil yang Dicapai';
-                    if (empty(trim(strip_tags($laporanKegiatan->output_nyata ?? '')))) $missingFieldsShow[] = 'Output Nyata';
-                    if (empty(trim(strip_tags($laporanKegiatan->dampak_awal ?? '')))) $missingFieldsShow[] = 'Dampak Awal';
-                    if (empty(trim(strip_tags($laporanKegiatan->kendala ?? '')))) $missingFieldsShow[] = 'Kendala yang Dihadapi';
-                    if (empty(trim(strip_tags($laporanKegiatan->solusi ?? '')))) $missingFieldsShow[] = 'Solusi yang Dilakukan';
-                    if (empty(trim(strip_tags($laporanKegiatan->evaluasi_rekomendasi ?? '')))) $missingFieldsShow[] = 'Catatan Evaluasi & Rekomendasi';
-
-                    $checkFilesEmpty = function ($files) {
-                        if (empty($files)) return true;
-                        if (is_string($files)) $files = json_decode($files, true) ?? [];
-                        if (!is_array($files)) return true;
-                        return count(array_filter($files, function($f) {
-                            if (empty($f)) return false;
-                            if (is_string($f)) return trim($f) !== '';
-                            if (is_array($f)) return !empty($f['path']) || !empty($f['original_name']);
-                            return true;
-                        })) === 0;
-                    };
-
-                    if ($checkFilesEmpty($laporanKegiatan->foto_kegiatan)) $missingFieldsShow[] = 'Foto Kegiatan';
-                    if ($checkFilesEmpty($laporanKegiatan->daftar_hadir)) $missingFieldsShow[] = 'Daftar Hadir';
-                    if ($checkFilesEmpty($laporanKegiatan->materi)) $missingFieldsShow[] = 'Materi';
-                    if ($checkFilesEmpty($laporanKegiatan->berita_acara)) $missingFieldsShow[] = 'Berita Acara';
-                }
-            }
-        @endphp
-
-        <div class="d-flex align-items-center flex-wrap flex-shrink-0 mt-1 mt-lg-0">
-            @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN && auth()->user()->role->role_name === 'admin')
-                <!-- Tombol Terima & Finalisasi -->
-                <form action="{{ route('laporan_kegiatan.terima', $laporanKegiatan->uuid) }}" method="POST" class="d-inline mr-2">
-                    @csrf
-                    @method('PUT')
-                    <button type="submit" class="btn btn-success btn-sm font-weight-bold" onclick="return confirm('Terima & Finalisasi Laporan ini?')">
-                        <i class="fas fa-check-circle mr-1"></i> Terima & Finalisasi
-                    </button>
-                </form>
-            @endif
-
-            @if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DIAJUKAN, \App\Models\LaporanKegiatan::STATUS_FINAL]) && auth()->user()->role->role_name === 'admin')
-                <!-- Tombol Buka Modal Revisi -->
-                <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark" data-toggle="modal" data-target="#modal-revisi">
-                    <i class="fas fa-edit mr-1"></i> Minta Revisi
-                </button>
-            @endif
-
-            @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_FINAL)
-                @can('print', $laporanKegiatan)
-                    <button type="button" onclick="printLaporan('{{ route('laporan_kegiatan.print', $laporanKegiatan) }}')" class="btn btn-sm bg-navy text-white mr-2 shadow-sm">
-                        <i class="fas fa-print mr-1"></i> Cetak Laporan
-                    </button>
-                @endcan
-            @endif
-
-            @if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DRAFT, \App\Models\LaporanKegiatan::STATUS_REVISI]))
-                @can('update', $laporanKegiatan)
-                    @if(empty($missingFieldsShow))
-                        <form action="{{ route('laporan_kegiatan.ajukan', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}" method="POST" class="d-inline mr-2">
-                            @csrf
-                            @method('PUT')
-                            <button type="submit" class="btn bg-navy text-white btn-sm shadow-sm fw-bold">
-                                <i class="fas fa-paper-plane mr-1"></i> {{ $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_REVISI ? 'Ajukan Revisi Sekarang' : 'Ajukan Sekarang' }}
-                            </button>
-                        </form>
-                    @else
-                        <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2" style="opacity: 0.8;" onclick="Swal.fire({icon: 'error', title: 'Data Belum Lengkap!', text: 'Laporan kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow ?? []) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
-                            <i class="fas fa-paper-plane mr-1"></i> {{ $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_REVISI ? 'Ajukan Revisi Sekarang' : 'Ajukan Sekarang' }}
-                        </button>
-                    @endif
-                    <a href="{{ route('laporan_kegiatan.edit', $laporanKegiatan) }}" class="btn btn-warning btn-sm mr-2 shadow-sm text-dark">
-                        <i class="fas fa-edit mr-1"></i> Edit Laporan
-                    </a>
-                @endcan
-            @endif
-
-            @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DRAFT)
-                @can('delete', $laporanKegiatan)
-                    <form action="{{ route('laporan_kegiatan.destroy', $laporanKegiatan) }}" method="POST" class="d-inline mr-2" data-confirm-delete="true">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash mr-1"></i> Hapus
-                        </button>
-                    </form>
-                @endcan
-            @endif
 
             @php
-                $backRoute = route('laporan_kegiatan.index');
-                if (request('from') === 'history' || $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_FINAL) {
-                    $backRoute = route('history_realisasi.index');
+                if (!isset($missingFieldsShow)) {
+                    $missingFieldsShow = [];
+                    $user = auth()->user();
+                    $isAnggota = $user && $user->role && $user->role->role_name === 'anggota';
+                    if (
+                        in_array($laporanKegiatan->status, [
+                            \App\Models\LaporanKegiatan::STATUS_DRAFT,
+                            \App\Models\LaporanKegiatan::STATUS_REVISI,
+                        ]) &&
+                        $isAnggota &&
+                        $laporanKegiatan->user_id == $user->id
+                    ) {
+                        if ($laporanKegiatan->isDarurat()) {
+                            if (empty(trim($laporanKegiatan->judul_kegiatan ?? ''))) {
+                                $missingFieldsShow[] = 'Judul Kegiatan';
+                            }
+                            if (empty(trim($laporanKegiatan->lokasi_kegiatan ?? ''))) {
+                                $missingFieldsShow[] = 'Lokasi Kegiatan';
+                            }
+                        }
+                        if (empty($laporanKegiatan->realisasi_tanggal_mulai)) {
+                            $missingFieldsShow[] = 'Realisasi Tanggal Mulai';
+                        }
+                        if (empty($laporanKegiatan->realisasi_tanggal_selesai)) {
+                            $missingFieldsShow[] = 'Realisasi Tanggal Selesai';
+                        }
+                        if (empty(trim(strip_tags($laporanKegiatan->rangkaian_kegiatan ?? '')))) {
+                            $missingFieldsShow[] = 'Rangkaian Kegiatan';
+                        }
+                        if (empty($laporanKegiatan->realisasi_peserta)) {
+                            $missingFieldsShow[] = 'Realisasi Jumlah Peserta';
+                        }
+                        if (empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? '')))) {
+                            $missingFieldsShow[] = 'Profil Peserta';
+                        }
+                        if (empty(trim(strip_tags($laporanKegiatan->hasil_dicapai ?? '')))) {
+                            $missingFieldsShow[] = 'Hasil yang Dicapai';
+                        }
+                        if (empty(trim(strip_tags($laporanKegiatan->output_nyata ?? '')))) {
+                            $missingFieldsShow[] = 'Output Nyata';
+                        }
+                        if (empty(trim(strip_tags($laporanKegiatan->dampak_awal ?? '')))) {
+                            $missingFieldsShow[] = 'Dampak Awal';
+                        }
+                        if (empty(trim(strip_tags($laporanKegiatan->kendala ?? '')))) {
+                            $missingFieldsShow[] = 'Kendala yang Dihadapi';
+                        }
+                        if (empty(trim(strip_tags($laporanKegiatan->solusi ?? '')))) {
+                            $missingFieldsShow[] = 'Solusi yang Dilakukan';
+                        }
+                        if (empty(trim(strip_tags($laporanKegiatan->evaluasi_rekomendasi ?? '')))) {
+                            $missingFieldsShow[] = 'Catatan Evaluasi & Rekomendasi';
+                        }
+
+                        $checkFilesEmpty = function ($files) {
+                            if (empty($files)) {
+                                return true;
+                            }
+                            if (is_string($files)) {
+                                $files = json_decode($files, true) ?? [];
+                            }
+                            if (!is_array($files)) {
+                                return true;
+                            }
+                            return count(
+                                array_filter($files, function ($f) {
+                                    if (empty($f)) {
+                                        return false;
+                                    }
+                                    if (is_string($f)) {
+                                        return trim($f) !== '';
+                                    }
+                                    if (is_array($f)) {
+                                        return !empty($f['path']) || !empty($f['original_name']);
+                                    }
+                                    return true;
+                                }),
+                            ) === 0;
+                        };
+
+                        if ($checkFilesEmpty($laporanKegiatan->foto_kegiatan)) {
+                            $missingFieldsShow[] = 'Foto Kegiatan';
+                        }
+                        if ($checkFilesEmpty($laporanKegiatan->daftar_hadir)) {
+                            $missingFieldsShow[] = 'Daftar Hadir';
+                        }
+                        if ($checkFilesEmpty($laporanKegiatan->materi)) {
+                            $missingFieldsShow[] = 'Materi';
+                        }
+                        if ($checkFilesEmpty($laporanKegiatan->berita_acara)) {
+                            $missingFieldsShow[] = 'Berita Acara';
+                        }
+                    }
                 }
             @endphp
-            <a href="{{ $backRoute }}" class="btn btn-secondary text-white btn-sm">
-                <i class="fas fa-arrow-left mr-1"></i> Kembali
-            </a>
-        </div>
-    </div>
 
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-            <i class="fas fa-exclamation-triangle mr-2"></i> {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
+            <div class="d-flex align-items-center flex-wrap flex-shrink-0 mt-1 mt-lg-0">
+                @if (
+                    $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DIAJUKAN &&
+                        auth()->user()->role->role_name === 'admin')
+                    <!-- Tombol Terima & Finalisasi -->
+                    <form action="{{ route('laporan_kegiatan.terima', $laporanKegiatan->uuid) }}" method="POST"
+                        class="d-inline mr-2">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-success btn-sm font-weight-bold"
+                            onclick="return confirm('Terima & Finalisasi Laporan ini?')">
+                            <i class="fas fa-check-circle mr-1"></i> Terima & Finalisasi
+                        </button>
+                    </form>
+                @endif
 
-    @if(!empty($missingFieldsShow))
-        <div class="alert alert-warning alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: #fff8e6; border-left: 4px solid #ffc107 !important;">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="top: 10px; right: 15px; opacity: 0.7;">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="d-flex align-items-start pr-4">
-                <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center mr-3 mt-1" style="width: 36px; height: 36px; flex-shrink: 0;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
-                        <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">{{ $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_REVISI ? 'Laporan Belum Lengkap' : 'Draft Belum Lengkap' }}</h6>
-                        <span class="badge bg-warning text-dark font-weight-bold" style="font-size: 0.75rem;">{{ count($missingFieldsShow ?? []) }} Data Wajib Belum Terisi</span>
+                @if (in_array($laporanKegiatan->status, [
+                        \App\Models\LaporanKegiatan::STATUS_DIAJUKAN,
+                        \App\Models\LaporanKegiatan::STATUS_FINAL,
+                    ]) && auth()->user()->role->role_name === 'admin')
+                    <!-- Tombol Buka Modal Revisi -->
+                    <button type="button" class="btn btn-sm btn-warning font-weight-bold mr-2 text-dark"
+                        data-toggle="modal" data-target="#modal-revisi">
+                        <i class="fas fa-edit mr-1"></i> Minta Revisi
+                    </button>
+                @endif
+
+                @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_FINAL)
+                    @can('print', $laporanKegiatan)
+                        <button type="button" onclick="printLaporan('{{ route('laporan_kegiatan.print', $laporanKegiatan) }}')"
+                            class="btn btn-sm bg-navy text-white mr-2 shadow-sm">
+                            <i class="fas fa-print mr-1"></i> Cetak Laporan
+                        </button>
+                    @endcan
+                @endif
+
+                @if (in_array($laporanKegiatan->status, [
+                        \App\Models\LaporanKegiatan::STATUS_DRAFT,
+                        \App\Models\LaporanKegiatan::STATUS_REVISI,
+                    ]))
+                    @can('update', $laporanKegiatan)
+                        @if (empty($missingFieldsShow))
+                            <form
+                                action="{{ route('laporan_kegiatan.ajukan', $laporanKegiatan->uuid ?? $laporanKegiatan->id) }}"
+                                method="POST" class="d-inline mr-2">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn bg-navy text-white btn-sm shadow-sm fw-bold">
+                                    <i class="fas fa-paper-plane mr-1"></i>
+                                    {{ $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_REVISI ? 'Ajukan Revisi Sekarang' : 'Ajukan Sekarang' }}
+                                </button>
+                            </form>
+                        @else
+                            <button type="button" class="btn bg-navy text-white btn-sm shadow-sm fw-bold mr-2"
+                                style="opacity: 0.8;"
+                                onclick="Swal.fire({icon: 'error', title: 'Data Belum Lengkap!', text: 'Laporan kegiatan ini belum dapat diajukan karena ada {{ count($missingFieldsShow ?? []) }} data wajib yang belum terisi. Silakan lengkapi data terlebih dahulu.', confirmButtonText: 'Mengerti', confirmButtonColor: '#001f3f'})">
+                                <i class="fas fa-paper-plane mr-1"></i>
+                                {{ $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_REVISI ? 'Ajukan Revisi Sekarang' : 'Ajukan Sekarang' }}
+                            </button>
+                        @endif
+                        <a href="{{ route('laporan_kegiatan.edit', $laporanKegiatan) }}"
+                            class="btn btn-warning btn-sm mr-2 shadow-sm text-dark">
+                            <i class="fas fa-edit mr-1"></i> Edit Laporan
+                        </a>
+                    @endcan
+                @endif
+
+                @if ($laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_DRAFT)
+                    @can('delete', $laporanKegiatan)
+                        <form action="{{ route('laporan_kegiatan.destroy', $laporanKegiatan) }}" method="POST"
+                            class="d-inline mr-2" data-confirm-delete="true">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash mr-1"></i> Hapus
+                            </button>
+                        </form>
+                    @endcan
+                @endif
+
+                @php
+                    $backRoute = route('laporan_kegiatan.index');
+                    if (
+                        request('from') === 'history' ||
+                        $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_FINAL
+                    ) {
+                        $backRoute = route('history_realisasi.index');
+                    }
+                @endphp
+                <a href="{{ $backRoute }}" class="btn btn-secondary text-white btn-sm">
+                    <i class="fas fa-arrow-left mr-1"></i> Kembali
+                </a>
+            </div>
+        </div>
+
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <i class="fas fa-exclamation-triangle mr-2"></i> {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        @if (!empty($missingFieldsShow))
+            <div class="alert alert-warning alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show"
+                role="alert" style="background-color: #fff8e6; border-left: 4px solid #ffc107 !important;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                    style="top: 10px; right: 15px; opacity: 0.7;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="d-flex align-items-start pr-4">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center mr-3 mt-1"
+                        style="width: 36px; height: 36px; flex-shrink: 0;">
+                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
-                    <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
-                        Lengkapi data laporan kegiatan ini agar dapat diajukan ke admin:
-                    </p>
-                    <div class="mt-2">
-                        <div class="p-2 rounded bg-white border" style="border-color: #ffe8a1 !important;">
-                            <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">Daftar Kolom Wajib yang Belum Terisi:</strong>
-                            <div class="d-flex flex-wrap" style="gap: 6px;">
-                                @foreach($missingFieldsShow as $mf)
-                                    <span class="badge bg-light text-dark border p-1" style="font-size: 0.78rem;">
-                                        <i class="fas fa-exclamation-circle text-warning mr-1"></i> {{ $mf }}
-                                    </span>
-                                @endforeach
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                            <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">
+                                {{ $laporanKegiatan->status === \App\Models\LaporanKegiatan::STATUS_REVISI ? 'Laporan Belum Lengkap' : 'Draft Belum Lengkap' }}
+                            </h6>
+                            <span class="badge bg-warning text-dark font-weight-bold"
+                                style="font-size: 0.75rem;">{{ count($missingFieldsShow ?? []) }} Data Wajib Belum
+                                Terisi</span>
+                        </div>
+                        <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
+                            Lengkapi data laporan kegiatan ini agar dapat diajukan ke admin:
+                        </p>
+                        <div class="mt-2">
+                            <div class="p-2 rounded bg-white border" style="border-color: #ffe8a1 !important;">
+                                <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">Daftar Kolom Wajib yang
+                                    Belum Terisi:</strong>
+                                <div class="d-flex flex-wrap" style="gap: 6px;">
+                                    @foreach ($missingFieldsShow as $mf)
+                                        <span class="badge bg-light text-dark border p-1" style="font-size: 0.78rem;">
+                                            <i class="fas fa-exclamation-circle text-warning mr-1"></i> {{ $mf }}
+                                        </span>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
 
-    @if(!empty($laporanKegiatan->catatan_evaluasi))
+        @if (!empty($laporanKegiatan->catatan_evaluasi))
+            @php
+                $lapSt = $laporanKegiatan->status;
+                $theme = match ($lapSt) {
+                    'final' => [
+                        'bg' => '#f0fdf4',
+                        'border' => '#22c55e',
+                        'icon' => 'fa-check-circle',
+                        'iconBg' => 'bg-success text-white',
+                        'title' => 'Laporan Diterima / Final',
+                        'badge' => 'Catatan Verifikasi',
+                        'badgeClass' => 'bg-success text-white',
+                        'borderColor' => '#bbf7d0',
+                        'desc' => 'Laporan kegiatan telah diverifikasi dan disetujui oleh admin.',
+                    ],
+                    'revisi' => [
+                        'bg' => '#fff8e6',
+                        'border' => '#ffc107',
+                        'icon' => 'fa-exclamation-triangle',
+                        'iconBg' => 'bg-warning text-dark',
+                        'title' => 'Laporan Perlu Revisi',
+                        'badge' => 'Catatan Revisi',
+                        'badgeClass' => 'bg-warning text-dark',
+                        'borderColor' => '#ffe8a1',
+                        'desc' =>
+                            'Silakan lakukan perbaikan pada laporan kegiatan ini sesuai catatan berikut sebelum diajukan kembali.',
+                    ],
+                    default => [
+                        'bg' => '#f0f4f8',
+                        'border' => '#17a2b8',
+                        'icon' => 'fa-info-circle',
+                        'iconBg' => 'bg-info text-white',
+                        'title' => 'Catatan Evaluasi / Admin',
+                        'badge' => 'Informasi',
+                        'badgeClass' => 'bg-info text-white',
+                        'borderColor' => '#bee5eb',
+                        'desc' => 'Catatan evaluasi terkait laporan kegiatan ini.',
+                    ],
+                };
+            @endphp
+            <div class="alert alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show"
+                role="alert"
+                style="background-color: {{ $theme['bg'] }}; border-left: 4px solid {{ $theme['border'] }} !important;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                    style="top: 10px; right: 15px; opacity: 0.7;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="d-flex align-items-start pr-4">
+                    <div class="rounded-circle {{ $theme['iconBg'] }} d-flex align-items-center justify-content-center mr-3 mt-1"
+                        style="width: 36px; height: 36px; flex-shrink: 0;">
+                        <i class="fas {{ $theme['icon'] }}"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                            <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">{{ $theme['title'] }}
+                            </h6>
+                            <span class="badge {{ $theme['badgeClass'] }} font-weight-bold"
+                                style="font-size: 0.75rem;">{{ $theme['badge'] }}</span>
+                        </div>
+                        <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
+                            {{ $theme['desc'] }}
+                        </p>
+                        <div class="mt-2 p-2 rounded bg-white border"
+                            style="border-color: {{ $theme['borderColor'] }} !important;">
+                            <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">
+                                <i class="fas fa-comment-dots mr-1" style="color: {{ $theme['border'] }};"></i> Catatan:
+                            </strong>
+                            <div class="text-dark" style="font-size: 0.88rem; line-height: 1.5;">
+                                {!! nl2br(e($laporanKegiatan->catatan_evaluasi)) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- Visual Progress Tracker -->
         @php
             $lapSt = $laporanKegiatan->status;
-            $theme = match($lapSt) {
-                'final' => [
-                    'bg' => '#f0fdf4',
-                    'border' => '#22c55e',
-                    'icon' => 'fa-check-circle',
-                    'iconBg' => 'bg-success text-white',
-                    'title' => 'Laporan Diterima / Final',
-                    'badge' => 'Catatan Verifikasi',
-                    'badgeClass' => 'bg-success text-white',
-                    'borderColor' => '#bbf7d0',
-                    'desc' => 'Laporan kegiatan telah diverifikasi dan disetujui oleh admin.'
-                ],
-                'revisi' => [
-                    'bg' => '#fff8e6',
-                    'border' => '#ffc107',
-                    'icon' => 'fa-exclamation-triangle',
-                    'iconBg' => 'bg-warning text-dark',
-                    'title' => 'Laporan Perlu Revisi',
-                    'badge' => 'Catatan Revisi',
-                    'badgeClass' => 'bg-warning text-dark',
-                    'borderColor' => '#ffe8a1',
-                    'desc' => 'Silakan lakukan perbaikan pada laporan kegiatan ini sesuai catatan berikut sebelum diajukan kembali.'
-                ],
-                default => [
-                    'bg' => '#f0f4f8',
-                    'border' => '#17a2b8',
-                    'icon' => 'fa-info-circle',
-                    'iconBg' => 'bg-info text-white',
-                    'title' => 'Catatan Evaluasi / Admin',
-                    'badge' => 'Informasi',
-                    'badgeClass' => 'bg-info text-white',
-                    'borderColor' => '#bee5eb',
-                    'desc' => 'Catatan evaluasi terkait laporan kegiatan ini.'
-                ]
-            };
+            $isDiajukan = in_array($lapSt, ['diajukan', 'revisi', 'final']);
+            $isRevisi = $lapSt === 'revisi';
+            $isFinal = $lapSt === 'final';
         @endphp
-        <div class="alert alert-important border-0 shadow-sm mb-4 p-3 rounded position-relative alert-dismissible fade show" role="alert" style="background-color: {{ $theme['bg'] }}; border-left: 4px solid {{ $theme['border'] }} !important;">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="top: 10px; right: 15px; opacity: 0.7;">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="d-flex align-items-start pr-4">
-                <div class="rounded-circle {{ $theme['iconBg'] }} d-flex align-items-center justify-content-center mr-3 mt-1" style="width: 36px; height: 36px; flex-shrink: 0;">
-                    <i class="fas {{ $theme['icon'] }}"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
-                        <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem;">{{ $theme['title'] }}</h6>
-                        <span class="badge {{ $theme['badgeClass'] }} font-weight-bold" style="font-size: 0.75rem;">{{ $theme['badge'] }}</span>
+        <div class="card shadow-sm mb-4 border-0 rounded">
+            <div class="card-body py-4">
+                <div class="timeline-tracker">
+                    <div class="timeline-step {{ 'completed' }}">
+                        <div class="timeline-icon"><i class="fas fa-pen"></i></div>
+                        <div class="timeline-label">Draft Laporan</div>
                     </div>
-                    <p class="text-muted mb-0 mt-1" style="font-size: 0.88rem;">
-                        {{ $theme['desc'] }}
-                    </p>
-                    <div class="mt-2 p-2 rounded bg-white border" style="border-color: {{ $theme['borderColor'] }} !important;">
-                        <strong class="d-block text-dark mb-1" style="font-size: 0.8rem;">
-                            <i class="fas fa-comment-dots mr-1" style="color: {{ $theme['border'] }};"></i> Catatan:
-                        </strong>
-                        <div class="text-dark" style="font-size: 0.88rem; line-height: 1.5;">
-                            {!! nl2br(e($laporanKegiatan->catatan_evaluasi)) !!}
-                        </div>
+                    <div
+                        class="timeline-step {{ $isDiajukan ? ($isFinal ? 'completed' : ($isRevisi ? 'rejected' : 'active')) : '' }}">
+                        <div class="timeline-icon"><i
+                                class="fas {{ $isRevisi ? 'fa-exclamation-triangle' : 'fa-paper-plane' }}"></i></div>
+                        <div class="timeline-label">{{ $isRevisi ? 'Perlu Revisi' : 'Menunggu Verifikasi' }}</div>
+                    </div>
+                    <div class="timeline-step {{ $isFinal ? 'completed' : '' }}">
+                        <div class="timeline-icon"><i class="fas fa-check-double"></i></div>
+                        <div class="timeline-label">Final / Diterima</div>
                     </div>
                 </div>
             </div>
         </div>
-    @endif
 
-    <!-- Visual Progress Tracker -->
-    @php
-        $lapSt = $laporanKegiatan->status;
-        $isDiajukan = in_array($lapSt, ['diajukan', 'revisi', 'final']);
-        $isRevisi = $lapSt === 'revisi';
-        $isFinal = $lapSt === 'final';
-    @endphp
-    <div class="card shadow-sm mb-4 border-0 rounded">
-        <div class="card-body py-4">
-            <div class="timeline-tracker">
-                <div class="timeline-step {{ 'completed' }}">
-                    <div class="timeline-icon"><i class="fas fa-pen"></i></div>
-                    <div class="timeline-label">Draft Laporan</div>
-                </div>
-                <div class="timeline-step {{ $isDiajukan ? ($isFinal ? 'completed' : ($isRevisi ? 'rejected' : 'active')) : '' }}">
-                    <div class="timeline-icon"><i class="fas {{ $isRevisi ? 'fa-exclamation-triangle' : 'fa-paper-plane' }}"></i></div>
-                    <div class="timeline-label">{{ $isRevisi ? 'Perlu Revisi' : 'Menunggu Verifikasi' }}</div>
-                </div>
-                <div class="timeline-step {{ $isFinal ? 'completed' : '' }}">
-                    <div class="timeline-icon"><i class="fas fa-check-double"></i></div>
-                    <div class="timeline-label">Final / Diterima</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @if(!$laporanKegiatan->isDarurat())
-        <!-- CALLOUT: Konteks Rencana Kegiatan -->
-        <div class="card shadow-sm mb-4 bg-white p-3" style="border: 1px solid #e2e8f0; border-radius: 8px;">
-            <h6 class="text-dark fw-bold mb-3"><i class="fas fa-info-circle mr-1 text-secondary"></i> Konteks Rencana Kegiatan</h6>
-            <div class="row">
-                <div class="col-md-4 pr-md-3 mb-2 mb-md-0">
-                    <strong>Nama Kegiatan:</strong><br>
-                    <span class="text-dark" style="line-height: 1.5;">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</span>
-                </div>
-                <div class="col-md-5 px-md-3 mb-2 mb-md-0">
-                    <strong>Waktu & Lokasi Rencana:</strong><br>
-                    <span class="text-dark" style="line-height: 1.5;">
-                        {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}<br>
-                        Di {{ $laporanKegiatan->rencanaKegiatan->desa }}
-                    </span>
-                </div>
-                <div class="col-md-3 pl-md-4 pl-lg-5">
-                    <strong>Target Peserta:</strong><br>
-                    <span class="text-dark">{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }} Orang</span>
-                </div>
-            </div>
-        </div>
-    @endif
-
-    <!-- Grid Layout 8-4 -->
-    <div class="row">
-        <!-- Kolom Kiri: Informasi Evaluasi Utama -->
-        <div class="col-md-8">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white">
-                    <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i> Detail Realisasi & Evaluasi</h3>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex align-items-center">
-                                    <div class="info-box-icon bg-light text-primary"><i class="fas fa-calendar-check"></i></div>
-                                    <div>
-                                        <small class="text-muted d-block">Tanggal Aktual</small>
-                                        <strong>{{ $laporanKegiatan->getFormattedRealisasiTanggalPelaksanaan() }}</strong>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <div class="info-box-icon bg-light text-success"><i class="fas fa-users"></i></div>
-                                    <div>
-                                        <small class="text-muted d-block">Realisasi Peserta</small>
-                                        <strong>{{ $laporanKegiatan->realisasi_peserta }} Orang</strong>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex align-items-center">
-                                    <div class="info-box-icon bg-light text-warning"><i class="fas fa-map-marker-alt"></i></div>
-                                    <div>
-                                        <small class="text-muted d-block">Lokasi (Desa)</small>
-                                        <strong>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</strong>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <div class="info-box-icon bg-light text-danger"><i class="fas fa-user-tie"></i></div>
-                                    <div>
-                                        <small class="text-muted d-block">Penanggung Jawab</small>
-                                        <strong>{{ $laporanKegiatan->isDarurat() ? ($laporanKegiatan->user->name ?? '-') : $laporanKegiatan->rencanaKegiatan->penanggung_jawab }}</strong>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+        @if (!$laporanKegiatan->isDarurat())
+            <!-- CALLOUT: Konteks Rencana Kegiatan -->
+            <div class="card shadow-sm mb-4 bg-white p-3" style="border: 1px solid #e2e8f0; border-radius: 8px;">
+                <h6 class="text-dark fw-bold mb-3"><i class="fas fa-info-circle mr-1 text-secondary"></i> Konteks Rencana
+                    Kegiatan</h6>
+                <div class="row">
+                    <div class="col-md-4 pr-md-3 mb-2 mb-md-0">
+                        <strong>Nama Kegiatan:</strong><br>
+                        <span class="text-dark"
+                            style="line-height: 1.5;">{{ $laporanKegiatan->rencanaKegiatan->nama_kegiatan }}</span>
+                    </div>
+                    <div class="col-md-5 px-md-3 mb-2 mb-md-0">
+                        <strong>Waktu & Lokasi Rencana:</strong><br>
+                        <span class="text-dark" style="line-height: 1.5;">
+                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d M Y') }}
+                            s/d
+                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d M Y') }}<br>
+                            Di {{ $laporanKegiatan->rencanaKegiatan->desa }}
+                        </span>
+                    </div>
+                    <div class="col-md-3 pl-md-4 pl-lg-5">
+                        <strong>Target Peserta:</strong><br>
+                        <span class="text-dark">{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }}
+                            Orang</span>
                     </div>
                 </div>
             </div>
+        @endif
 
-            {{-- Card: Narasi Laporan (Accordion) --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white d-flex align-items-center">
-                    <h3 class="card-title fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-2"></i>Narasi Laporan</h3>
-                    <small class="text-muted ml-2">— klik bagian untuk membuka</small>
+        <!-- Grid Layout 8-4 -->
+        <div class="row">
+            <!-- Kolom Kiri: Informasi Evaluasi Utama -->
+            <div class="col-md-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i> Detail Realisasi
+                            & Evaluasi</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <div class="info-box-icon bg-light text-primary"><i
+                                                class="fas fa-calendar-check"></i></div>
+                                        <div>
+                                            <small class="text-muted d-block">Tanggal Aktual</small>
+                                            <strong>{{ $laporanKegiatan->getFormattedRealisasiTanggalPelaksanaan() }}</strong>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <div class="info-box-icon bg-light text-success"><i class="fas fa-users"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Realisasi Peserta</small>
+                                            <strong>{{ $laporanKegiatan->realisasi_peserta }} Orang</strong>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <div class="info-box-icon bg-light text-warning"><i
+                                                class="fas fa-map-marker-alt"></i></div>
+                                        <div>
+                                            <small class="text-muted d-block">Lokasi (Desa)</small>
+                                            <strong>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</strong>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <div class="info-box-icon bg-light text-danger"><i class="fas fa-user-tie"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Penanggung Jawab</small>
+                                            <strong>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->user->name ?? '-' : $laporanKegiatan->rencanaKegiatan->penanggung_jawab }}</strong>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body p-3">
 
-                    {{-- ACCORDION untuk semua seksi konten panjang --}}
-                    <div class="accordion" id="accordionLaporan">
+                {{-- Card: Narasi Laporan (Accordion) --}}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white d-flex align-items-center">
+                        <h3 class="card-title fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-2"></i>Narasi Laporan
+                        </h3>
+                        <small class="text-muted ml-2">— klik bagian untuk membuka</small>
+                    </div>
+                    <div class="card-body p-3">
 
-                        {{-- Rangkaian Kegiatan --}}
-                        <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
-                            <div class="accordion-item-header card-header bg-white py-2 px-3" id="headRangkaian"
-                                 style="cursor:pointer;" data-toggle="collapse" data-target="#collapseRangkaian"
-                                 aria-expanded="false" aria-controls="collapseRangkaian">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-list-ul mr-2" style="color:#1a365d;"></i>Rangkaian Kegiatan / Alur Acara</h6>
-                                    <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon" style="font-size:0.75rem; transition: transform 0.3s;"></i>
-                                </div>
-                            </div>
-                            <div id="collapseRangkaian" class="collapse" aria-labelledby="headRangkaian" data-parent="#accordionLaporan">
-                                <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                    {!! $laporanKegiatan->rangkaian_kegiatan !!}
-                                </div>
-                            </div>
-                        </div>
+                        {{-- ACCORDION untuk semua seksi konten panjang --}}
+                        <div class="accordion" id="accordionLaporan">
 
-                        {{-- Profil Peserta --}}
-                        <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
-                            <div class="accordion-item-header card-header bg-white py-2 px-3" id="headProfil"
-                                 style="cursor:pointer;" data-toggle="collapse" data-target="#collapseProfil"
-                                 aria-expanded="false" aria-controls="collapseProfil">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-users mr-2" style="color:#1a365d;"></i>Profil Peserta</h6>
-                                    <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon" style="font-size:0.75rem; transition: transform 0.3s;"></i>
-                                </div>
-                            </div>
-                            <div id="collapseProfil" class="collapse" aria-labelledby="headProfil" data-parent="#accordionLaporan">
-                                <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                    {!! $laporanKegiatan->profil_peserta !!}
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Hasil & Output --}}
-                        <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
-                            <div class="accordion-item-header card-header bg-white py-2 px-3" id="headHasil"
-                                 style="cursor:pointer;" data-toggle="collapse" data-target="#collapseHasil"
-                                 aria-expanded="false" aria-controls="collapseHasil">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-chart-line mr-2" style="color:#1a365d;"></i>Hasil yang Dicapai & Output Nyata</h6>
-                                    <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon" style="font-size:0.75rem; transition: transform 0.3s;"></i>
-                                </div>
-                            </div>
-                            <div id="collapseHasil" class="collapse" aria-labelledby="headHasil" data-parent="#accordionLaporan">
-                                <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                    <div class="mb-3">
-                                        <strong class="text-dark d-block mb-1">Hasil yang Dicapai:</strong>
-                                        {!! $laporanKegiatan->hasil_dicapai !!}
+                            {{-- Rangkaian Kegiatan --}}
+                            <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                                <div class="accordion-item-header card-header bg-white py-2 px-3" id="headRangkaian"
+                                    style="cursor:pointer;" data-toggle="collapse" data-target="#collapseRangkaian"
+                                    aria-expanded="false" aria-controls="collapseRangkaian">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-list-ul mr-2"
+                                                style="color:#1a365d;"></i>Rangkaian Kegiatan / Alur Acara</h6>
+                                        <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
+                                            style="font-size:0.75rem; transition: transform 0.3s;"></i>
                                     </div>
-                                    <hr>
-                                    <div class="mb-3 mt-3">
-                                        <strong class="text-dark d-block mb-1">Output Nyata:</strong>
-                                        {!! $laporanKegiatan->output_nyata !!}
-                                    </div>
-                                    <hr>
-                                    <div class="mt-3">
-                                        <strong class="text-dark d-block mb-1">Dampak Awal:</strong>
-                                        {!! $laporanKegiatan->dampak_awal !!}
+                                </div>
+                                <div id="collapseRangkaian" class="collapse" aria-labelledby="headRangkaian"
+                                    data-parent="#accordionLaporan">
+                                    <div class="card-body text-justify"
+                                        style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                        {!! $laporanKegiatan->rangkaian_kegiatan !!}
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {{-- Kendala, Solusi & Evaluasi --}}
-                        <div class="rounded mb-0 overflow-hidden" style="border: 1px solid #e2e8f0;">
-                            <div class="accordion-item-header card-header bg-white py-2 px-3" id="headKendala"
-                                 style="cursor:pointer;" data-toggle="collapse" data-target="#collapseKendala"
-                                 aria-expanded="false" aria-controls="collapseKendala">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-exclamation-triangle mr-2" style="color:#1a365d;"></i>Kendala, Solusi & Evaluasi</h6>
-                                    <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon" style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                            {{-- Profil Peserta --}}
+                            <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                                <div class="accordion-item-header card-header bg-white py-2 px-3" id="headProfil"
+                                    style="cursor:pointer;" data-toggle="collapse" data-target="#collapseProfil"
+                                    aria-expanded="false" aria-controls="collapseProfil">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-users mr-2"
+                                                style="color:#1a365d;"></i>Profil Peserta</h6>
+                                        <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
+                                            style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                                    </div>
+                                </div>
+                                <div id="collapseProfil" class="collapse" aria-labelledby="headProfil"
+                                    data-parent="#accordionLaporan">
+                                    <div class="card-body text-justify"
+                                        style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                        {!! $laporanKegiatan->profil_peserta !!}
+                                    </div>
                                 </div>
                             </div>
-                            <div id="collapseKendala" class="collapse" aria-labelledby="headKendala" data-parent="#accordionLaporan">
-                                <div class="card-body text-justify" style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                    <div class="mb-4">
-                                        <strong class="text-dark d-block mb-2"><i class="fas fa-exclamation-triangle mr-1 text-dark"></i> Kendala yang Dihadapi:</strong>
-                                        <div class="text-dark">
-                                            {!! $laporanKegiatan->kendala ?: '<em class="text-dark">Tidak ada kendala.</em>' !!}
+
+                            {{-- Hasil & Output --}}
+                            <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                                <div class="accordion-item-header card-header bg-white py-2 px-3" id="headHasil"
+                                    style="cursor:pointer;" data-toggle="collapse" data-target="#collapseHasil"
+                                    aria-expanded="false" aria-controls="collapseHasil">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-chart-line mr-2"
+                                                style="color:#1a365d;"></i>Hasil yang Dicapai & Output Nyata</h6>
+                                        <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
+                                            style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                                    </div>
+                                </div>
+                                <div id="collapseHasil" class="collapse" aria-labelledby="headHasil"
+                                    data-parent="#accordionLaporan">
+                                    <div class="card-body text-justify"
+                                        style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                        <div class="mb-3">
+                                            <strong class="text-dark d-block mb-1">Hasil yang Dicapai:</strong>
+                                            {!! $laporanKegiatan->hasil_dicapai !!}
                                         </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <strong class="text-dark d-block mb-2"><i class="fas fa-check-circle mr-1 text-dark"></i> Solusi yang Dilakukan:</strong>
-                                        <div class="text-dark">
-                                            {!! $laporanKegiatan->solusi ?: '<em class="text-dark">Tidak ada solusi yang dicatat.</em>' !!}
+                                        <hr>
+                                        <div class="mb-3 mt-3">
+                                            <strong class="text-dark d-block mb-1">Output Nyata:</strong>
+                                            {!! $laporanKegiatan->output_nyata !!}
                                         </div>
-                                    </div>
-                                    <div class="mb-2">
-                                        <strong class="text-dark d-block mb-2"><i class="fas fa-lightbulb mr-1 text-dark"></i> Evaluasi & Rekomendasi:</strong>
-                                        <div class="text-dark">
-                                            {!! $laporanKegiatan->evaluasi_rekomendasi ?: '<em class="text-dark">Tidak ada evaluasi.</em>' !!}
+                                        <hr>
+                                        <div class="mt-3">
+                                            <strong class="text-dark d-block mb-1">Dampak Awal:</strong>
+                                            {!! $laporanKegiatan->dampak_awal !!}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                    </div>{{-- End accordion --}}
-                </div>
-            </div>
-        </div>
-
-        <!-- Kolom Kanan: Dokumen & Foto -->
-        <div class="col-md-4">
-
-            <!-- Foto Kegiatan -->
-            <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white py-2 px-3">
-                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-images mr-1"></i> Foto Kegiatan</h6>
-                </div>
-                <div class="card-body p-2">
-                    @php
-                        $fotos = $laporanKegiatan->foto_kegiatan;
-                        if (is_string($fotos)) $fotos = json_decode($fotos, true) ?? [];
-                        $hasFotoItems = is_array($fotos) && count(array_filter($fotos)) > 0;
-                    @endphp
-                    @if ($hasFotoItems)
-                        <div class="row">
-                            @foreach ($fotos as $index => $foto)
-                                @php
-                                    if (is_array($foto)) {
-                                        $filePath = $foto['path'] ?? '';
-                                        $fileName = $foto['original_name'] ?? ('Foto Kegiatan ' . ($index + 1));
-                                    } else {
-                                        $filePath = $foto;
-                                        $fileName = 'Foto Kegiatan ' . ($index + 1);
-                                    }
-                                @endphp
-                                @if(!empty($filePath))
-                                    <div class="col-6 mb-2 px-2">
-                                        <div class="gallery-img-wrapper border shadow-sm" style="height: 120px; border-radius: 4px;" data-toggle="modal" data-target="#imageModal{{ $index }}">
-                                            <img src="/public/storage/app/{{ $filePath }}" class="gallery-img" alt="{{ $fileName }}" style="height: 120px; width: 100%; object-fit: cover;">
-                                        </div>
+                            {{-- Kendala, Solusi & Evaluasi --}}
+                            <div class="rounded mb-0 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                                <div class="accordion-item-header card-header bg-white py-2 px-3" id="headKendala"
+                                    style="cursor:pointer;" data-toggle="collapse" data-target="#collapseKendala"
+                                    aria-expanded="false" aria-controls="collapseKendala">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-exclamation-triangle mr-2"
+                                                style="color:#1a365d;"></i>Kendala, Solusi & Evaluasi</h6>
+                                        <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
+                                            style="font-size:0.75rem; transition: transform 0.3s;"></i>
                                     </div>
-
-                                    <!-- Modal for Image -->
-                                    <div class="modal fade" id="imageModal{{ $index }}" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" style="max-width: fit-content; max-width: -moz-fit-content; width: auto; margin: 1.75rem auto;">
-                                            <div class="modal-content border-0 shadow-lg" style="width: auto; min-width: 320px; max-width: 92vw; border-radius: 8px; overflow: hidden;">
-                                                <div class="modal-header border-0 bg-white py-2 px-3 align-items-center">
-                                                    <h6 class="modal-title font-weight-bold text-dark text-truncate mb-0" style="max-width: calc(90vw - 60px);" title="{{ $fileName }}">
-                                                        {{ $fileName }}
-                                                    </h6>
-                                                    <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close" style="outline: none;">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body text-center p-0" style="background-color: #1a1a1a; display: flex; justify-content: center; align-items: center;">
-                                                    <img src="/public/storage/app/{{ $filePath }}" class="img-fluid" style="max-height: 80vh; max-width: 90vw; width: auto; height: auto; display: block; object-fit: contain;" alt="{{ $fileName }}">
-                                                </div>
+                                </div>
+                                <div id="collapseKendala" class="collapse" aria-labelledby="headKendala"
+                                    data-parent="#accordionLaporan">
+                                    <div class="card-body text-justify"
+                                        style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                        <div class="mb-4">
+                                            <strong class="text-dark d-block mb-2"><i
+                                                    class="fas fa-exclamation-triangle mr-1 text-dark"></i> Kendala yang
+                                                Dihadapi:</strong>
+                                            <div class="text-dark">
+                                                {!! $laporanKegiatan->kendala ?: '<em class="text-dark">Tidak ada kendala.</em>' !!}
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <strong class="text-dark d-block mb-2"><i
+                                                    class="fas fa-check-circle mr-1 text-dark"></i> Solusi yang
+                                                Dilakukan:</strong>
+                                            <div class="text-dark">
+                                                {!! $laporanKegiatan->solusi ?: '<em class="text-dark">Tidak ada solusi yang dicatat.</em>' !!}
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong class="text-dark d-block mb-2"><i
+                                                    class="fas fa-lightbulb mr-1 text-dark"></i> Evaluasi &
+                                                Rekomendasi:</strong>
+                                            <div class="text-dark">
+                                                {!! $laporanKegiatan->evaluasi_rekomendasi ?: '<em class="text-dark">Tidak ada evaluasi.</em>' !!}
                                             </div>
                                         </div>
                                     </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="text-center text-muted py-3">
-                            <i class="fas fa-image fa-2x mb-2 text-secondary d-block"></i>
-                            Tidak ada foto kegiatan
-                        </div>
-                    @endif
-                </div>
-            </div>
+                                </div>
+                            </div>
 
-            <!-- Dokumen Lampiran -->
-            <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white py-2 px-3">
-                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Lampiran</h6>
-                </div>
-                <div class="card-body py-2 px-3">
-                    @php
-                        $renderFileItem = function($files, $title, $iconClass) {
-                            if(empty($files) || (is_array($files) && count(array_filter($files)) === 0)) {
-                                return '';
-                            }
-                            if(is_string($files)) $files = json_decode($files, true) ?? [];
-                            $html = "<div class='text-muted font-weight-bold mb-1' style='font-size:0.75rem;'>{$title}</div>";
-                            foreach($files as $file) {
-                                if(empty($file)) continue;
-                                $path = is_array($file) ? ($file['path'] ?? '') : $file;
-                                $name = is_array($file) ? ($file['original_name'] ?? basename($path)) : basename($file);
-                                if(empty($path)) continue;
-                                $url = asset('public/storage/app/' . $path);
-                                $html .= "<a href='{$url}' target='_blank' class='btn btn-sm bg-navy text-white btn-block text-left mb-2 text-truncate' title='{$name}' style='font-size:0.78rem;'><i class='{$iconClass} mr-1'></i> {$name}</a>";
-                            }
-                            return $html;
-                        };
-
-                        $hasFiles = !empty($laporanKegiatan->daftar_hadir) || !empty($laporanKegiatan->notulen) || !empty($laporanKegiatan->materi) || !empty($laporanKegiatan->berita_acara);
-                    @endphp
-
-                    @if($hasFiles)
-                        {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
-                        {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
-                        {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint') !!}
-                        {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf') !!}
-                    @else
-                        <div class="text-center text-muted py-3">
-                            <i class="fas fa-file-alt fa-2x mb-2 text-secondary d-block"></i>
-                            Belum ada dokumen yang dilampirkan
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Minta Revisi -->
-@if (in_array($laporanKegiatan->status, [\App\Models\LaporanKegiatan::STATUS_DIAJUKAN, \App\Models\LaporanKegiatan::STATUS_FINAL]) && auth()->user()->role->role_name === 'admin')
-<div class="modal fade" id="modal-revisi" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('laporan_kegiatan.revisi', $laporanKegiatan->uuid) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-edit mr-2 text-navy"></i>Minta Revisi Laporan</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Catatan Revisi <span class="text-danger">*</span></label>
-                        <textarea name="catatan_evaluasi" class="form-control" rows="4" required placeholder="Tuliskan catatan revisi untuk pelaksana..."></textarea>
+                        </div>{{-- End accordion --}}
                     </div>
                 </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-secondary text-white" data-dismiss="modal"><i class="fas fa-times mr-1"></i> Batal</button>
-                    <button type="submit" class="btn bg-navy text-white font-weight-bold"><i class="fas fa-paper-plane mr-1"></i> Kirim Permintaan Revisi</button>
+            </div>
+
+            <!-- Kolom Kanan: Dokumen & Foto -->
+            <div class="col-md-4">
+
+                <!-- Foto Kegiatan -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-white py-2 px-3">
+                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-images mr-1"></i> Foto Kegiatan</h6>
+                    </div>
+                    <div class="card-body p-2">
+                        @php
+                            $fotos = $laporanKegiatan->foto_kegiatan;
+                            if (is_string($fotos)) {
+                                $fotos = json_decode($fotos, true) ?? [];
+                            }
+                            $hasFotoItems = is_array($fotos) && count(array_filter($fotos)) > 0;
+                        @endphp
+                        @if ($hasFotoItems)
+                            <div class="row">
+                                @foreach ($fotos as $index => $foto)
+                                    @php
+                                        if (is_array($foto)) {
+                                            $filePath = $foto['path'] ?? '';
+                                            $fileName = $foto['original_name'] ?? 'Foto Kegiatan ' . ($index + 1);
+                                        } else {
+                                            $filePath = $foto;
+                                            $fileName = 'Foto Kegiatan ' . ($index + 1);
+                                        }
+                                    @endphp
+                                    @if (!empty($filePath))
+                                        <div class="col-6 mb-2 px-2">
+                                            <div class="gallery-img-wrapper border shadow-sm"
+                                                style="height: 120px; border-radius: 4px;" data-toggle="modal"
+                                                data-target="#imageModal{{ $index }}">
+                                                <img src="/public/storage/app/{{ $filePath }}" class="gallery-img"
+                                                    alt="{{ $fileName }}"
+                                                    style="height: 120px; width: 100%; object-fit: cover;">
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal for Image -->
+                                        <div class="modal fade" id="imageModal{{ $index }}" tabindex="-1"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered"
+                                                style="max-width: fit-content; max-width: -moz-fit-content; width: auto; margin: 1.75rem auto;">
+                                                <div class="modal-content border-0 shadow-lg"
+                                                    style="width: auto; min-width: 320px; max-width: 92vw; border-radius: 8px; overflow: hidden;">
+                                                    <div
+                                                        class="modal-header border-0 bg-white py-2 px-3 align-items-center">
+                                                        <h6 class="modal-title font-weight-bold text-dark text-truncate mb-0"
+                                                            style="max-width: calc(90vw - 60px);"
+                                                            title="{{ $fileName }}">
+                                                            {{ $fileName }}
+                                                        </h6>
+                                                        <button type="button" class="close ml-auto" data-dismiss="modal"
+                                                            aria-label="Close" style="outline: none;">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center p-0"
+                                                        style="background-color: #1a1a1a; display: flex; justify-content: center; align-items: center;">
+                                                        <img src="/public/storage/app/{{ $filePath }}"
+                                                            class="img-fluid"
+                                                            style="max-height: 80vh; max-width: 90vw; width: auto; height: auto; display: block; object-fit: contain;"
+                                                            alt="{{ $fileName }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center text-muted py-3">
+                                <i class="fas fa-image fa-2x mb-2 text-secondary d-block"></i>
+                                Tidak ada foto kegiatan
+                            </div>
+                        @endif
+                    </div>
                 </div>
-            </form>
+
+                <!-- Dokumen Lampiran -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-white py-2 px-3">
+                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Lampiran</h6>
+                    </div>
+                    <div class="card-body py-2 px-3">
+                        @php
+                            $renderFileItem = function ($files, $title, $iconClass) {
+                                if (empty($files) || (is_array($files) && count(array_filter($files)) === 0)) {
+                                    return '';
+                                }
+                                if (is_string($files)) {
+                                    $files = json_decode($files, true) ?? [];
+                                }
+                                $html = "<div class='text-muted font-weight-bold mb-1' style='font-size:0.75rem;'>{$title}</div>";
+                                foreach ($files as $file) {
+                                    if (empty($file)) {
+                                        continue;
+                                    }
+                                    $path = is_array($file) ? $file['path'] ?? '' : $file;
+                                    $name = is_array($file)
+                                        ? $file['original_name'] ?? basename($path)
+                                        : basename($file);
+                                    if (empty($path)) {
+                                        continue;
+                                    }
+                                    $url = asset('public/storage/app/' . $path);
+                                    $html .= "<a href='{$url}' target='_blank' class='btn btn-sm bg-navy text-white btn-block text-left mb-2 text-truncate' title='{$name}' style='font-size:0.78rem;'><i class='{$iconClass} mr-1'></i> {$name}</a>";
+                                }
+                                return $html;
+                            };
+
+                            $hasFiles =
+                                !empty($laporanKegiatan->daftar_hadir) ||
+                                !empty($laporanKegiatan->notulen) ||
+                                !empty($laporanKegiatan->materi) ||
+                                !empty($laporanKegiatan->berita_acara);
+                        @endphp
+
+                        @if ($hasFiles)
+                            {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
+                            {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
+                            {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint') !!}
+                            {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf') !!}
+                        @else
+                            <div class="text-center text-muted py-3">
+                                <i class="fas fa-file-alt fa-2x mb-2 text-secondary d-block"></i>
+                                Belum ada dokumen yang dilampirkan
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-@endif
 
-@push('scripts')
-<script>
-    // Accordion chevron rotation + active state
-    document.addEventListener('DOMContentLoaded', function () {
-        var collapseEls = document.querySelectorAll('#accordionLaporan .collapse');
-        collapseEls.forEach(function (el) {
-            el.addEventListener('show.bs.collapse', function () {
-                var header = document.querySelector('[data-target="#' + el.id + '"]');
-                if (header) {
-                    header.classList.add('is-open');
-                    var icon = header.querySelector('.accordion-toggle-icon');
-                    if (icon) icon.style.transform = 'rotate(180deg)';
-                }
+    <!-- Modal Minta Revisi -->
+    @if (in_array($laporanKegiatan->status, [
+            \App\Models\LaporanKegiatan::STATUS_DIAJUKAN,
+            \App\Models\LaporanKegiatan::STATUS_FINAL,
+        ]) && auth()->user()->role->role_name === 'admin')
+        <div class="modal fade" id="modal-revisi" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('laporan_kegiatan.revisi', $laporanKegiatan->uuid) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-header">
+                            <h5 class="modal-title fw-bold"><i class="fas fa-edit mr-2 text-navy"></i>Minta Revisi Laporan
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Catatan Revisi <span class="text-danger">*</span></label>
+                                <textarea name="catatan_evaluasi" class="form-control" rows="4" required
+                                    placeholder="Tuliskan catatan revisi untuk pelaksana..."></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-secondary text-white" data-dismiss="modal"><i
+                                    class="fas fa-times mr-1"></i> Batal</button>
+                            <button type="submit" class="btn bg-navy text-white font-weight-bold"><i
+                                    class="fas fa-paper-plane mr-1"></i> Kirim Permintaan Revisi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @push('scripts')
+        <script>
+            // Accordion chevron rotation + active state
+            document.addEventListener('DOMContentLoaded', function() {
+                var collapseEls = document.querySelectorAll('#accordionLaporan .collapse');
+                collapseEls.forEach(function(el) {
+                    el.addEventListener('show.bs.collapse', function() {
+                        var header = document.querySelector('[data-target="#' + el.id + '"]');
+                        if (header) {
+                            header.classList.add('is-open');
+                            var icon = header.querySelector('.accordion-toggle-icon');
+                            if (icon) icon.style.transform = 'rotate(180deg)';
+                        }
+                    });
+                    el.addEventListener('hide.bs.collapse', function() {
+                        var header = document.querySelector('[data-target="#' + el.id + '"]');
+                        if (header) {
+                            header.classList.remove('is-open');
+                            var icon = header.querySelector('.accordion-toggle-icon');
+                            if (icon) icon.style.transform = 'rotate(0deg)';
+                        }
+                    });
+                });
             });
-            el.addEventListener('hide.bs.collapse', function () {
-                var header = document.querySelector('[data-target="#' + el.id + '"]');
-                if (header) {
-                    header.classList.remove('is-open');
-                    var icon = header.querySelector('.accordion-toggle-icon');
-                    if (icon) icon.style.transform = 'rotate(0deg)';
-                }
+
+            // Auto-render HEIC images in gallery & modal popups
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof heic2any === 'undefined') return;
+                const heicImgs = document.querySelectorAll('img[src*=".heic" i], img[src*=".heif" i]');
+                if (heicImgs.length === 0) return;
+
+                const promiseMap = new Map();
+                heicImgs.forEach((img) => {
+                    const src = img.getAttribute('src');
+                    if (!src) return;
+
+                    if (!promiseMap.has(src)) {
+                        promiseMap.set(src, (async () => {
+                            const resp = await fetch(src);
+                            if (!resp.ok) throw new Error('Fetch failed: ' + resp.status);
+                            const blob = await resp.blob();
+                            const converted = await heic2any({
+                                blob: blob,
+                                toType: 'image/jpeg',
+                                quality: 0.85
+                            });
+                            const finalBlob = Array.isArray(converted) ? converted[0] :
+                                converted;
+                            return URL.createObjectURL(finalBlob);
+                        })());
+                    }
+
+                    promiseMap.get(src).then((objUrl) => {
+                        img.src = objUrl;
+                    }).catch((err) => {
+                        console.error('HEIC auto-render failed for:', src, err);
+                    });
+                });
             });
-        });
-    });
 
-    // Auto-render HEIC images in gallery & modal popups
-    document.addEventListener('DOMContentLoaded', function () {
-        if (typeof heic2any === 'undefined') return;
-        const heicImgs = document.querySelectorAll('img[src*=".heic" i], img[src*=".heif" i]');
-        if (heicImgs.length === 0) return;
+            function printLaporan(url) {
+                // Membuka URL print di iframe tersembunyi
+                let iframe = document.createElement('iframe');
+                iframe.style.position = 'absolute';
+                iframe.style.width = '0px';
+                iframe.style.height = '0px';
+                iframe.style.border = 'none';
+                iframe.src = url;
 
-        const promiseMap = new Map();
-        heicImgs.forEach((img) => {
-            const src = img.getAttribute('src');
-            if (!src) return;
+                document.body.appendChild(iframe);
 
-            if (!promiseMap.has(src)) {
-                promiseMap.set(src, (async () => {
-                    const resp = await fetch(src);
-                    if (!resp.ok) throw new Error('Fetch failed: ' + resp.status);
-                    const blob = await resp.blob();
-                    const converted = await heic2any({ blob: blob, toType: 'image/jpeg', quality: 0.85 });
-                    const finalBlob = Array.isArray(converted) ? converted[0] : converted;
-                    return URL.createObjectURL(finalBlob);
-                })());
+                // Memastikan iframe sudah ter-load sebelum memicu print
+                iframe.onload = async function() {
+                    try {
+                        if (iframe.contentWindow && iframe.contentWindow.__heicDonePromise) {
+                            await iframe.contentWindow.__heicDonePromise;
+                        }
+                    } catch (e) {
+                        console.warn(e);
+                    }
+
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+
+                    // Menghapus iframe setelah beberapa saat (memberi waktu jendela print tertutup)
+                    setTimeout(function() {
+                        document.body.removeChild(iframe);
+                    }, 5000);
+                };
             }
-
-            promiseMap.get(src).then((objUrl) => {
-                img.src = objUrl;
-            }).catch((err) => {
-                console.error('HEIC auto-render failed for:', src, err);
-            });
-        });
-    });
-
-    function printLaporan(url) {
-        // Membuka URL print di iframe tersembunyi
-        let iframe = document.createElement('iframe');
-        iframe.style.position = 'absolute';
-        iframe.style.width = '0px';
-        iframe.style.height = '0px';
-        iframe.style.border = 'none';
-        iframe.src = url;
-
-        document.body.appendChild(iframe);
-
-        // Memastikan iframe sudah ter-load sebelum memicu print
-        iframe.onload = async function() {
-            try {
-                if (iframe.contentWindow && iframe.contentWindow.__heicDonePromise) {
-                    await iframe.contentWindow.__heicDonePromise;
-                }
-            } catch (e) {
-                console.warn(e);
-            }
-
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-
-            // Menghapus iframe setelah beberapa saat (memberi waktu jendela print tertutup)
-            setTimeout(function() {
-                document.body.removeChild(iframe);
-            }, 5000);
-        };
-    }
-</script>
-@endpush
+        </script>
+    @endpush
 @endsection
