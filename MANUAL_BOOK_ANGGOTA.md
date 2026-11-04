@@ -24,6 +24,9 @@ Demi keamanan akun Anda, segera ubah kata sandi default setelah login pertama:
 4. Buat kata sandi baru (minimal 8 karakter) dan konfirmasikan kembali.
 5. Klik **Simpan Password**.
 
+![Panduan Login dan Ganti Password Anggota](docs/images/anggota_login_gantipass.svg)
+*Gambar 1: Alur Login Pertama Kali Menggunakan Password Default (12345678) dan Mengganti Password Pribadi*
+
 ---
 
 ## 📊 3. Memahami Dashboard Anggota
@@ -32,6 +35,9 @@ Setelah masuk, halaman Dashboard menyajikan ringkasan kegiatan Anda:
 - **Kalender Kegiatan**: Menampilkan jadwal kegiatan milik Anda yang telah berstatus **Disetujui**. Klik tanggal atau agenda untuk melihat ringkasan singkat.
 - **Peta Lokasi Kegiatan**: Menampilkan sebaran pin koordinat kegiatan Anda yang telah disetujui.
 - **Tabel 5 Rencana Terbaru**: Menampilkan status pengajuan terakhir yang Anda buat.
+
+![Tampilan Dashboard Anggota](docs/images/anggota_dashboard.svg)
+*Gambar 2: Tampilan Dashboard Anggota (Statistik Kegiatan Sendiri, Kalender Agenda, dan Peta Sebaran)*
 
 ---
 
@@ -77,14 +83,23 @@ Pada bagian bawah Langkah 3, terdapat 2 pilihan:
 - 💾 **Simpan Sebagai Draft**: Gunakan ini jika data Anda belum lengkap dan masih ingin diedit kembali nanti.
 - 🚀 **Ajukan Rencana Kegiatan**: Langsung mengirim rencana ke Admin untuk diperiksa dan disetujui.
 
+![Tampilan Form Rencana Kegiatan](docs/images/anggota_form_rencana.svg)
+*Gambar 3: Form Wizard Rencana Kegiatan (Input Waktu & Pin Peta Leaflet serta Tabel Rincian Anggaran)*
+
+---
+
 ### 4.3 Memantau Status & Memperbaiki Revisi
 - `Draft`: Masih dapat diubah atau dihapus oleh Anda secara bebas.
 - `Diajukan`: Sedang menunggu ditinjau oleh Admin (data terkunci sementara).
 - `Disetujui`: Kegiatan telah resmi disetujui! Anda dapat mulai menjalankan kegiatan di lapangan.
 - `Revisi`: Admin memerlukan perbaikan.
   - Klik tombol **Lihat Detail** untuk membaca **Catatan Revisi dari Admin**.
+  - Terdapat daftar *checklist* kolom isian wajib yang belum lengkap.
   - Klik tombol **Edit** (ikon pensil), lengkapi bagian yang diminta, lalu klik **Ajukan Ulang**.
 - `Ditolak`: Rencana ditolak beserta alasannya.
+
+![Siklus Status dan Penanganan Revisi](docs/images/anggota_status_revisi.svg)
+*Gambar 4: Siklus Status Rencana Kegiatan dan Kotak Catatan Revisi / Checklist Kolom Belum Lengkap*
 
 ### 4.4 Mengunduh PDF Rencana
 Pada halaman detail rencana kegiatan yang telah disetujui, klik tombol **Unduh PDF** untuk menyimpan atau mencetak dokumen rencana resmi.
@@ -126,8 +141,8 @@ Buka menu **Laporan Kegiatan**, pilih metode yang sesuai:
 - Klik tombol **Selanjutnya**.
 
 #### 🔹 Langkah 3: Unggah Berkas Bukti Lapangan
-Unggah dokumen bukti otentik kegiatan:
-- 📷 **Foto Kegiatan**: Dokumentasi foto saat kegiatan berlangsung (maksimal 50MB per foto).
+Unggah dokumen bukti otentik kegiatan (maksimal 50MB per file):
+- 📷 **Foto Kegiatan**: Dokumentasi foto saat kegiatan berlangsung.
 - 📋 **Daftar Hadir**: Berkas presensi tanda tangan peserta.
 - 📝 **Notulen**: Catatan jalannya rapat/kegiatan.
 - 📚 **Materi**: Materi paparan, slide, atau modul yang disampaikan (bila ada).
@@ -137,6 +152,9 @@ Unggah dokumen bukti otentik kegiatan:
 - **Simpan Sebagai Draft**: Simpan jika berkas lampiran masih ada yang belum terkumpul lengkap.
 - **Ajukan Laporan**: Kirim laporan ke Admin untuk divalidasi. Begitu diajukan, status Rencana Kegiatan terkait otomatis berubah menjadi **Selesai**.
 
+![Tampilan Form Laporan Kegiatan](docs/images/anggota_form_laporan.svg)
+*Gambar 5: Dua Jalur Laporan Kegiatan dan Kotak Unggah Berkas Bukti Lapangan (Langkah 3)*
+
 ### 5.4 Memperbaiki Laporan yang Diminta Revisi
 - Jika Admin meminta revisi, status laporan menjadi `Revisi`.
 - Buka detail laporan untuk membaca catatan evaluasi dari Admin.
@@ -144,7 +162,10 @@ Unggah dokumen bukti otentik kegiatan:
 
 ### 5.5 Mencetak Laporan Kegiatan
 - Buka detail laporan kegiatan Anda.
-- Klik tombol **Cetak Laporan** (ikon printer) untuk membuka format cetak ramah cetak browser (siap diprint atau disimpan sebagai PDF).
+- Klik tombol **Cetak Laporan** (ikon printer) untuk membuka format cetak ramah cetak browser (siap diprint langsung atau disimpan sebagai PDF).
+
+![Cetak dan Unduh Dokumen](docs/images/anggota_cetak_dokumen.svg)
+*Gambar 6: Dokumen PDF Rencana Kegiatan dan Tampilan Cetak Resmi Laporan Realisasi*
 
 ---
 
@@ -160,4 +181,4 @@ Unggah dokumen bukti otentik kegiatan:
 3. **Cek Notifikasi Rutin**: Periksa ikon lonceng di kanan atas secara berkala untuk mengetahui apakah rencana atau laporan Anda sudah disetujui oleh Admin.
 
 ---
-*Manual Book Rekam WeBe - Versi 1.0 (Anggota)*
+*Manual Book Rekam WeBe - Versi 1.1 (Anggota)*

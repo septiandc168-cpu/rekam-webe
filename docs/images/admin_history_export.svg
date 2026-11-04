@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 480" width="100%" height="100%">
+  <defs>
+    <style>
+      .font { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+      .shadow-sm { filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.06)); }
+    </style>
+  </defs>
+
+  <rect width="920" height="480" fill="#f8fafc" rx="10" />
+
+  <!-- Top Bar -->
+  <g transform="translate(30, 25)">
+    <text x="0" y="24" fill="#0f172a" font-size="20" font-weight="bold" class="font">History Realisasi Kegiatan</text>
+    <text x="0" y="44" fill="#64748b" font-size="12" class="font">Arsip seluruh kegiatan yang telah memiliki laporan dan unduh rekapitulasi data</text>
+
+    <!-- Button Export CSV / Excel (Green) -->
+    <rect x="690" y="5" width="170" height="38" rx="6" fill="#10b981" class="shadow-sm" />
+    <text x="775" y="29" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle" class="font">📥 Export CSV / Excel</text>
+  </g>
+
+  <!-- Filter Card -->
+  <g transform="translate(30, 85)" class="shadow-sm">
+    <rect width="860" height="60" rx="8" fill="#ffffff" stroke="#e2e8f0" />
+    
+    <!-- Filter Bulan -->
+    <rect x="20" y="14" width="130" height="32" rx="4" fill="#f8fafc" stroke="#cbd5e1" />
+    <text x="32" y="34" fill="#334155" font-size="12" class="font">Bulan: Semua ▾</text>
+
+    <!-- Filter Tahun -->
+    <rect x="165" y="14" width="120" height="32" rx="4" fill="#f8fafc" stroke="#cbd5e1" />
+    <text x="177" y="34" fill="#334155" font-size="12" class="font">Tahun: 2026 ▾</text>
+
+    <!-- Filter Status -->
+    <rect x="300" y="14" width="150" height="32" rx="4" fill="#f8fafc" stroke="#cbd5e1" />
+    <text x="312" y="34" fill="#334155" font-size="12" class="font">Status: Final ▾</text>
+
+    <!-- Input Search -->
+    <rect x="465" y="14" width="280" height="32" rx="4" fill="#ffffff" stroke="#cbd5e1" />
+    <text x="477" y="34" fill="#94a3b8" font-size="12" class="font">🔍 Cari kegiatan / pelaksana...</text>
+
+    <!-- Button Filter -->
+    <rect x="760" y="14" width="80" height="32" rx="4" fill="#001f3f" />
+    <text x="800" y="34" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle" class="font">Terapkan</text>
+  </g>
+
+  <!-- Table Card -->
+  <g transform="translate(30, 160)" class="shadow-sm">
+    <rect width="860" height="290" rx="8" fill="#ffffff" stroke="#e2e8f0" />
+
+    <!-- Table Header (Navy Header) -->
+    <rect width="860" height="40" rx="8 8 0 0" fill="#001f3f" />
+    <text x="25" y="25" fill="#ffffff" font-size="12" font-weight="bold" class="font">NO</text>
+    <text x="65" y="25" fill="#ffffff" font-size="12" font-weight="bold" class="font">NAMA KEGIATAN</text>
+    <text x="320" y="25" fill="#ffffff" font-size="12" font-weight="bold" class="font">LOKASI &amp; WAKTU</text>
+    <text x="540" y="25" fill="#ffffff" font-size="12" font-weight="bold" class="font">PELAKSANA</text>
+    <text x="680" y="25" fill="#ffffff" font-size="12" font-weight="bold" class="font">PESERTA</text>
+    <text x="765" y="25" fill="#ffffff" font-size="12" font-weight="bold" class="font">STATUS</text>
+
+    <!-- Row 1 -->
+    <g transform="translate(0, 40)">
+      <rect width="860" height="50" fill="#ffffff" stroke="#f1f5f9" stroke-width="1" />
+      <text x="25" y="30" fill="#475569" font-size="13" class="font">1</text>
+      <text x="65" y="22" fill="#0f172a" font-size="13" font-weight="600" class="font">Kemah Konservasi Bahari Remaja</text>
+      <text x="65" y="38" fill="#64748b" font-size="11" class="font">Jenis: Edukasi</text>
+
+      <text x="320" y="22" fill="#334155" font-size="12" class="font">Pulau Keramat • Teluk Bakau</text>
+      <text x="320" y="38" fill="#64748b" font-size="11" class="font">10 - 12 Okt 2026</text>
+
+      <text x="540" y="30" fill="#334155" font-size="12" class="font">Dido Septian</text>
+
+      <text x="680" y="30" fill="#334155" font-size="12" class="font">45 Orang</text>
+
+      <rect x="765" y="15" width="70" height="22" rx="4" fill="#ecfdf5" />
+      <text x="800" y="30" fill="#065f46" font-size="11" font-weight="bold" text-anchor="middle" class="font">Final</text>
+    </g>
+
+    <!-- Row 2 -->
+    <g transform="translate(0, 90)">
+      <rect width="860" height="50" fill="#fcfcfd" stroke="#f1f5f9" stroke-width="1" />
+      <text x="25" y="30" fill="#475569" font-size="13" class="font">2</text>
+      <text x="65" y="22" fill="#0f172a" font-size="13" font-weight="600" class="font">Pelatihan Pengolahan Dodol Mangrove</text>
+      <text x="65" y="38" fill="#64748b" font-size="11" class="font">Jenis: Usaha Masyarakat</text>
+
+      <text x="320" y="22" fill="#334155" font-size="12" class="font">Balai Pertemuan Desa Malang Rapat</text>
+      <text x="320" y="38" fill="#64748b" font-size="11" class="font">18 - 19 Sep 2026</text>
+
+      <text x="540" y="30" fill="#334155" font-size="12" class="font">Rina Marwah</text>
+
+      <text x="680" y="30" fill="#334155" font-size="12" class="font">28 Orang</text>
+
+      <rect x="765" y="15" width="70" height="22" rx="4" fill="#ecfdf5" />
+      <text x="800" y="30" fill="#065f46" font-size="11" font-weight="bold" text-anchor="middle" class="font">Final</text>
+    </g>
+
+    <!-- Row 3 -->
+    <g transform="translate(0, 140)">
+      <rect width="860" height="50" fill="#ffffff" stroke="#f1f5f9" stroke-width="1" />
+      <text x="25" y="30" fill="#475569" font-size="13" class="font">3</text>
+      <text x="65" y="22" fill="#0f172a" font-size="13" font-weight="600" class="font">Aksi Bersih Pantai &amp; Penanaman Cemara</text>
+      <text x="65" y="38" fill="#64748b" font-size="11" class="font">Jenis: Konservasi</text>
+
+      <text x="320" y="22" fill="#334155" font-size="12" class="font">Pantai Trikora 4</text>
+      <text x="320" y="38" fill="#64748b" font-size="11" class="font">05 Agu 2026</text>
+
+      <text x="540" y="30" fill="#334155" font-size="12" class="font">Budi Santoso</text>
+
+      <text x="680" y="30" fill="#334155" font-size="12" class="font">80 Orang</text>
+
+      <rect x="765" y="15" width="70" height="22" rx="4" fill="#ecfdf5" />
+      <text x="800" y="30" fill="#065f46" font-size="11" font-weight="bold" text-anchor="middle" class="font">Final</text>
+    </g>
+  </g>
+</svg>

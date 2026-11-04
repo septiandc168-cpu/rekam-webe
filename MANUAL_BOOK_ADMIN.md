@@ -4,7 +4,7 @@
 ---
 
 ## 📌 1. Pendahuluan
-Dokumen ini merupakan panduan ringkas dan cepat (*Quick Start Guide*) bagi **Administrator / Supervisor** dalam mengelola pengguna, memverifikasi pengajuan rencana kegiatan, menyetujui laporan pelaksanaan kegiatan, serta mengunduh rekap data kegiatan di aplikasi **Rekam WeBe**.
+Dokumen ini merupakan panduan ringkas dan praktis (*Quick Start Guide*) bagi **Administrator / Supervisor** dalam mengelola pengguna, memverifikasi pengajuan rencana kegiatan, menyetujui laporan pelaksanaan kegiatan, serta mengunduh rekap data kegiatan di aplikasi **Rekam WeBe**.
 
 ---
 
@@ -20,6 +20,9 @@ Dokumen ini merupakan panduan ringkas dan cepat (*Quick Start Guide*) bagi **Adm
 2. Pilih menu **Ganti Password**.
 3. Masukkan **Password Saat Ini**, buat **Password Baru** (minimal 8 karakter), lalu ulangi di kolom **Konfirmasi Password Baru**.
 4. Klik tombol **Simpan Password**.
+
+![Tampilan Login dan Modal Ganti Password](docs/images/admin_login_akun.svg)
+*Gambar 1: Halaman Login Sistem dan Modal Ubah Kata Sandi Akun*
 
 ---
 
@@ -48,12 +51,15 @@ Admin memiliki wewenang penuh untuk mengatur akun anggota/staf pelaksana kegiata
 ### 3.3 Reset Password Pengguna
 Gunakan fitur ini apabila anggota lupa kata sandi mereka:
 1. Cari nama pengguna di tabel.
-2. Klik tombol **Reset Password** (ikon kunci).
+2. Klik tombol **Reset Password** (ikon kunci warna kuning).
 3. Konfirmasi reset. Password pengguna akan diatur ulang kembali ke `12345678`.
 
 ### 3.4 Menghapus Pengguna
 - Klik tombol **Hapus** (ikon tempat sampah warna merah) pada baris pengguna terkait.
 - Konfirmasi penghapusan pada jendela pop-up.
+
+![Tampilan Manajemen Pengguna](docs/images/admin_manajemen_user.svg)
+*Gambar 2: Halaman Manajemen Pengguna, Tambah Akun, dan Tombol Reset Password*
 
 ---
 
@@ -65,6 +71,9 @@ Halaman Dashboard menyajikan informasi operasional secara terpusat:
 - **Kalender Kegiatan**: Jadwal kegiatan yang berstatus *Disetujui* per hari.
 - **Peta Lokasi Kegiatan**: Peta persebaran titik lokasi koordinat kegiatan yang telah disetujui.
 - **Tabel 5 Rencana Terbaru**: Menampilkan pengajuan kegiatan paling mutakhir dari anggota.
+
+![Tampilan Dashboard Admin](docs/images/admin_dashboard.svg)
+*Gambar 3: Dashboard Monitoring Administrator (Statistik, Tren Bulanan, Kalender, dan Peta Sebaran)*
 
 ---
 
@@ -86,17 +95,20 @@ Setiap rencana yang diajukan oleh anggota wajib ditinjau dan divalidasi oleh Adm
 Di halaman detail rencana, Admin dapat memilih salah satu aksi berikut:
 
 - ✅ **Setujui Kegiatan**:
-  - Klik tombol **Setujui**.
+  - Klik tombol hijau **Setujui Kegiatan**.
   - Konfirmasi tindakan.
   - Status berubah menjadi `Disetujui`. Anggota akan menerima notifikasi dan kegiatan resmi masuk ke kalender & peta serta siap dilaporkan setelah selesai di lapangan.
 - ⚠️ **Minta Revisi**:
-  - Klik tombol **Minta Revisi**.
+  - Klik tombol kuning **Minta Revisi**.
   - Isi kolom **Catatan Revisi** (contoh: *"Mohon lampirkan rincian biaya transportasi dan perjelas tujuan kegiatan"*).
   - Klik **Kirim Revisi**. Status berubah menjadi `Revisi` dan catatan akan tampil pada akun anggota terkait.
 - ❌ **Tolak Kegiatan**:
-  - Klik tombol **Tolak**.
+  - Klik tombol merah **Tolak Kegiatan**.
   - Masukkan **Alasan Penolakan**.
   - Klik **Tolak Rencana**. Status berubah menjadi `Ditolak`.
+
+![Tampilan Verifikasi Rencana Kegiatan](docs/images/admin_verifikasi_rencana.svg)
+*Gambar 4: Halaman Verifikasi Rencana Kegiatan dan Panel Keputusan Admin (Setujui / Revisi / Tolak)*
 
 ---
 
@@ -118,13 +130,16 @@ Setelah anggota melaksanakan kegiatan di lapangan, mereka akan mengirimkan lapor
 
 ### 6.2 Tindakan Persetujuan Laporan
 - ✅ **Terima Laporan (Finalisasi)**:
-  - Klik tombol **Terima Laporan**.
+  - Klik tombol hijau **Terima Laporan (Final)**.
   - Status laporan berubah menjadi `Final`.
   - Sistem secara otomatis memperbarui status Rencana Kegiatan terkait menjadi `Selesai`.
 - ⚠️ **Minta Revisi Laporan**:
-  - Klik tombol **Minta Revisi**.
+  - Klik tombol kuning **Minta Revisi Laporan**.
   - Tuliskan **Catatan Evaluasi** (misal: *"Foto kegiatan dan daftar hadir bertanda tangan belum diunggah"*).
   - Klik **Kirim Permintaan Revisi**. Status laporan berubah menjadi `Revisi`. Anggota akan memperbaiki dan mengajukan ulang.
+
+![Tampilan Verifikasi Laporan Kegiatan](docs/images/admin_verifikasi_laporan.svg)
+*Gambar 5: Halaman Pemeriksaan Bukti Lapangan dan Aksi Persetujuan Laporan Realisasi*
 
 ---
 
@@ -144,6 +159,9 @@ Gunakan bilah filter di bagian atas tabel:
 2. Klik tombol hijau **Export CSV / Excel** di pojok kanan atas tabel.
 3. Berkas `.csv` akan terunduh otomatis ke komputer Anda, diformat rapi (UTF-8) dan siap dibuka langsung di Microsoft Excel, Google Sheets, atau software pengolah data lainnya.
 
+![Tampilan History Realisasi dan Export](docs/images/admin_history_export.svg)
+*Gambar 6: Halaman History Realisasi, Bilah Filter Pencarian, dan Tombol Export CSV / Excel*
+
 ---
 
 ## 🔔 8. Notifikasi Sistem
@@ -152,4 +170,4 @@ Gunakan bilah filter di bagian atas tabel:
 - Tersedia opsi **Tandai Semua Sudah Dibaca** dan **Hapus Semua Notifikasi**.
 
 ---
-*Manual Book Rekam WeBe - Versi 1.0 (Admin)*
+*Manual Book Rekam WeBe - Versi 1.1 (Admin)*

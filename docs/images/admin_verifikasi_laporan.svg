@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" width="100%" height="100%">
+  <defs>
+    <style>
+      .font { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+      .shadow-sm { filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.06)); }
+    </style>
+  </defs>
+
+  <rect width="920" height="520" fill="#f8fafc" rx="10" />
+
+  <!-- Page Header -->
+  <g transform="translate(35, 25)">
+    <text x="0" y="24" fill="#0f172a" font-size="20" font-weight="bold" class="font">Verifikasi Laporan Realisasi Kegiatan</text>
+    <text x="0" y="44" fill="#64748b" font-size="12" class="font">Validasi bukti lapangan, capaian target, dan evaluasi kegiatan sebelum finalisasi</text>
+
+    <!-- Status Badge -->
+    <rect x="740" y="6" width="145" height="32" rx="16" fill="#e8f0fe" stroke="#bfdbfe" />
+    <circle cx="758" cy="22" r="5" fill="#1d4ed8" />
+    <text x="815" y="27" fill="#1d4ed8" font-size="12" font-weight="bold" text-anchor="middle" class="font">Status: Diajukan</text>
+  </g>
+
+  <!-- Left: Realisasi & Bukti Card -->
+  <g transform="translate(35, 95)" class="shadow-sm">
+    <rect width="530" height="395" rx="8" fill="#ffffff" stroke="#e2e8f0" />
+    <rect width="530" height="42" rx="8 8 0 0" fill="#001f3f" />
+    <text x="20" y="26" fill="#ffffff" font-size="13" font-weight="bold" class="font">📑  Bukti Pelaksanaan &amp; Evaluasi Lapangan</text>
+
+    <g transform="translate(20, 60)">
+      <text x="0" y="0" fill="#64748b" font-size="11" font-weight="bold" class="font">KEGIATAN &amp; PELAKSANA</text>
+      <text x="0" y="18" fill="#0f172a" font-size="13" font-weight="600" class="font">Pelatihan Pembuatan Pupuk Organik Mangrove (Oleh: Dido Septian)</text>
+
+      <text x="0" y="55" fill="#64748b" font-size="11" font-weight="bold" class="font">TARGET VS REALISASI PESERTA</text>
+      <text x="0" y="73" fill="#059669" font-size="13" font-weight="bold" class="font">Target: 30 Orang  ➔  Realisasi: 32 Orang Hadir (106%)</text>
+
+      <text x="0" y="110" fill="#64748b" font-size="11" font-weight="bold" class="font">OUTPUT NYATA &amp; DAMPAK AWAL</text>
+      <text x="0" y="128" fill="#334155" font-size="12" class="font">Tersusun 15 karung pupuk percontohan dan terbentuk 1 kelompok binaan baru.</text>
+
+      <text x="0" y="165" fill="#64748b" font-size="11" font-weight="bold" class="font">BERKAS BUKTI LENGKAP TERUNGGAH (5/5)</text>
+      
+      <!-- Bukti Badges -->
+      <g transform="translate(0, 180)">
+        <rect x="0" y="0" width="120" height="26" rx="4" fill="#ecfdf5" stroke="#a7f3d0" />
+        <text x="10" y="17" fill="#065f46" font-size="11" class="font">📷 Foto Kegiatan</text>
+
+        <rect x="130" y="0" width="115" height="26" rx="4" fill="#ecfdf5" stroke="#a7f3d0" />
+        <text x="140" y="17" fill="#065f46" font-size="11" class="font">📋 Daftar Hadir</text>
+
+        <rect x="255" y="0" width="95" height="26" rx="4" fill="#ecfdf5" stroke="#a7f3d0" />
+        <text x="265" y="17" fill="#065f46" font-size="11" class="font">📝 Notulen</text>
+
+        <rect x="360" y="0" width="115" height="26" rx="4" fill="#ecfdf5" stroke="#a7f3d0" />
+        <text x="370" y="17" fill="#065f46" font-size="11" class="font">📜 Berita Acara</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Right: Verification Action Panel -->
+  <g transform="translate(585, 95)" class="shadow-sm">
+    <rect width="300" height="395" rx="8" fill="#ffffff" stroke="#e2e8f0" />
+    <rect width="300" height="42" rx="8 8 0 0" fill="#0f172a" />
+    <text x="20" y="26" fill="#ffffff" font-size="13" font-weight="bold" class="font">⚡  Persetujuan Laporan</text>
+
+    <g transform="translate(20, 65)">
+      <!-- Aksi 1: Terima Laporan -->
+      <g transform="translate(0, 0)">
+        <rect width="260" height="85" rx="6" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.5" />
+        <text x="16" y="24" fill="#065f46" font-size="13" font-weight="bold" class="font">✓  TERIMA LAPORAN (FINAL)</text>
+        <text x="16" y="44" fill="#047857" font-size="11" class="font">• Status Laporan menjadi Final</text>
+        <text x="16" y="60" fill="#047857" font-size="11" class="font">• Status Rencana otomatis Selesai</text>
+      </g>
+
+      <!-- Aksi 2: Minta Revisi Laporan -->
+      <g transform="translate(0, 105)">
+        <rect width="260" height="130" rx="6" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5" />
+        <text x="16" y="24" fill="#92400e" font-size="13" font-weight="bold" class="font">⚠️  MINTA REVISI LAPORAN</text>
+        <text x="16" y="42" fill="#b45309" font-size="10" class="font">Catatan evaluasi yang harus diperbaiki:</text>
+        <rect x="14" y="52" width="232" height="60" rx="4" fill="#ffffff" stroke="#cbd5e1" />
+        <text x="22" y="74" fill="#64748b" font-size="10" class="font">Lampirkan foto penyerahan bibit...</text>
+      </g>
+
+      <!-- Action Button Submit -->
+      <rect x="0" y="270" width="260" height="38" rx="6" fill="#001f3f" />
+      <text x="130" y="294" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle" class="font">Kirim Hasil Verifikasi</text>
+    </g>
+  </g>
+</svg>
