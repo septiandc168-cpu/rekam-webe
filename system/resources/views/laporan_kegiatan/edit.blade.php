@@ -165,6 +165,9 @@
             @method('PUT')
             <input type="hidden" name="action" id="form-action"
                 value="{{ in_array($laporanKegiatan->status, ['draft', 'revisi']) ? 'diajukan' : 'update' }}">
+            @if ($laporanKegiatan->isDarurat())
+                <input type="hidden" name="is_laporan_langsung" value="1">
+            @endif
 
             <!-- STEP 1: Realisasi Kegiatan -->
             <div class="wizard-step" id="step-1">
@@ -429,13 +432,13 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Daftar Hadir <span
-                                        class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mt-2">Daftar Hadir @if (!$laporanKegiatan->isDarurat())<span
+                                        class="text-danger">*</span>@endif</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="daftar_hadir[]"
                                         class="custom-file-input custom-doc-input" id="daftarHadirInput"
                                         accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*"
-                                        multiple {{ empty($daftar_hadir) ? 'required' : '' }}>
+                                        multiple {{ (!$laporanKegiatan->isDarurat() && empty($daftar_hadir)) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="daftarHadirInput">Biarkan kosong jika tidak
                                         diubah...</label>
                                 </div>
@@ -522,12 +525,12 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Materi <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mt-2">Materi @if (!$laporanKegiatan->isDarurat())<span class="text-danger">*</span>@endif</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="materi[]" class="custom-file-input custom-doc-input"
                                         id="materiInput"
                                         accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z"
-                                        multiple {{ empty($materi) ? 'required' : '' }}>
+                                        multiple {{ (!$laporanKegiatan->isDarurat() && empty($materi)) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="materiInput">Biarkan kosong jika tidak
                                         diubah...</label>
                                 </div>
@@ -566,13 +569,13 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Berita Acara <span
-                                        class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mt-2">Berita Acara @if (!$laporanKegiatan->isDarurat())<span
+                                        class="text-danger">*</span>@endif</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="berita_acara[]"
                                         class="custom-file-input custom-doc-input" id="beritaAcaraInput"
                                         accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z"
-                                        multiple {{ empty($berita_acara) ? 'required' : '' }}>
+                                        multiple {{ (!$laporanKegiatan->isDarurat() && empty($berita_acara)) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="beritaAcaraInput">Biarkan kosong jika tidak
                                         diubah...</label>
                                 </div>
@@ -794,23 +797,29 @@
                         return true;
                     } else if (stepNum === 3) {
                         // Tahap 3: Lampiran Bukti
+                        const isLangsung = document.querySelector('input[name="is_laporan_langsung"]');
                         const requiredFiles = [{
                                 key: 'foto_kegiatan',
                                 inputId: 'fotoInput'
-                            },
-                            {
-                                key: 'daftar_hadir',
-                                inputId: 'daftarHadirInput'
-                            },
-                            {
-                                key: 'materi',
-                                inputId: 'materiInput'
-                            },
-                            {
-                                key: 'berita_acara',
-                                inputId: 'beritaAcaraInput'
                             }
                         ];
+
+                        if (!isLangsung) {
+                            requiredFiles.push(
+                                {
+                                    key: 'daftar_hadir',
+                                    inputId: 'daftarHadirInput'
+                                },
+                                {
+                                    key: 'materi',
+                                    inputId: 'materiInput'
+                                },
+                                {
+                                    key: 'berita_acara',
+                                    inputId: 'beritaAcaraInput'
+                                }
+                            );
+                        }
 
                         for (let req of requiredFiles) {
                             const hasBuffer = typeof fileBuffers !== 'undefined' && fileBuffers[req.key] && fileBuffers[
@@ -1031,27 +1040,33 @@
                     }
 
                     // 2. Validasi file lampiran wajib di Step 3
+                    const isLangsung = document.querySelector('input[name="is_laporan_langsung"]');
                     const requiredFiles = [{
                             key: 'foto_kegiatan',
                             name: 'Foto Kegiatan',
                             inputId: 'fotoInput'
-                        },
-                        {
-                            key: 'daftar_hadir',
-                            name: 'Daftar Hadir',
-                            inputId: 'daftarHadirInput'
-                        },
-                        {
-                            key: 'materi',
-                            name: 'Materi',
-                            inputId: 'materiInput'
-                        },
-                        {
-                            key: 'berita_acara',
-                            name: 'Berita Acara',
-                            inputId: 'beritaAcaraInput'
                         }
                     ];
+
+                    if (!isLangsung) {
+                        requiredFiles.push(
+                            {
+                                key: 'daftar_hadir',
+                                name: 'Daftar Hadir',
+                                inputId: 'daftarHadirInput'
+                            },
+                            {
+                                key: 'materi',
+                                name: 'Materi',
+                                inputId: 'materiInput'
+                            },
+                            {
+                                key: 'berita_acara',
+                                name: 'Berita Acara',
+                                inputId: 'beritaAcaraInput'
+                            }
+                        );
+                    }
 
                     for (let req of requiredFiles) {
                         const hasBuffer = fileBuffers[req.key] && fileBuffers[req.key].length > 0;

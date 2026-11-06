@@ -1008,14 +1008,16 @@ class LaporanKegiatanController extends Controller
         if ($this->isFileListEmpty($laporan->foto_kegiatan)) {
             $missing[] = 'Foto Kegiatan';
         }
-        if ($this->isFileListEmpty($laporan->daftar_hadir)) {
-            $missing[] = 'Daftar Hadir';
-        }
-        if ($this->isFileListEmpty($laporan->materi)) {
-            $missing[] = 'Materi';
-        }
-        if ($this->isFileListEmpty($laporan->berita_acara)) {
-            $missing[] = 'Berita Acara';
+        if (!$laporan->isDarurat()) {
+            if ($this->isFileListEmpty($laporan->daftar_hadir)) {
+                $missing[] = 'Daftar Hadir';
+            }
+            if ($this->isFileListEmpty($laporan->materi)) {
+                $missing[] = 'Materi';
+            }
+            if ($this->isFileListEmpty($laporan->berita_acara)) {
+                $missing[] = 'Berita Acara';
+            }
         }
 
         return $missing;

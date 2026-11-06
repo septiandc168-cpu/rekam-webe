@@ -116,6 +116,9 @@ class LaporanKegiatanRequest extends FormRequest
             return $rules;
         }
 
+        $isLaporanLangsung = ($this->has('is_laporan_langsung') && $this->is_laporan_langsung == '1') ||
+            (in_array($this->method(), ['PUT', 'PATCH']) && $this->route('laporan_kegiatan') && $this->route('laporan_kegiatan')->isDarurat());
+
         $rules = [
             // Informasi Pelaksanaan
             'realisasi_tanggal_mulai' => 'required|date',
@@ -134,16 +137,16 @@ class LaporanKegiatanRequest extends FormRequest
             'solusi' => 'required|string',
             'evaluasi_rekomendasi' => 'required|string',
 
-            // Dokumentasi (Required saat diajukan)
+            // Dokumentasi (Required saat diajukan untuk laporan biasa, opsional untuk laporan langsung)
             'foto_kegiatan' => $this->hasFileOrExisting('foto_kegiatan') ? 'nullable|array' : 'required|array|min:1',
             'foto_kegiatan.*' => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,bmp,svg,heic,heif|max:51200',
-            'daftar_hadir' => $this->hasFileOrExisting('daftar_hadir') ? 'nullable|array' : 'required|array|min:1',
+            'daftar_hadir' => (!$isLaporanLangsung && !$this->hasFileOrExisting('daftar_hadir')) ? 'required|array|min:1' : 'nullable|array',
             'daftar_hadir.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp|max:51200',
             'notulen' => 'nullable|array',
             'notulen.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
-            'materi' => $this->hasFileOrExisting('materi') ? 'nullable|array' : 'required|array|min:1',
+            'materi' => (!$isLaporanLangsung && !$this->hasFileOrExisting('materi')) ? 'required|array|min:1' : 'nullable|array',
             'materi.*' => 'nullable|file|mimes:pdf,ppt,pptx,doc,docx,xls,xlsx,txt,csv,rtf,zip,rar,7z|max:51200',
-            'berita_acara' => $this->hasFileOrExisting('berita_acara') ? 'nullable|array' : 'required|array|min:1',
+            'berita_acara' => (!$isLaporanLangsung && !$this->hasFileOrExisting('berita_acara')) ? 'required|array|min:1' : 'nullable|array',
             'berita_acara.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
 
             // Remove files (for edit)

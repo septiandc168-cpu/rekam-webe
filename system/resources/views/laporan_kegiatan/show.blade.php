@@ -262,14 +262,16 @@
                         if ($checkFilesEmpty($laporanKegiatan->foto_kegiatan)) {
                             $missingFieldsShow[] = 'Foto Kegiatan';
                         }
-                        if ($checkFilesEmpty($laporanKegiatan->daftar_hadir)) {
-                            $missingFieldsShow[] = 'Daftar Hadir';
-                        }
-                        if ($checkFilesEmpty($laporanKegiatan->materi)) {
-                            $missingFieldsShow[] = 'Materi';
-                        }
-                        if ($checkFilesEmpty($laporanKegiatan->berita_acara)) {
-                            $missingFieldsShow[] = 'Berita Acara';
+                        if (!$laporanKegiatan->isDarurat()) {
+                            if ($checkFilesEmpty($laporanKegiatan->daftar_hadir)) {
+                                $missingFieldsShow[] = 'Daftar Hadir';
+                            }
+                            if ($checkFilesEmpty($laporanKegiatan->materi)) {
+                                $missingFieldsShow[] = 'Materi';
+                            }
+                            if ($checkFilesEmpty($laporanKegiatan->berita_acara)) {
+                                $missingFieldsShow[] = 'Berita Acara';
+                            }
                         }
                     }
                 }

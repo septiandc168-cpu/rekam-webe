@@ -293,12 +293,12 @@
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-bold">Daftar Hadir <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold">Daftar Hadir @if (!$isLaporanLangsung)<span class="text-danger">*</span>@endif</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="daftar_hadir[]"
                                         class="custom-file-input custom-doc-input" id="daftarHadirInput"
                                         accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*"
-                                        multiple required>
+                                        multiple {{ $isLaporanLangsung ? '' : 'required' }}>
                                     <label class="custom-file-label" for="daftarHadirInput">Pilih file...</label>
                                 </div>
                                 <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga
@@ -327,12 +327,12 @@
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-bold">Materi <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold">Materi @if (!$isLaporanLangsung)<span class="text-danger">*</span>@endif</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="materi[]" class="custom-file-input custom-doc-input"
                                         id="materiInput"
                                         accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z"
-                                        multiple required>
+                                        multiple {{ $isLaporanLangsung ? '' : 'required' }}>
                                     <label class="custom-file-label" for="materiInput">Pilih file...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen/presentasi hingga 50MB/file.</small>
@@ -342,12 +342,12 @@
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-bold">Berita Acara <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold">Berita Acara @if (!$isLaporanLangsung)<span class="text-danger">*</span>@endif</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="berita_acara[]"
                                         class="custom-file-input custom-doc-input" id="beritaAcaraInput"
                                         accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z"
-                                        multiple required>
+                                        multiple {{ $isLaporanLangsung ? '' : 'required' }}>
                                     <label class="custom-file-label" for="beritaAcaraInput">Pilih file...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
@@ -560,23 +560,29 @@
                         return true;
                     } else if (stepNum === 3) {
                         // Tahap 3: Lampiran Bukti
+                        const isLangsung = document.querySelector('input[name="is_laporan_langsung"]');
                         const requiredFiles = [{
                                 key: 'foto_kegiatan',
                                 inputId: 'fotoInput'
-                            },
-                            {
-                                key: 'daftar_hadir',
-                                inputId: 'daftarHadirInput'
-                            },
-                            {
-                                key: 'materi',
-                                inputId: 'materiInput'
-                            },
-                            {
-                                key: 'berita_acara',
-                                inputId: 'beritaAcaraInput'
                             }
                         ];
+
+                        if (!isLangsung) {
+                            requiredFiles.push(
+                                {
+                                    key: 'daftar_hadir',
+                                    inputId: 'daftarHadirInput'
+                                },
+                                {
+                                    key: 'materi',
+                                    inputId: 'materiInput'
+                                },
+                                {
+                                    key: 'berita_acara',
+                                    inputId: 'beritaAcaraInput'
+                                }
+                            );
+                        }
 
                         for (let req of requiredFiles) {
                             const hasBuffer = typeof fileBuffers !== 'undefined' && fileBuffers[req.key] && fileBuffers[
@@ -796,27 +802,33 @@
                     }
 
                     // 2. Validasi file lampiran wajib di Step 3
+                    const isLangsung = document.querySelector('input[name="is_laporan_langsung"]');
                     const requiredFiles = [{
                             key: 'foto_kegiatan',
                             name: 'Foto Kegiatan',
                             inputId: 'fotoInput'
-                        },
-                        {
-                            key: 'daftar_hadir',
-                            name: 'Daftar Hadir',
-                            inputId: 'daftarHadirInput'
-                        },
-                        {
-                            key: 'materi',
-                            name: 'Materi',
-                            inputId: 'materiInput'
-                        },
-                        {
-                            key: 'berita_acara',
-                            name: 'Berita Acara',
-                            inputId: 'beritaAcaraInput'
                         }
                     ];
+
+                    if (!isLangsung) {
+                        requiredFiles.push(
+                            {
+                                key: 'daftar_hadir',
+                                name: 'Daftar Hadir',
+                                inputId: 'daftarHadirInput'
+                            },
+                            {
+                                key: 'materi',
+                                name: 'Materi',
+                                inputId: 'materiInput'
+                            },
+                            {
+                                key: 'berita_acara',
+                                name: 'Berita Acara',
+                                inputId: 'beritaAcaraInput'
+                            }
+                        );
+                    }
 
                     for (let req of requiredFiles) {
                         const hasBuffer = fileBuffers[req.key] && fileBuffers[req.key].length > 0;
