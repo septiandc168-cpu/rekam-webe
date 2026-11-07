@@ -193,44 +193,60 @@
                     ) {
                         if ($laporanKegiatan->isDarurat()) {
                             if (empty(trim($laporanKegiatan->judul_kegiatan ?? ''))) {
-                                $missingFieldsShow[] = 'Judul Kegiatan';
+                                $missingFieldsShow[] = 'Nama Kegiatan';
                             }
                             if (empty(trim($laporanKegiatan->lokasi_kegiatan ?? ''))) {
                                 $missingFieldsShow[] = 'Lokasi Kegiatan';
                             }
-                        }
-                        if (empty($laporanKegiatan->realisasi_tanggal_mulai)) {
-                            $missingFieldsShow[] = 'Realisasi Tanggal Mulai';
-                        }
-                        if (empty($laporanKegiatan->realisasi_tanggal_selesai)) {
-                            $missingFieldsShow[] = 'Realisasi Tanggal Selesai';
-                        }
-                        if (empty(trim(strip_tags($laporanKegiatan->rangkaian_kegiatan ?? '')))) {
-                            $missingFieldsShow[] = 'Rangkaian Kegiatan';
-                        }
-                        if (empty($laporanKegiatan->realisasi_peserta)) {
-                            $missingFieldsShow[] = 'Realisasi Jumlah Peserta';
-                        }
-                        if (empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? '')))) {
-                            $missingFieldsShow[] = 'Profil Peserta';
-                        }
-                        if (empty(trim(strip_tags($laporanKegiatan->hasil_dicapai ?? '')))) {
-                            $missingFieldsShow[] = 'Hasil yang Dicapai';
-                        }
-                        if (empty(trim(strip_tags($laporanKegiatan->output_nyata ?? '')))) {
-                            $missingFieldsShow[] = 'Output Nyata';
-                        }
-                        if (empty(trim(strip_tags($laporanKegiatan->dampak_awal ?? '')))) {
-                            $missingFieldsShow[] = 'Dampak Awal';
-                        }
-                        if (empty(trim(strip_tags($laporanKegiatan->kendala ?? '')))) {
-                            $missingFieldsShow[] = 'Kendala yang Dihadapi';
-                        }
-                        if (empty(trim(strip_tags($laporanKegiatan->solusi ?? '')))) {
-                            $missingFieldsShow[] = 'Solusi yang Dilakukan';
-                        }
-                        if (empty(trim(strip_tags($laporanKegiatan->evaluasi_rekomendasi ?? '')))) {
-                            $missingFieldsShow[] = 'Catatan Evaluasi & Rekomendasi';
+                            if (empty($laporanKegiatan->realisasi_tanggal_mulai)) {
+                                $missingFieldsShow[] = 'Tanggal Mulai';
+                            }
+                            if (empty($laporanKegiatan->realisasi_tanggal_selesai)) {
+                                $missingFieldsShow[] = 'Tanggal Selesai';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->rangkaian_kegiatan ?? '')))) {
+                                $missingFieldsShow[] = 'Rangkaian Kegiatan';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->hasil_dicapai ?? '')))) {
+                                $missingFieldsShow[] = 'Hasil yang Dicapai';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->evaluasi_rekomendasi ?? '')))) {
+                                $missingFieldsShow[] = 'Catatan Evaluasi & Rekomendasi';
+                            }
+                        } else {
+                            if (empty($laporanKegiatan->realisasi_tanggal_mulai)) {
+                                $missingFieldsShow[] = 'Realisasi Tanggal Mulai';
+                            }
+                            if (empty($laporanKegiatan->realisasi_tanggal_selesai)) {
+                                $missingFieldsShow[] = 'Realisasi Tanggal Selesai';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->rangkaian_kegiatan ?? '')))) {
+                                $missingFieldsShow[] = 'Rangkaian Kegiatan';
+                            }
+                            if (empty($laporanKegiatan->realisasi_peserta)) {
+                                $missingFieldsShow[] = 'Realisasi Jumlah Peserta';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? '')))) {
+                                $missingFieldsShow[] = 'Profil Peserta';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->hasil_dicapai ?? '')))) {
+                                $missingFieldsShow[] = 'Hasil yang Dicapai';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->output_nyata ?? '')))) {
+                                $missingFieldsShow[] = 'Output Nyata';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->dampak_awal ?? '')))) {
+                                $missingFieldsShow[] = 'Dampak Awal';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->kendala ?? '')))) {
+                                $missingFieldsShow[] = 'Kendala yang Dihadapi';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->solusi ?? '')))) {
+                                $missingFieldsShow[] = 'Solusi yang Dilakukan';
+                            }
+                            if (empty(trim(strip_tags($laporanKegiatan->evaluasi_rekomendasi ?? '')))) {
+                                $missingFieldsShow[] = 'Catatan Evaluasi & Rekomendasi';
+                            }
                         }
 
                         $checkFilesEmpty = function ($files) {
@@ -581,8 +597,8 @@
                                         <div class="info-box-icon bg-light text-success"><i class="fas fa-users"></i>
                                         </div>
                                         <div>
-                                            <small class="text-muted d-block">Realisasi Peserta</small>
-                                            <strong>{{ $laporanKegiatan->realisasi_peserta }} Orang</strong>
+                                            <small class="text-muted d-block">{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Peserta' }}</small>
+                                            <strong>{{ $laporanKegiatan->realisasi_peserta ? $laporanKegiatan->realisasi_peserta . ' Orang' : '-' }}</strong>
                                         </div>
                                     </li>
                                 </ul>
@@ -660,7 +676,7 @@
                                     data-parent="#accordionLaporan">
                                     <div class="card-body text-justify"
                                         style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                        {!! $laporanKegiatan->profil_peserta !!}
+                                        {!! $laporanKegiatan->profil_peserta ?: '<em class="text-muted">Tidak diisi (opsional).</em>' !!}
                                     </div>
                                 </div>
                             </div>
@@ -672,7 +688,7 @@
                                     aria-expanded="false" aria-controls="collapseHasil">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-chart-line mr-2"
-                                                style="color:#1a365d;"></i>Hasil yang Dicapai & Output Nyata</h6>
+                                                style="color:#1a365d;"></i>{{ $laporanKegiatan->isDarurat() ? 'Hasil yang Dicapai' : 'Hasil yang Dicapai & Output Nyata' }}</h6>
                                         <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
                                             style="font-size:0.75rem; transition: transform 0.3s;"></i>
                                     </div>
@@ -681,20 +697,26 @@
                                     data-parent="#accordionLaporan">
                                     <div class="card-body text-justify"
                                         style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                        <div class="mb-3">
-                                            <strong class="text-dark d-block mb-1">Hasil yang Dicapai:</strong>
-                                            {!! $laporanKegiatan->hasil_dicapai !!}
-                                        </div>
-                                        <hr>
-                                        <div class="mb-3 mt-3">
-                                            <strong class="text-dark d-block mb-1">Output Nyata:</strong>
-                                            {!! $laporanKegiatan->output_nyata !!}
-                                        </div>
-                                        <hr>
-                                        <div class="mt-3">
-                                            <strong class="text-dark d-block mb-1">Dampak Awal:</strong>
-                                            {!! $laporanKegiatan->dampak_awal !!}
-                                        </div>
+                                        @if ($laporanKegiatan->isDarurat())
+                                            <div class="mb-1">
+                                                {!! $laporanKegiatan->hasil_dicapai !!}
+                                            </div>
+                                        @else
+                                            <div class="mb-3">
+                                                <strong class="text-dark d-block mb-1">Hasil yang Dicapai:</strong>
+                                                {!! $laporanKegiatan->hasil_dicapai !!}
+                                            </div>
+                                            <hr>
+                                            <div class="mb-3 mt-3">
+                                                <strong class="text-dark d-block mb-1">Output Nyata:</strong>
+                                                {!! $laporanKegiatan->output_nyata !!}
+                                            </div>
+                                            <hr>
+                                            <div class="mt-3">
+                                                <strong class="text-dark d-block mb-1">Dampak Awal:</strong>
+                                                {!! $laporanKegiatan->dampak_awal !!}
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -705,8 +727,8 @@
                                     style="cursor:pointer;" data-toggle="collapse" data-target="#collapseKendala"
                                     aria-expanded="false" aria-controls="collapseKendala">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-exclamation-triangle mr-2"
-                                                style="color:#1a365d;"></i>Kendala, Solusi & Evaluasi</h6>
+                                        <h6 class="mb-0 fw-bold text-dark"><i class="fas {{ $laporanKegiatan->isDarurat() ? 'fa-clipboard-check' : 'fa-exclamation-triangle' }} mr-2"
+                                                style="color:#1a365d;"></i>{{ $laporanKegiatan->isDarurat() ? 'Evaluasi & Rekomendasi' : 'Kendala, Solusi & Evaluasi' }}</h6>
                                         <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
                                             style="font-size:0.75rem; transition: transform 0.3s;"></i>
                                     </div>
@@ -715,30 +737,36 @@
                                     data-parent="#accordionLaporan">
                                     <div class="card-body text-justify"
                                         style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                        <div class="mb-4">
-                                            <strong class="text-dark d-block mb-2"><i
-                                                    class="fas fa-exclamation-triangle mr-1 text-dark"></i> Kendala yang
-                                                Dihadapi:</strong>
-                                            <div class="text-dark">
-                                                {!! $laporanKegiatan->kendala ?: '<em class="text-dark">Tidak ada kendala.</em>' !!}
+                                        @if ($laporanKegiatan->isDarurat())
+                                            <div class="mb-1">
+                                                {!! $laporanKegiatan->evaluasi_rekomendasi ?: '<em class="text-muted">Tidak ada evaluasi.</em>' !!}
                                             </div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <strong class="text-dark d-block mb-2"><i
-                                                    class="fas fa-check-circle mr-1 text-dark"></i> Solusi yang
-                                                Dilakukan:</strong>
-                                            <div class="text-dark">
-                                                {!! $laporanKegiatan->solusi ?: '<em class="text-dark">Tidak ada solusi yang dicatat.</em>' !!}
+                                        @else
+                                            <div class="mb-4">
+                                                <strong class="text-dark d-block mb-2"><i
+                                                        class="fas fa-exclamation-triangle mr-1 text-dark"></i> Kendala yang
+                                                    Dihadapi:</strong>
+                                                <div class="text-dark">
+                                                    {!! $laporanKegiatan->kendala ?: '<em class="text-dark">Tidak ada kendala.</em>' !!}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="mb-2">
-                                            <strong class="text-dark d-block mb-2"><i
-                                                    class="fas fa-lightbulb mr-1 text-dark"></i> Evaluasi &
-                                                Rekomendasi:</strong>
-                                            <div class="text-dark">
-                                                {!! $laporanKegiatan->evaluasi_rekomendasi ?: '<em class="text-dark">Tidak ada evaluasi.</em>' !!}
+                                            <div class="mb-4">
+                                                <strong class="text-dark d-block mb-2"><i
+                                                        class="fas fa-check-circle mr-1 text-dark"></i> Solusi yang
+                                                    Dilakukan:</strong>
+                                                <div class="text-dark">
+                                                    {!! $laporanKegiatan->solusi ?: '<em class="text-dark">Tidak ada solusi yang dicatat.</em>' !!}
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div class="mb-2">
+                                                <strong class="text-dark d-block mb-2"><i
+                                                        class="fas fa-lightbulb mr-1 text-dark"></i> Evaluasi &
+                                                    Rekomendasi:</strong>
+                                                <div class="text-dark">
+                                                    {!! $laporanKegiatan->evaluasi_rekomendasi ?: '<em class="text-dark">Tidak ada evaluasi.</em>' !!}
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

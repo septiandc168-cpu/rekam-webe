@@ -965,50 +965,66 @@ class LaporanKegiatanController extends Controller
 
         if ($laporan->isDarurat()) {
             if (empty(trim($laporan->judul_kegiatan ?? ''))) {
-                $missing[] = 'Judul Kegiatan';
+                $missing[] = 'Nama Kegiatan';
             }
             if (empty(trim($laporan->lokasi_kegiatan ?? ''))) {
                 $missing[] = 'Lokasi Kegiatan';
             }
-        }
-        if (empty($laporan->realisasi_tanggal_mulai)) {
-            $missing[] = 'Realisasi Tanggal Mulai';
-        }
-        if (empty($laporan->realisasi_tanggal_selesai)) {
-            $missing[] = 'Realisasi Tanggal Selesai';
-        }
-        if (empty(trim(strip_tags($laporan->rangkaian_kegiatan ?? '')))) {
-            $missing[] = 'Rangkaian Kegiatan';
-        }
-        if (empty($laporan->realisasi_peserta)) {
-            $missing[] = 'Realisasi Jumlah Peserta';
-        }
-        if (empty(trim(strip_tags($laporan->profil_peserta ?? '')))) {
-            $missing[] = 'Profil Peserta';
-        }
-        if (empty(trim(strip_tags($laporan->hasil_dicapai ?? '')))) {
-            $missing[] = 'Hasil yang Dicapai';
-        }
-        if (empty(trim(strip_tags($laporan->output_nyata ?? '')))) {
-            $missing[] = 'Output Nyata';
-        }
-        if (empty(trim(strip_tags($laporan->dampak_awal ?? '')))) {
-            $missing[] = 'Dampak Awal';
-        }
-        if (empty(trim(strip_tags($laporan->kendala ?? '')))) {
-            $missing[] = 'Kendala yang Dihadapi';
-        }
-        if (empty(trim(strip_tags($laporan->solusi ?? '')))) {
-            $missing[] = 'Solusi yang Dilakukan';
-        }
-        if (empty(trim(strip_tags($laporan->evaluasi_rekomendasi ?? '')))) {
-            $missing[] = 'Catatan Evaluasi & Rekomendasi';
-        }
-
-        if ($this->isFileListEmpty($laporan->foto_kegiatan)) {
-            $missing[] = 'Foto Kegiatan';
-        }
-        if (!$laporan->isDarurat()) {
+            if (empty($laporan->realisasi_tanggal_mulai)) {
+                $missing[] = 'Tanggal Mulai';
+            }
+            if (empty($laporan->realisasi_tanggal_selesai)) {
+                $missing[] = 'Tanggal Selesai';
+            }
+            if (empty(trim(strip_tags($laporan->rangkaian_kegiatan ?? '')))) {
+                $missing[] = 'Rangkaian Kegiatan';
+            }
+            if (empty(trim(strip_tags($laporan->hasil_dicapai ?? '')))) {
+                $missing[] = 'Hasil yang Dicapai';
+            }
+            if (empty(trim(strip_tags($laporan->evaluasi_rekomendasi ?? '')))) {
+                $missing[] = 'Catatan Evaluasi & Rekomendasi';
+            }
+            if ($this->isFileListEmpty($laporan->foto_kegiatan)) {
+                $missing[] = 'Foto Kegiatan';
+            }
+        } else {
+            if (empty($laporan->realisasi_tanggal_mulai)) {
+                $missing[] = 'Realisasi Tanggal Mulai';
+            }
+            if (empty($laporan->realisasi_tanggal_selesai)) {
+                $missing[] = 'Realisasi Tanggal Selesai';
+            }
+            if (empty(trim(strip_tags($laporan->rangkaian_kegiatan ?? '')))) {
+                $missing[] = 'Rangkaian Kegiatan';
+            }
+            if (empty($laporan->realisasi_peserta)) {
+                $missing[] = 'Realisasi Jumlah Peserta';
+            }
+            if (empty(trim(strip_tags($laporan->profil_peserta ?? '')))) {
+                $missing[] = 'Profil Peserta';
+            }
+            if (empty(trim(strip_tags($laporan->hasil_dicapai ?? '')))) {
+                $missing[] = 'Hasil yang Dicapai';
+            }
+            if (empty(trim(strip_tags($laporan->output_nyata ?? '')))) {
+                $missing[] = 'Output Nyata';
+            }
+            if (empty(trim(strip_tags($laporan->dampak_awal ?? '')))) {
+                $missing[] = 'Dampak Awal';
+            }
+            if (empty(trim(strip_tags($laporan->kendala ?? '')))) {
+                $missing[] = 'Kendala yang Dihadapi';
+            }
+            if (empty(trim(strip_tags($laporan->solusi ?? '')))) {
+                $missing[] = 'Solusi yang Dilakukan';
+            }
+            if (empty(trim(strip_tags($laporan->evaluasi_rekomendasi ?? '')))) {
+                $missing[] = 'Catatan Evaluasi & Rekomendasi';
+            }
+            if ($this->isFileListEmpty($laporan->foto_kegiatan)) {
+                $missing[] = 'Foto Kegiatan';
+            }
             if ($this->isFileListEmpty($laporan->daftar_hadir)) {
                 $missing[] = 'Daftar Hadir';
             }

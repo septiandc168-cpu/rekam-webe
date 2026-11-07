@@ -124,17 +124,17 @@ class LaporanKegiatanRequest extends FormRequest
             'realisasi_tanggal_mulai' => 'required|date',
             'realisasi_tanggal_selesai' => 'required|date|after_or_equal:realisasi_tanggal_mulai',
             'rangkaian_kegiatan' => 'required|string',
-            'realisasi_peserta' => 'required|integer',
-            'profil_peserta' => 'required|string',
+            'realisasi_peserta' => $isLaporanLangsung ? 'nullable|integer|min:0' : 'required|integer',
+            'profil_peserta' => $isLaporanLangsung ? 'nullable|string' : 'required|string',
 
             // Hasil dan Output
             'hasil_dicapai' => 'required|string',
-            'output_nyata' => 'required|string',
-            'dampak_awal' => 'required|string',
+            'output_nyata' => $isLaporanLangsung ? 'nullable|string' : 'required|string',
+            'dampak_awal' => $isLaporanLangsung ? 'nullable|string' : 'required|string',
 
             // Kendala dan Evaluasi
-            'kendala' => 'required|string',
-            'solusi' => 'required|string',
+            'kendala' => $isLaporanLangsung ? 'nullable|string' : 'required|string',
+            'solusi' => $isLaporanLangsung ? 'nullable|string' : 'required|string',
             'evaluasi_rekomendasi' => 'required|string',
 
             // Dokumentasi (Required saat diajukan untuk laporan biasa, opsional untuk laporan langsung)
@@ -189,17 +189,20 @@ class LaporanKegiatanRequest extends FormRequest
      */
     public function messages(): array
     {
+        $isLaporanLangsung = ($this->has('is_laporan_langsung') && $this->is_laporan_langsung == '1') ||
+            (in_array($this->method(), ['PUT', 'PATCH']) && $this->route('laporan_kegiatan') && $this->route('laporan_kegiatan')->isDarurat());
+
         return [
             // Informasi Pelaksanaan
-            'realisasi_tanggal_mulai.required' => 'Realisasi tanggal mulai wajib diisi.',
-            'realisasi_tanggal_mulai.date' => 'Realisasi tanggal mulai harus berupa tanggal yang valid.',
-            'realisasi_tanggal_selesai.required' => 'Realisasi tanggal selesai wajib diisi.',
-            'realisasi_tanggal_selesai.date' => 'Realisasi tanggal selesai harus berupa tanggal yang valid.',
-            'realisasi_tanggal_selesai.after_or_equal' => 'Realisasi tanggal selesai tidak boleh lebih awal dari tanggal mulai.',
+            'realisasi_tanggal_mulai.required' => $isLaporanLangsung ? 'Tanggal mulai wajib diisi.' : 'Realisasi tanggal mulai wajib diisi.',
+            'realisasi_tanggal_mulai.date' => $isLaporanLangsung ? 'Tanggal mulai harus berupa tanggal yang valid.' : 'Realisasi tanggal mulai harus berupa tanggal yang valid.',
+            'realisasi_tanggal_selesai.required' => $isLaporanLangsung ? 'Tanggal selesai wajib diisi.' : 'Realisasi tanggal selesai wajib diisi.',
+            'realisasi_tanggal_selesai.date' => $isLaporanLangsung ? 'Tanggal selesai harus berupa tanggal yang valid.' : 'Realisasi tanggal selesai harus berupa tanggal yang valid.',
+            'realisasi_tanggal_selesai.after_or_equal' => $isLaporanLangsung ? 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.' : 'Realisasi tanggal selesai tidak boleh lebih awal dari tanggal mulai.',
             'rangkaian_kegiatan.required' => 'Rangkaian kegiatan wajib diisi.',
             'realisasi_peserta.required' => 'Realisasi jumlah peserta wajib diisi.',
-            'realisasi_peserta.integer' => 'Realisasi jumlah peserta harus berupa angka.',
-            'realisasi_peserta.min' => 'Realisasi jumlah peserta tidak boleh kurang dari 0.',
+            'realisasi_peserta.integer' => $isLaporanLangsung ? 'Jumlah peserta harus berupa angka.' : 'Realisasi jumlah peserta harus berupa angka.',
+            'realisasi_peserta.min' => $isLaporanLangsung ? 'Jumlah peserta tidak boleh kurang dari 0.' : 'Realisasi jumlah peserta tidak boleh kurang dari 0.',
             'profil_peserta.required' => 'Profil peserta wajib diisi.',
 
             // Hasil dan Output
@@ -237,7 +240,7 @@ class LaporanKegiatanRequest extends FormRequest
             // Rencana Kegiatan
             'rencana_kegiatan_id.required' => 'Rencana kegiatan wajib dipilih.',
             'rencana_kegiatan_id.exists' => 'Rencana kegiatan tidak valid.',
-            'judul_kegiatan.required' => 'Judul kegiatan wajib diisi untuk laporan langsung.',
+            'judul_kegiatan.required' => 'Nama kegiatan wajib diisi untuk laporan langsung.',
             'lokasi_kegiatan.required' => 'Lokasi kegiatan wajib diisi untuk laporan langsung.',
         ];
     }
@@ -249,11 +252,16 @@ class LaporanKegiatanRequest extends FormRequest
      */
     public function attributes(): array
     {
+        $isLaporanLangsung = ($this->has('is_laporan_langsung') && $this->is_laporan_langsung == '1') ||
+            (in_array($this->method(), ['PUT', 'PATCH']) && $this->route('laporan_kegiatan') && $this->route('laporan_kegiatan')->isDarurat());
+
         return [
-            'realisasi_tanggal_mulai' => 'Realisasi Tanggal Mulai',
-            'realisasi_tanggal_selesai' => 'Realisasi Tanggal Selesai',
+            'judul_kegiatan' => 'Nama Kegiatan',
+            'lokasi_kegiatan' => 'Lokasi Kegiatan',
+            'realisasi_tanggal_mulai' => $isLaporanLangsung ? 'Tanggal Mulai' : 'Realisasi Tanggal Mulai',
+            'realisasi_tanggal_selesai' => $isLaporanLangsung ? 'Tanggal Selesai' : 'Realisasi Tanggal Selesai',
             'rangkaian_kegiatan' => 'Rangkaian Kegiatan',
-            'realisasi_peserta' => 'Realisasi Jumlah Peserta',
+            'realisasi_peserta' => $isLaporanLangsung ? 'Jumlah Peserta' : 'Realisasi Jumlah Peserta',
             'profil_peserta' => 'Profil Peserta',
             'hasil_dicapai' => 'Hasil yang Dicapai',
             'output_nyata' => 'Output Nyata',
