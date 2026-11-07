@@ -68,7 +68,7 @@
                         style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
                         <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
                             style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
-                        <span class="fw-bold text-muted d-block step-text">Evaluasi</span>
+                        <span class="fw-bold text-muted d-block step-text">{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Hasil & Evaluasi' : 'Evaluasi' }}</span>
                     </div>
 
                     <div class="step-indicator text-center position-relative"
@@ -165,25 +165,39 @@
                             </div>
                         </div>
                     </div>
+                    @if (isset($isLaporanLangsung) && $isLaporanLangsung)
+                        <div class="card-footer bg-white clearfix">
+                            <a href="{{ route('laporan_kegiatan.index') }}"
+                                class="btn btn-secondary text-white float-left"><i class="fas fa-arrow-left mr-1"></i>
+                                Kembali</a>
+                            <div class="float-right d-flex">
+                                <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
+                                    <i class="fas fa-save mr-1"></i> Simpan Draft
+                                </button>
+                                <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya
+                                    <i class="fas fa-arrow-right ml-1"></i></button>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
-                <!-- Hasil dan Output Kegiatan -->
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-white">
-                        <h3 class="card-title fw-bold text-dark">
-                            <i class="fas fa-chart-line mr-1"></i> {{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Hasil Kegiatan' : 'Hasil dan Output Kegiatan' }}
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'col-md-12' : 'col-md-6' }} mb-3">
-                                <label class="form-label">Hasil yang Dicapai <span class="text-danger">*</span></label>
-                                <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4"
-                                    placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
-                                    pencapaian utama yang diperoleh dari pelaksanaan kegiatan ini.</small>
-                            </div>
-                            @if (!isset($isLaporanLangsung) || !$isLaporanLangsung)
+                @if (!isset($isLaporanLangsung) || !$isLaporanLangsung)
+                    <!-- Hasil dan Output Kegiatan -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-white">
+                            <h3 class="card-title fw-bold text-dark">
+                                <i class="fas fa-chart-line mr-1"></i> Hasil dan Output Kegiatan
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Hasil yang Dicapai <span class="text-danger">*</span></label>
+                                    <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4"
+                                        placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai') !!}</textarea>
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                        pencapaian utama yang diperoleh dari pelaksanaan kegiatan ini.</small>
+                                </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Output Nyata <span class="text-danger">*</span></label>
                                     <textarea name="output_nyata" class="form-control summernote-editor" rows="4"
@@ -201,35 +215,53 @@
                                         perubahan awal yang sudah terlihat di masyarakat atau lingkungan setelah
                                         kegiatan.</small>
                                 </div>
-                            @endif
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white clearfix">
+                            <a href="{{ route('rencana_kegiatan.show', $rencanaKegiatan?->uuid ?? $rencanaKegiatan?->id) }}"
+                                class="btn btn-secondary text-white float-left"><i class="fas fa-arrow-left mr-1"></i>
+                                Kembali</a>
+                            <div class="float-right d-flex">
+                                <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
+                                    <i class="fas fa-save mr-1"></i> Simpan Draft
+                                </button>
+                                <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya
+                                    <i class="fas fa-arrow-right ml-1"></i></button>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-footer bg-white clearfix">
-                        <a href="{{ isset($isLaporanLangsung) && $isLaporanLangsung ? route('laporan_kegiatan.index') : route('rencana_kegiatan.show', $rencanaKegiatan?->uuid ?? $rencanaKegiatan?->id) }}"
-                            class="btn btn-secondary text-white float-left"><i class="fas fa-arrow-left mr-1"></i>
-                            Kembali</a>
-                        <div class="float-right d-flex">
-                            <button type="button" class="btn btn-secondary text-white mr-2 btn-save-draft">
-                                <i class="fas fa-save mr-1"></i> Simpan Draft
-                            </button>
-                            <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya
-                                <i class="fas fa-arrow-right ml-1"></i></button>
-                        </div>
-                    </div>
-                </div>
+                @endif
             </div>
 
-            <!-- STEP 2: Kendala dan Evaluasi -->
+            <!-- STEP 2: Evaluasi & Hasil Kegiatan -->
             <div class="wizard-step" id="step-2" style="display: none;">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white">
                         <h3 class="card-title fw-bold text-dark">
-                            <i class="fas fa-clipboard-check mr-1"></i> {{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Evaluasi Kegiatan' : 'Kendala dan Evaluasi' }}
+                            <i class="fas fa-clipboard-check mr-1"></i> {{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Hasil & Evaluasi Kegiatan' : 'Kendala dan Evaluasi' }}
                         </h3>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            @if (!isset($isLaporanLangsung) || !$isLaporanLangsung)
+                        @if (isset($isLaporanLangsung) && $isLaporanLangsung)
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Hasil yang Dicapai <span class="text-danger">*</span></label>
+                                    <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4"
+                                        placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai') !!}</textarea>
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                        pencapaian utama yang diperoleh dari pelaksanaan kegiatan ini.</small>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Catatan Evaluasi & Rekomendasi <span
+                                            class="text-danger">*</span></label>
+                                    <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="5"
+                                        placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi') !!}</textarea>
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan
+                                        penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
+                                </div>
+                            </div>
+                        @else
+                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Kendala yang Dihadapi <span class="text-danger">*</span></label>
                                     <textarea name="kendala" class="form-control summernote-editor" rows="4"
@@ -245,16 +277,16 @@
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
                                         langkah-langkah yang diambil untuk mengatasi kendala tersebut.</small>
                                 </div>
-                            @endif
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">Catatan Evaluasi & Rekomendasi <span
-                                        class="text-danger">*</span></label>
-                                <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="5"
-                                    placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan
-                                    penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Catatan Evaluasi & Rekomendasi <span
+                                            class="text-danger">*</span></label>
+                                    <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="5"
+                                        placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi') !!}</textarea>
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan
+                                        penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                     <div class="card-footer bg-white clearfix">
                         <button type="button" class="btn btn-secondary text-white btn-prev float-left"
@@ -554,7 +586,7 @@
                         }
 
                         const summernoteFields = isLangsung
-                            ? ['rangkaian_kegiatan', 'hasil_dicapai']
+                            ? ['rangkaian_kegiatan']
                             : ['rangkaian_kegiatan', 'profil_peserta', 'hasil_dicapai', 'output_nyata', 'dampak_awal'];
                         for (let name of summernoteFields) {
                             if (!isSummernoteFilled(`textarea[name="${name}"]`)) return false;
@@ -563,7 +595,7 @@
                     } else if (stepNum === 2) {
                         // Tahap 2: Evaluasi & Kendala
                         const summernoteFields = isLangsung
-                            ? ['evaluasi_rekomendasi']
+                            ? ['hasil_dicapai', 'evaluasi_rekomendasi']
                             : ['kendala', 'solusi', 'evaluasi_rekomendasi'];
                         for (let name of summernoteFields) {
                             if (!isSummernoteFilled(`textarea[name="${name}"]`)) return false;
