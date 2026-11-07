@@ -237,8 +237,8 @@ class RencanaKegiatanController extends Controller
                 'foto' => 'nullable|array',
                 'foto.*' => 'file|mimes:jpg,jpeg,png,webp,gif,bmp,svg,heic,heif|max:51200',
                 'dokumen' => 'nullable|array',
-                'dokumen.*' => 'file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
-                'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
+                'dokumen.*' => 'file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp,gif,bmp,heic,heif|max:51200',
+                'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp,gif,bmp,heic,heif|max:51200',
             ];
 
             $messages = [
@@ -278,8 +278,8 @@ class RencanaKegiatanController extends Controller
                 'foto' => 'nullable|array',
                 'foto.*' => 'file|mimes:jpg,jpeg,png,webp,gif,bmp,svg,heic,heif|max:51200',
                 'dokumen' => 'nullable|array',
-                'dokumen.*' => 'file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
-                'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
+                'dokumen.*' => 'file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp,gif,bmp,heic,heif|max:51200',
+                'anggaran_kegiatan' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp,gif,bmp,heic,heif|max:51200',
             ];
 
             $messages = [
@@ -316,33 +316,14 @@ class RencanaKegiatanController extends Controller
         $dokumenPaths = [];
         if ($request->hasFile('dokumen')) {
             foreach ($request->file('dokumen') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('rencana_kegiatans/dokumen', $fileName, 'public');
-
-                // Simpan array dengan path dan nama asli
-                $dokumenPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $dokumenPaths[] = \App\Services\ImageService::storeOrCompress($file, 'rencana_kegiatans/dokumen', 'public');
             }
         }
 
         $anggaranKegiatanPath = null;
         if ($request->hasFile('anggaran_kegiatan')) {
             $file = $request->file('anggaran_kegiatan');
-            $originalName = $file->getClientOriginalName();
-            $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-            
-            $path = $file->storeAs('rencana_kegiatans/anggaran', $fileName, 'public');
-            
-            $anggaranKegiatanPath = [
-                'path' => $path,
-                'original_name' => $originalName
-            ];
+            $anggaranKegiatanPath = \App\Services\ImageService::storeOrCompress($file, 'rencana_kegiatans/anggaran', 'public');
         }
 
         // if both dates present and end before start, swap them automatically
@@ -528,12 +509,12 @@ class RencanaKegiatanController extends Controller
                 'foto' => 'nullable|array',
                 'foto.*' => 'file|mimes:jpg,jpeg,png,webp,gif,bmp,svg,heic,heif|max:51200',
                 'dokumen' => 'nullable|array',
-                'dokumen.*' => 'file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
+                'dokumen.*' => 'file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp,gif,bmp,heic,heif|max:51200',
                 'remove_foto' => 'nullable|array',
                 'remove_foto.*' => 'string',
                 'remove_dokumen' => 'nullable|array',
                 'remove_dokumen.*' => 'string',
-                'anggaran_kegiatan' => $hasExistingAnggaran ? 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200' : 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z|max:51200',
+                'anggaran_kegiatan' => $hasExistingAnggaran ? 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp,gif,bmp,heic,heif|max:51200' : 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,rtf,zip,rar,7z,jpg,jpeg,png,webp,gif,bmp,heic,heif|max:51200',
                 'remove_anggaran_kegiatan' => 'nullable|string',
             ];
 
@@ -658,18 +639,7 @@ class RencanaKegiatanController extends Controller
         $newDokumenPaths = [];
         if ($request->hasFile('dokumen')) {
             foreach ($request->file('dokumen') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('rencana_kegiatans/dokumen', $fileName, 'public');
-
-                // Simpan array dengan path dan nama asli
-                $newDokumenPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $newDokumenPaths[] = \App\Services\ImageService::storeOrCompress($file, 'rencana_kegiatans/dokumen', 'public');
             }
         }
 
@@ -695,15 +665,7 @@ class RencanaKegiatanController extends Controller
         $newAnggaranPath = null;
         if ($request->hasFile('anggaran_kegiatan')) {
             $file = $request->file('anggaran_kegiatan');
-            $originalName = $file->getClientOriginalName();
-            $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-            
-            $path = $file->storeAs('rencana_kegiatans/anggaran', $fileName, 'public');
-            
-            $newAnggaranPath = [
-                'path' => $path,
-                'original_name' => $originalName
-            ];
+            $newAnggaranPath = \App\Services\ImageService::storeOrCompress($file, 'rencana_kegiatans/anggaran', 'public');
 
             // Bersihkan file lama jika ada penggantian file baru
             if ($currentAnggaran) {

@@ -408,14 +408,13 @@
                             <div class="custom-file mb-1">
                                 <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan"
                                     class="custom-file-input"
-                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif"
                                     @if (!$rencana_kegiatan->anggaran_kegiatan) required @endif>
                                 <label class="custom-file-label" for="anggaranKegiatanInput"
                                     id="anggaranKegiatanLabel">Pilih file anggaran...</label>
                             </div>
                             <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file
-                                proposal/RAB/rincian anggaran kegiatan. Bebas format dokumen (PDF, Word, Excel, ZIP, dll)
-                                hingga 50MB.</small>
+                                proposal/RAB/rincian anggaran kegiatan. Format dokumen (PDF, Word, Excel, ZIP) atau gambar/foto hingga 50MB. Gambar akan otomatis dikompres.</small>
                             <div id="preview-anggaran" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
@@ -503,12 +502,11 @@
                             @endif
                             <div class="custom-file mb-1">
                                 <input type="file" id="dokumenInput" name="dokumen[]" class="custom-file-input"
-                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z" multiple>
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif" multiple>
                                 <label class="custom-file-label" for="dokumenInput">Pilih file dokumen...</label>
                             </div>
                             <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Lampirkan dokumen pendukung
-                                seperti surat izin, proposal, atau jadwal. Bebas format dokumen & jumlah file hingga
-                                50MB/file.</small>
+                                seperti surat izin, proposal, jadwal, atau foto. Dokumen atau foto hingga 50MB/file. Foto/gambar akan otomatis dikompres.</small>
                             <div id="preview-dokumen" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
@@ -543,6 +541,13 @@
         const preview = document.getElementById('image-preview-container');
 
         let filesBuffer = [];
+
+        function isImageFile(file) {
+            if (!file) return false;
+            if (file.type && file.type.startsWith('image/')) return true;
+            const nameLower = (file.name || '').toLowerCase();
+            return /\.(jpe?g|png|gif|webp|bmp|heic|heif)$/i.test(nameLower);
+        }
 
         function compressImageFile(file, maxWidth = 1920, maxHeight = 1920, quality = 0.82) {
             if (!file.type || !file.type.match(/^image\/(jpeg|jpg|png|webp)$/i)) {
@@ -585,39 +590,59 @@
             });
         }
 
-        fotoInput.addEventListener('change', async function() {
-            for (let file of this.files) {
-                let currentFile = file;
-                const nameLower = currentFile.name.toLowerCase();
-                if (!currentFile.type.startsWith('image/') && !nameLower.endsWith('.heic') && !nameLower
-                    .endsWith('.heif')) continue;
-
-                if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type ===
-                    'image/heic') {
-                    if (typeof heic2any !== 'undefined') {
-                        try {
-                            const convertedBlob = await heic2any({
-                                blob: currentFile,
-                                toType: 'image/jpeg',
-                                quality: 0.85
-                            });
-                            const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-                            currentFile = new File([blob], currentFile.name.replace(/\.(heic|heif)$/i,
-                            '.jpg'), {
-                                type: 'image/jpeg'
-                            });
-                        } catch (e) {}
+        async function processFileIfImage(file) {
+            if (!isImageFile(file)) return file;
+            let currentFile = file;
+            const nameLower = (currentFile.name || '').toLowerCase();
+            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type === 'image/heic') {
+                if (typeof heic2any !== 'undefined') {
+                    try {
+                        const convertedBlob = await heic2any({
+                            blob: currentFile,
+                            toType: 'image/jpeg',
+                            quality: 0.85
+                        });
+                        const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                        currentFile = new File([blob], currentFile.name.replace(/\.(heic|heif)$/i, '.jpg'), {
+                            type: 'image/jpeg'
+                        });
+                    } catch (e) {
+                        console.warn('HEIC conversion failed:', e);
                     }
                 }
+            }
+            try {
+                currentFile = await compressImageFile(currentFile);
+            } catch (e) {}
+            return currentFile;
+        }
 
-                try {
-                    currentFile = await compressImageFile(currentFile);
-                } catch (e) {}
+        fotoInput.addEventListener('change', async function() {
+            const rawFiles = Array.from(this.files);
+            if (rawFiles.length === 0) return;
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Memproses Foto...',
+                    text: 'Mengompres foto yang diunggah...',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+            }
+
+            for (let file of rawFiles) {
+                if (!isImageFile(file)) continue;
+
+                let currentFile = await processFileIfImage(file);
 
                 // Hindari duplikasi
                 if (!filesBuffer.some(f => f.name === currentFile.name && f.size === currentFile.size)) {
                     filesBuffer.push(currentFile);
                 }
+            }
+
+            if (typeof Swal !== 'undefined') {
+                Swal.close();
             }
 
             renderPreview();
@@ -672,29 +697,45 @@
 
         let dokumenBuffer = [];
 
-        dokumenInput.addEventListener('change', function() {
+        dokumenInput.addEventListener('change', async function() {
             const maxSize = 50 * 1024 * 1024; // 50MB
+            const rawFiles = Array.from(this.files);
+            if (rawFiles.length === 0) return;
 
-            Array.from(this.files).forEach(file => {
+            const hasImage = rawFiles.some(f => isImageFile(f));
+            if (hasImage && typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Memproses Dokumen...',
+                    text: 'Mengompres gambar yang diunggah...',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+            }
+
+            for (let file of rawFiles) {
                 // Validasi ukuran file
                 if (file.size > maxSize) {
                     alert(`File ${file.name} melebihi batas 50MB.`);
-                    return;
+                    continue;
                 }
 
+                let processedFile = await processFileIfImage(file);
+
                 const exists = dokumenBuffer.some(
-                    f => f.name === file.name && f.size === file.size
+                    f => f.name === processedFile.name && f.size === processedFile.size
                 );
 
                 if (!exists) {
-                    dokumenBuffer.push(file);
+                    dokumenBuffer.push(processedFile);
                 }
-            });
+            }
+
+            if (hasImage && typeof Swal !== 'undefined') {
+                Swal.close();
+            }
 
             syncDokumenInput();
             renderDokumenPreview();
-
-            // ❌ JANGAN reset input
         });
 
         function renderDokumenPreview() {
@@ -712,6 +753,8 @@
                     'fa-file-powerpoint text-warning';
                 else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z'))
                     icon = 'fa-file-archive text-info';
+                else if (nameLower.match(/\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i))
+                    icon = 'fa-file-image text-primary';
 
                 const div = document.createElement('div');
                 div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
@@ -752,7 +795,7 @@
         const previewAnggaran = document.getElementById('preview-anggaran');
         let anggaranBuffer = [];
 
-        anggaranKegiatanInput.addEventListener('change', function() {
+        anggaranKegiatanInput.addEventListener('change', async function() {
             const maxSize = 50 * 1024 * 1024; // 50MB
 
             if (this.files.length > 1) {
@@ -761,19 +804,47 @@
                 return;
             }
 
-            Array.from(this.files).forEach(file => {
-                if (file.size > maxSize) {
-                    alert('Ukuran file maksimal 50MB.');
-                    this.value = '';
-                    return;
+            const rawFiles = Array.from(this.files);
+            if (rawFiles.length === 0) return;
+
+            let file = rawFiles[0];
+            if (file.size > maxSize) {
+                alert('Ukuran file maksimal 50MB.');
+                this.value = '';
+                return;
+            }
+
+            if (isImageFile(file)) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Memproses File...',
+                        text: 'Mengompres gambar file anggaran kegiatan...',
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
                 }
+                file = await processFileIfImage(file);
+                if (typeof Swal !== 'undefined') {
+                    Swal.close();
+                }
+            }
 
-                anggaranBuffer = [file];
-            });
-
+            anggaranBuffer = [file];
+            syncAnggaranInput();
             renderAnggaranPreview();
             if (window.scheduleUpdateProgress) window.scheduleUpdateProgress();
         });
+
+        function syncAnggaranInput() {
+            if (!anggaranKegiatanInput) return;
+            const dt = new DataTransfer();
+            anggaranBuffer.forEach(file => dt.items.add(file));
+            anggaranKegiatanInput.files = dt.files;
+            const label = document.getElementById('anggaranKegiatanLabel') || document.querySelector('label[for="anggaranKegiatanInput"]');
+            if (label && anggaranBuffer.length > 0) {
+                label.innerText = anggaranBuffer[0].name;
+            }
+        }
 
         function renderAnggaranPreview() {
             if (!previewAnggaran) return;
@@ -791,6 +862,8 @@
                     'fa-file-powerpoint text-warning';
                 else if (nameLower.endsWith('.zip') || nameLower.endsWith('.rar') || nameLower.endsWith('.7z'))
                     icon = 'fa-file-archive text-info';
+                else if (nameLower.match(/\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i))
+                    icon = 'fa-file-image text-primary';
 
                 const div = document.createElement('div');
                 div.className = 'preview-file-item position-relative p-2 mb-2 border rounded bg-white shadow-sm';
@@ -816,11 +889,9 @@
 
         function removeAnggaran(index) {
             anggaranBuffer = [];
-            if (anggaranKegiatanInput) {
-                anggaranKegiatanInput.value = '';
-            }
+            syncAnggaranInput();
             renderAnggaranPreview();
-            const label = document.getElementById('anggaranKegiatanLabel');
+            const label = document.getElementById('anggaranKegiatanLabel') || document.querySelector('label[for="anggaranKegiatanInput"]');
             if (label) {
                 label.innerText = 'Pilih file anggaran...';
             }

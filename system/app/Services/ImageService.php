@@ -185,4 +185,55 @@ class ImageService
             ];
         }
     }
+
+    /**
+     * Check whether an uploaded file is an image (including HEIC/HEIF).
+     */
+    public static function isImage(UploadedFile $file): bool
+    {
+        $ext = strtolower($file->getClientOriginalExtension() ?? '');
+        $mime = strtolower($file->getMimeType() ?? '');
+
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'heic', 'heif'];
+        $imageMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp', 'image/heic', 'image/heif'];
+
+        return in_array($ext, $imageExtensions) || in_array($mime, $imageMimes) || str_starts_with($mime, 'image/');
+    }
+
+    /**
+     * Smartly store any uploaded file:
+     * - If image, compress and resize automatically.
+     * - If document (PDF/Word/Excel/etc.), store securely as original.
+     *
+     * @param UploadedFile $file
+     * @param string $directory Target directory
+     * @param string $disk Storage disk
+     * @param int $maxWidth Max width for images
+     * @param int $maxHeight Max height for images
+     * @param int $quality Compression quality
+     * @return array ['path' => string, 'original_name' => string]
+     */
+    public static function storeOrCompress(
+        UploadedFile $file,
+        string $directory,
+        string $disk = 'public',
+        int $maxWidth = 1920,
+        int $maxHeight = 1920,
+        int $quality = 80
+    ): array {
+        if (self::isImage($file)) {
+            return self::compressAndStore($file, $directory, $disk, $maxWidth, $maxHeight, $quality);
+        }
+
+        $originalName = $file->getClientOriginalName();
+        $cleanOriginalName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $originalName);
+        $fileName = time() . '_' . uniqid() . '_' . $cleanOriginalName;
+        $path = $file->storeAs($directory, $fileName, $disk);
+
+        return [
+            'path' => $path,
+            'original_name' => $originalName,
+        ];
+    }
 }
+

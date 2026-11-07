@@ -246,72 +246,28 @@ class LaporanKegiatanController extends Controller
         $daftarHadirPaths = [];
         if ($request->hasFile('daftar_hadir')) {
             foreach ($request->file('daftar_hadir') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/daftar_hadir', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $daftarHadirPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $daftarHadirPaths[] = \App\Services\ImageService::storeOrCompress($file, 'laporan_kegiatan/daftar_hadir', 'public');
             }
         }
 
         $notulenPaths = [];
         if ($request->hasFile('notulen')) {
             foreach ($request->file('notulen') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/notulen', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $notulenPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $notulenPaths[] = \App\Services\ImageService::storeOrCompress($file, 'laporan_kegiatan/notulen', 'public');
             }
         }
 
         $materiPaths = [];
         if ($request->hasFile('materi')) {
             foreach ($request->file('materi') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/materi', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $materiPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $materiPaths[] = \App\Services\ImageService::storeOrCompress($file, 'laporan_kegiatan/materi', 'public');
             }
         }
 
         $beritaAcaraPaths = [];
         if ($request->hasFile('berita_acara')) {
             foreach ($request->file('berita_acara') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/berita_acara', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $beritaAcaraPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $beritaAcaraPaths[] = \App\Services\ImageService::storeOrCompress($file, 'laporan_kegiatan/berita_acara', 'public');
             }
         }
 
@@ -569,72 +525,28 @@ class LaporanKegiatanController extends Controller
         $newDaftarHadirPaths = [];
         if ($request->hasFile('daftar_hadir')) {
             foreach ($request->file('daftar_hadir') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/daftar_hadir', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $newDaftarHadirPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $newDaftarHadirPaths[] = \App\Services\ImageService::storeOrCompress($file, 'laporan_kegiatan/daftar_hadir', 'public');
             }
         }
 
         $newNotulenPaths = [];
         if ($request->hasFile('notulen')) {
             foreach ($request->file('notulen') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/notulen', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $newNotulenPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $newNotulenPaths[] = \App\Services\ImageService::storeOrCompress($file, 'laporan_kegiatan/notulen', 'public');
             }
         }
 
         $newMateriPaths = [];
         if ($request->hasFile('materi')) {
             foreach ($request->file('materi') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/materi', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $newMateriPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $newMateriPaths[] = \App\Services\ImageService::storeOrCompress($file, 'laporan_kegiatan/materi', 'public');
             }
         }
 
         $newBeritaAcaraPaths = [];
         if ($request->hasFile('berita_acara')) {
             foreach ($request->file('berita_acara') as $file) {
-                // Buat nama file unik dengan nama asli
-                $originalName = $file->getClientOriginalName();
-                $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-                
-                // Simpan file dengan nama asli
-                $path = $file->storeAs('laporan_kegiatan/berita_acara', $fileName, 'public');
-                
-                // Simpan array dengan path dan nama asli
-                $newBeritaAcaraPaths[] = [
-                    'path' => $path,
-                    'original_name' => $originalName
-                ];
+                $newBeritaAcaraPaths[] = \App\Services\ImageService::storeOrCompress($file, 'laporan_kegiatan/berita_acara', 'public');
             }
         }
 

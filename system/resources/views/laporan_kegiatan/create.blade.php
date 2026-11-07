@@ -333,12 +333,12 @@
                                     <div class="custom-file mb-1">
                                         <input type="file" name="daftar_hadir[]"
                                             class="custom-file-input custom-doc-input" id="daftarHadirInput"
-                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*"
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif"
                                             multiple required>
                                         <label class="custom-file-label" for="daftarHadirInput">Pilih file...</label>
                                     </div>
                                     <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga
-                                        50MB/file.</small>
+                                        50MB/file, foto akan otomatis dikompres oleh sistem.</small>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
                                         scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan. Jika kegiatannya
                                         tidak memiliki daftar hadir, upload foto pesertanya.</small>
@@ -350,11 +350,11 @@
                                     <div class="custom-file mb-1">
                                         <input type="file" name="notulen[]" class="custom-file-input custom-doc-input"
                                             id="notulenInput"
-                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif"
                                             multiple>
                                         <label class="custom-file-label" for="notulenInput">Pilih file...</label>
                                     </div>
-                                    <small class="text-muted">Bebas format dokumen hingga 50MB/file.</small>
+                                    <small class="text-muted">Bebas format dokumen/foto hingga 50MB/file, foto akan otomatis dikompres oleh sistem.</small>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
                                         catatan hasil rapat/diskusi selama kegiatan berlangsung. Jika kegiatan tidak berupa
                                         rapat, upload dokumen yang berisi proses pelaksanaan kegiatannya dan ini bersifat
@@ -368,11 +368,11 @@
                                 <div class="custom-file mb-1">
                                     <input type="file" name="materi[]" class="custom-file-input custom-doc-input"
                                         id="materiInput"
-                                        accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                        accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif"
                                         multiple {{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? '' : 'required' }}>
                                     <label class="custom-file-label" for="materiInput">Pilih file...</label>
                                 </div>
-                                <small class="text-muted">Bebas format dokumen/presentasi hingga 50MB/file{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? ' (opsional).' : '.' }}</small>
+                                <small class="text-muted">Bebas format dokumen/presentasi/foto hingga 50MB/file{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? ' (opsional).' : ', foto akan otomatis dikompres oleh sistem.' }}</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
                                     materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.</small>
                                 <div id="preview-materi" class="d-flex flex-column gap-1 mt-2"></div>
@@ -383,11 +383,11 @@
                                 <div class="custom-file mb-1">
                                     <input type="file" name="berita_acara[]"
                                         class="custom-file-input custom-doc-input" id="beritaAcaraInput"
-                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif"
                                         multiple {{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? '' : 'required' }}>
                                     <label class="custom-file-label" for="beritaAcaraInput">Pilih file...</label>
                                 </div>
-                                <small class="text-muted">Bebas format dokumen hingga 50MB/file{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? ' (opsional).' : '.' }}</small>
+                                <small class="text-muted">Bebas format dokumen/foto hingga 50MB/file{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? ' (opsional).' : ', foto akan otomatis dikompres oleh sistem.' }}</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
                                     berita acara resmi pelaksanaan kegiatan.</small>
                                 <div id="preview-berita_acara" class="d-flex flex-column gap-1 mt-2"></div>
@@ -961,6 +961,13 @@
                     });
                 }
 
+                function isImageFile(file) {
+                    if (!file) return false;
+                    const nameLower = (file.name || '').toLowerCase();
+                    const typeLower = (file.type || '').toLowerCase();
+                    return typeLower.startsWith('image/') || nameLower.match(/\.(jpg|jpeg|png|webp|gif|bmp|heic|heif)$/i);
+                }
+
                 async function handleFileUpload(fieldName, inputElement, isImage) {
                     const rawFiles = Array.from(inputElement.files);
                     if (!rawFiles || rawFiles.length === 0) return;
@@ -978,14 +985,15 @@
                         return;
                     }
 
-                    let filesToProcess = rawFiles;
+                    let filesToProcess = [];
+                    const hasImages = rawFiles.some(f => isImageFile(f));
 
                     // Optimasi khusus gambar (HEIC conversion + client-side compression)
-                    if (isImage) {
+                    if (hasImages) {
                         if (typeof Swal !== 'undefined') {
                             Swal.fire({
-                                title: 'Mengoptimalkan Foto...',
-                                html: `Sedang memproses & mengompresi <b>${rawFiles.length}</b> foto agar ukuran efisien dan upload lancar.<br><small class="text-muted">Proses berlangsung otomatis di browser...</small>`,
+                                title: 'Mengoptimalkan File...',
+                                html: `Sedang memproses & mengompresi file foto/gambar agar ukuran efisien dan upload lancar.<br><small class="text-muted">Proses berlangsung otomatis di browser...</small>`,
                                 allowOutsideClick: false,
                                 didOpen: () => {
                                     Swal.showLoading();
@@ -993,39 +1001,41 @@
                             });
                         }
 
-                        filesToProcess = [];
                         for (let file of rawFiles) {
                             let currentFile = file;
-                            const nameLower = currentFile.name.toLowerCase();
 
-                            // 1. Konversi format HEIC/HEIF jika berasal dari iPhone
-                            if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type ===
-                                'image/heic' || currentFile.type === 'image/heif') {
-                                try {
-                                    if (typeof heic2any !== 'undefined') {
-                                        const convertedBlob = await heic2any({
-                                            blob: currentFile,
-                                            toType: 'image/jpeg',
-                                            quality: 0.85
-                                        });
-                                        const blob = Array.isArray(convertedBlob) ? convertedBlob[0] :
-                                            convertedBlob;
-                                        const newName = currentFile.name.replace(/\.(heic|heif)$/i, '.jpg');
-                                        currentFile = new File([blob], newName, {
-                                            type: 'image/jpeg',
-                                            lastModified: currentFile.lastModified || Date.now()
-                                        });
+                            if (isImageFile(currentFile)) {
+                                const nameLower = currentFile.name.toLowerCase();
+
+                                // 1. Konversi format HEIC/HEIF jika berasal dari iPhone
+                                if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type ===
+                                    'image/heic' || currentFile.type === 'image/heif') {
+                                    try {
+                                        if (typeof heic2any !== 'undefined') {
+                                            const convertedBlob = await heic2any({
+                                                blob: currentFile,
+                                                toType: 'image/jpeg',
+                                                quality: 0.85
+                                            });
+                                            const blob = Array.isArray(convertedBlob) ? convertedBlob[0] :
+                                                convertedBlob;
+                                            const newName = currentFile.name.replace(/\.(heic|heif)$/i, '.jpg');
+                                            currentFile = new File([blob], newName, {
+                                                type: 'image/jpeg',
+                                                lastModified: currentFile.lastModified || Date.now()
+                                            });
+                                        }
+                                    } catch (err) {
+                                        console.error('Konversi HEIC gagal, gunakan file asli:', currentFile.name, err);
                                     }
-                                } catch (err) {
-                                    console.error('Konversi HEIC gagal, gunakan file asli:', currentFile.name, err);
                                 }
-                            }
 
-                            // 2. Kompresi & proporsional resize gambar di browser
-                            try {
-                                currentFile = await compressImageFile(currentFile);
-                            } catch (err) {
-                                console.error('Kompresi foto gagal:', currentFile.name, err);
+                                // 2. Kompresi & proporsional resize gambar di browser
+                                try {
+                                    currentFile = await compressImageFile(currentFile);
+                                } catch (err) {
+                                    console.error('Kompresi foto gagal:', currentFile.name, err);
+                                }
                             }
 
                             filesToProcess.push(currentFile);
@@ -1034,6 +1044,8 @@
                         if (typeof Swal !== 'undefined') {
                             Swal.close();
                         }
+                    } else {
+                        filesToProcess = rawFiles;
                     }
 
                     filesToProcess.forEach(file => {
