@@ -280,6 +280,7 @@ class LaporanKegiatanController extends Controller
             'rencana_kegiatan_id' => $request->rencana_kegiatan_id,
             'judul_kegiatan' => $request->judul_kegiatan,
             'lokasi_kegiatan' => $request->lokasi_kegiatan,
+            'deskripsi' => $isLaporanLangsung ? $request->deskripsi : null,
             'realisasi_tanggal_mulai' => $request->realisasi_tanggal_mulai,
             'realisasi_tanggal_selesai' => $request->realisasi_tanggal_selesai,
             'rangkaian_kegiatan' => $request->rangkaian_kegiatan,
@@ -592,6 +593,7 @@ class LaporanKegiatanController extends Controller
         if ($laporanKegiatan->isDarurat()) {
             $updateData['judul_kegiatan'] = $request->judul_kegiatan;
             $updateData['lokasi_kegiatan'] = $request->lokasi_kegiatan;
+            $updateData['deskripsi'] = $request->deskripsi;
         }
 
         $laporanKegiatan->update($updateData);
@@ -881,6 +883,9 @@ class LaporanKegiatanController extends Controller
             }
             if (empty(trim($laporan->lokasi_kegiatan ?? ''))) {
                 $missing[] = 'Lokasi Kegiatan';
+            }
+            if (empty(trim(strip_tags($laporan->deskripsi ?? '')))) {
+                $missing[] = 'Deskripsi Kegiatan';
             }
             if (empty($laporan->realisasi_tanggal_mulai)) {
                 $missing[] = 'Tanggal Mulai';

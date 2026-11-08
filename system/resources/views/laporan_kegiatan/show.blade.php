@@ -204,6 +204,9 @@
                             if (empty($laporanKegiatan->realisasi_tanggal_selesai)) {
                                 $missingFieldsShow[] = 'Tanggal Selesai';
                             }
+                            if (empty(trim(strip_tags($laporanKegiatan->deskripsi ?? '')))) {
+                                $missingFieldsShow[] = 'Deskripsi Kegiatan';
+                            }
                             if (empty(trim(strip_tags($laporanKegiatan->rangkaian_kegiatan ?? '')))) {
                                 $missingFieldsShow[] = 'Rangkaian Kegiatan';
                             }
@@ -653,6 +656,29 @@
 
                         {{-- ACCORDION untuk semua seksi konten panjang --}}
                         <div class="accordion" id="accordionLaporan">
+
+                            @if ($laporanKegiatan->isDarurat() && !empty(trim(strip_tags($laporanKegiatan->deskripsi ?? ''))))
+                                {{-- Deskripsi Kegiatan --}}
+                                <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                                    <div class="accordion-item-header card-header bg-white py-2 px-3" id="headDeskripsi"
+                                        style="cursor:pointer;" data-toggle="collapse" data-target="#collapseDeskripsi"
+                                        aria-expanded="false" aria-controls="collapseDeskripsi">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-align-left mr-2"
+                                                    style="color:#1a365d;"></i>Deskripsi Kegiatan</h6>
+                                            <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
+                                                style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                                        </div>
+                                    </div>
+                                    <div id="collapseDeskripsi" class="collapse" aria-labelledby="headDeskripsi"
+                                        data-parent="#accordionLaporan">
+                                        <div class="card-body text-justify"
+                                            style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                            {!! $laporanKegiatan->deskripsi !!}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
 
                             {{-- Rangkaian Kegiatan --}}
                             <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">

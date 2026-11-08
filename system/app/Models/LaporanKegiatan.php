@@ -32,6 +32,7 @@ class LaporanKegiatan extends Model
         'rencana_kegiatan_id',
         'judul_kegiatan',
         'lokasi_kegiatan',
+        'deskripsi',
         'realisasi_tanggal_mulai',
         'realisasi_tanggal_selesai',
         'rangkaian_kegiatan',

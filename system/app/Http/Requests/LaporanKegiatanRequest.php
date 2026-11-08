@@ -57,6 +57,7 @@ class LaporanKegiatanRequest extends FormRequest
         if ($isDraft) {
             $rules = [
                 // Informasi Pelaksanaan - all nullable for draft
+                'deskripsi' => 'nullable|string',
                 'realisasi_tanggal_mulai' => 'nullable|date',
                 'realisasi_tanggal_selesai' => 'nullable|date|after_or_equal:realisasi_tanggal_mulai',
                 'rangkaian_kegiatan' => 'nullable|string',
@@ -121,6 +122,7 @@ class LaporanKegiatanRequest extends FormRequest
 
         $rules = [
             // Informasi Pelaksanaan
+            'deskripsi' => $isLaporanLangsung ? 'required|string' : 'nullable|string',
             'realisasi_tanggal_mulai' => 'required|date',
             'realisasi_tanggal_selesai' => 'required|date|after_or_equal:realisasi_tanggal_mulai',
             'rangkaian_kegiatan' => 'required|string',
@@ -194,6 +196,7 @@ class LaporanKegiatanRequest extends FormRequest
 
         return [
             // Informasi Pelaksanaan
+            'deskripsi.required' => 'Deskripsi kegiatan wajib diisi.',
             'realisasi_tanggal_mulai.required' => $isLaporanLangsung ? 'Tanggal mulai wajib diisi.' : 'Realisasi tanggal mulai wajib diisi.',
             'realisasi_tanggal_mulai.date' => $isLaporanLangsung ? 'Tanggal mulai harus berupa tanggal yang valid.' : 'Realisasi tanggal mulai harus berupa tanggal yang valid.',
             'realisasi_tanggal_selesai.required' => $isLaporanLangsung ? 'Tanggal selesai wajib diisi.' : 'Realisasi tanggal selesai wajib diisi.',
@@ -258,6 +261,7 @@ class LaporanKegiatanRequest extends FormRequest
         return [
             'judul_kegiatan' => 'Nama Kegiatan',
             'lokasi_kegiatan' => 'Lokasi Kegiatan',
+            'deskripsi' => 'Deskripsi Kegiatan',
             'realisasi_tanggal_mulai' => $isLaporanLangsung ? 'Tanggal Mulai' : 'Realisasi Tanggal Mulai',
             'realisasi_tanggal_selesai' => $isLaporanLangsung ? 'Tanggal Selesai' : 'Realisasi Tanggal Selesai',
             'rangkaian_kegiatan' => 'Rangkaian Kegiatan',

@@ -193,6 +193,23 @@
                     @endif
                 </td>
             </tr>
+            @if ($laporanKegiatan->isDarurat() && !empty(trim(strip_tags($laporanKegiatan->deskripsi ?? ''))))
+                <tr>
+                    <td style="vertical-align: top;">Deskripsi Kegiatan</td>
+                    <td style="text-align: center; vertical-align: top;">:</td>
+                    <td style="vertical-align: top;">
+                        @php
+                            $deskripsiText = $laporanKegiatan->deskripsi ?? '-';
+                            if (strip_tags($deskripsiText) === $deskripsiText) {
+                                $formattedDeskripsi = nl2br($deskripsiText);
+                            } else {
+                                $formattedDeskripsi = $deskripsiText;
+                            }
+                        @endphp
+                        {!! $formattedDeskripsi !!}
+                    </td>
+                </tr>
+            @endif
             <tr>
                 <td style="vertical-align: top;">Rangkaian Kegiatan</td>
                 <td style="text-align: center; vertical-align: top;">:</td>

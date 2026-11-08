@@ -225,6 +225,16 @@
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ $laporanKegiatan->isDarurat() ? 'Jumlah peserta yang mengikuti kegiatan (opsional).' : 'Jumlah peserta yang benar-benar hadir berdasarkan daftar hadir.' }}</small>
                             </div>
                         </div>
+                        @if ($laporanKegiatan->isDarurat())
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Deskripsi Kegiatan <span class="text-danger">*</span></label>
+                                    <textarea name="deskripsi" class="form-control summernote-editor" rows="4"
+                                        placeholder="Masukkan deskripsi kegiatan / gambaran umum..." required>{!! old('deskripsi', $laporanKegiatan->deskripsi) !!}</textarea>
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan gambaran umum, latar belakang, dan konteks kegiatan yang dilaksanakan.</small>
+                                </div>
+                            </div>
+                        @endif
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Rangkaian Kegiatan / Alur Acara <span
@@ -825,7 +835,7 @@
                         }
 
                         const summernoteFields = isLangsung
-                            ? ['rangkaian_kegiatan']
+                            ? ['deskripsi', 'rangkaian_kegiatan']
                             : ['rangkaian_kegiatan', 'profil_peserta', 'hasil_dicapai', 'output_nyata', 'dampak_awal'];
                         for (let name of summernoteFields) {
                             if (!isSummernoteFilled(`textarea[name="${name}"]`)) return false;
