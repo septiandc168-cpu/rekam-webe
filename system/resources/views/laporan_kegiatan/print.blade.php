@@ -220,16 +220,20 @@
                     <td>{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }} orang</td>
                 </tr>
             @endif
-            <tr>
-                <td>{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Peserta' }}</td>
-                <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->realisasi_peserta ? $laporanKegiatan->realisasi_peserta . ' orang' : '-' }}</td>
-            </tr>
-            <tr>
-                <td>Profil Peserta</td>
-                <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->profil_peserta ?: '-' !!}</td>
-            </tr>
+            @if (!$laporanKegiatan->isDarurat() || !empty($laporanKegiatan->realisasi_peserta))
+                <tr>
+                    <td>{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Peserta' }}</td>
+                    <td style="text-align: center;">:</td>
+                    <td>{{ $laporanKegiatan->realisasi_peserta ? $laporanKegiatan->realisasi_peserta . ' orang' : '-' }}</td>
+                </tr>
+            @endif
+            @if (!$laporanKegiatan->isDarurat() || !empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? ''))))
+                <tr>
+                    <td>Profil Peserta</td>
+                    <td style="text-align: center;">:</td>
+                    <td>{!! $laporanKegiatan->profil_peserta ?: '-' !!}</td>
+                </tr>
+            @endif
         </table>
 
         @if ($laporanKegiatan->isDarurat())
@@ -298,108 +302,158 @@
             @endif
         @endif
 
-        <!-- Dokumentasi Kegiatan -->
-        <div
-            style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
-            Dokumentasi Kegiatan</div>
+        @php
+            $hasValidFiles = function ($files) {
+                if (empty($files)) {
+                    return false;
+                }
+                if (is_string($files)) {
+                    $files = json_decode($files, true) ?? [];
+                }
+                if (!is_array($files)) {
+                    return false;
+                }
+                return count(
+                    array_filter($files, function ($f) {
+                        if (empty($f)) {
+                            return false;
+                        }
+                        if (is_string($f)) {
+                            return trim($f) !== '';
+                        }
+                        if (is_array($f)) {
+                            return !empty($f['path']) || !empty($f['original_name']);
+                        }
+                        return true;
+                    }),
+                ) > 0;
+            };
 
-        @if (!empty($laporanKegiatan->foto_kegiatan))
-            <div style="margin-bottom: 10px;">
-                <div style="font-weight: bold; margin-bottom: 3px;">Foto Kegiatan</div>
-                <div class="documentation-grid">
-                    @foreach ($laporanKegiatan->foto_kegiatan as $index => $foto_kegiatan)
-                        @php
-                            $filePath = is_array($foto_kegiatan) ? $foto_kegiatan['path'] : $foto_kegiatan;
-                            $fileName = is_array($foto_kegiatan)
-                                ? $foto_kegiatan['original_name']
-                                : basename($foto_kegiatan);
-                        @endphp
-                        <div class="doc-item">
-                            <div class="doc-image-container">
-                                <img src="/public/storage/app/{{ $filePath }}" class="doc-image"
-                                    alt="{{ $fileName }}">
-                            </div>
-                            <div class="doc-caption">{{ $fileName }}</div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        @endif
+            $hasFoto = $hasValidFiles($laporanKegiatan->foto_kegiatan);
+            $hasDaftarHadir = !$laporanKegiatan->isDarurat() && $hasValidFiles($laporanKegiatan->daftar_hadir);
+            $hasNotulen = !$laporanKegiatan->isDarurat() && $hasValidFiles($laporanKegiatan->notulen);
+            $hasMateri = $hasValidFiles($laporanKegiatan->materi);
+            $hasBeritaAcara = $hasValidFiles($laporanKegiatan->berita_acara);
 
-        @if (!$laporanKegiatan->isDarurat() && !empty($laporanKegiatan->daftar_hadir))
-            <div style="margin-bottom: 10px;">
-                <div style="font-weight: bold; margin-bottom: 3px;">Daftar Hadir</div>
-                <div class="file-list">
-                    @foreach ($laporanKegiatan->daftar_hadir as $index => $daftar_hadir)
-                        @php
-                            $filePath = is_array($daftar_hadir) ? $daftar_hadir['path'] : $daftar_hadir;
-                            $fileName = is_array($daftar_hadir)
-                                ? $daftar_hadir['original_name']
-                                : basename($daftar_hadir);
-                        @endphp
-                        <div style="padding: 2px 0px;">
-                            <a href="/public/storage/app/{{ $filePath }}" target="_blank"
-                                style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        @endif
+            $hasAnyDocumentation = $hasFoto || $hasDaftarHadir || $hasNotulen || $hasMateri || $hasBeritaAcara;
+        @endphp
 
-        @if (!$laporanKegiatan->isDarurat() && !empty($laporanKegiatan->notulen))
-            <div style="margin-bottom: 10px;">
-                <div style="font-weight: bold; margin-bottom: 3px;">Notulen</div>
-                <div class="file-list">
-                    @foreach ($laporanKegiatan->notulen as $index => $notulen)
-                        @php
-                            $filePath = is_array($notulen) ? $notulen['path'] : $notulen;
-                            $fileName = is_array($notulen) ? $notulen['original_name'] : basename($notulen);
-                        @endphp
-                        <div style="padding: 2px 0px;">
-                            <a href="/public/storage/app/{{ $filePath }}" target="_blank"
-                                style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        @endif
+        @if ($hasAnyDocumentation)
+            <!-- Dokumentasi Kegiatan -->
+            <div
+                style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
+                Dokumentasi Kegiatan</div>
 
-        @if (!empty($laporanKegiatan->materi))
-            <div style="margin-bottom: 10px;">
-                <div style="font-weight: bold; margin-bottom: 3px;">Materi</div>
-                <div class="file-list">
-                    @foreach ($laporanKegiatan->materi as $index => $materi)
-                        @php
-                            $filePath = is_array($materi) ? $materi['path'] : $materi;
-                            $fileName = is_array($materi) ? $materi['original_name'] : basename($materi);
-                        @endphp
-                        <div style="padding: 2px 0px;">
-                            <a href="/public/storage/app/{{ $filePath }}" target="_blank"
-                                style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
-                        </div>
-                    @endforeach
+            @if ($hasFoto)
+                <div style="margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 3px;">Foto Kegiatan</div>
+                    <div class="documentation-grid">
+                        @foreach ($laporanKegiatan->foto_kegiatan as $index => $foto_kegiatan)
+                            @php
+                                $filePath = is_array($foto_kegiatan) ? $foto_kegiatan['path'] ?? '' : $foto_kegiatan;
+                                $fileName = is_array($foto_kegiatan)
+                                    ? $foto_kegiatan['original_name'] ?? basename($filePath)
+                                    : basename($foto_kegiatan);
+                            @endphp
+                            @if (!empty($filePath))
+                                <div class="doc-item">
+                                    <div class="doc-image-container">
+                                        <img src="/public/storage/app/{{ $filePath }}" class="doc-image"
+                                            alt="{{ $fileName }}">
+                                    </div>
+                                    <div class="doc-caption">{{ $fileName }}</div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        @if (!empty($laporanKegiatan->berita_acara))
-            <div style="margin-bottom: 10px;">
-                <div style="font-weight: bold; margin-bottom: 3px;">Berita Acara</div>
-                <div class="file-list">
-                    @foreach ($laporanKegiatan->berita_acara as $index => $berita_acara)
-                        @php
-                            $filePath = is_array($berita_acara) ? $berita_acara['path'] : $berita_acara;
-                            $fileName = is_array($berita_acara)
-                                ? $berita_acara['original_name']
-                                : basename($berita_acara);
-                        @endphp
-                        <div style="padding: 2px 0px;">
-                            <a href="/public/storage/app/{{ $filePath }}" target="_blank"
-                                style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
-                        </div>
-                    @endforeach
+            @if ($hasDaftarHadir)
+                <div style="margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 3px;">Daftar Hadir</div>
+                    <div class="file-list">
+                        @foreach ($laporanKegiatan->daftar_hadir as $index => $daftar_hadir)
+                            @php
+                                $filePath = is_array($daftar_hadir) ? $daftar_hadir['path'] ?? '' : $daftar_hadir;
+                                $fileName = is_array($daftar_hadir)
+                                    ? $daftar_hadir['original_name'] ?? basename($filePath)
+                                    : basename($daftar_hadir);
+                            @endphp
+                            @if (!empty($filePath))
+                                <div style="padding: 2px 0px;">
+                                    <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                        style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
+
+            @if ($hasNotulen)
+                <div style="margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 3px;">Notulen</div>
+                    <div class="file-list">
+                        @foreach ($laporanKegiatan->notulen as $index => $notulen)
+                            @php
+                                $filePath = is_array($notulen) ? $notulen['path'] ?? '' : $notulen;
+                                $fileName = is_array($notulen)
+                                    ? $notulen['original_name'] ?? basename($filePath)
+                                    : basename($notulen);
+                            @endphp
+                            @if (!empty($filePath))
+                                <div style="padding: 2px 0px;">
+                                    <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                        style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if ($hasMateri)
+                <div style="margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 3px;">Materi</div>
+                    <div class="file-list">
+                        @foreach ($laporanKegiatan->materi as $index => $materi)
+                            @php
+                                $filePath = is_array($materi) ? $materi['path'] ?? '' : $materi;
+                                $fileName = is_array($materi) ? $materi['original_name'] ?? basename($filePath) : basename($materi);
+                            @endphp
+                            @if (!empty($filePath))
+                                <div style="padding: 2px 0px;">
+                                    <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                        style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if ($hasBeritaAcara)
+                <div style="margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 3px;">Berita Acara</div>
+                    <div class="file-list">
+                        @foreach ($laporanKegiatan->berita_acara as $index => $berita_acara)
+                            @php
+                                $filePath = is_array($berita_acara) ? $berita_acara['path'] ?? '' : $berita_acara;
+                                $fileName = is_array($berita_acara)
+                                    ? $berita_acara['original_name'] ?? basename($filePath)
+                                    : basename($berita_acara);
+                            @endphp
+                            @if (!empty($filePath))
+                                <div style="padding: 2px 0px;">
+                                    <a href="/public/storage/app/{{ $filePath }}" target="_blank"
+                                        style="color: blue; text-decoration: underline;">{{ $fileName }}</a>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         @endif
 
 

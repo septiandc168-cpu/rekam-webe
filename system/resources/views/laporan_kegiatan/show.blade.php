@@ -581,6 +581,9 @@
                         <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i> {{ $laporanKegiatan->isDarurat() ? 'Detail Pelaksanaan & Evaluasi' : 'Detail Realisasi & Evaluasi' }}</h3>
                     </div>
                     <div class="card-body">
+                        @php
+                            $showPeserta = !$laporanKegiatan->isDarurat() || !empty($laporanKegiatan->realisasi_peserta);
+                        @endphp
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <ul class="list-group list-group-flush">
@@ -592,32 +595,45 @@
                                             <strong>{{ $laporanKegiatan->getFormattedRealisasiTanggalPelaksanaan() }}</strong>
                                         </div>
                                     </li>
-                                    <li class="list-group-item d-flex align-items-center">
-                                        <div class="info-box-icon bg-light text-success"><i class="fas fa-users"></i>
-                                        </div>
-                                        <div>
-                                            <small class="text-muted d-block">{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Peserta' }}</small>
-                                            <strong>{{ $laporanKegiatan->realisasi_peserta ? $laporanKegiatan->realisasi_peserta . ' Orang' : '-' }}</strong>
-                                        </div>
-                                    </li>
+                                    @if ($showPeserta)
+                                        <li class="list-group-item d-flex align-items-center">
+                                            <div class="info-box-icon bg-light text-success"><i class="fas fa-users"></i>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Peserta' }}</small>
+                                                <strong>{{ $laporanKegiatan->realisasi_peserta ? $laporanKegiatan->realisasi_peserta . ' Orang' : '-' }}</strong>
+                                            </div>
+                                        </li>
+                                    @else
+                                        <li class="list-group-item d-flex align-items-center">
+                                            <div class="info-box-icon bg-light text-warning"><i
+                                                    class="fas fa-map-marker-alt"></i></div>
+                                            <div>
+                                                <small class="text-muted d-block">Lokasi</small>
+                                                <strong>{{ $laporanKegiatan->lokasi_kegiatan ?: '-' }}</strong>
+                                            </div>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                             <div class="col-md-6">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item d-flex align-items-center">
-                                        <div class="info-box-icon bg-light text-warning"><i
-                                                class="fas fa-map-marker-alt"></i></div>
-                                        <div>
-                                            <small class="text-muted d-block">Lokasi {{ $laporanKegiatan->isDarurat() ? '' : '(Desa)' }}</small>
-                                            <strong>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</strong>
-                                        </div>
-                                    </li>
+                                    @if ($showPeserta)
+                                        <li class="list-group-item d-flex align-items-center">
+                                            <div class="info-box-icon bg-light text-warning"><i
+                                                    class="fas fa-map-marker-alt"></i></div>
+                                            <div>
+                                                <small class="text-muted d-block">Lokasi {{ $laporanKegiatan->isDarurat() ? '' : '(Desa)' }}</small>
+                                                <strong>{{ $laporanKegiatan->isDarurat() ? ($laporanKegiatan->lokasi_kegiatan ?: '-') : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</strong>
+                                            </div>
+                                        </li>
+                                    @endif
                                     <li class="list-group-item d-flex align-items-center">
                                         <div class="info-box-icon bg-light text-danger"><i class="fas fa-user-tie"></i>
                                         </div>
                                         <div>
                                             <small class="text-muted d-block">Penanggung Jawab</small>
-                                            <strong>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->user->name ?? '-' : $laporanKegiatan->rencanaKegiatan->penanggung_jawab }}</strong>
+                                            <strong>{{ $laporanKegiatan->isDarurat() ? ($laporanKegiatan->user->name ?? '-') : $laporanKegiatan->rencanaKegiatan->penanggung_jawab }}</strong>
                                         </div>
                                     </li>
                                 </ul>
@@ -659,26 +675,28 @@
                                 </div>
                             </div>
 
-                            {{-- Profil Peserta --}}
-                            <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
-                                <div class="accordion-item-header card-header bg-white py-2 px-3" id="headProfil"
-                                    style="cursor:pointer;" data-toggle="collapse" data-target="#collapseProfil"
-                                    aria-expanded="false" aria-controls="collapseProfil">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-users mr-2"
-                                                style="color:#1a365d;"></i>Profil Peserta</h6>
-                                        <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
-                                            style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                            @if (!$laporanKegiatan->isDarurat() || !empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? ''))))
+                                {{-- Profil Peserta --}}
+                                <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
+                                    <div class="accordion-item-header card-header bg-white py-2 px-3" id="headProfil"
+                                        style="cursor:pointer;" data-toggle="collapse" data-target="#collapseProfil"
+                                        aria-expanded="false" aria-controls="collapseProfil">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-users mr-2"
+                                                    style="color:#1a365d;"></i>Profil Peserta</h6>
+                                            <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
+                                                style="font-size:0.75rem; transition: transform 0.3s;"></i>
+                                        </div>
+                                    </div>
+                                    <div id="collapseProfil" class="collapse" aria-labelledby="headProfil"
+                                        data-parent="#accordionLaporan">
+                                        <div class="card-body text-justify"
+                                            style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
+                                            {!! $laporanKegiatan->profil_peserta ?: '<em class="text-muted">Tidak diisi (opsional).</em>' !!}
+                                        </div>
                                     </div>
                                 </div>
-                                <div id="collapseProfil" class="collapse" aria-labelledby="headProfil"
-                                    data-parent="#accordionLaporan">
-                                    <div class="card-body text-justify"
-                                        style="background:#f8fafc; border-top: 1px solid #e2e8f0;">
-                                        {!! $laporanKegiatan->profil_peserta ?: '<em class="text-muted">Tidak diisi (opsional).</em>' !!}
-                                    </div>
-                                </div>
-                            </div>
+                            @endif
 
                             {{-- Hasil & Output --}}
                             <div class="rounded mb-2 overflow-hidden" style="border: 1px solid #e2e8f0;">
@@ -856,60 +874,92 @@
                 </div>
 
                 <!-- Dokumen Lampiran -->
-                <div class="card shadow-sm mb-3">
-                    <div class="card-header bg-white py-2 px-3">
-                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Lampiran</h6>
-                    </div>
-                    <div class="card-body py-2 px-3">
-                        @php
-                            $renderFileItem = function ($files, $title, $iconClass) {
-                                if (empty($files) || (is_array($files) && count(array_filter($files)) === 0)) {
-                                    return '';
-                                }
-                                if (is_string($files)) {
-                                    $files = json_decode($files, true) ?? [];
-                                }
-                                $html = "<div class='text-muted font-weight-bold mb-1' style='font-size:0.75rem;'>{$title}</div>";
-                                foreach ($files as $file) {
-                                    if (empty($file)) {
-                                        continue;
-                                    }
-                                    $path = is_array($file) ? $file['path'] ?? '' : $file;
-                                    $name = is_array($file)
-                                        ? $file['original_name'] ?? basename($path)
-                                        : basename($file);
-                                    if (empty($path)) {
-                                        continue;
-                                    }
-                                    $url = asset('public/storage/app/' . $path);
-                                    $html .= "<a href='{$url}' target='_blank' class='btn btn-sm bg-navy text-white btn-block text-left mb-2 text-truncate' title='{$name}' style='font-size:0.78rem;'><i class='{$iconClass} mr-1'></i> {$name}</a>";
-                                }
-                                return $html;
-                            };
+                @php
+                    $renderFileItem = function ($files, $title, $iconClass) {
+                        if (empty($files) || (is_array($files) && count(array_filter($files)) === 0)) {
+                            return '';
+                        }
+                        if (is_string($files)) {
+                            $files = json_decode($files, true) ?? [];
+                        }
+                        $html = "<div class='text-muted font-weight-bold mb-1' style='font-size:0.75rem;'>{$title}</div>";
+                        $count = 0;
+                        foreach ($files as $file) {
+                            if (empty($file)) {
+                                continue;
+                            }
+                            $path = is_array($file) ? $file['path'] ?? '' : $file;
+                            $name = is_array($file)
+                                ? $file['original_name'] ?? basename($path)
+                                : basename($file);
+                            if (empty($path)) {
+                                continue;
+                            }
+                            $count++;
+                            $url = asset('public/storage/app/' . $path);
+                            $html .= "<a href='{$url}' target='_blank' class='btn btn-sm bg-navy text-white btn-block text-left mb-2 text-truncate' title='{$name}' style='font-size:0.78rem;'><i class='{$iconClass} mr-1'></i> {$name}</a>";
+                        }
+                        return $count > 0 ? $html : '';
+                    };
 
-                            $hasFiles = $laporanKegiatan->isDarurat()
-                                ? (!empty($laporanKegiatan->materi) || !empty($laporanKegiatan->berita_acara))
-                                : (!empty($laporanKegiatan->daftar_hadir) ||
-                                    !empty($laporanKegiatan->notulen) ||
-                                    !empty($laporanKegiatan->materi) ||
-                                    !empty($laporanKegiatan->berita_acara));
-                        @endphp
+                    $hasFilesCheck = function ($files) {
+                        if (empty($files)) {
+                            return false;
+                        }
+                        if (is_string($files)) {
+                            $files = json_decode($files, true) ?? [];
+                        }
+                        if (!is_array($files)) {
+                            return false;
+                        }
+                        return count(
+                            array_filter($files, function ($f) {
+                                if (empty($f)) {
+                                    return false;
+                                }
+                                if (is_string($f)) {
+                                    return trim($f) !== '';
+                                }
+                                if (is_array($f)) {
+                                    return !empty($f['path']) || !empty($f['original_name']);
+                                }
+                                return true;
+                            }),
+                        ) > 0;
+                    };
 
-                        @if ($hasFiles)
-                            @if (!$laporanKegiatan->isDarurat())
-                                {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
-                                {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
+                    $hasMateri = $hasFilesCheck($laporanKegiatan->materi);
+                    $hasBeritaAcara = $hasFilesCheck($laporanKegiatan->berita_acara);
+                    $hasDaftarHadir = $hasFilesCheck($laporanKegiatan->daftar_hadir);
+                    $hasNotulen = $hasFilesCheck($laporanKegiatan->notulen);
+
+                    $hasFiles = $laporanKegiatan->isDarurat()
+                        ? ($hasMateri || $hasBeritaAcara)
+                        : ($hasDaftarHadir || $hasNotulen || $hasMateri || $hasBeritaAcara);
+                @endphp
+
+                @if (!$laporanKegiatan->isDarurat() || $hasFiles)
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-white py-2 px-3">
+                            <h6 class="fw-bold text-dark mb-0"><i class="fas fa-file-alt mr-1"></i> Dokumen Lampiran</h6>
+                        </div>
+                        <div class="card-body py-2 px-3">
+                            @if ($hasFiles)
+                                @if (!$laporanKegiatan->isDarurat())
+                                    {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
+                                    {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
+                                @endif
+                                {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint') !!}
+                                {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf') !!}
+                            @else
+                                <div class="text-center text-muted py-3">
+                                    <i class="fas fa-file-alt fa-2x mb-2 text-secondary d-block"></i>
+                                    Belum ada dokumen yang dilampirkan
+                                </div>
                             @endif
-                            {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint') !!}
-                            {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf') !!}
-                        @else
-                            <div class="text-center text-muted py-3">
-                                <i class="fas fa-file-alt fa-2x mb-2 text-secondary d-block"></i>
-                                Belum ada dokumen yang dilampirkan
-                            </div>
-                        @endif
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>
