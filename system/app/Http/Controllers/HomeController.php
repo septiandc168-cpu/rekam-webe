@@ -49,18 +49,60 @@ class HomeController extends Controller
             $totalUsers     = 0;
         }
 
-        // === Chart Data: Kegiatan per bulan (Default: 2 bulan lalu s/d 9 bulan ke depan = 12 bulan) ===
-        $defaultStartDate = Carbon::now()->subMonths(2)->startOfMonth();
-        $chartDataResult  = $this->getChartData($user, $isAdmin, $defaultStartDate, 12);
+        // === Chart Data: Kegiatan per bulan (12 bulan: 2 bulan lalu s/d 9 bulan ke depan) ===
+        $chartLabels          = [];
+        $chartValues          = [];
+        $chartDisetujui       = [];
+        $chartSelesai         = [];
+        $chartRencanaSelesai  = [];
+        $chartLaporanLangsung = [];
+        $now = Carbon::now();
 
-        $chartLabels          = $chartDataResult['labels'];
-        $chartValues          = $chartDataResult['values'];
-        $chartDisetujui       = $chartDataResult['disetujui'];
-        $chartRencanaSelesai  = $chartDataResult['rencana_selesai'];
-        $chartLaporanLangsung = $chartDataResult['laporan_langsung'];
-        $chartSelesai         = $chartDataResult['selesai'];
-        $chartPeriodLabel     = $chartDataResult['period_label'];
-        $chartStartMonth      = $chartDataResult['start_month'];
+        for ($i = -2; $i <= 9; $i++) {
+            $month = $now->copy()->addMonths($i);
+            $chartLabels[] = $month->translatedFormat('M Y');
+
+            $queryDisetujui = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
+                ->whereMonth('tanggal_mulai', $month->month)
+                ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
+
+            $querySelesai = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
+                ->whereMonth('tanggal_mulai', $month->month)
+                ->where('status', RencanaKegiatan::STATUS_SELESAI);
+
+            // Hitung Laporan Langsung (Tanpa Rencana Kegiatan) yang resmi (hanya status diajukan & final, mengecualikan draft & revisi)
+            $queryLaporanLangsung = LaporanKegiatan::whereNull('rencana_kegiatan_id')
+                ->whereIn('status', [
+                    LaporanKegiatan::STATUS_DIAJUKAN,
+                    LaporanKegiatan::STATUS_FINAL
+                ])
+                ->where(function ($q) use ($month) {
+                    $q->whereYear('realisasi_tanggal_mulai', $month->year)
+                      ->whereMonth('realisasi_tanggal_mulai', $month->month)
+                      ->orWhere(function ($q2) use ($month) {
+                          $q2->whereNull('realisasi_tanggal_mulai')
+                             ->whereYear('created_at', $month->year)
+                             ->whereMonth('created_at', $month->month);
+                      });
+                });
+
+            if (!$isAdmin) {
+                $queryDisetujui->where('user_id', $user->id);
+                $querySelesai->where('user_id', $user->id);
+                $queryLaporanLangsung->where('user_id', $user->id);
+            }
+
+            $countDisetujui       = $queryDisetujui->count();
+            $countRencanaSelesai  = $querySelesai->count();
+            $countLaporanLangsung = $queryLaporanLangsung->count();
+            $countSelesaiTotal    = $countRencanaSelesai + $countLaporanLangsung;
+
+            $chartDisetujui[]       = $countDisetujui;
+            $chartRencanaSelesai[]  = $countRencanaSelesai;
+            $chartLaporanLangsung[] = $countLaporanLangsung;
+            $chartSelesai[]         = $countSelesaiTotal;
+            $chartValues[]          = $countDisetujui + $countSelesaiTotal;
+        }
 
         // === Tabel: 5 Rencana Terbaru ===
         $rencanaQuery = RencanaKegiatan::with('user')->latest();
@@ -108,128 +150,9 @@ class HomeController extends Controller
             'chartRencanaSelesai',
             'chartLaporanLangsung',
             'chartSelesai',
-            'chartPeriodLabel',
-            'chartStartMonth',
             'rencanaTerbaru',
             'mapData'
         ));
-    }
-
-    /**
-     * Get chart statistics data via AJAX for flexible month & year shifting.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function chartData(Request $request)
-    {
-        $user = auth()->user();
-        $isAdmin = $user && $user->role && $user->role->role_name === 'admin';
-
-        $monthsCount = (int) $request->input('months', 12);
-        if ($monthsCount < 1 || $monthsCount > 36) {
-            $monthsCount = 12;
-        }
-
-        if ($request->filled('start_month')) {
-            try {
-                $startDate = Carbon::parse($request->input('start_month') . '-01')->startOfMonth();
-            } catch (\Exception $e) {
-                $startDate = Carbon::now()->subMonths(2)->startOfMonth();
-            }
-        } elseif ($request->filled('year')) {
-            $year = (int) $request->input('year');
-            $month = (int) $request->input('month', 1);
-            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-        } else {
-            $startDate = Carbon::now()->subMonths(2)->startOfMonth();
-        }
-
-        $data = $this->getChartData($user, $isAdmin, $startDate, $monthsCount);
-
-        return response()->json($data);
-    }
-
-    /**
-     * Query and build chart statistics data for a given start month and range.
-     *
-     * @param \App\Models\User $user
-     * @param bool $isAdmin
-     * @param \Carbon\Carbon $startDate
-     * @param int $monthsCount
-     * @return array
-     */
-    private function getChartData($user, $isAdmin, Carbon $startDate, int $monthsCount = 12)
-    {
-        $chartLabels          = [];
-        $chartValues          = [];
-        $chartDisetujui       = [];
-        $chartSelesai         = [];
-        $chartRencanaSelesai  = [];
-        $chartLaporanLangsung = [];
-
-        $startDate = $startDate->copy()->startOfMonth();
-
-        for ($i = 0; $i < $monthsCount; $i++) {
-            $month = $startDate->copy()->addMonths($i);
-            $chartLabels[] = $month->translatedFormat('M Y');
-
-            $queryDisetujui = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
-                ->whereMonth('tanggal_mulai', $month->month)
-                ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
-
-            $querySelesai = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
-                ->whereMonth('tanggal_mulai', $month->month)
-                ->where('status', RencanaKegiatan::STATUS_SELESAI);
-
-            // Hitung Laporan Langsung (Tanpa Rencana Kegiatan) yang resmi (hanya status diajukan & final, mengecualikan draft & revisi)
-            $queryLaporanLangsung = LaporanKegiatan::whereNull('rencana_kegiatan_id')
-                ->whereIn('status', [
-                    LaporanKegiatan::STATUS_DIAJUKAN,
-                    LaporanKegiatan::STATUS_FINAL
-                ])
-                ->where(function ($q) use ($month) {
-                    $q->whereYear('realisasi_tanggal_mulai', $month->year)
-                      ->whereMonth('realisasi_tanggal_mulai', $month->month)
-                      ->orWhere(function ($q2) use ($month) {
-                          $q2->whereNull('realisasi_tanggal_mulai')
-                             ->whereYear('created_at', $month->year)
-                             ->whereMonth('created_at', $month->month);
-                      });
-                });
-
-            if (!$isAdmin) {
-                $queryDisetujui->where('user_id', $user->id);
-                $querySelesai->where('user_id', $user->id);
-                $queryLaporanLangsung->where('user_id', $user->id);
-            }
-
-            $countDisetujui       = $queryDisetujui->count();
-            $countRencanaSelesai  = $querySelesai->count();
-            $countLaporanLangsung = $queryLaporanLangsung->count();
-            $countSelesaiTotal    = $countRencanaSelesai + $countLaporanLangsung;
-
-            $chartDisetujui[]       = $countDisetujui;
-            $chartRencanaSelesai[]  = $countRencanaSelesai;
-            $chartLaporanLangsung[] = $countLaporanLangsung;
-            $chartSelesai[]         = $countSelesaiTotal;
-            $chartValues[]          = $countDisetujui + $countSelesaiTotal;
-        }
-
-        $endDate = $startDate->copy()->addMonths($monthsCount - 1);
-
-        return [
-            'labels'           => $chartLabels,
-            'values'           => $chartValues,
-            'disetujui'        => $chartDisetujui,
-            'rencana_selesai'  => $chartRencanaSelesai,
-            'laporan_langsung' => $chartLaporanLangsung,
-            'selesai'          => $chartSelesai,
-            'start_month'      => $startDate->format('Y-m'),
-            'end_month'        => $endDate->format('Y-m'),
-            'period_label'     => $startDate->translatedFormat('M Y') . ' — ' . $endDate->translatedFormat('M Y'),
-            'months_count'     => $monthsCount,
-        ];
     }
 
     /**
