@@ -138,7 +138,7 @@
                         style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
                         <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
                             style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
-                        <span class="fw-bold text-primary d-block step-text">Realisasi Kegiatan</span>
+                        <span class="fw-bold text-primary d-block step-text">{{ $laporanKegiatan->isDarurat() ? 'Pelaksanaan Kegiatan' : 'Realisasi Kegiatan' }}</span>
                     </div>
 
                     <div class="step-indicator text-center position-relative"
