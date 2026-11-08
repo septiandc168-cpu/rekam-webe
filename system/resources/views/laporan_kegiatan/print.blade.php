@@ -116,41 +116,66 @@
             style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 8px; margin-top: 15px;">
             Detail Pelaksanaan Kegiatan</div>
         <table class="table-borderless mb-4" style="width: 100%; border-collapse: collapse; margin-left: 30px;">
-            <tr>
-                <td style="width: 220px;">Tanggal Pelaksanaan</td>
-                <td style="width: 15px; text-align: center;">:</td>
-                <td>
-                    {{ $laporanKegiatan->isDarurat() ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : ($laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-') }}
-                    @if (
-                        $laporanKegiatan->isDarurat()
-                            ? $laporanKegiatan->realisasi_tanggal_selesai &&
-                                $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai
-                            : $laporanKegiatan->rencanaKegiatan->tanggal_selesai &&
+            @if ($laporanKegiatan->isDarurat())
+                <tr>
+                    <td style="width: 220px;">Nama Kegiatan</td>
+                    <td style="width: 15px; text-align: center;">:</td>
+                    <td>{{ $laporanKegiatan->judul_kegiatan }}</td>
+                </tr>
+                <tr>
+                    <td style="width: 220px;">Tanggal Pelaksanaan</td>
+                    <td style="width: 15px; text-align: center;">:</td>
+                    <td>
+                        {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
+                        @if (
+                            $laporanKegiatan->realisasi_tanggal_selesai &&
+                                $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
+                            s/d
+                            {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->translatedFormat('d F Y') }}
+                        @endif
+                    </td>
+                </tr>
+            @else
+                <tr>
+                    <td style="width: 220px;">Tanggal Pelaksanaan (Rencana)</td>
+                    <td style="width: 15px; text-align: center;">:</td>
+                    <td>
+                        {{ $laporanKegiatan->rencanaKegiatan->tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_mulai)->translatedFormat('d F Y') : '-' }}
+                        @if (
+                            $laporanKegiatan->rencanaKegiatan->tanggal_selesai &&
                                 $laporanKegiatan->rencanaKegiatan->tanggal_selesai != $laporanKegiatan->rencanaKegiatan->tanggal_mulai)
-                        s/d
-                        {{ \Carbon\Carbon::parse($laporanKegiatan->isDarurat() ? $laporanKegiatan->realisasi_tanggal_selesai : $laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d F Y') }}
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <td>Realisasi Tanggal Pelaksanaan</td>
-                <td style="text-align: center;">:</td>
-                <td>
-                    {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
-                    @if (
-                        $laporanKegiatan->realisasi_tanggal_selesai &&
-                            $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
-                        s/d
-                        {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->translatedFormat('d F Y') }}
-                    @endif
-                </td>
-            </tr>
+                            s/d
+                            {{ \Carbon\Carbon::parse($laporanKegiatan->rencanaKegiatan->tanggal_selesai)->translatedFormat('d F Y') }}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td>Realisasi Tanggal Pelaksanaan</td>
+                    <td style="text-align: center;">:</td>
+                    <td>
+                        {{ $laporanKegiatan->realisasi_tanggal_mulai ? \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_mulai)->translatedFormat('d F Y') : '-' }}
+                        @if (
+                            $laporanKegiatan->realisasi_tanggal_selesai &&
+                                $laporanKegiatan->realisasi_tanggal_selesai != $laporanKegiatan->realisasi_tanggal_mulai)
+                            s/d
+                            {{ \Carbon\Carbon::parse($laporanKegiatan->realisasi_tanggal_selesai)->translatedFormat('d F Y') }}
+                        @endif
+                    </td>
+                </tr>
+            @endif
             <tr>
                 <td>Lokasi</td>
                 <td style="text-align: center;">:</td>
                 <td>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}
                 </td>
             </tr>
+            @if ($laporanKegiatan->isDarurat())
+                <tr>
+                    <td>Penanggung Jawab</td>
+                    <td style="text-align: center;">:</td>
+                    <td>{{ $laporanKegiatan->user->name ?? '-' }}</td>
+                </tr>
+            @endif
             <tr>
                 <td>Waktu Pelaksanaan</td>
                 <td style="text-align: center;">:</td>
@@ -187,68 +212,89 @@
                     {!! $formattedRangkaian !!}
                 </td>
             </tr>
+            @if (!$laporanKegiatan->isDarurat())
+                <tr>
+                    <td>Target Peserta</td>
+                    <td style="text-align: center;">:</td>
+                    <td>{{ $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }} orang</td>
+                </tr>
+            @endif
             <tr>
-                <td>Target Peserta</td>
+                <td>{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Peserta' }}</td>
                 <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->isDarurat() ? '-' : $laporanKegiatan->rencanaKegiatan->estimasi_peserta ?? '-' }}
-                    orang</td>
-            </tr>
-            <tr>
-                <td>Realisasi Peserta</td>
-                <td style="text-align: center;">:</td>
-                <td>{{ $laporanKegiatan->realisasi_peserta }} orang</td>
+                <td>{{ $laporanKegiatan->realisasi_peserta ? $laporanKegiatan->realisasi_peserta . ' orang' : '-' }}</td>
             </tr>
             <tr>
                 <td>Profil Peserta</td>
                 <td style="text-align: center;">:</td>
-                <td>{!! $laporanKegiatan->profil_peserta !!}</td>
+                <td>{!! $laporanKegiatan->profil_peserta ?: '-' !!}</td>
             </tr>
         </table>
 
-        <!-- Hasil dan Output Kegiatan -->
-        <div
-            style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
-            Hasil dan Output Kegiatan</div>
+        @if ($laporanKegiatan->isDarurat())
+            <!-- Hasil yang Dicapai -->
+            <div
+                style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
+                Hasil yang Dicapai</div>
 
-        <div style="margin-bottom: 15px;">
-            <div style="font-weight: bold; margin-bottom: 5px;">Hasil yang Dicapai</div>
-            <div>{!! $laporanKegiatan->hasil_dicapai !!}</div>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <div style="font-weight: bold; margin-bottom: 5px;">Output Nyata</div>
-            <div>{!! $laporanKegiatan->output_nyata !!}</div>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <div style="font-weight: bold; margin-bottom: 5px;">Dampak Awal yang Terlihat</div>
-            <div>{!! $laporanKegiatan->dampak_awal !!}</div>
-        </div>
-
-        <!-- Kendala dan Evaluasi -->
-        <div
-            style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
-            Kendala dan Evaluasi</div>
-
-        @if ($laporanKegiatan->kendala)
             <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Kendala yang Dihadapi</div>
-                <div>{!! $laporanKegiatan->kendala !!}</div>
+                <div>{!! $laporanKegiatan->hasil_dicapai !!}</div>
             </div>
-        @endif
 
-        @if ($laporanKegiatan->solusi)
-            <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Solusi yang Dilakukan</div>
-                <div>{!! $laporanKegiatan->solusi !!}</div>
-            </div>
-        @endif
+            <!-- Evaluasi dan Rekomendasi -->
+            <div
+                style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
+                Evaluasi dan Rekomendasi</div>
 
-        @if ($laporanKegiatan->evaluasi_rekomendasi)
             <div style="margin-bottom: 15px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Evaluasi dan Rekomendasi</div>
-                <div>{!! $laporanKegiatan->evaluasi_rekomendasi !!}</div>
+                <div>{!! $laporanKegiatan->evaluasi_rekomendasi ?: '-' !!}</div>
             </div>
+        @else
+            <!-- Hasil dan Output Kegiatan -->
+            <div
+                style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
+                Hasil dan Output Kegiatan</div>
+
+            <div style="margin-bottom: 15px;">
+                <div style="font-weight: bold; margin-bottom: 5px;">Hasil yang Dicapai</div>
+                <div>{!! $laporanKegiatan->hasil_dicapai !!}</div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <div style="font-weight: bold; margin-bottom: 5px;">Output Nyata</div>
+                <div>{!! $laporanKegiatan->output_nyata !!}</div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <div style="font-weight: bold; margin-bottom: 5px;">Dampak Awal yang Terlihat</div>
+                <div>{!! $laporanKegiatan->dampak_awal !!}</div>
+            </div>
+
+            <!-- Kendala dan Evaluasi -->
+            <div
+                style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; margin-bottom: 12px; margin-top: 20px;">
+                Kendala dan Evaluasi</div>
+
+            @if ($laporanKegiatan->kendala)
+                <div style="margin-bottom: 15px;">
+                    <div style="font-weight: bold; margin-bottom: 5px;">Kendala yang Dihadapi</div>
+                    <div>{!! $laporanKegiatan->kendala !!}</div>
+                </div>
+            @endif
+
+            @if ($laporanKegiatan->solusi)
+                <div style="margin-bottom: 15px;">
+                    <div style="font-weight: bold; margin-bottom: 5px;">Solusi yang Dilakukan</div>
+                    <div>{!! $laporanKegiatan->solusi !!}</div>
+                </div>
+            @endif
+
+            @if ($laporanKegiatan->evaluasi_rekomendasi)
+                <div style="margin-bottom: 15px;">
+                    <div style="font-weight: bold; margin-bottom: 5px;">Evaluasi dan Rekomendasi</div>
+                    <div>{!! $laporanKegiatan->evaluasi_rekomendasi !!}</div>
+                </div>
+            @endif
         @endif
 
         <!-- Dokumentasi Kegiatan -->
@@ -279,7 +325,7 @@
             </div>
         @endif
 
-        @if (!empty($laporanKegiatan->daftar_hadir))
+        @if (!$laporanKegiatan->isDarurat() && !empty($laporanKegiatan->daftar_hadir))
             <div style="margin-bottom: 10px;">
                 <div style="font-weight: bold; margin-bottom: 3px;">Daftar Hadir</div>
                 <div class="file-list">
@@ -299,7 +345,7 @@
             </div>
         @endif
 
-        @if (!empty($laporanKegiatan->notulen))
+        @if (!$laporanKegiatan->isDarurat() && !empty($laporanKegiatan->notulen))
             <div style="margin-bottom: 10px;">
                 <div style="font-weight: bold; margin-bottom: 3px;">Notulen</div>
                 <div class="file-list">

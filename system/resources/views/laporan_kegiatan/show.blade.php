@@ -578,8 +578,7 @@
             <div class="col-md-8">
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
-                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i> Detail Realisasi
-                            & Evaluasi</h3>
+                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i> {{ $laporanKegiatan->isDarurat() ? 'Detail Pelaksanaan & Evaluasi' : 'Detail Realisasi & Evaluasi' }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="row mb-4">
@@ -589,7 +588,7 @@
                                         <div class="info-box-icon bg-light text-primary"><i
                                                 class="fas fa-calendar-check"></i></div>
                                         <div>
-                                            <small class="text-muted d-block">Tanggal Aktual</small>
+                                            <small class="text-muted d-block">{{ $laporanKegiatan->isDarurat() ? 'Tanggal Pelaksanaan' : 'Tanggal Aktual' }}</small>
                                             <strong>{{ $laporanKegiatan->getFormattedRealisasiTanggalPelaksanaan() }}</strong>
                                         </div>
                                     </li>
@@ -609,7 +608,7 @@
                                         <div class="info-box-icon bg-light text-warning"><i
                                                 class="fas fa-map-marker-alt"></i></div>
                                         <div>
-                                            <small class="text-muted d-block">Lokasi (Desa)</small>
+                                            <small class="text-muted d-block">Lokasi {{ $laporanKegiatan->isDarurat() ? '' : '(Desa)' }}</small>
                                             <strong>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->lokasi_kegiatan : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</strong>
                                         </div>
                                     </li>
@@ -888,16 +887,19 @@
                                 return $html;
                             };
 
-                            $hasFiles =
-                                !empty($laporanKegiatan->daftar_hadir) ||
-                                !empty($laporanKegiatan->notulen) ||
-                                !empty($laporanKegiatan->materi) ||
-                                !empty($laporanKegiatan->berita_acara);
+                            $hasFiles = $laporanKegiatan->isDarurat()
+                                ? (!empty($laporanKegiatan->materi) || !empty($laporanKegiatan->berita_acara))
+                                : (!empty($laporanKegiatan->daftar_hadir) ||
+                                    !empty($laporanKegiatan->notulen) ||
+                                    !empty($laporanKegiatan->materi) ||
+                                    !empty($laporanKegiatan->berita_acara));
                         @endphp
 
                         @if ($hasFiles)
-                            {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
-                            {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
+                            @if (!$laporanKegiatan->isDarurat())
+                                {!! $renderFileItem($laporanKegiatan->daftar_hadir, 'Daftar Hadir', 'fas fa-file-pdf') !!}
+                                {!! $renderFileItem($laporanKegiatan->notulen, 'Notulen', 'fas fa-file-word') !!}
+                            @endif
                             {!! $renderFileItem($laporanKegiatan->materi, 'Materi', 'fas fa-file-powerpoint') !!}
                             {!! $renderFileItem($laporanKegiatan->berita_acara, 'Berita Acara', 'fas fa-file-pdf') !!}
                         @else
