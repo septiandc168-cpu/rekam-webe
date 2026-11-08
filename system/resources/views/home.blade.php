@@ -170,7 +170,7 @@
         <div class="row d-flex align-items-stretch">
             <!-- Chart: Statistik Kegiatan per Bulan -->
             <div class="col-md-7 mb-4 d-flex">
-                <div class="card w-100 h-100 d-flex flex-column">
+                <div class="card w-100 h-100 d-flex flex-column shadow-sm">
                     <div class="card-header bg-navy">
                         <h3 class="card-title mb-0">
                             <i class="fas fa-chart-bar mr-2"></i>
@@ -185,9 +185,74 @@
                             </button>
                         </div>
                     </div>
-                    <div class="card-body flex-grow-1" style="position: relative; min-height: 350px;">
-                        <div style="position: absolute; top: 1.25rem; left: 1.25rem; right: 1.25rem; bottom: 1.25rem;">
-                            <canvas id="chartKegiatan"></canvas>
+                    <div class="card-body flex-grow-1 d-flex flex-column p-3">
+                        <!-- Toolbar Navigasi & Filter Periode Bulan/Tahun -->
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom" style="gap: 8px;">
+                            <!-- Navigasi Geser (Mundur / Maju) -->
+                            <div class="d-flex align-items-center flex-wrap" style="gap: 4px;">
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-secondary" id="btnChartPrevYear" title="Mundur 1 Tahun (-12 Bulan)">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary" id="btnChartPrevMonth" title="Geser 1 Bulan ke Kiri">
+                                        <i class="fas fa-chevron-left mr-1"></i> <span class="d-none d-sm-inline">Bulan Lalu</span>
+                                    </button>
+                                </div>
+
+                                <!-- Periode Indicator Badge -->
+                                <span id="chartPeriodBadge" class="badge badge-light border text-navy px-2 py-1 font-weight-bold mx-1" style="font-size: 0.82rem; min-width: 140px; text-align: center;">
+                                    <i class="far fa-calendar-alt text-primary mr-1"></i>
+                                    <span id="chartPeriodText">{{ $chartPeriodLabel ?? 'Sep 2026 — Agt 2027' }}</span>
+                                </span>
+
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-primary" id="btnChartNextMonth" title="Geser 1 Bulan ke Kanan">
+                                        <span class="d-none d-sm-inline">Bulan Depan</span> <i class="fas fa-chevron-right ml-1"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="btnChartNextYear" title="Maju 1 Tahun (+12 Bulan)">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </button>
+                                </div>
+
+                                <button type="button" class="btn btn-sm btn-outline-secondary ml-1" id="btnChartReset" title="Kembali ke Periode Saat Ini">
+                                    <i class="fas fa-undo-alt mr-1"></i> <span class="d-none d-md-inline">Reset</span>
+                                </button>
+                            </div>
+
+                            <!-- Pilihan Langsung Bulan & Tahun -->
+                            <div class="d-flex align-items-center flex-wrap" style="gap: 6px;">
+                                <div class="input-group input-group-sm" style="width: auto;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-light text-muted px-2" style="font-size: 0.78rem;">
+                                            <i class="far fa-calendar-check mr-1 text-primary"></i> Mulai
+                                        </span>
+                                    </div>
+                                    <input type="month" id="chartStartMonthInput" class="form-control form-control-sm"
+                                        value="{{ $chartStartMonth ?? Carbon\Carbon::now()->subMonths(2)->format('Y-m') }}"
+                                        style="font-size: 0.8rem; height: 31px; max-width: 135px;"
+                                        title="Pilih Bulan & Tahun Awal Grafik">
+                                </div>
+
+                                <select id="chartMonthsCountSelect" class="custom-select custom-select-sm" style="font-size: 0.78rem; height: 31px; width: auto;" title="Pilih Jumlah Bulan yang Ditampilkan">
+                                    <option value="6">6 Bulan</option>
+                                    <option value="12" selected>12 Bulan</option>
+                                    <option value="18">18 Bulan</option>
+                                    <option value="24">24 Bulan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Chart Canvas Wrapper -->
+                        <div class="flex-grow-1 position-relative" style="min-height: 320px;">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+                                <canvas id="chartKegiatan"></canvas>
+                            </div>
+                            <!-- Loading Spinner Overlay -->
+                            <div id="chartLoadingOverlay" class="d-none justify-content-center align-items-center" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.7); z-index: 10; border-radius: 6px;">
+                                <div class="spinner-border text-primary" role="status" style="width: 2rem; height: 2rem;">
+                                    <span class="sr-only">Memuat data...</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -323,7 +388,7 @@
 
             // === Chart.js: Stacked Bar Chart Kegiatan per Bulan ===
             var ctx = document.getElementById('chartKegiatan').getContext('2d');
-            new Chart(ctx, {
+            var chartKegiatan = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: @json($chartLabels),
@@ -442,6 +507,125 @@
                     }
                 }
             });
+
+            // === Interaktivitas Navigasi Geser & Filter Periode Chart ===
+            var currentStartMonth = '{{ $chartStartMonth ?? Carbon\Carbon::now()->subMonths(2)->format("Y-m") }}';
+            var currentMonthsCount = 12;
+            var defaultStartMonth = '{{ Carbon\Carbon::now()->subMonths(2)->format("Y-m") }}';
+
+            function loadChartData(startMonth, monthsCount) {
+                $('#chartLoadingOverlay').removeClass('d-none').addClass('d-flex');
+
+                $.ajax({
+                    url: '{{ route("dashboard.chartData") }}',
+                    type: 'GET',
+                    data: {
+                        start_month: startMonth,
+                        months: monthsCount
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        currentStartMonth = res.start_month;
+                        currentMonthsCount = res.months_count;
+
+                        // Perbarui UI input & label
+                        $('#chartStartMonthInput').val(res.start_month);
+                        $('#chartPeriodText').text(res.period_label);
+                        $('#chartMonthsCountSelect').val(res.months_count);
+
+                        // Perbarui data chart dengan animasi transisi halus
+                        chartKegiatan.data.labels = res.labels;
+                        chartKegiatan.data.datasets[0].data = res.disetujui;
+                        chartKegiatan.data.datasets[1].data = res.rencana_selesai;
+                        chartKegiatan.data.datasets[2].data = res.laporan_langsung;
+                        chartKegiatan.update();
+                    },
+                    error: function(err) {
+                        console.error('Gagal memperbarui grafik kegiatan:', err);
+                    },
+                    complete: function() {
+                        $('#chartLoadingOverlay').removeClass('d-flex').addClass('d-none');
+                    }
+                });
+            }
+
+            function shiftMonths(n) {
+                if (!currentStartMonth) return;
+                var parts = currentStartMonth.split('-');
+                var year = parseInt(parts[0], 10);
+                var month = parseInt(parts[1], 10); // 1 - 12
+
+                var totalMonths = year * 12 + (month - 1) + n;
+                var newYear = Math.floor(totalMonths / 12);
+                var newMonth = (totalMonths % 12) + 1;
+
+                var formattedMonth = newYear + '-' + (newMonth < 10 ? '0' + newMonth : newMonth);
+                loadChartData(formattedMonth, currentMonthsCount);
+            }
+
+            // Event Listeners Tombol Navigasi Geser
+            $('#btnChartPrevMonth').on('click', function() {
+                shiftMonths(-1);
+            });
+
+            $('#btnChartNextMonth').on('click', function() {
+                shiftMonths(1);
+            });
+
+            $('#btnChartPrevYear').on('click', function() {
+                shiftMonths(-12);
+            });
+
+            $('#btnChartNextYear').on('click', function() {
+                shiftMonths(12);
+            });
+
+            $('#btnChartReset').on('click', function() {
+                loadChartData(defaultStartMonth, 12);
+            });
+
+            // Event Listener Input Month Picker Langsung
+            $('#chartStartMonthInput').on('change', function() {
+                var val = $(this).val();
+                if (val) {
+                    loadChartData(val, currentMonthsCount);
+                }
+            });
+
+            // Event Listener Dropdown Jumlah Bulan
+            $('#chartMonthsCountSelect').on('change', function() {
+                var months = parseInt($(this).val(), 10);
+                loadChartData(currentStartMonth, months);
+            });
+
+            // Dukungan Touch Swipe pada Canvas Chart (Mobile / Tablet)
+            var canvasTouchStartX = 0;
+            var canvasTouchEndX = 0;
+            var chartCanvasElem = document.getElementById('chartKegiatan');
+
+            if (chartCanvasElem) {
+                chartCanvasElem.addEventListener('touchstart', function(e) {
+                    if (e.changedTouches && e.changedTouches.length > 0) {
+                        canvasTouchStartX = e.changedTouches[0].clientX;
+                    }
+                }, { passive: true });
+
+                chartCanvasElem.addEventListener('touchend', function(e) {
+                    if (e.changedTouches && e.changedTouches.length > 0) {
+                        canvasTouchEndX = e.changedTouches[0].clientX;
+                        var diff = canvasTouchEndX - canvasTouchStartX;
+                        if (Math.abs(diff) > 50) {
+                            if (diff < 0) {
+                                // Geser ke kiri (swipe left) -> Maju 1 bulan
+                                shiftMonths(1);
+                            } else {
+                                // Geser ke kanan (swipe right) -> Mundur 1 bulan
+                                shiftMonths(-1);
+                            }
+                        }
+                    }
+                }, { passive: true });
+            }
 
             // === FullCalendar ===
             var calendarEl = document.getElementById('calendar');

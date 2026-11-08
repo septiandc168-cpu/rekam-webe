@@ -11,6 +11,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/dashboard/events', [App\Http\Controllers\HomeController::class, 'events'])->name('dashboard.events')->middleware('auth');
+Route::get('/dashboard/chart-data', [App\Http\Controllers\HomeController::class, 'chartData'])->name('dashboard.chartData')->middleware('auth');
 
 Route::middleware(['auth', 'isSupervisor'])->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('users.index');
