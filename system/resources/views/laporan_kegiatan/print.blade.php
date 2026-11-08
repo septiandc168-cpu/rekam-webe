@@ -52,9 +52,10 @@
                     <div
                         style="font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: bold; margin-bottom: 5px;">
                         REKAM WEBE - SISTEM PELAPORAN KEGIATAN</div>
-                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 11pt;">
-                        Jl. RM Sudiono No.49A, Ketapang, Kalimantan Barat<br>
-                        Email: yayasanwebe@gmail.com | Telp/WA: +62 813 6022 733
+                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 10.5pt; line-height: 1.3;">
+                        Jl. Gajah Mada GG Wanabakti 1 No.A 11, Kali Nilam, Kec. Delta Pawan,<br>
+                        Kabupaten Ketapang, Kalimantan Barat 78812<br>
+                        Email: mitra@yayasanwebe.org | Telp/WA: +62 813 6022 733
                     </div>
                 </td>
             </tr>
