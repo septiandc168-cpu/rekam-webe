@@ -61,7 +61,7 @@
                         style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
                         <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
                             style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
-                        <span class="fw-bold text-primary d-block step-text">{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Pelaksanaan Kegiatan' : 'Realisasi Kegiatan' }}</span>
+                        <span class="fw-bold text-primary d-block step-text">Realisasi Kegiatan</span>
                     </div>
 
                     <div class="step-indicator text-center position-relative"
@@ -106,18 +106,18 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
                                     <input type="text" name="judul_kegiatan" class="form-control"
-                                        placeholder="Contoh: 11th GEF International Waters Conference (IWC11)..." required
+                                        placeholder="Masukkan nama kegiatan..." required
                                         value="{{ old('judul_kegiatan') }}">
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan
-                                        nama kegiatan, konferensi, workshop, pelatihan, atau agenda yang dilaksanakan/diikuti.</small>
+                                        nama kegiatan yang jelas dan spesifik sesuai pelaksanaan di lapangan.</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Lokasi Kegiatan <span class="text-danger">*</span></label>
                                     <input type="text" name="lokasi_kegiatan" class="form-control"
-                                        placeholder="Contoh: The Anvaya Beach Resort Bali / Kendawangan, Ketapang..." required
+                                        placeholder="Masukkan lokasi kegiatan..." required
                                         value="{{ old('lokasi_kegiatan') }}">
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan
-                                        tempat, venue, atau daerah pelaksanaan (misal: nama gedung/hotel, desa, atau kota/kabupaten).</small>
+                                        lokasi spesifik tempat kegiatan berlangsung (nama desa/kecamatan/kabupaten).</small>
                                 </div>
                             </div>
                         @endif
@@ -126,22 +126,24 @@
                                 <label class="form-label">{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Tanggal Mulai' : 'Realisasi Tanggal Mulai' }} <span class="text-danger">*</span></label>
                                 <input type="date" name="realisasi_tanggal_mulai" class="form-control" required
                                     value="{{ old('realisasi_tanggal_mulai') }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Tanggal dimulainya pelaksanaan kegiatan atau agenda acara.' : 'Tanggal aktual kegiatan mulai dilaksanakan di lapangan.' }}</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal aktual
+                                    kegiatan mulai dilaksanakan di lapangan.</small>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Tanggal Selesai' : 'Realisasi Tanggal Selesai' }} <span
                                         class="text-danger">*</span></label>
                                 <input type="date" name="realisasi_tanggal_selesai" class="form-control" required
                                     value="{{ old('realisasi_tanggal_selesai') }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Tanggal berakhirnya kegiatan. Jika kegiatan berlangsung 1 hari, samakan dengan tanggal mulai.' : 'Tanggal aktual kegiatan selesai. Jika 1 hari, isi sama dengan tanggal mulai.' }}</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal
+                                    aktual kegiatan selesai. Jika 1 hari, isi sama dengan tanggal mulai.</small>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Jumlah Peserta' : 'Realisasi Jumlah Peserta' }} @if (!isset($isLaporanLangsung) || !$isLaporanLangsung)<span
                                         class="text-danger">*</span>@endif</label>
                                 <input type="number" name="realisasi_peserta" class="form-control"
-                                    placeholder="{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Masukkan estimasi jumlah peserta (opsional)...' : 'Masukkan realisasi jumlah peserta...' }}" min="0" {{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? '' : 'required' }}
+                                    placeholder="{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Masukkan jumlah peserta (opsional)...' : 'Masukkan realisasi jumlah peserta...' }}" min="0" {{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? '' : 'required' }}
                                     value="{{ old('realisasi_peserta') }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Estimasi total delegasi/peserta yang hadir atau terlibat (opsional, kosongkan jika tidak diketahui).' : 'Jumlah peserta yang benar-benar hadir berdasarkan daftar hadir.' }}</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Jumlah peserta yang mengikuti kegiatan (opsional).' : 'Jumlah peserta yang benar-benar hadir berdasarkan daftar hadir.' }}</small>
                             </div>
                         </div>
                         @if (isset($isLaporanLangsung) && $isLaporanLangsung)
@@ -149,8 +151,8 @@
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Deskripsi Kegiatan <span class="text-danger">*</span></label>
                                     <textarea name="deskripsi" class="form-control summernote-editor" rows="4"
-                                        placeholder="Tuliskan gambaran umum, latar belakang keikutsertaan/pelaksanaan, dan konteks kegiatan..." required>{!! old('deskripsi') !!}</textarea>
-                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan gambaran umum kegiatan, latar belakang keikutsertaan, tujuan, dan konteks acara yang dilaksanakan.</small>
+                                        placeholder="Masukkan deskripsi kegiatan / gambaran umum..." required>{!! old('deskripsi') !!}</textarea>
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan gambaran umum, latar belakang, dan konteks kegiatan yang dilaksanakan.</small>
                                 </div>
                             </div>
                         @endif
@@ -159,14 +161,17 @@
                                 <label class="form-label">Rangkaian Kegiatan / Alur Acara <span
                                         class="text-danger">*</span></label>
                                 <textarea name="rangkaian_kegiatan" class="form-control summernote-editor" rows="4"
-                                    placeholder="{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Uraikan agenda per hari / per sesi, topik pembahasan, atau aktivitas yang diikuti...' : 'Masukkan rangkaian kegiatan...' }}" required>{!! old('rangkaian_kegiatan') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Uraikan alur agenda per hari atau per sesi, topik pembahasan, sesi diskusi, atau kunjungan yang diikuti.' : 'Uraikan urutan acara dari awal hingga akhir, termasuk waktu dan kegiatan di setiap sesi.' }}</small>
+                                    placeholder="Masukkan rangkaian kegiatan..." required>{!! old('rangkaian_kegiatan') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Uraikan
+                                    urutan acara dari awal hingga akhir, termasuk waktu dan kegiatan di setiap sesi.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Profil Peserta @if (!isset($isLaporanLangsung) || !$isLaporanLangsung)<span class="text-danger">*</span>@endif</label>
                                 <textarea name="profil_peserta" class="form-control summernote-editor" rows="3"
-                                    placeholder="{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Contoh: Dihadiri oleh delegasi internasional, unsur pemerintah, akademisi, dan organisasi masyarakat sipil (opsional)...' : 'Masukkan profil peserta...' }}" {{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? '' : 'required' }}>{!! old('profil_peserta') !!}</textarea>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Uraikan profil delegasi atau pihak yang terlibat: asal instansi/lembaga, profesi, atau pemangku kepentingan (opsional).' : 'Jelaskan latar belakang peserta: profesi, asal daerah, rentang usia, atau kelompok sasaran.' }}</small>
+                                    placeholder="Masukkan profil peserta..." {{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? '' : 'required' }}>{!! old('profil_peserta') !!}</textarea>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                    latar belakang peserta: profesi, asal daerah, rentang usia, atau kelompok
+                                    sasaran{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? ' (opsional).' : '.' }}</small>
                             </div>
                         </div>
                     </div>
@@ -252,15 +257,17 @@
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Hasil yang Dicapai <span class="text-danger">*</span></label>
                                     <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4"
-                                        placeholder="Jelaskan hasil capaian, peran, kemitraan baru, atau manfaat yang diperoleh bagi organisasi/yayasan..." required>{!! old('hasil_dicapai') !!}</textarea>
-                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Uraikan hasil yang dicapai, manfaat konkret bagi Yayasan WeBe, kemitraan/jejaring baru, atau peran aktif selama kegiatan.</small>
+                                        placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai') !!}</textarea>
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
+                                        pencapaian utama yang diperoleh dari pelaksanaan kegiatan ini.</small>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Catatan Evaluasi & Rekomendasi <span
                                             class="text-danger">*</span></label>
                                     <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="5"
-                                        placeholder="Tuliskan kesimpulan, pembelajaran yang diperoleh, dan rekomendasi tindak lanjut..." required>{!! old('evaluasi_rekomendasi') !!}</textarea>
-                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Uraikan kesimpulan, poin pembelajaran penting (lesson learned), serta saran dan rekomendasi tindak lanjut ke depan.</small>
+                                        placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi') !!}</textarea>
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan
+                                        penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
                                 </div>
                             </div>
                         @else
@@ -325,7 +332,8 @@
                                 </div>
                                 <small class="text-muted">Bebas format gambar & jumlah file, foto berukuran besar akan
                                     otomatis dikompres oleh sistem.</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Unggah foto dokumentasi kegiatan seperti suasana acara, sesi diskusi/presentasi, narasumber, atau kunjungan lapangan.' : 'Unggah foto dokumentasi pelaksanaan kegiatan seperti suasana acara, narasumber, dan peserta.' }}</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah foto
+                                    dokumentasi pelaksanaan kegiatan seperti suasana acara, narasumber, dan peserta.</small>
                                 <div id="preview-foto_kegiatan" class="d-flex flex-wrap gap-2 mt-2"></div>
                             </div>
 
@@ -375,12 +383,13 @@
                                     <label class="custom-file-label" for="materiInput">Pilih file...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen/presentasi/foto hingga 50MB/file{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? ' (opsional).' : ', foto akan otomatis dikompres oleh sistem.' }}</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Unggah bahan presentasi, materi paparan narasumber, modul, atau dokumen agenda jika ada (opsional).' : 'Unggah materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.' }}</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.</small>
                                 <div id="preview-materi" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-bold">{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Berita Acara / Dokumen Pendukung' : 'Berita Acara' }} @if (!isset($isLaporanLangsung) || !$isLaporanLangsung)<span class="text-danger">*</span>@endif</label>
+                                <label class="form-label fw-bold">Berita Acara @if (!isset($isLaporanLangsung) || !$isLaporanLangsung)<span class="text-danger">*</span>@endif</label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="berita_acara[]"
                                         class="custom-file-input custom-doc-input" id="beritaAcaraInput"
@@ -389,7 +398,8 @@
                                     <label class="custom-file-label" for="beritaAcaraInput">Pilih file...</label>
                                 </div>
                                 <small class="text-muted">Bebas format dokumen/foto hingga 50MB/file{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? ' (opsional).' : ', foto akan otomatis dikompres oleh sistem.' }}</small>
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ (isset($isLaporanLangsung) && $isLaporanLangsung) ? 'Unggah sertifikat kepesertaan, surat tugas/undangan, atau dokumen pendukung lainnya jika ada (opsional).' : 'Unggah berita acara resmi pelaksanaan kegiatan.' }}</small>
+                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
+                                    berita acara resmi pelaksanaan kegiatan.</small>
                                 <div id="preview-berita_acara" class="d-flex flex-column gap-1 mt-2"></div>
                             </div>
                         </div>
