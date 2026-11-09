@@ -6,10 +6,15 @@
 ## 📌 1. Tentang Panduan Ini
 Buku panduan ini dibuat sebagai petunjuk praktis bagi seluruh **Anggota / Staf Lapangan / Penanggung Jawab Kegiatan** dalam menggunakan aplikasi **Rekam WeBe** versi terbaru. Panduan ini menggunakan bahasa sehari-hari yang sederhana, jelas, dan mudah diikuti langkah demi langkah.
 
-Alur kerja utama Anda di aplikasi ini sangat mudah dan teratur:
-```
-1. Buat Rencana Kegiatan ➔ 2. Tunggu Disetujui Admin ➔ 3. Laksanakan di Lapangan ➔ 4. Buat Laporan Kegiatan ➔ 5. Laporan Final & Arsip Selesai
-```
+Di Rekam WeBe, anggota memiliki dua jalur pelaporan kegiatan:
+1. **Jalur Kegiatan Terencana (Reguler)**:
+   ```
+   Buat Rencana ➔ Disetujui Admin ➔ Pelaksanaan Lapangan ➔ Buat Laporan Reguler ➔ Final & Selesai
+   ```
+2. **Jalur Laporan Langsung (Insidental / Tanggap Darurat)**:
+   ```
+   Kegiatan Mendadak Lapangan ➔ Buat Laporan Langsung ➔ Disahkan Admin ➔ Final & Masuk Arsip
+   ```
 
 ---
 
@@ -162,7 +167,7 @@ Jika kegiatan Anda mendapatkan status **Revisi**:
 2. Anda akan melihat **Kotak Kuning Catatan Revisi dari Admin** yang memuat instruksi hal apa saja yang perlu diperbaiki.
 3. Klik tombol **Edit** (ikon pensil), lakukan perbaikan pada kolom yang diminta, lalu klik tombol **Ajukan Ulang**.
 
-### 5.2 Penting: Revisi pada Rencana yang Pernah Disetujui
+### 5.2 Revisi pada Rencana yang Pernah Disetujui
 Jika kegiatan Anda **sudah pernah Disetujui** tetapi di kemudian hari jadwal lapangan bergeser atau lokasi desa berubah, Admin dapat mengembalikan status kegiatan menjadi **Revisi**. Anda cukup mengedit form kegiatan tersebut dan mengklik **Ajukan Ulang** agar jadwal resmi di kalender yayasan tetap akurat.
 
 ### 5.3 Mengunduh Dokumen PDF Pengajuan Resmi
@@ -177,76 +182,138 @@ Untuk kegiatan yang sudah berstatus **Disetujui**, Anda dapat mengunduh berkas p
 
 ---
 
-## 📑 6. Membuat Laporan Hasil Kegiatan (Menu: Laporan Kegiatan)
+## 📑 6. Membuat Laporan Kegiatan dari Rencana Disetujui (Laporan Reguler)
 
-Setelah kegiatan lapangan selesai dilaksanakan, anggota wajib membuat laporan pertanggungjawaban kegiatan.
+Setelah kegiatan lapangan selesai dilaksanakan sesuai jadwal rencana, anggota menyusun laporan pertanggungjawaban melalui alur reguler.
 
-### 6.1 Memilih Jalur Pembuatan Laporan
-Buka menu **Laporan Kegiatan** pada bilah sebelah kiri. Terdapat dua jalur pelaporan:
-
-1. **Jalur Utama: Laporan dari Rencana yang Disetujui (Kegiatan Terencana)**:
-   - Pada tabel atas bertajuk *"Rencana Kegiatan Siap Dilaporkan"*, cari nama kegiatan Anda yang sudah selesai dilaksanakan.
-   - Klik tombol biru **Buat Laporan** pada baris kegiatan tersebut.
-2. **Jalur Kedua: Buat Laporan Langsung (Insidental / Tanggap Darurat)**:
-   - Gunakan tombol **Buat Laporan Langsung** hanya jika kegiatan lapangan bersifat mendadak/insidental tanpa sempat membuat rencana sebelumnya.
+### 6.1 Memulai Laporan Reguler
+1. Buka menu **Laporan Kegiatan** pada bilah menu sebelah kiri.
+2. Pada tabel bagian atas yang bertajuk **"Rencana Kegiatan Disetujui"** (atau *"Rencana Kegiatan Siap Dilaporkan"*), cari nama kegiatan yang telah Anda laksanakan.
+3. Klik tombol biru **Buat Laporan** di baris kegiatan tersebut.
+4. Anda akan masuk ke formulir laporan 3 langkah yang sudah terhubung dengan data rencana Anda.
 
 > 📸 **[TEMPATKAN SCREENSHOT 8 DI SINI]**
 > - **Halaman yang dibuka:** Menu Laporan Kegiatan.
-> - **Bagian yang di-screenshot:** Tabel atas "Rencana Kegiatan Siap Dilaporkan" dengan tombol biru "Buat Laporan", serta tombol hitam/navy "Buat Laporan Langsung".
-> - **Keterangan gambar:** *Halaman Menu Laporan Kegiatan dan Pilihan Pembuatan Laporan*
+> - **Bagian yang di-screenshot:** Tabel atas "Rencana Kegiatan Disetujui" dengan tombol biru "Buat Laporan" di ujung baris.
+> - **Keterangan gambar:** *Tabel Rencana Kegiatan Disetujui Siap Dibuatkan Laporan*
 
 ---
 
-### 6.2 Mengisi Formulir Laporan (3 Langkah Mudah)
+### 6.2 Mengisi Formulir Laporan Reguler (3 Langkah)
 
 #### 🔹 Langkah 1: Realisasi Pelaksanaan
-- **Tanggal Mulai & Selesai Nyata**: Masukkan tanggal riil saat kegiatan berlangsung di lapangan.
-- **Realisasi Jumlah Peserta**: Jumlah orang/peserta yang benar-benar hadir (berdasarkan presensi fisik).
-- **Rangkaian Acara**: Ceritakan susunan jalannya acara dari pembukaan hingga penutupan.
-- **Profil Peserta**: Uraikan latar belakang peserta (contoh: *20 nelayan kepiting dan 5 tokoh pemuda desa*).
-- *(Khusus Laporan Langsung: Terdapat kolom Nama Kegiatan, Lokasi, dan Deskripsi Kegiatan, sedangkan isian peserta bersifat opsional).*
+- **Realisasi Tanggal Mulai & Selesai**: Masukkan tanggal aktual kegiatan berlangsung di lapangan.
+- **Realisasi Jumlah Peserta**: Masukkan jumlah peserta yang hadir nyata berdasarkan lembar presensi.
+- **Profil Peserta**: Jelaskan latar belakang peserta (contoh: *25 orang nelayan kepiting dan 5 pemuda karang taruna*).
+- **Rangkaian Acara**: Uraikan alur jalannya kegiatan dari awal pembukaan hingga selesai.
+- **Hasil yang Dicapai & Output Nyata**: Uraikan capaian utama kegiatan dan output fisik/terukur (contoh: *500 bibit mangrove tertanam rapi*).
+- **Dampak Awal**: Efek positif awal yang langsung dirasakan oleh warga masyarakat atau lingkungan sekitar.
 - Klik **Selanjutnya**.
 
-#### 🔹 Langkah 2: Hasil & Evaluasi
-- **Hasil yang Dicapai & Output Nyata**: Uraikan capaian utama dan wujud fisik yang dihasilkan (contoh: *500 bibit mangrove tertanam rapi di bibir pantai*).
-- **Dampak Awal**: Efek positif awal yang langsung dirasakan oleh warga sekitar.
-- **Kendala Lapangan & Solusi**: Ceritakan kendala nyata di lapangan (misal: *ombak pasang tinggi*) dan solusi kreatif yang Anda lakukan saat itu.
-- **Catatan Evaluasi / Rekomendasi**: Masukan atau saran untuk kegiatan serupa di masa depan.
+#### 🔹 Langkah 2: Kendala & Evaluasi
+- **Kendala yang Dihadapi**: Ceritakan kendala nyata di lapangan (misal: *cuaca hujan lebat atau air pasang*).
+- **Solusi yang Dilakukan**: Langkah penyelesaian yang Anda ambil saat itu untuk mengatasi kendala.
+- **Catatan Evaluasi / Rekomendasi**: Saran atau masukan perbaikan untuk pelaksanaan kegiatan berikutnya.
 - Klik **Selanjutnya**.
 
 #### 🔹 Langkah 3: Mengunggah Berkas Bukti Lapangan
-Unggah bukti otentik kegiatan:
-- 📷 **Foto Kegiatan (Wajib)**: Foto suasana acara, narasumber, dan peserta. Sistem otomatis meringankan ukuran foto kamera smartphone dan mendukung format foto iPhone (.heic/.heif).
-- 📋 **Daftar Hadir (Wajib pada Laporan Reguler)**: Scan atau foto lembar presensi yang telah ditandatangani peserta. Jika kegiatan tidak menggunakan tanda tangan presensi, Anda dapat melampirkan foto bersama peserta.
-- 📝 **Notulen (Opsional)**: Catatan ringkasan rapat atau catatan proses jalannya kegiatan.
-- 📚 **Materi**: Bahan slide presentasi, modul, atau selebaran materi yang dibagikan.
-- 📜 **Berita Acara**: Lembar berita acara serah terima atau penyelesaian pekerjaan.
+Unggah bukti administratif resmi:
+- 📷 **Foto Kegiatan (Wajib)**: Foto dokumentasi acara, peserta, dan narasumber. Sistem otomatis mengompres foto dan mendukung foto kamera iPhone (.heic/.heif).
+- 📋 **Daftar Hadir (Wajib)**: Foto atau scan lembar tanda tangan presensi kehadiran peserta. Jika kegiatan tidak memiliki lembar presensi, lampirkan foto bersama seluruh peserta.
+- 📝 **Notulen (Opsional)**: Catatan hasil rapat atau diskusi selama kegiatan.
+- 📚 **Materi (Wajib)**: Modul, slide presentasi, atau bahan sosialisasi yang dibagikan.
+- 📜 **Berita Acara (Wajib)**: Lembar berita acara serah terima atau penyelesaian kegiatan.
 
 ---
 
-### 6.3 Mengirim Laporan & Efek Otomatisnya
-- Anda dapat mengklik **Simpan Draft** jika berkas foto/presensi belum lengkap dikumpulkan.
-- Jika sudah lengkap, klik tombol **Ajukan Laporan**.
-- **Otomatisasi Sistem**: Begitu laporan Anda diverifikasi dan diterima (**Final**) oleh Admin, status Rencana Kegiatan terkait otomatis berubah menjadi **Selesai** dan masuk ke arsip *History Realisasi*.
-
-### 6.4 Mencetak Laporan Kegiatan (Tampilan Print)
-Untuk kebutuhan fisik atau berkas pertanggungjawaban:
-1. Buka detail laporan kegiatan Anda.
-2. Klik tombol hijau bertuliskan **Cetak Laporan** (ikon printer).
-3. Halaman ramah cetak resmi lengkap dengan kop surat Yayasan WeBe, ringkasan capaian, dan lampiran dokumentasi foto siap langsung dicetak atau disimpan ke file PDF.
+### 6.3 Pengajuan & Cetak Laporan Reguler
+- Klik **Simpan Draft** jika berkas foto atau presensi belum lengkap terkumpul.
+- Klik **Ajukan Laporan** jika semua bukti sudah terunggah lengkap.
+- **Otomatisasi Sistem**: Begitu laporan disahkan menjadi **Final** oleh Admin, status Rencana Kegiatan otomatis berubah menjadi **Selesai**.
+- **Cetak Laporan**: Pada halaman detail laporan, klik tombol hijau **Cetak Laporan** untuk mencetak laporan resmi dengan kop surat Yayasan WeBe.
 
 > 📸 **[TEMPATKAN SCREENSHOT 9 DI SINI]**
-> - **Halaman yang dibuka:** Formulir Laporan Kegiatan (Langkah 3: Lampiran Bukti).
+> - **Halaman yang dibuka:** Formulir Laporan Kegiatan Reguler (Langkah 3: Lampiran Bukti).
 > - **Bagian yang di-screenshot:** Area unggah foto kegiatan, daftar hadir, notulen, materi, dan berita acara beserta tombol "Ajukan Laporan".
-> - **Keterangan gambar:** *Formulir Laporan Kegiatan - Langkah 3: Unggah Bukti Dokumen Lapangan*
+> - **Keterangan gambar:** *Formulir Laporan Kegiatan Reguler - Langkah 3: Unggah Bukti Lapangan*
 
 ---
 
-## 💡 7. Tips Praktis untuk Rekan-Rekan Lapangan
+## ⚡ 7. KHUSUS: Membuat Laporan Langsung (Insidental / Tanggap Darurat)
+
+Aplikasi **Rekam WeBe** menyediakan fitur khusus bernama **Laporan Langsung**. Fitur ini dirancang khusus untuk memfasilitasi kerja-kerja lapangan yang dinamis dan mendadak tanpa melalui proses pengajuan rencana kegiatan di awal.
+
+### 7.1 Kapan Harus Menggunakan Laporan Langsung?
+Gunakan fitur **Laporan Langsung** apabila:
+1. Terjadi **Kegiatan Tanggap Darurat** (misalnya: evakuasi satwa terdampar, respons bencana alam pesisir, atau penanganan pencemaran laut mendadak).
+2. Terjadi **Aksi Lapangan Insidental / Spontan** bersama warga atau mitra tanpa sempat menyusun proposal rencana kegiatan terlebih dahulu.
+3. Terjadi **Kegiatan Koordinasi Khusus / Pertemuan Cepat** di luar agenda rutin yayasan.
+
+---
+
+### 7.2 Cara Mengakses Form Laporan Langsung
+1. Buka menu **Laporan Kegiatan** pada bilah menu sebelah kiri.
+2. Di pojok kanan atas kartu *"Data Laporan Kegiatan"*, klik tombol berwarna navy bertuliskan **+ Buat Laporan Langsung**.
+3. Sistem akan membuka formulir khusus Laporan Langsung yang telah disederhanakan sesuai kebutuhan lapangan.
+
+> 📸 **[TEMPATKAN SCREENSHOT 10 DI SINI]**
+> - **Halaman yang dibuka:** Menu Laporan Kegiatan.
+> - **Bagian yang di-screenshot:** Tombol berwarna navy bertuliskan "Buat Laporan Langsung" di pojok kanan atas kartu Data Laporan Kegiatan.
+> - **Keterangan gambar:** *Tombol Akses Fitur Buat Laporan Langsung*
+
+---
+
+### 7.3 Mengisi Formulir Laporan Langsung (3 Langkah Praktis)
+
+Formulir Laporan Langsung dirancang sangat fleksibel dan tidak kaku:
+
+#### 🔹 Langkah 1: Pelaksanaan Kegiatan
+- **Nama Kegiatan (Wajib)**: Tuliskan nama kegiatan tanggap darurat / insidental yang dilaksanakan (contoh: *Aksi Tanggap Darurat Evakuasi Penyu Terdampar Pantai Paloh*).
+- **Lokasi Kegiatan (Wajib)**: Tuliskan nama desa, pantai, atau lokasi spesifik tempat kegiatan berlangsung.
+- **Tanggal Mulai & Selesai (Wajib)**: Tanggal pelaksanaan kegiatan di lapangan.
+- **Jumlah Peserta (Opsional)**: Masukkan jumlah orang yang terlibat jika ada (boleh dikosongkan jika kegiatan mandiri/tim kecil).
+- **Deskripsi Kegiatan (Wajib)**: Uraikan gambaran umum, latar belakang situasi darurat/insidental, serta konteks kegiatan menggunakan editor teks.
+- **Rangkaian Kegiatan / Alur Acara (Wajib)**: Uraikan kronologi tindakan yang dilakukan dari awal hingga akhir.
+- **Profil Peserta (Opsional)**: Uraikan latar belakang tim/warga yang terlibat (jika ada).
+- Klik **Selanjutnya**.
+
+#### 🔹 Langkah 2: Hasil & Evaluasi
+- **Hasil yang Dicapai (Wajib)**: Uraikan hasil nyata dari aksi penanganan/kegiatan yang dilakukan (contoh: *Penyu berhasil diselamatkan dan dilepasliarkan kembali ke laut lepas*).
+- **Output Nyata (Opsional)**: Bentuk fisik atau data terukur yang dihasilkan.
+- **Dampak Awal (Opsional)**: Dampak langsung yang dirasakan lingkungan/warga.
+- **Kendala & Solusi (Opsional)**: Hambatan yang ditemui saat penanganan dan cara mengatasinya.
+- **Evaluasi / Rekomendasi (Wajib)**: Catatan masukan untuk langkah antisipasi ke depan.
+- Klik **Selanjutnya**.
+
+#### 🔹 Langkah 3: Lampiran Bukti Lapangan
+- 📷 **Foto Kegiatan (Wajib)**: Unggah foto dokumentasi bukti aksi lapangan. Mendukung multi-upload, otomatis dikompres, dan mendukung format kamera iPhone (.heic/.heif).
+- 📋 **Daftar Hadir**: Bersifat opsional (tidak diwajibkan karena pada kegiatan tanggap darurat biasanya tidak sempat mengedarkan lembar tanda tangan).
+- 📝 **Notulen**: Bersifat opsional.
+- 📚 **Materi & Berita Acara**: Bersifat opsional.
+- *Keunggulan Khusus:* Jika kolom peserta dan lampiran daftar hadir dikosongkan, pada tampilan detail dan lembar cetak dokumen, bagian tersebut otomatis disembunyikan secara rapi tanpa meninggalkan kolom kosong yang janggal.
+
+---
+
+### 7.4 Mengirim & Menyimpan Laporan Langsung
+- 💾 **Simpan Draft**: Anda dapat menyimpan progres laporan langsung kapan saja jika masih mengumpulkan foto.
+- 🚀 **Ajukan Laporan**: Begitu diklik, laporan langsung terkirim ke Admin untuk diperiksa dan disahkan statusnya menjadi **Final**.
+
+### 7.5 Mencetak Laporan Langsung
+Laporan langsung yang telah disetujui dapat dicetak kapan saja melalui tombol **Cetak Laporan** dengan judul resmi *"Laporan Kegiatan Langsung / Tanggap Darurat"* berkop Yayasan WeBe.
+
+> 📸 **[TEMPATKAN SCREENSHOT 11 DI SINI]**
+> - **Halaman yang dibuka:** Formulir Laporan Langsung (Langkah 1: Pelaksanaan Kegiatan).
+> - **Bagian yang di-screenshot:** Tampilan form Laporan Langsung yang menampilkan isian nama kegiatan, lokasi, tanggal, deskripsi kegiatan, dan rangkaian acara.
+> - **Keterangan gambar:** *Formulir Laporan Langsung - Langkah 1: Pelaksanaan Kegiatan*
+
+---
+
+## 💡 8. Tips Praktis untuk Rekan-Rekan Lapangan
 1. **Foto & Presensi Adalah Kunci**: Pastikan Anda mengambil foto lembar daftar hadir bertanda tangan dengan pencahayaan yang jelas saat acara selesai di lapangan.
-2. **Jangan Ragu Menyimpan Draft**: Jika Anda sedang di jalan atau lelah setelah kegiatan, simpan formulir sebagai *Draft*. Melanjutkan draf jauh lebih cepat daripada mengetik ulang dari awal.
-3. **Pencarian Nama Desa di Peta**: Saat menentukan lokasi kegiatan di Langkah 2 rencana, gunakan kotak pencarian peta dengan mengetikkan nama desa atau kecamatan untuk mempercepat pencarian titik.
-4. **Periksa Lonceng Notifikasi**: Selalu cek ikon lonceng di pojok kanan atas untuk mengetahui kabar terbaru apakah rencana Anda telah disetujui Admin atau memerlukan sedikit revisi.
+2. **Gunakan Laporan Langsung untuk Aksi Cepat**: Jangan biarkan kegiatan insidental di lapangan tidak tercatat hanya karena tidak ada proposal di awal. Manfaatkan tombol *Buat Laporan Langsung* agar seluruh kerja keras Anda tetap terekam resmi oleh yayasan.
+3. **Jangan Ragu Menyimpan Draft**: Jika Anda sedang di jalan atau lelah setelah kegiatan, simpan formulir sebagai *Draft*. Melanjutkan draf jauh lebih cepat daripada mengetik ulang dari awal.
+4. **Pencarian Nama Desa di Peta**: Saat menentukan lokasi kegiatan di Langkah 2 rencana, gunakan kotak pencarian peta dengan mengetikkan nama desa atau kecamatan untuk mempercepat pencarian titik.
+5. **Periksa Lonceng Notifikasi**: Selalu cek ikon lonceng di pojok kanan atas untuk mengetahui kabar terbaru apakah rencana atau laporan Anda telah disetujui Admin atau memerlukan sedikit revisi.
 
 ---
 *Buku Panduan Penggunaan Rekam WeBe (Anggota) - Yayasan WeBe*

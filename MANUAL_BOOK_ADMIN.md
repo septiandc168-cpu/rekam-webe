@@ -9,8 +9,9 @@ Selamat datang! Buku panduan ini disusun khusus untuk memandu **Admin / Pengurus
 Tugas dan kewenangan utama Admin di aplikasi ini meliputi:
 1. **Mengelola Akun Pengguna**: Mendaftarkan anggota baru, mengubah data, dan mereset kata sandi jika anggota lupa.
 2. **Review & Approval Rencana Kegiatan**: Memeriksa usulan program dari anggota, memberikan persetujuan, meminta revisi, atau menolak usulan. Admin juga dapat mengembalikan rencana yang telah disetujui ke status revisi jika terjadi perubahan jadwal/anggaran di lapangan.
-3. **Validasi & Finalisasi Laporan Kegiatan**: Memeriksa realisasi pelaksanaan lapangan beserta bukti dokumen pendukung (Laporan dari Rencana maupun Laporan Langsung/Insidental), lalu mengesahkannya menjadi status **Final**.
-4. **Monitoring & Arsip Data**: Memantau kalender kegiatan terpadu, grafik kegiatan bulanan, peta lokasi sebaran kegiatan, serta mengunduh rekapitulasi data lengkap ke dalam format **Excel / CSV**.
+3. **Validasi Laporan Kegiatan Reguler**: Memeriksa realisasi pelaksanaan lapangan beserta bukti dokumen pendukung yang terhubung dengan usulan rencana, lalu mengesahkannya menjadi status **Final**.
+4. **Validasi Laporan Langsung (Insidental / Tanggap Darurat)**: Memeriksa laporan mandiri atas kegiatan mendadak lapangan tanpa rencana awal, memastikan bukti foto otentik, lalu mengesahkannya ke arsip resmi.
+5. **Monitoring & Arsip Data**: Memantau kalender kegiatan terpadu, grafik kegiatan bulanan, peta lokasi sebaran kegiatan, serta mengunduh rekapitulasi data lengkap ke dalam format **Excel / CSV**.
 
 ---
 
@@ -91,7 +92,7 @@ Halaman **Dashboard** menyajikan ringkasan operasional yayasan secara terpadu da
 - **Kartu Statistik (Bagian Atas)**:
   - **Rencana Diajukan**: Usulan baru dari anggota yang menunggu pemeriksaan Admin.
   - **Rencana Disetujui**: Kegiatan yang telah disahkan dan siap dieksekusi.
-  - **Laporan Aktif**: Laporan hasil kegiatan yang menunggu verifikasi atau sedang direvisi.
+  - **Laporan Aktif**: Laporan hasil kegiatan (reguler maupun langsung) yang menunggu verifikasi atau sedang direvisi.
   - **Total Anggota Aktif**: Jumlah pengguna dengan hak akses anggota.
 - **Grafik Kegiatan Bulanan**: Menampilkan perbandingan tren kegiatan yang disetujui dan kegiatan yang telah selesai terlaksana sepanjang tahun.
 - **Kalender Agenda Yayasan**: Kalender interaktif yang memuat seluruh jadwal kegiatan yang telah disetujui. Memudahkan pengurus memantau agar tidak terjadi jadwal acara yang bertabrakan.
@@ -153,96 +154,130 @@ Jika suatu rencana kegiatan **sudah berstatus Disetujui**, namun di kemudian har
 
 ---
 
-## 📝 6. Memeriksa & Mengesahkan Laporan Kegiatan (Menu: Laporan Kegiatan)
+## 📝 6. Memeriksa & Mengesahkan Laporan Kegiatan Reguler (Menu: Laporan Kegiatan)
 
-Setelah kegiatan terlaksana di lapangan, anggota akan mengunggah laporan hasil kegiatan beserta seluruh bukti administratif digital.
+Laporan Kegiatan Reguler adalah laporan hasil kegiatan yang terhubung langsung dengan usulan rencana kegiatan yang telah disetujui sebelumnya.
 
-### 6.1 Memahami 2 Jenis Laporan yang Masuk
-Admin akan menerima dua jenis laporan kegiatan pada menu **Laporan Kegiatan**:
-1. **Laporan dari Rencana yang Disetujui (Reguler)**: Laporan yang terhubung langsung dengan usulan rencana sebelumnya. Memuat target rencana vs realisasi lapangan.
-2. **Laporan Langsung (Insidental / Tanggap Darurat)**: Laporan kegiatan mendadak yang tidak sempat direncanakan sebelumnya. Pada jenis ini, rincian pelaksanaan dan hasil dirangkum langsung secara mandiri.
-
----
-
-### 6.2 Memeriksa Bukti Dokumen Lapangan
-Buka detail laporan yang berstatus **Diajukan**. Periksa kelengkapan poin-poin berikut:
-- **Pelaksanaan Riil**: Tanggal mulai/selesai sebenarnya dan jumlah peserta yang hadir.
+### 6.1 Memeriksa Bukti Dokumen Lapangan Reguler
+Buka detail laporan reguler yang berstatus **Diajukan**. Periksa kelengkapan poin-poin berikut:
+- **Pelaksanaan Riil**: Tanggal mulai/selesai sebenarnya dan jumlah peserta yang hadir nyata.
 - **Hasil & Evaluasi**: Hasil nyata yang dicapai, output fisik, dampak awal, serta kendala lapangan beserta solusinya.
 - **Bukti Digital Otentik**:
-  - 📷 **Foto Kegiatan**: Dokumentasi foto suasana kegiatan (sistem telah mengompres ukuran gambar secara cerdas dan mendukung foto kamera iPhone / HEIC).
-  - 📋 **Daftar Hadir**: Lembar presensi bertanda tangan peserta (wajib pada laporan reguler).
-  - 📝 **Notulen**: Catatan rapat atau notulensi proses jalannya kegiatan.
-  - 📚 **Materi**: Berkas modul atau paparan presentasi yang disampaikan.
-  - 📜 **Berita Acara**: Lembar berita acara serah terima atau penyelesaian pekerjaan.
+  - 📷 **Foto Kegiatan (Wajib)**: Dokumentasi foto suasana kegiatan (sistem telah mengompres ukuran gambar secara cerdas dan mendukung foto kamera iPhone / HEIC).
+  - 📋 **Daftar Hadir (Wajib)**: Lembar presensi bertanda tangan peserta asli.
+  - 📝 **Notulen (Opsional)**: Catatan rapat atau notulensi proses jalannya kegiatan.
+  - 📚 **Materi (Wajib)**: Berkas modul atau paparan presentasi yang disampaikan.
+  - 📜 **Berita Acara (Wajib)**: Lembar berita acara serah terima atau penyelesaian pekerjaan.
 
 ---
 
-### 6.3 Mengesahkan Laporan (Finalisasi)
+### 6.2 Mengesahkan Laporan Reguler (Finalisasi)
 - **Jika Laporan Sudah Lengkap dan Benar (Terima Laporan)**:
   - Klik tombol hijau **Terima Laporan**.
   - Status laporan resmi menjadi **Final**.
   - **Otomatisasi Sistem**: Sistem secara otomatis akan memperbarui status Rencana Kegiatan terkait menjadi **Selesai**. Data otomatis diarsipkan permanen ke menu *History Realisasi*.
 - **Jika Bukti Belum Lengkap (Minta Revisi Laporan)**:
   - Klik tombol kuning **Minta Revisi Laporan**.
-  - Tuliskan catatan perbaikan (contoh: *"Lembar presensi halaman kedua blur, mohon unggah foto presensi yang lebih jelas"*).
+  - Tuliskan catatan perbaikan (contoh: *"Lembar presensi halaman kedua buram, mohon unggah foto presensi yang lebih jelas"*).
   - Status laporan berubah menjadi **Revisi** agar diperbaiki oleh anggota pembuat laporan.
 
-### 6.4 Fitur Pembaruan: Meminta Revisi pada Laporan yang Telah Diterima (Final)
-Jika suatu laporan telah disetujui namun ditemukan kekeliruan administratif belakangan (misalnya nota tambahan atau revisi berita acara):
+### 6.3 Meminta Revisi pada Laporan yang Telah Diterima (Final)
+Jika suatu laporan telah disetujui namun ditemukan kekeliruan administratif belakangan:
 - Admin dapat membuka laporan terkait dan menekan tombol **Minta Revisi Laporan**.
 - Laporan akan kembali dibuka akses editnya untuk anggota, dan status rencana terkait akan dikembalikan dari Selesai untuk sementara hingga laporan difinalisasi ulang.
 
 > 📸 **[TEMPATKAN SCREENSHOT 8 DI SINI]**
-> - **Halaman yang dibuka:** Halaman detail laporan kegiatan (`/laporan_kegiatan/{id}`).
+> - **Halaman yang dibuka:** Halaman detail laporan kegiatan reguler (`/laporan_kegiatan/{id}`).
 > - **Bagian yang di-screenshot:** Area lampiran bukti (foto, daftar hadir, notulen) dan tombol "Terima Laporan" serta "Minta Revisi".
-> - **Keterangan gambar:** *Pemeriksaan Bukti Laporan Kegiatan dan Tombol Finalisasi Admin*
+> - **Keterangan gambar:** *Pemeriksaan Bukti Laporan Kegiatan Reguler dan Tombol Finalisasi Admin*
 
 ---
 
-## 📜 7. Riwayat Realisasi & Ekspor Laporan (Menu: History Realisasi)
+## ⚡ 7. KHUSUS: Memeriksa & Mengesahkan Laporan Langsung (Insidental / Darurat)
 
-Menu **History Realisasi** merupakan pusat bank data arsip seluruh kegiatan yayasan yang telah selesai dan memiliki laporan resmi.
+Aplikasi **Rekam WeBe** memiliki fitur **Laporan Langsung** untuk menampung kegiatan lapangan yang bersifat mendadak, tanggap darurat, atau insidental tanpa melalui pengajuan rencana kegiatan di awal.
 
-### 7.1 Filter Data Canggih
+### 7.1 Mengenali Laporan Langsung yang Masuk
+Pada menu **Laporan Kegiatan** maupun halaman detailnya, Admin dapat langsung mengenali Laporan Langsung melalui tanda-tanda berikut:
+- **Lencana Khusus**: Terdapat keterangan/badge bertuliskan *"Laporan Langsung / Tanggap Darurat"*.
+- **Tidak Terikat Rencana**: Dokumen ini tidak memiliki tautan konteks rencana kegiatan sebelumnya karena kegiatan langsung dieksekusi di lapangan.
+
+---
+
+### 7.2 Poin-Poin Utama yang Diperiksa oleh Admin
+Saat memeriksa Laporan Langsung yang diajukan oleh anggota, Admin perlu memfokuskan evaluasi pada:
+1. **Nama Kegiatan & Lokasi**: Memastikan nama kegiatan dan lokasi spesifik (desa/pantai/kawasan) telah diuraikan dengan jelas.
+2. **Deskripsi Kegiatan**: Membaca latar belakang situasi darurat atau konteks insidental mengapa kegiatan tersebut harus langsung dijalankan di lapangan.
+3. **Rangkaian Kegiatan & Capaian**: Meninjau kronologi aksi yang dilakukan serta hasil nyata yang dicapai dari penanganan tersebut.
+4. **Foto Bukti Lapangan (Krusial)**: Karena Laporan Langsung bersifat insidental, **Foto Dokumentasi Lapangan adalah bukti utama**. Pastikan foto yang diunggah valid dan menggambarkan aksi lapangan secara otentik.
+5. **Fleksibilitas Lampiran Dokumen**: Pada Laporan Langsung, lampiran daftar hadir, materi, dan berita acara bersifat **opsional**. Jika anggota tidak melampirkan lembar daftar hadir (misal pada aksi penyelamatan penyu atau pembersihan sampah darurat), hal tersebut sah menurut sistem dan kolom kosong otomatis disembunyikan.
+
+---
+
+### 7.3 Mengambil Tindakan pada Laporan Langsung
+1. **Terima Laporan (Final)**:
+   - Klik tombol hijau **Terima Laporan**.
+   - Status Laporan Langsung seketika menjadi **Final**.
+   - Laporan langsung otomatis masuk ke bank data arsip resmi di menu **History Realisasi**.
+2. **Minta Revisi Laporan**:
+   - Klik tombol kuning **Minta Revisi Laporan** jika uraian hasil penanganan atau foto bukti masih kurang jelas.
+   - Masukkan catatan evaluasi, lalu kirim ke anggota untuk diperbaiki.
+
+### 7.4 Tampilan Cetak Resmi Laporan Langsung
+Laporan Langsung yang telah disetujui memiliki format cetak resmi (*print view*) yang secara otomatis menampilkan kop Yayasan WeBe bertajuk *"Laporan Kegiatan Langsung / Tanggap Darurat"*. Bagian peserta yang kosong tidak akan menampilkan baris kosong yang merusak tata letak dokumen.
+
+> 📸 **[TEMPATKAN SCREENSHOT 9 DI SINI]**
+> - **Halaman yang dibuka:** Halaman detail Laporan Langsung (`/laporan_kegiatan/{id}`).
+> - **Bagian yang di-screenshot:** Header dokumen yang memuat label Laporan Langsung/Darurat, deskripsi kegiatan insidental, foto dokumentasi, dan panel tombol aksi "Terima Laporan".
+> - **Keterangan gambar:** *Pemeriksaan Detail Laporan Langsung oleh Admin*
+
+---
+
+## 📜 8. Riwayat Realisasi & Ekspor Laporan (Menu: History Realisasi)
+
+Menu **History Realisasi** merupakan pusat bank data arsip seluruh kegiatan yayasan yang telah selesai dan memiliki laporan resmi (baik Laporan Reguler maupun Laporan Langsung).
+
+### 8.1 Filter Data Canggih
 Anda dapat memfilter arsip kegiatan berdasarkan kebutuhan pelaporan:
 - **Bulan** dan **Tahun** pelaksanaan.
 - **Status Laporan** (menampilkan laporan berstatus Final, Diajukan, atau Revisi).
 - **Kolom Penanggung Jawab (PJ)**: Menampilkan nama koordinator lapangan untuk setiap kegiatan secara jelas.
 - **Kotak Pencarian Cepat (DataTable Search)**: Cukup ketikkan kata kunci nama desa, jenis kegiatan, atau kata tertentu untuk menemukan data dalam hitungan detik.
 
-### 7.2 Mengunduh Rekapitulasi ke Excel / CSV
+### 8.2 Mengunduh Rekapitulasi ke Excel / CSV
 1. Atur saringan data sesuai kebutuhan Anda (misal: Tahun 2026), atau biarkan tanpa filter jika ingin mengunduh seluruh data riwayat yayasan.
 2. Klik tombol hijau bertuliskan **Export CSV / Excel** di pojok kanan atas tabel.
 3. Berkas spreadsheet (.xlsx/.csv) akan terunduh otomatis ke komputer Anda, rapi dan siap diolah untuk rapat evaluasi bulanan maupun laporan donatur.
 
-> 📸 **[TEMPATKAN SCREENSHOT 9 DI SINI]**
+> 📸 **[TEMPATKAN SCREENSHOT 10 DI SINI]**
 > - **Halaman yang dibuka:** Menu History Realisasi.
 > - **Bagian yang di-screenshot:** Bilah filter (Bulan, Tahun, Status Laporan), tabel riwayat kegiatan dengan kolom Penanggung Jawab, dan tombol "Export CSV / Excel".
 > - **Keterangan gambar:** *Halaman History Realisasi dan Fitur Export Data*
 
 ---
 
-## 🔔 8. Notifikasi Lonceng & Alur Komunikasi Sistem
+## 🔔 9. Notifikasi Lonceng & Alur Komunikasi Sistem
 
 - Pada bilah navigasi kanan atas, terdapat ikon **Lonceng Notifikasi**.
 - Angka merah pada lonceng menunjukkan adanya:
   - Usulan Rencana Kegiatan baru dari anggota.
   - Usulan perbaikan Rencana yang telah diperbarui oleh anggota.
-  - Pengajuan Laporan Kegiatan baru atau perbaikan laporan yang telah diajukan ulang.
+  - Pengajuan Laporan Kegiatan baru (Reguler maupun Laporan Langsung) atau perbaikan laporan yang diajukan ulang.
 - Klik pada item notifikasi untuk langsung menuju ke halaman dokumen yang memerlukan perhatian Anda tanpa perlu mencarinya secara manual.
 
-> 📸 **[TEMPATKAN SCREENSHOT 10 DI SINI]**
+> 📸 **[TEMPATKAN SCREENSHOT 11 DI SINI]**
 > - **Halaman yang dibuka:** Navbar pojok kanan atas (dropdown lonceng).
 > - **Bagian yang di-screenshot:** Panel dropdown notifikasi yang menampilkan daftar pemberitahuan pengajuan kegiatan baru.
 > - **Keterangan gambar:** *Menu Lonceng Notifikasi Sistem Rekam WeBe*
 
 ---
 
-## 💡 9. Tips & Praktik Terbaik bagi Admin
+## 💡 10. Tips & Praktik Terbaik bagi Admin
 1. **Sertakan Catatan Spesifik Saat Revisi**: Saat menekan tombol *Minta Revisi*, tuliskan instruksi yang gamblang agar anggota di lapangan langsung mengerti apa yang harus diperbaiki tanpa perlu bolak-balik bertanya di grup WhatsApp.
-2. **Periksa Kejelasan Presensi & Foto**: Sebelum mengesahkan laporan menjadi Final, pastikan lembar presensi bertanda tangan dan foto kegiatan terlihat jelas karena berkas ini yang akan terlampir resmi saat laporan dicetak.
-3. **Manfaatkan Kalender Dashboard**: Sebelum menyetujui tanggal rencana kegiatan baru, tengok sekilas kalender di dashboard untuk memastikan tim lapangan memiliki jeda waktu yang cukup antar kegiatan.
-4. **Cetak PDF Mandiri**: Admin dapat mencetak versi fisik atau menyimpan PDF dari setiap rencana kegiatan (tombol *Unduh PDF*) maupun laporan kegiatan (tombol *Cetak Laporan*) dengan kop surat resmi Yayasan WeBe.
+2. **Fleksibilitas Menilai Laporan Langsung**: Pahami bahwa Laporan Langsung biasanya lahir dari situasi darurat lapangan. Fokus utama penilaian ada pada kejelasan deskripsi tindakan dan foto otentik, bukan pada kelengkapan lembar presensi atau modul materi.
+3. **Periksa Kejelasan Presensi & Foto**: Sebelum mengesahkan laporan menjadi Final, pastikan lembar presensi bertanda tangan dan foto kegiatan terlihat jelas karena berkas ini yang akan terlampir resmi saat laporan dicetak.
+4. **Manfaatkan Kalender Dashboard**: Sebelum menyetujui tanggal rencana kegiatan baru, tengok sekilas kalender di dashboard untuk memastikan tim lapangan memiliki jeda waktu yang cukup antar kegiatan.
+5. **Cetak PDF Mandiri**: Admin dapat mencetak versi fisik atau menyimpan PDF dari setiap rencana kegiatan (tombol *Unduh PDF*) maupun laporan kegiatan (tombol *Cetak Laporan*) dengan kop surat resmi Yayasan WeBe.
 
 ---
 *Buku Panduan Penggunaan Rekam WeBe (Admin) - Yayasan WeBe*
