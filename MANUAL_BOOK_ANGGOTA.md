@@ -4,240 +4,249 @@
 ---
 
 ## 📌 1. Tentang Panduan Ini
-Buku panduan ini dibuat sebagai petunjuk praktis bagi **Anggota / Staf Lapangan** dalam menggunakan aplikasi **Rekam WeBe**. Kalimat di dalam panduan ini disusun dengan bahasa sehari-hari yang sederhana dan mudah diikuti langkah demi langkah.
+Buku panduan ini dibuat sebagai petunjuk praktis bagi seluruh **Anggota / Staf Lapangan / Penanggung Jawab Kegiatan** dalam menggunakan aplikasi **Rekam WeBe** versi terbaru. Panduan ini menggunakan bahasa sehari-hari yang sederhana, jelas, dan mudah diikuti langkah demi langkah.
 
-Alur kerja utama Anda di aplikasi ini sangat mudah:
+Alur kerja utama Anda di aplikasi ini sangat mudah dan teratur:
 ```
-1. Buat Rencana Kegiatan ➔ 2. Tunggu Disetujui Admin ➔ 3. Laksanakan di Lapangan ➔ 4. Buat Laporan Kegiatan
+1. Buat Rencana Kegiatan ➔ 2. Tunggu Disetujui Admin ➔ 3. Laksanakan di Lapangan ➔ 4. Buat Laporan Kegiatan ➔ 5. Laporan Final & Arsip Selesai
 ```
 
 ---
 
-## 🔑 2. Masuk ke Aplikasi (Login) & Mengganti Kata Sandi
+## 🔑 2. Masuk ke Aplikasi (Login) & Penggantian Kata Sandi
 
 ### 2.1 Masuk Pertama Kali (Login Awal)
-Akun Anda didaftarkan oleh Admin. Untuk pertama kali masuk:
-1. Buka peramban (*browser*) di laptop atau HP Anda (misal: Google Chrome).
-2. Masukkan alamat website **Rekam WeBe**.
-3. Ketikkan **Email** Anda yang sudah didaftarkan oleh Admin.
+Akun Anda didaftarkan oleh Admin yayasan. Untuk masuk pertama kali:
+1. Buka peramban (*browser*) di laptop atau HP Anda (disarankan Google Chrome).
+2. Buka alamat website **Rekam WeBe**.
+3. Masukkan **Email** Anda yang telah didaftarkan.
 4. Masukkan kata sandi awal: `12345678`.
 5. Klik tombol **Login**.
 
 > 📸 **[TEMPATKAN SCREENSHOT 1 DI SINI]**
-> - **Halaman yang dibuka:** Halaman Login utama.
+> - **Halaman yang dibuka:** Halaman utama Login.
 > - **Bagian yang di-screenshot:** Layar form login dengan kolom Email terisi dan kolom Password terisi kata sandi awal (`12345678`).
 > - **Keterangan gambar:** *Halaman Login Pertama Kali bagi Anggota*
 
 ---
 
-### 2.2 Wajib Mengganti Kata Sandi Akun
-Demi keamanan akun pribadi Anda, segera ganti kata sandi awal setelah berhasil masuk pertama kali:
-1. Klik **nama Anda** pada pojok kanan atas layar.
+### 2.2 Wajib Mengganti Kata Sandi Pribadi
+Demi keamanan akun Anda, segera ganti kata sandi awal setelah pertama kali berhasil masuk:
+1. Klik **nama Anda** pada pojok kanan atas layar (*navbar*).
 2. Pilih menu **Ganti Password**.
-3. Pada jendela yang muncul:
-   - Ketik `12345678` di kolom **Password Saat Ini**.
-   - Buat kata sandi baru milik Anda sendiri di kolom **Password Baru** (minimal 8 karakter).
-   - Ketik ulang kata sandi baru tersebut di kolom **Konfirmasi Password Baru**.
+3. Pada jendela kecil yang muncul:
+   - **Password Saat Ini**: Ketikkan kata sandi lama (`12345678`).
+   - **Password Baru**: Buat kata sandi pribadi baru Anda (minimal 8 karakter).
+   - **Konfirmasi Password Baru**: Ketik ulang kata sandi baru tersebut.
 4. Klik tombol **Simpan**.
 
 > 📸 **[TEMPATKAN SCREENSHOT 2 DI SINI]**
-> - **Halaman yang dibuka:** Pojok kanan atas nama profil ➔ Klik "Ganti Password".
-> - **Bagian yang di-screenshot:** Jendela (*pop-up*) Ganti Password yang menampilkan kolom isian sandi lama dan sandi baru.
-> - **Keterangan gambar:** *Formulir Penggantian Kata Sandi Pribadi*
+> - **Halaman yang dibuka:** Profil pojok kanan atas ➔ Klik "Ganti Password".
+> - **Bagian yang di-screenshot:** Jendela (*pop-up*) formulir Ganti Password.
+> - **Keterangan gambar:** *Formulir Penggantian Kata Sandi Pribadi Anggota*
 
 ---
 
 ## 📊 3. Memahami Halaman Dashboard Anggota
 
-Setelah login, Anda langsung berada di halaman **Dashboard**. Halaman ini menampilkan jadwal dan rangkuman kegiatan milik Anda sendiri:
-- **Kotak Rencana Milik Saya**: Jumlah usulan kegiatan yang pernah Anda buat.
-- **Kotak Rencana Disetujui**: Usulan yang sudah disahkan Admin dan siap Anda kerjakan di lapangan.
-- **Kotak Laporan Proses**: Laporan yang sedang Anda susun atau sedang menunggu pemeriksaan Admin.
-- **Kalender Agenda**: Menampilkan tanggal jadwal kegiatan Anda yang sudah disetujui.
-- **Peta Lokasi Kegiatan**: Menampilkan titik koordinat lokasi tempat kegiatan Anda akan dilaksanakan.
+Setelah masuk, Anda langsung berada di halaman **Dashboard**. Halaman ini memuat ringkasan agenda khusus milik Anda sendiri:
+- **Kartu Statistik Pribadi**:
+  - **Rencana Milik Saya**: Jumlah usulan kegiatan yang pernah Anda buat dan sedang berjalan.
+  - **Rencana Disetujui**: Usulan yang sudah disahkan Admin dan siap Anda laksanakan di lapangan.
+  - **Laporan Dalam Proses**: Laporan yang sedang Anda susun (draf) atau sedang menunggu verifikasi Admin.
+- **Grafik Kegiatan**: Menampilkan statistik capaian kegiatan bulanan Anda.
+- **Kalender Agenda**: Menampilkan jadwal kegiatan Anda yang sudah disetujui agar Anda dapat memantau linimasa kerja lapangan secara teratur.
+- **Peta Lokasi Kegiatan**: Menampilkan sebaran titik lokasi desa tempat kegiatan Anda akan diselenggarakan.
 
 > 📸 **[TEMPATKAN SCREENSHOT 3 DI SINI]**
 > - **Halaman yang dibuka:** Menu Dashboard.
-> - **Bagian yang di-screenshot:** Layar utama Dashboard Anggota yang memperlihatkan kotak ringkasan kegiatan, kalender jadwal, dan peta lokasi kegiatan Anda.
+> - **Bagian yang di-screenshot:** Layar utama Dashboard Anggota yang menampilkan kartu ringkasan kegiatan pribadi, kalender agenda, dan peta lokasi kegiatan.
 > - **Keterangan gambar:** *Tampilan Dashboard Anggota Rekam WeBe*
 
 ---
 
 ## 📅 4. Membuat Rencana Kegiatan Baru (Menu: Rencana Kegiatan)
 
-Sebelum turun ke lapangan, anggota wajib membuat rencana kegiatan terlebih dahulu. Pembuatan rencana menggunakan formulir **3 Langkah Mudah (Wizard)**.
+Sebelum melaksanakan program di lapangan, anggota wajib membuat rencana kegiatan terlebih dahulu. Pengisian rencana menggunakan formulir **3 Langkah Bertahap (Wizard)** yang nyaman dan tidak melelahkan.
 
 ### 4.1 Membuka Formulir Rencana
 1. Klik menu **Rencana Kegiatan** di bilah menu sebelah kiri.
-2. Klik tombol **+ Buat Rencana Kegiatan**.
+2. Klik tombol **+ Tambah Rencana Kegiatan** (atau **+ Buat Rencana Kegiatan**).
 
 ---
 
-### 4.2 Mengisi Langkah 1: Detail Kegiatan
-Pada langkah pertama ini, masukkan gambaran umum kegiatan:
-- **Nama Kegiatan**: Tulis nama kegiatan dengan jelas (misal: *Pelatihan Pembuatan Pupuk Organik Mangrove*).
-- **Estimasi Jumlah Peserta**: Perkiraan berapa orang yang akan hadir.
-- **Penanggung Jawab**: Nama Anda atau anggota tim yang bertanggung jawab.
-- **Kelompok / Komunitas Pelaksana**: Nama komunitas dampingan atau kelompok nelayan/warga.
-- **Jenis Kegiatan**: Pilih salah satu (*Konservasi*, *Usaha Masyarakat*, *Edukasi*, atau *Lainnya*).
-- **Deskripsi Kegiatan**: Jelaskan secara singkat kegiatan apa yang akan dilakukan.
-- **Tujuan Kegiatan**: Tulis sasaran atau manfaat yang ingin dicapai.
-- Jika sudah selesai, klik tombol **Selanjutnya** di bagian bawah.
+### 4.2 Langkah 1: Detail Kegiatan (Informasi Dasar)
+Pada langkah pertama, masukkan gambaran umum kegiatan:
+- **Nama Kegiatan**: Tuliskan nama kegiatan yang jelas dan spesifik (contoh: *Pelatihan Pembuatan Pupuk Organik Mangrove*).
+- **Estimasi Jumlah Peserta**: Perkiraan jumlah warga atau peserta yang akan hadir.
+- **Penanggung Jawab (PJ)**: Nama koordinator lapangan yang bertanggung jawab.
+- **Kelompok / Komunitas Pelaksana**: Nama kelompok tani, nelayan, atau komunitas mitra.
+- **Jenis Kegiatan**: Pilih kategori yang sesuai (*Konservasi*, *Usaha Masyarakat*, *Edukasi*, atau *Lainnya*). Jika memilih *Lainnya*, ketikkan jenis kegiatan pada kolom keterangan yang muncul otomatis.
+- **Deskripsi Kegiatan**: Uraikan gambaran umum kegiatan menggunakan editor teks yang rapi (bisa tebal/bold, miring, atau berpoin).
+- **Tujuan Kegiatan**: Sebutkan tujuan utama yang ingin dicapai dari kegiatan ini.
+- Klik tombol **Selanjutnya** di pojok kanan bawah.
 
 > 📸 **[TEMPATKAN SCREENSHOT 4 DI SINI]**
-> - **Halaman yang dibuka:** Menu Rencana Kegiatan ➔ Klik "+ Buat Rencana Kegiatan" (Langkah 1).
-> - **Bagian yang di-screenshot:** Tampilan form "Langkah 1: Detail Kegiatan" lengkap dengan isian nama kegiatan, penanggung jawab, kelompok, dan deskripsi.
+> - **Halaman yang dibuka:** Formulir Rencana Kegiatan (Langkah 1: Detail Kegiatan).
+> - **Bagian yang di-screenshot:** Tampilan form Langkah 1 dengan isian nama kegiatan, estimasi peserta, penanggung jawab, jenis kegiatan, serta editor deskripsi dan tujuan.
 > - **Keterangan gambar:** *Formulir Rencana Kegiatan - Langkah 1: Detail Informasi Dasar*
 
 ---
 
-### 4.3 Mengisi Langkah 2: Waktu & Lokasi (Peta Interaktif)
-Pada langkah ini, Anda menentukan jadwal dan lokasi di peta:
-1. **Tanggal Mulai & Selesai**: Pilih rentang tanggal kegiatan.
-2. **Waktu Mulai & Selesai**: Tentukan jam mulai dan jam selesai (contoh: 09:00 s/d 15:00).
-3. **Desa / Wilayah**: Tulis nama desa atau kampung tempat acara (misal: *Desa Teluk Bakau*).
-4. **Menandai Lokasi di Peta**:
-   - Geser peta ke lokasi yang dituju.
-   - **Klik langsung pada peta** di titik tempat acara akan berlangsung.
-   - Sebuah pin penanda merah akan otomatis muncul di peta, dan sistem otomatis mengisi angka koordinat (*Latitude & Longitude*).
-5. Klik tombol **Selanjutnya**.
+### 4.3 Langkah 2: Waktu & Lokasi (Peta Interaktif)
+Pada langkah kedua, tentukan jadwal dan lokasi kegiatan:
+1. **Waktu Pelaksanaan**:
+   - **Tanggal Mulai & Selesai**: Pilih tanggal acara. Sistem memiliki validasi pintar di mana tanggal selesai otomatis tidak bisa dipilih lebih awal dari tanggal mulai.
+   - **Waktu Mulai & Selesai**: Tentukan jam pelaksanaan (format 24 jam, misal: 08:30 s/d 15:00).
+2. **Lokasi Kegiatan**:
+   - **Desa / Wilayah**: Ketikkan nama desa atau dusun lokasi acara (misal: *Desa Sebubus*).
+   - **Menentukan Titik Peta (Leaflet Map)**:
+     - Gunakan **Kotak Pencarian Peta** di pojok kiri atas peta untuk mencari nama jalan/desa/wilayah secara cepat.
+     - Atau **klik langsung pada peta** di lokasi yang diinginkan. Sebuah pin merah penanda akan otomatis muncul dan kolom koordinat (*Latitude & Longitude*) akan terisi sendiri tanpa perlu menghafal angka GPS!
+     - Pin merah juga bisa digeser (*drag*) jika Anda ingin menggeser posisinya lebih akurat.
+3. Klik tombol **Selanjutnya**.
 
 > 📸 **[TEMPATKAN SCREENSHOT 5 DI SINI]**
 > - **Halaman yang dibuka:** Formulir Rencana Kegiatan (Langkah 2: Waktu & Lokasi).
-> - **Bagian yang di-screenshot:** Area peta interaktif dengan pin merah penanda lokasi kegiatan yang sudah terpasang dan kolom koordinat terisi otomatis.
-> - **Keterangan gambar:** *Formulir Rencana Kegiatan - Langkah 2: Pemilihan Titik Lokasi pada Peta*
+> - **Bagian yang di-screenshot:** Area peta interaktif dengan pin merah penanda lokasi kegiatan yang sudah terpasang dan kotak pencarian geocoder di atas peta.
+> - **Keterangan gambar:** *Formulir Rencana Kegiatan - Langkah 2: Pemilihan Titik Lokasi pada Peta Interaktif*
 
 ---
 
-### 4.4 Mengisi Langkah 3: Dokumen & Anggaran Biaya
-Pada langkah terakhir, masukkan rincian kebutuhan biaya dan lampiran berkas:
-1. **Tabel Rincian Kebutuhan Anggaran**:
-   - Klik tombol **+ Tambah Baris** untuk menambah kebutuhan belanja.
-   - Masukkan nama barang/kebutuhan (contoh: *Konsumsi peserta*), jumlah/volume (contoh: *30*), satuan (contoh: *Kotak*), dan harga satuan (contoh: *25000*).
-   - Sistem akan otomatis menghitung subtotal dan total anggaran belanja Anda.
-2. **Unggah File Anggaran / Proposal**: Wajib mengunggah berkas proposal anggaran (file PDF, Word, atau Excel, maksimal 50MB).
-3. **Foto Pendukung & Dokumen Tambahan**: Anda dapat mengunggah foto survei lokasi atau surat perizinan jika ada (opsional).
+### 4.4 Langkah 3: Dokumen Pendukung & Anggaran
+Pada langkah terakhir, lengkapi berkas administratif dan estimasi biaya:
+1. **Rincian Kebutuhan**:
+   - Tuliskan rincian kebutuhan seperti perlengkapan, sewa perahu/tenda, konsumsi, atau rincian biaya lainnya.
+   - *Tips Cepat:* Jika rincian biaya sudah tertulis detail di dalam berkas proposal/RAB, Anda cukup menuliskan keterangan singkat seperti: *"Tertera pada file proposal"* atau *"In-kind"*.
+2. **File Anggaran Kegiatan (RAB / Proposal)**:
+   - Wajib mengunggah berkas anggaran/proposal kegiatan.
+   - Mendukung format bebas (PDF, Word, Excel, ZIP, dll) hingga ukuran maksimal **50 MB**.
+3. **Media Publikasi (Foto / Banner)**:
+   - Anda dapat melampirkan foto survei lokasi atau banner kegiatan.
+   - **Fitur Cerdas:** Mendukung multi-upload, tampilan pratinjau (*preview*) foto, dan sistem secara otomatis mengompres foto resolusi tinggi serta mengonversi foto kamera iPhone (.heic/.heif) menjadi format ramah web secara instan!
+4. **Dokumen Pendukung (Opsional)**:
+   - Unggah surat izin desa, jadwal kegiatan lengkap, atau surat undangan narasumber jika ada.
 
 ---
 
-### 4.5 Pilihan Menyimpan: Simpan Draft vs Ajukan
-Di bagian paling bawah Langkah 3, terdapat 2 tombol pilihan:
-- 💾 **Simpan Sebagai Draft**: Pilih ini jika pengisian Anda belum selesai atau Anda masih ingin melengkapinya nanti. Data draft masih bisa Anda ubah atau hapus kapan saja.
-- 🚀 **Ajukan Rencana Kegiatan**: Pilih ini jika semua data sudah lengkap dan siap dikirim ke Admin untuk diperiksa dan disetujui.
+### 4.5 Pilihan Menyimpan: Simpan Draft vs Ajukan Rencana
+Di bagian bawah Langkah 3, terdapat dua opsi tombol penyimpanan:
+- 💾 **Simpan sebagai Draft**:
+  - Gunakan tombol ini jika pengisian Anda belum selesai atau data anggaran belum lengkap.
+  - Untuk menyimpan draft, Anda **hanya perlu mengisi Nama Kegiatan**.
+  - Rencana berstatus *Draft* hanya terlihat oleh Anda sendiri, tidak dikirim ke Admin, dan dapat Anda edit atau hapus kapan saja.
+- 🚀 **Ajukan Rencana**:
+  - Gunakan jika seluruh isian dari Langkah 1 sampai 3 sudah lengkap.
+  - Begitu tombol ini diklik, data Anda terkunci aman, status berubah menjadi **Diajukan**, dan notifikasi otomatis dikirim ke Admin untuk diperiksa.
 
 > 📸 **[TEMPATKAN SCREENSHOT 6 DI SINI]**
 > - **Halaman yang dibuka:** Formulir Rencana Kegiatan (Langkah 3: Dokumen & Anggaran).
-> - **Bagian yang di-screenshot:** Tabel rincian anggaran kebutuhan belanja beserta tombol "Simpan Sebagai Draft" dan tombol "Ajukan Rencana Kegiatan" di bagian bawah.
-> - **Keterangan gambar:** *Formulir Rencana Kegiatan - Langkah 3: Rincian Anggaran dan Tombol Pengajuan*
+> - **Bagian yang di-screenshot:** Form rincian kebutuhan, unggah file RAB, unggah foto/dokumen pendukung, beserta tombol "Simpan sebagai Draft" dan "Ajukan Rencana".
+> - **Keterangan gambar:** *Formulir Rencana Kegiatan - Langkah 3: Rincian Anggaran dan Pilihan Pengajuan*
 
 ---
 
 ## 🔍 5. Memantau Status Kegiatan & Memperbaiki Revisi
 
-Setelah diajukan, periksa status usulan Anda pada tabel menu **Rencana Kegiatan**:
-- `Draft`: Rencana masih berupa konsep di akun Anda (belum dikirim ke Admin).
-- `Diajukan`: Rencana sedang menunggu antrean untuk diperiksa oleh Admin.
-- `Disetujui`: **Selamat!** Usulan kegiatan Anda resmi disetujui. Silakan laksanakan kegiatan sesuai jadwal.
-- `Revisi`: Admin meminta perbaikan data atau kelengkapan berkas.
-- `Ditolak`: Kegiatan tidak dapat disetujui disertai alasan penolakan.
+Periksa perkembangan usulan Anda pada tabel menu **Rencana Kegiatan**:
+- `Draft`: Rencana masih berupa konsep pribadi di akun Anda.
+- `Diajukan`: Sedang menunggu giliran diperiksa oleh Admin.
+- `Disetujui`: **Resmi Disetujui!** Tanggal acara masuk ke kalender yayasan dan Anda dapat mulai melaksanakan kegiatan di lapangan.
+- `Revisi`: Ada catatan perbaikan dari Admin yang harus disesuaikan.
+- `Ditolak`: Usulan tidak dapat disetujui beserta alasan tertulis dari pengurus.
+- `Selesai`: Seluruh rangkaian kegiatan dan pelaporan telah tuntas disahkan.
 
 ### 5.1 Cara Memperbaiki Usulan yang Diminta Revisi
 Jika kegiatan Anda mendapatkan status **Revisi**:
-1. Buka menu **Rencana Kegiatan**, lalu klik tombol bergambar mata (**Lihat Detail**) pada kegiatan tersebut.
-2. Anda akan melihat **Kotak Kuning Berisi Catatan dari Admin** yang menjelaskan apa saja yang harus diperbaiki.
-3. Di bawahnya juga terdapat daftar kotak merah penunjuk data apa yang masih kurang (*Checklist Kolom Wajib*).
-4. Klik tombol **Edit** (ikon pensil), perbaiki isian form sesuai catatan Admin, lalu klik tombol **Ajukan Ulang ke Admin**.
+1. Buka menu **Rencana Kegiatan**, lalu klik tombol mata (**Lihat Detail**).
+2. Anda akan melihat **Kotak Kuning Catatan Revisi dari Admin** yang memuat instruksi hal apa saja yang perlu diperbaiki.
+3. Klik tombol **Edit** (ikon pensil), lakukan perbaikan pada kolom yang diminta, lalu klik tombol **Ajukan Ulang**.
+
+### 5.2 Penting: Revisi pada Rencana yang Pernah Disetujui
+Jika kegiatan Anda **sudah pernah Disetujui** tetapi di kemudian hari jadwal lapangan bergeser atau lokasi desa berubah, Admin dapat mengembalikan status kegiatan menjadi **Revisi**. Anda cukup mengedit form kegiatan tersebut dan mengklik **Ajukan Ulang** agar jadwal resmi di kalender yayasan tetap akurat.
+
+### 5.3 Mengunduh Dokumen PDF Pengajuan Resmi
+Untuk kegiatan yang sudah berstatus **Disetujui**, Anda dapat mengunduh berkas pengajuan resmi:
+1. Buka halaman detail rencana kegiatan terkait.
+2. Klik tombol biru bertuliskan **Unduh PDF**. Berkas pengajuan berformat PDF resmi lengkap dengan kop Yayasan WeBe siap dicetak atau disimpan.
 
 > 📸 **[TEMPATKAN SCREENSHOT 7 DI SINI]**
-> - **Halaman yang dibuka:** Halaman detail rencana kegiatan yang berstatus Revisi (`/rencana_kegiatan/{id}`).
-> - **Bagian yang di-screenshot:** Kotak catatan evaluasi dari Admin berwarna kuning dan daftar checklist isian yang masih kurang.
-> - **Keterangan gambar:** *Tampilan Catatan Revisi Admin dan Petunjuk Kolom yang Perlu Diperbaiki*
-
----
-
-### 5.2 Mengunduh Dokumen PDF Rencana Kegiatan
-Untuk kegiatan yang sudah berstatus **Disetujui**, Anda dapat mencetak berkas pengajuan resminya:
-1. Buka halaman detail rencana kegiatan terkait.
-2. Klik tombol biru bertuliskan **Unduh PDF**.
-3. Berkas PDF rapi lengkap dengan kop resmi Yayasan WeBe akan terunduh ke komputer/HP Anda.
-
-> 📸 **[TEMPATKAN SCREENSHOT 8 DI SINI]**
-> - **Halaman yang dibuka:** Halaman detail rencana kegiatan yang berstatus Disetujui.
-> - **Bagian yang di-screenshot:** Tombol biru "Unduh PDF" yang terletak di bagian atas halaman detail rencana.
-> - **Keterangan gambar:** *Tombol Unduh PDF Rencana Kegiatan Resmi*
+> - **Halaman yang dibuka:** Halaman detail rencana kegiatan yang berstatus Revisi.
+> - **Bagian yang di-screenshot:** Kotak catatan evaluasi Admin berwarna kuning beserta tombol aksi "Edit" dan "Unduh PDF".
+> - **Keterangan gambar:** *Halaman Detail Rencana Kegiatan dan Catatan Revisi Admin*
 
 ---
 
 ## 📑 6. Membuat Laporan Hasil Kegiatan (Menu: Laporan Kegiatan)
 
-Setelah Anda selesai melaksanakan kegiatan di lapangan, buatlah laporan pertanggungjawaban kegiatan.
+Setelah kegiatan lapangan selesai dilaksanakan, anggota wajib membuat laporan pertanggungjawaban kegiatan.
 
-### 6.1 Memulai Laporan (Dua Pilihan)
-Buka menu **Laporan Kegiatan** di sebelah kiri:
-1. **Laporan dari Rencana yang Sudah Disetujui (Cara Utama)**:
-   - Pada tabel bagian atas bertajuk *"Rencana Kegiatan Siap Dilaporkan"*, cari nama kegiatan Anda.
-   - Klik tombol biru **Buat Laporan** di baris kegiatan tersebut.
-2. **Laporan Langsung / Tanggap Darurat**:
-   - Jika ada kegiatan lapangan mendadak/insidental tanpa sempat membuat rencana terlebih dahulu, klik tombol **Buat Laporan Langsung**.
+### 6.1 Memilih Jalur Pembuatan Laporan
+Buka menu **Laporan Kegiatan** pada bilah sebelah kiri. Terdapat dua jalur pelaporan:
 
-> 📸 **[TEMPATKAN SCREENSHOT 9 DI SINI]**
+1. **Jalur Utama: Laporan dari Rencana yang Disetujui (Kegiatan Terencana)**:
+   - Pada tabel atas bertajuk *"Rencana Kegiatan Siap Dilaporkan"*, cari nama kegiatan Anda yang sudah selesai dilaksanakan.
+   - Klik tombol biru **Buat Laporan** pada baris kegiatan tersebut.
+2. **Jalur Kedua: Buat Laporan Langsung (Insidental / Tanggap Darurat)**:
+   - Gunakan tombol **Buat Laporan Langsung** hanya jika kegiatan lapangan bersifat mendadak/insidental tanpa sempat membuat rencana sebelumnya.
+
+> 📸 **[TEMPATKAN SCREENSHOT 8 DI SINI]**
 > - **Halaman yang dibuka:** Menu Laporan Kegiatan.
-> - **Bagian yang di-screenshot:** Bagian atas tabel yang memperlihatkan daftar "Rencana Kegiatan Siap Dilaporkan" beserta tombol biru "Buat Laporan", dan tombol "Buat Laporan Langsung".
-> - **Keterangan gambar:** *Halaman Awal Laporan Kegiatan dan Tombol Pembuatan Laporan*
+> - **Bagian yang di-screenshot:** Tabel atas "Rencana Kegiatan Siap Dilaporkan" dengan tombol biru "Buat Laporan", serta tombol hitam/navy "Buat Laporan Langsung".
+> - **Keterangan gambar:** *Halaman Menu Laporan Kegiatan dan Pilihan Pembuatan Laporan*
 
 ---
 
-### 6.2 Mengisi Formulir Laporan (3 Langkah)
+### 6.2 Mengisi Formulir Laporan (3 Langkah Mudah)
 
 #### 🔹 Langkah 1: Realisasi Pelaksanaan
-- Masukkan **Tanggal Mulai & Selesai yang sebenarnya** saat acara berlangsung di lapangan.
-- Ceritakan **Rangkaian Kegiatan** (susunan acara dari pembukaan hingga penutupan).
-- Tuliskan **Jumlah Peserta yang hadir nyata di lapangan** dan **Profil Peserta** (misal: *25 orang ibu-ibu PKK dan 5 pemuda karang taruna*).
+- **Tanggal Mulai & Selesai Nyata**: Masukkan tanggal riil saat kegiatan berlangsung di lapangan.
+- **Realisasi Jumlah Peserta**: Jumlah orang/peserta yang benar-benar hadir (berdasarkan presensi fisik).
+- **Rangkaian Acara**: Ceritakan susunan jalannya acara dari pembukaan hingga penutupan.
+- **Profil Peserta**: Uraikan latar belakang peserta (contoh: *20 nelayan kepiting dan 5 tokoh pemuda desa*).
+- *(Khusus Laporan Langsung: Terdapat kolom Nama Kegiatan, Lokasi, dan Deskripsi Kegiatan, sedangkan isian peserta bersifat opsional).*
 - Klik **Selanjutnya**.
 
-#### 🔹 Langkah 2: Evaluasi & Dampak
-- Tuliskan **Hasil yang Dicapai** dan **Output Nyata** (contoh: *30 batang bibit mangrove ditanam*).
-- Tuliskan **Dampak Awal** yang langsung dirasakan warga.
-- Ceritakan secara jujur **Kendala yang Dihadapi** di lapangan (misal: *hujan lebat di siang hari*) dan **Solusi** yang Anda lakukan saat itu.
-- Tuliskan **Catatan Evaluasi / Rekomendasi** untuk kegiatan ke depan.
+#### 🔹 Langkah 2: Hasil & Evaluasi
+- **Hasil yang Dicapai & Output Nyata**: Uraikan capaian utama dan wujud fisik yang dihasilkan (contoh: *500 bibit mangrove tertanam rapi di bibir pantai*).
+- **Dampak Awal**: Efek positif awal yang langsung dirasakan oleh warga sekitar.
+- **Kendala Lapangan & Solusi**: Ceritakan kendala nyata di lapangan (misal: *ombak pasang tinggi*) dan solusi kreatif yang Anda lakukan saat itu.
+- **Catatan Evaluasi / Rekomendasi**: Masukan atau saran untuk kegiatan serupa di masa depan.
 - Klik **Selanjutnya**.
 
 #### 🔹 Langkah 3: Mengunggah Berkas Bukti Lapangan
-Wajib melampirkan bukti-bukti otentik pelaksanaan:
-- 📷 **Foto Kegiatan**: Dokumentasi saat acara berlangsung (bisa upload banyak foto sekaligus, otomatis dikompres).
-- 📋 **Daftar Hadir**: Lembar presensi kehadiran yang sudah ditandatangani peserta (PDF atau foto jelas).
-- 📝 **Notulen**: Catatan tertulis ringkasan hasil rapat/pelaksanaan.
-- 📚 **Materi**: Bahan slide, modul, atau materi sosialisasi yang dibagikan (jika ada).
-- 📜 **Berita Acara**: Lembar berita acara serah terima atau penyelesaian kegiatan.
+Unggah bukti otentik kegiatan:
+- 📷 **Foto Kegiatan (Wajib)**: Foto suasana acara, narasumber, dan peserta. Sistem otomatis meringankan ukuran foto kamera smartphone dan mendukung format foto iPhone (.heic/.heif).
+- 📋 **Daftar Hadir (Wajib pada Laporan Reguler)**: Scan atau foto lembar presensi yang telah ditandatangani peserta. Jika kegiatan tidak menggunakan tanda tangan presensi, Anda dapat melampirkan foto bersama peserta.
+- 📝 **Notulen (Opsional)**: Catatan ringkasan rapat atau catatan proses jalannya kegiatan.
+- 📚 **Materi**: Bahan slide presentasi, modul, atau selebaran materi yang dibagikan.
+- 📜 **Berita Acara**: Lembar berita acara serah terima atau penyelesaian pekerjaan.
 
-Setelah bukti terunggah, klik tombol **Ajukan Laporan ke Admin**.
-> *Catatan: Begitu laporan diajukan, status Rencana Kegiatan Anda otomatis berubah menjadi Selesai.*
+---
 
-> 📸 **[TEMPATKAN SCREENSHOT 10 DI SINI]**
-> - **Halaman yang dibuka:** Formulir Laporan Kegiatan (Langkah 3: Unggah Berkas Bukti).
-> - **Bagian yang di-screenshot:** Area kotak-kotak unggah berkas (Foto Kegiatan, Daftar Hadir bertanda tangan, Notulen, Materi, dan Berita Acara) beserta tombol "Ajukan Laporan".
+### 6.3 Mengirim Laporan & Efek Otomatisnya
+- Anda dapat mengklik **Simpan Draft** jika berkas foto/presensi belum lengkap dikumpulkan.
+- Jika sudah lengkap, klik tombol **Ajukan Laporan**.
+- **Otomatisasi Sistem**: Begitu laporan Anda diverifikasi dan diterima (**Final**) oleh Admin, status Rencana Kegiatan terkait otomatis berubah menjadi **Selesai** dan masuk ke arsip *History Realisasi*.
+
+### 6.4 Mencetak Laporan Kegiatan (Tampilan Print)
+Untuk kebutuhan fisik atau berkas pertanggungjawaban:
+1. Buka detail laporan kegiatan Anda.
+2. Klik tombol hijau bertuliskan **Cetak Laporan** (ikon printer).
+3. Halaman ramah cetak resmi lengkap dengan kop surat Yayasan WeBe, ringkasan capaian, dan lampiran dokumentasi foto siap langsung dicetak atau disimpan ke file PDF.
+
+> 📸 **[TEMPATKAN SCREENSHOT 9 DI SINI]**
+> - **Halaman yang dibuka:** Formulir Laporan Kegiatan (Langkah 3: Lampiran Bukti).
+> - **Bagian yang di-screenshot:** Area unggah foto kegiatan, daftar hadir, notulen, materi, dan berita acara beserta tombol "Ajukan Laporan".
 > - **Keterangan gambar:** *Formulir Laporan Kegiatan - Langkah 3: Unggah Bukti Dokumen Lapangan*
 
 ---
 
-### 6.3 Mencetak Laporan Kegiatan (Tampilan Cetak / Print)
-Untuk kebutuhan arsip fisik atau laporan tertulis:
-1. Buka halaman detail laporan kegiatan Anda.
-2. Klik tombol hijau bertuliskan **Cetak Laporan** (ikon printer).
-3. Halaman ramah cetak lengkap dengan kop Yayasan WeBe akan terbuka, siap dicetak langsung ke printer atau disimpan sebagai file PDF.
-
-> 📸 **[TEMPATKAN SCREENSHOT 11 DI SINI]**
-> - **Halaman yang dibuka:** Tampilan cetak laporan (`/laporan_kegiatan/{id}/print`).
-> - **Bagian yang di-screenshot:** Format tampilan cetak dokumen laporan kegiatan lengkap dengan kop surat yayasan, ringkasan capaian, dan lampiran foto dokumentasi.
-> - **Keterangan gambar:** *Tampilan Cetak Resmi Laporan Kegiatan*
-
----
-
-## 💡 7. Tips Penting untuk Kelancaran Kerja Anggota
-1. **Titik Lokasi Tepat**: Saat memilih lokasi di peta, pastikan Anda memperbesar (*zoom-in*) peta agar penanda pin berada tepat di desa/pantai lokasi kegiatan.
-2. **Daftar Hadir Asli**: Selalu siapkan lembar tanda tangan peserta di lapangan dan foto atau scan lembar tersebut sesegera mungkin setelah kegiatan berakhir.
-3. **Simpan Sebagai Draft Terlebih Dahulu**: Jika belum semua foto atau berkas terkumpul, simpan formulir sebagai *Draft*. Anda dapat melanjutkannya kembali kapan saja tanpa kehilangan data yang sudah diketik.
-4. **Pantau Lonceng Notifikasi**: Periksa ikon lonceng di kanan atas secara berkala untuk mengetahui jika Admin sudah menyetujui rencana Anda atau memberikan catatan revisi.
+## 💡 7. Tips Praktis untuk Rekan-Rekan Lapangan
+1. **Foto & Presensi Adalah Kunci**: Pastikan Anda mengambil foto lembar daftar hadir bertanda tangan dengan pencahayaan yang jelas saat acara selesai di lapangan.
+2. **Jangan Ragu Menyimpan Draft**: Jika Anda sedang di jalan atau lelah setelah kegiatan, simpan formulir sebagai *Draft*. Melanjutkan draf jauh lebih cepat daripada mengetik ulang dari awal.
+3. **Pencarian Nama Desa di Peta**: Saat menentukan lokasi kegiatan di Langkah 2 rencana, gunakan kotak pencarian peta dengan mengetikkan nama desa atau kecamatan untuk mempercepat pencarian titik.
+4. **Periksa Lonceng Notifikasi**: Selalu cek ikon lonceng di pojok kanan atas untuk mengetahui kabar terbaru apakah rencana Anda telah disetujui Admin atau memerlukan sedikit revisi.
 
 ---
 *Buku Panduan Penggunaan Rekam WeBe (Anggota) - Yayasan WeBe*

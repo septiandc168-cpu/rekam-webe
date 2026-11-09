@@ -269,12 +269,14 @@
                             <div class="custom-file mb-1">
                                 <input type="file" id="anggaranKegiatanInput" name="anggaran_kegiatan"
                                     class="custom-file-input"
-                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif" required>
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif"
+                                    required>
                                 <label class="custom-file-label" for="anggaranKegiatanInput">Pilih file
                                     anggaran...</label>
                             </div>
                             <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah file
-                                proposal/RAB/rincian anggaran kegiatan. Format dokumen (PDF, Word, Excel, ZIP) atau gambar/foto hingga 50MB. Gambar akan otomatis dikompres.</small>
+                                proposal/RAB/rincian anggaran kegiatan. Format dokumen (PDF, Word, Excel, ZIP) atau
+                                gambar/foto hingga 50MB. Gambar akan otomatis dikompres.</small>
                             <div id="preview-anggaran" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
@@ -302,11 +304,13 @@
                             <label class="form-label fw-bold">Dokumen Pendukung (Opsional)</label>
                             <div class="custom-file mb-1">
                                 <input type="file" id="dokumenInput" name="dokumen[]" class="custom-file-input"
-                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif" multiple>
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif"
+                                    multiple>
                                 <label class="custom-file-label" for="dokumenInput">Pilih file dokumen...</label>
                             </div>
                             <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Lampirkan dokumen pendukung
-                                seperti surat izin, proposal, jadwal, atau foto. Dokumen atau foto hingga 50MB/file. Foto/gambar akan otomatis dikompres.</small>
+                                seperti surat izin, proposal, jadwal, atau foto. Dokumen atau foto hingga 50MB/file.
+                                Foto/gambar akan otomatis dikompres.</small>
                             <div id="preview-dokumen" class="d-flex flex-column mt-2"></div>
                         </div>
                     </div>
@@ -415,7 +419,9 @@
                     title: 'Memproses Foto...',
                     text: 'Mengompres foto yang diunggah...',
                     allowOutsideClick: false,
-                    didOpen: () => { Swal.showLoading(); }
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
                 });
             }
 
@@ -497,7 +503,9 @@
                     title: 'Memproses Dokumen...',
                     text: 'Mengompres gambar yang diunggah...',
                     allowOutsideClick: false,
-                    didOpen: () => { Swal.showLoading(); }
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
                 });
             }
 
@@ -609,7 +617,9 @@
                         title: 'Memproses File...',
                         text: 'Mengompres gambar file anggaran kegiatan...',
                         allowOutsideClick: false,
-                        didOpen: () => { Swal.showLoading(); }
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
                     });
                 }
                 file = await processFileIfImage(file);
@@ -884,10 +894,10 @@
                         // Tahap 2: Waktu & Lokasi
                         const tglMulai = (document.querySelector('input[name="tanggal_mulai"]')?.value || '').trim();
                         const tglSelesai = (document.querySelector('input[name="tanggal_selesai"]')?.value || '')
-                    .trim();
+                            .trim();
                         const waktuMulai = (document.querySelector('input[name="waktu_mulai"]')?.value || '').trim();
                         const waktuSelesai = (document.querySelector('input[name="waktu_selesai"]')?.value || '')
-                    .trim();
+                            .trim();
                         const desa = (document.querySelector('input[name="desa"]')?.value || '').trim();
                         const lat = (document.querySelector('input[name="lat"]')?.value || '').trim();
                         const lng = (document.querySelector('input[name="lng"]')?.value || '').trim();
@@ -1042,7 +1052,8 @@
                         const namaKegiatan = namaKegiatanInput ? namaKegiatanInput.value.trim() : '';
                         if (!namaKegiatan) {
                             alert(
-                                'Mohon isi Nama Kegiatan terlebih dahulu untuk menyimpan sebagai draft.');
+                                'Mohon isi Nama Kegiatan terlebih dahulu untuk menyimpan sebagai draft.'
+                                );
                             showStep(0);
                             if (namaKegiatanInput) namaKegiatanInput.focus();
                             return false;

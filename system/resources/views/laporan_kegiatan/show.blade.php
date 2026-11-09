@@ -581,11 +581,14 @@
             <div class="col-md-8">
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
-                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i> {{ $laporanKegiatan->isDarurat() ? 'Detail Pelaksanaan & Evaluasi' : 'Detail Realisasi & Evaluasi' }}</h3>
+                        <h3 class="card-title fw-bold text-dark"><i class="fas fa-info-circle mr-1"></i>
+                            {{ $laporanKegiatan->isDarurat() ? 'Detail Pelaksanaan & Evaluasi' : 'Detail Realisasi & Evaluasi' }}
+                        </h3>
                     </div>
                     <div class="card-body">
                         @php
-                            $showPeserta = !$laporanKegiatan->isDarurat() || !empty($laporanKegiatan->realisasi_peserta);
+                            $showPeserta =
+                                !$laporanKegiatan->isDarurat() || !empty($laporanKegiatan->realisasi_peserta);
                         @endphp
                         <div class="row mb-4">
                             <div class="col-md-6">
@@ -594,7 +597,8 @@
                                         <div class="info-box-icon bg-light text-primary"><i
                                                 class="fas fa-calendar-check"></i></div>
                                         <div>
-                                            <small class="text-muted d-block">{{ $laporanKegiatan->isDarurat() ? 'Tanggal Pelaksanaan' : 'Tanggal Aktual' }}</small>
+                                            <small
+                                                class="text-muted d-block">{{ $laporanKegiatan->isDarurat() ? 'Tanggal Pelaksanaan' : 'Tanggal Aktual' }}</small>
                                             <strong>{{ $laporanKegiatan->getFormattedRealisasiTanggalPelaksanaan() }}</strong>
                                         </div>
                                     </li>
@@ -603,7 +607,8 @@
                                             <div class="info-box-icon bg-light text-success"><i class="fas fa-users"></i>
                                             </div>
                                             <div>
-                                                <small class="text-muted d-block">{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Peserta' }}</small>
+                                                <small
+                                                    class="text-muted d-block">{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Peserta' }}</small>
                                                 <strong>{{ $laporanKegiatan->realisasi_peserta ? $laporanKegiatan->realisasi_peserta . ' Orang' : '-' }}</strong>
                                             </div>
                                         </li>
@@ -626,7 +631,8 @@
                                             <div class="info-box-icon bg-light text-warning"><i
                                                     class="fas fa-map-marker-alt"></i></div>
                                             <div>
-                                                <small class="text-muted d-block">Lokasi {{ $laporanKegiatan->isDarurat() ? '' : '(Desa)' }}</small>
+                                                <small class="text-muted d-block">Lokasi
+                                                    {{ $laporanKegiatan->isDarurat() ? '' : '(Desa)' }}</small>
                                                 <strong>{{ $laporanKegiatan->isDarurat() ? ($laporanKegiatan->lokasi_kegiatan ?: '-') : ($laporanKegiatan->rencanaKegiatan->desa ?: '-') }}</strong>
                                             </div>
                                         </li>
@@ -636,7 +642,7 @@
                                         </div>
                                         <div>
                                             <small class="text-muted d-block">Penanggung Jawab</small>
-                                            <strong>{{ $laporanKegiatan->isDarurat() ? ($laporanKegiatan->user->name ?? '-') : $laporanKegiatan->rencanaKegiatan->penanggung_jawab }}</strong>
+                                            <strong>{{ $laporanKegiatan->isDarurat() ? $laporanKegiatan->user->name ?? '-' : $laporanKegiatan->rencanaKegiatan->penanggung_jawab }}</strong>
                                         </div>
                                     </li>
                                 </ul>
@@ -731,7 +737,8 @@
                                     aria-expanded="false" aria-controls="collapseHasil">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-chart-line mr-2"
-                                                style="color:#1a365d;"></i>{{ $laporanKegiatan->isDarurat() ? 'Hasil yang Dicapai' : 'Hasil yang Dicapai & Output Nyata' }}</h6>
+                                                style="color:#1a365d;"></i>{{ $laporanKegiatan->isDarurat() ? 'Hasil yang Dicapai' : 'Hasil yang Dicapai & Output Nyata' }}
+                                        </h6>
                                         <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
                                             style="font-size:0.75rem; transition: transform 0.3s;"></i>
                                     </div>
@@ -770,8 +777,10 @@
                                     style="cursor:pointer;" data-toggle="collapse" data-target="#collapseKendala"
                                     aria-expanded="false" aria-controls="collapseKendala">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-0 fw-bold text-dark"><i class="fas {{ $laporanKegiatan->isDarurat() ? 'fa-clipboard-check' : 'fa-exclamation-triangle' }} mr-2"
-                                                style="color:#1a365d;"></i>{{ $laporanKegiatan->isDarurat() ? 'Evaluasi & Rekomendasi' : 'Kendala, Solusi & Evaluasi' }}</h6>
+                                        <h6 class="mb-0 fw-bold text-dark"><i
+                                                class="fas {{ $laporanKegiatan->isDarurat() ? 'fa-clipboard-check' : 'fa-exclamation-triangle' }} mr-2"
+                                                style="color:#1a365d;"></i>{{ $laporanKegiatan->isDarurat() ? 'Evaluasi & Rekomendasi' : 'Kendala, Solusi & Evaluasi' }}
+                                        </h6>
                                         <i class="fas fa-chevron-down text-muted toggle-icon accordion-toggle-icon"
                                             style="font-size:0.75rem; transition: transform 0.3s;"></i>
                                     </div>
@@ -787,7 +796,8 @@
                                         @else
                                             <div class="mb-4">
                                                 <strong class="text-dark d-block mb-2"><i
-                                                        class="fas fa-exclamation-triangle mr-1 text-dark"></i> Kendala yang
+                                                        class="fas fa-exclamation-triangle mr-1 text-dark"></i> Kendala
+                                                    yang
                                                     Dihadapi:</strong>
                                                 <div class="text-dark">
                                                     {!! $laporanKegiatan->kendala ?: '<em class="text-dark">Tidak ada kendala.</em>' !!}
@@ -915,9 +925,7 @@
                                 continue;
                             }
                             $path = is_array($file) ? $file['path'] ?? '' : $file;
-                            $name = is_array($file)
-                                ? $file['original_name'] ?? basename($path)
-                                : basename($file);
+                            $name = is_array($file) ? $file['original_name'] ?? basename($path) : basename($file);
                             if (empty($path)) {
                                 continue;
                             }
@@ -960,8 +968,8 @@
                     $hasNotulen = $hasFilesCheck($laporanKegiatan->notulen);
 
                     $hasFiles = $laporanKegiatan->isDarurat()
-                        ? ($hasMateri || $hasBeritaAcara)
-                        : ($hasDaftarHadir || $hasNotulen || $hasMateri || $hasBeritaAcara);
+                        ? $hasMateri || $hasBeritaAcara
+                        : $hasDaftarHadir || $hasNotulen || $hasMateri || $hasBeritaAcara;
                 @endphp
 
                 @if (!$laporanKegiatan->isDarurat() || $hasFiles)

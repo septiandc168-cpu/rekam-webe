@@ -138,14 +138,16 @@
                         style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-1">
                         <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
                             style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">1</div>
-                        <span class="fw-bold text-primary d-block step-text">{{ $laporanKegiatan->isDarurat() ? 'Pelaksanaan Kegiatan' : 'Realisasi Kegiatan' }}</span>
+                        <span
+                            class="fw-bold text-primary d-block step-text">{{ $laporanKegiatan->isDarurat() ? 'Pelaksanaan Kegiatan' : 'Realisasi Kegiatan' }}</span>
                     </div>
 
                     <div class="step-indicator text-center position-relative"
                         style="z-index: 2; width: 33%; cursor: pointer;" id="indicator-2">
                         <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-2 step-circle"
                             style="width: 40px; height: 40px; border: 4px solid #fff; font-weight: bold;">2</div>
-                        <span class="fw-bold text-muted d-block step-text">{{ $laporanKegiatan->isDarurat() ? 'Hasil & Evaluasi' : 'Evaluasi' }}</span>
+                        <span
+                            class="fw-bold text-muted d-block step-text">{{ $laporanKegiatan->isDarurat() ? 'Hasil & Evaluasi' : 'Evaluasi' }}</span>
                     </div>
 
                     <div class="step-indicator text-center position-relative"
@@ -201,37 +203,47 @@
                         @endif
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">{{ $laporanKegiatan->isDarurat() ? 'Tanggal Mulai' : 'Realisasi Tanggal Mulai' }} <span
-                                        class="text-danger">*</span></label>
+                                <label
+                                    class="form-label">{{ $laporanKegiatan->isDarurat() ? 'Tanggal Mulai' : 'Realisasi Tanggal Mulai' }}
+                                    <span class="text-danger">*</span></label>
                                 <input type="date" name="realisasi_tanggal_mulai" class="form-control" required
                                     value="{{ old('realisasi_tanggal_mulai', $laporanKegiatan->realisasi_tanggal_mulai) }}">
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal
                                     aktual kegiatan mulai dilaksanakan di lapangan.</small>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">{{ $laporanKegiatan->isDarurat() ? 'Tanggal Selesai' : 'Realisasi Tanggal Selesai' }} <span
-                                        class="text-danger">*</span></label>
+                                <label
+                                    class="form-label">{{ $laporanKegiatan->isDarurat() ? 'Tanggal Selesai' : 'Realisasi Tanggal Selesai' }}
+                                    <span class="text-danger">*</span></label>
                                 <input type="date" name="realisasi_tanggal_selesai" class="form-control" required
                                     value="{{ old('realisasi_tanggal_selesai', $laporanKegiatan->realisasi_tanggal_selesai) }}">
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tanggal
                                     aktual kegiatan selesai. Jika 1 hari, isi sama dengan tanggal mulai.</small>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Jumlah Peserta' }} @if (!$laporanKegiatan->isDarurat())<span
-                                        class="text-danger">*</span>@endif</label>
+                                <label
+                                    class="form-label">{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Jumlah Peserta' }}
+                                    @if (!$laporanKegiatan->isDarurat())
+                                        <span class="text-danger">*</span>
+                                    @endif
+                                </label>
                                 <input type="number" name="realisasi_peserta" class="form-control"
-                                    placeholder="{{ $laporanKegiatan->isDarurat() ? 'Masukkan jumlah peserta (opsional)...' : 'Masukkan realisasi jumlah peserta...' }}" min="0" {{ $laporanKegiatan->isDarurat() ? '' : 'required' }}
+                                    placeholder="{{ $laporanKegiatan->isDarurat() ? 'Masukkan jumlah peserta (opsional)...' : 'Masukkan realisasi jumlah peserta...' }}"
+                                    min="0" {{ $laporanKegiatan->isDarurat() ? '' : 'required' }}
                                     value="{{ old('realisasi_peserta', $laporanKegiatan->realisasi_peserta) }}">
-                                <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>{{ $laporanKegiatan->isDarurat() ? 'Jumlah peserta yang mengikuti kegiatan (opsional).' : 'Jumlah peserta yang benar-benar hadir berdasarkan daftar hadir.' }}</small>
+                                <small class="text-muted d-block mt-1"><i
+                                        class="fas fa-info-circle mr-1"></i>{{ $laporanKegiatan->isDarurat() ? 'Jumlah peserta yang mengikuti kegiatan (opsional).' : 'Jumlah peserta yang benar-benar hadir berdasarkan daftar hadir.' }}</small>
                             </div>
                         </div>
                         @if ($laporanKegiatan->isDarurat())
                             <div class="row">
                                 <div class="col-md-12 mb-3">
-                                    <label class="form-label">Deskripsi Kegiatan <span class="text-danger">*</span></label>
+                                    <label class="form-label">Deskripsi Kegiatan <span
+                                            class="text-danger">*</span></label>
                                     <textarea name="deskripsi" class="form-control summernote-editor" rows="4"
                                         placeholder="Masukkan deskripsi kegiatan / gambaran umum..." required>{!! old('deskripsi', $laporanKegiatan->deskripsi) !!}</textarea>
-                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan gambaran umum, latar belakang, dan konteks kegiatan yang dilaksanakan.</small>
+                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Tuliskan
+                                        gambaran umum, latar belakang, dan konteks kegiatan yang dilaksanakan.</small>
                                 </div>
                             </div>
                         @endif
@@ -245,7 +257,10 @@
                                     urutan acara dari awal hingga akhir, termasuk waktu dan kegiatan di setiap sesi.</small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Profil Peserta @if (!$laporanKegiatan->isDarurat())<span class="text-danger">*</span>@endif</label>
+                                <label class="form-label">Profil Peserta @if (!$laporanKegiatan->isDarurat())
+                                        <span class="text-danger">*</span>
+                                    @endif
+                                </label>
                                 <textarea name="profil_peserta" class="form-control summernote-editor" rows="3"
                                     placeholder="Masukkan profil peserta..." {{ $laporanKegiatan->isDarurat() ? '' : 'required' }}>{!! old('profil_peserta', $laporanKegiatan->profil_peserta) !!}</textarea>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
@@ -265,7 +280,8 @@
                                         <i class="fas fa-save mr-1"></i> Simpan Draft
                                     </button>
                                 @endif
-                                <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya
+                                <button type="button" class="btn bg-navy text-white btn-next"
+                                    data-next="step-2">Selanjutnya
                                     <i class="fas fa-arrow-right ml-1"></i></button>
                             </div>
                         </div>
@@ -283,7 +299,8 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Hasil yang Dicapai <span class="text-danger">*</span></label>
+                                    <label class="form-label">Hasil yang Dicapai <span
+                                            class="text-danger">*</span></label>
                                     <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4"
                                         placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai', $laporanKegiatan->hasil_dicapai) !!}</textarea>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
@@ -302,7 +319,8 @@
                                             class="text-danger">*</span></label>
                                     <textarea name="dampak_awal" class="form-control summernote-editor" rows="4"
                                         placeholder="Masukkan dampak awal yang terlihat..." required>{!! old('dampak_awal', $laporanKegiatan->dampak_awal) !!}</textarea>
-                                    <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Deskripsikan
+                                    <small class="text-muted d-block mt-1"><i
+                                            class="fas fa-info-circle mr-1"></i>Deskripsikan
                                         perubahan awal yang sudah terlihat di masyarakat atau lingkungan setelah
                                         kegiatan.</small>
                                 </div>
@@ -318,7 +336,8 @@
                                         <i class="fas fa-save mr-1"></i> Simpan Draft
                                     </button>
                                 @endif
-                                <button type="button" class="btn bg-navy text-white btn-next" data-next="step-2">Selanjutnya
+                                <button type="button" class="btn bg-navy text-white btn-next"
+                                    data-next="step-2">Selanjutnya
                                     <i class="fas fa-arrow-right ml-1"></i></button>
                             </div>
                         </div>
@@ -331,14 +350,16 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white">
                         <h3 class="card-title fw-bold text-dark">
-                            <i class="fas fa-clipboard-check mr-1"></i> {{ $laporanKegiatan->isDarurat() ? 'Hasil & Evaluasi Kegiatan' : 'Kendala dan Evaluasi' }}
+                            <i class="fas fa-clipboard-check mr-1"></i>
+                            {{ $laporanKegiatan->isDarurat() ? 'Hasil & Evaluasi Kegiatan' : 'Kendala dan Evaluasi' }}
                         </h3>
                     </div>
                     <div class="card-body">
                         @if ($laporanKegiatan->isDarurat())
                             <div class="row">
                                 <div class="col-md-12 mb-3">
-                                    <label class="form-label">Hasil yang Dicapai <span class="text-danger">*</span></label>
+                                    <label class="form-label">Hasil yang Dicapai <span
+                                            class="text-danger">*</span></label>
                                     <textarea name="hasil_dicapai" class="form-control summernote-editor" rows="4"
                                         placeholder="Masukkan hasil yang dicapai..." required>{!! old('hasil_dicapai', $laporanKegiatan->hasil_dicapai) !!}</textarea>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
@@ -350,13 +371,15 @@
                                     <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="5"
                                         placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi', $laporanKegiatan->evaluasi_rekomendasi) !!}</textarea>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan
-                                        penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
+                                        penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa
+                                        depan.</small>
                                 </div>
                             </div>
                         @else
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Kendala yang Dihadapi <span class="text-danger">*</span></label>
+                                    <label class="form-label">Kendala yang Dihadapi <span
+                                            class="text-danger">*</span></label>
                                     <textarea name="kendala" class="form-control summernote-editor" rows="4"
                                         placeholder="Masukkan kendala yang dihadapi..." required>{!! old('kendala', $laporanKegiatan->kendala) !!}</textarea>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Sebutkan
@@ -364,7 +387,8 @@
                                         tidak ada kendala.</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Solusi yang Dilakukan <span class="text-danger">*</span></label>
+                                    <label class="form-label">Solusi yang Dilakukan <span
+                                            class="text-danger">*</span></label>
                                     <textarea name="solusi" class="form-control summernote-editor" rows="4"
                                         placeholder="Masukkan solusi yang dilakukan..." required>{!! old('solusi', $laporanKegiatan->solusi) !!}</textarea>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Jelaskan
@@ -376,7 +400,8 @@
                                     <textarea name="evaluasi_rekomendasi" class="form-control summernote-editor" rows="5"
                                         placeholder="Masukkan catatan evaluasi & rekomendasi..." required>{!! old('evaluasi_rekomendasi', $laporanKegiatan->evaluasi_rekomendasi) !!}</textarea>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Berikan
-                                        penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa depan.</small>
+                                        penilaian keseluruhan dan saran perbaikan untuk kegiatan serupa di masa
+                                        depan.</small>
                                 </div>
                             </div>
                         @endif
@@ -493,7 +518,8 @@
                                     <small class="text-muted">Bebas format file (PDF, Word, Excel, Foto, ZIP, dll) hingga
                                         50MB/file, foto akan otomatis dikompres oleh sistem.</small>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
-                                        scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan. Jika kegiatannya
+                                        scan/foto daftar hadir yang sudah ditandatangani oleh peserta kegiatan. Jika
+                                        kegiatannya
                                         tidak memiliki daftar hadir, upload foto pesertanya.</small>
                                     <div id="preview-daftar_hadir" class="d-flex flex-column gap-1 mt-2"></div>
                                 </div>
@@ -535,7 +561,8 @@
                                         <label class="custom-file-label" for="notulenInput">Biarkan kosong jika tidak
                                             diubah...</label>
                                     </div>
-                                    <small class="text-muted">Bebas format dokumen/foto hingga 50MB/file, foto akan otomatis dikompres oleh sistem.</small>
+                                    <small class="text-muted">Bebas format dokumen/foto hingga 50MB/file, foto akan
+                                        otomatis dikompres oleh sistem.</small>
                                     <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
                                         catatan hasil rapat/diskusi selama kegiatan berlangsung. Jika kegiatan tidak berupa
                                         rapat, upload dokumen yang berisi proses pelaksanaan kegiatannya dan ini bersifat
@@ -573,16 +600,21 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Materi @if (!$laporanKegiatan->isDarurat())<span class="text-danger">*</span>@endif</label>
+                                <label class="form-label fw-bold mt-2">Materi @if (!$laporanKegiatan->isDarurat())
+                                        <span class="text-danger">*</span>
+                                    @endif
+                                </label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="materi[]" class="custom-file-input custom-doc-input"
                                         id="materiInput"
                                         accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif"
-                                        multiple {{ (!$laporanKegiatan->isDarurat() && empty($materi)) ? 'required' : '' }}>
+                                        multiple
+                                        {{ !$laporanKegiatan->isDarurat() && empty($materi) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="materiInput">Biarkan kosong jika tidak
                                         diubah...</label>
                                 </div>
-                                <small class="text-muted">Bebas format dokumen/presentasi/foto hingga 50MB/file{{ $laporanKegiatan->isDarurat() ? ' (opsional).' : ', foto akan otomatis dikompres oleh sistem.' }}</small>
+                                <small class="text-muted">Bebas format dokumen/presentasi/foto hingga
+                                    50MB/file{{ $laporanKegiatan->isDarurat() ? ' (opsional).' : ', foto akan otomatis dikompres oleh sistem.' }}</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
                                     materi presentasi, modul, atau bahan ajar yang digunakan saat kegiatan.</small>
                                 <div id="preview-materi" class="d-flex flex-column gap-1 mt-2"></div>
@@ -617,17 +649,21 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <label class="form-label fw-bold mt-2">Berita Acara @if (!$laporanKegiatan->isDarurat())<span
-                                        class="text-danger">*</span>@endif</label>
+                                <label class="form-label fw-bold mt-2">Berita Acara @if (!$laporanKegiatan->isDarurat())
+                                        <span class="text-danger">*</span>
+                                    @endif
+                                </label>
                                 <div class="custom-file mb-1">
                                     <input type="file" name="berita_acara[]"
                                         class="custom-file-input custom-doc-input" id="beritaAcaraInput"
                                         accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,image/*,.heic,.heif"
-                                        multiple {{ (!$laporanKegiatan->isDarurat() && empty($berita_acara)) ? 'required' : '' }}>
+                                        multiple
+                                        {{ !$laporanKegiatan->isDarurat() && empty($berita_acara) ? 'required' : '' }}>
                                     <label class="custom-file-label" for="beritaAcaraInput">Biarkan kosong jika tidak
                                         diubah...</label>
                                 </div>
-                                <small class="text-muted">Bebas format dokumen/foto hingga 50MB/file{{ $laporanKegiatan->isDarurat() ? ' (opsional).' : ', foto akan otomatis dikompres oleh sistem.' }}</small>
+                                <small class="text-muted">Bebas format dokumen/foto hingga
+                                    50MB/file{{ $laporanKegiatan->isDarurat() ? ' (opsional).' : ', foto akan otomatis dikompres oleh sistem.' }}</small>
                                 <small class="text-muted d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Unggah
                                     berita acara resmi pelaksanaan kegiatan.</small>
                                 <div id="preview-berita_acara" class="d-flex flex-column gap-1 mt-2"></div>
@@ -830,22 +866,23 @@
                         if (!tglMulai || !tglSelesai) return false;
 
                         if (!isLangsung) {
-                            const peserta = (document.querySelector('input[name="realisasi_peserta"]')?.value || '').trim();
+                            const peserta = (document.querySelector('input[name="realisasi_peserta"]')?.value || '')
+                                .trim();
                             if (!peserta) return false;
                         }
 
-                        const summernoteFields = isLangsung
-                            ? ['deskripsi', 'rangkaian_kegiatan']
-                            : ['rangkaian_kegiatan', 'profil_peserta', 'hasil_dicapai', 'output_nyata', 'dampak_awal'];
+                        const summernoteFields = isLangsung ?
+                            ['deskripsi', 'rangkaian_kegiatan'] :
+                            ['rangkaian_kegiatan', 'profil_peserta', 'hasil_dicapai', 'output_nyata', 'dampak_awal'];
                         for (let name of summernoteFields) {
                             if (!isSummernoteFilled(`textarea[name="${name}"]`)) return false;
                         }
                         return true;
                     } else if (stepNum === 2) {
                         // Tahap 2: Evaluasi & Kendala
-                        const summernoteFields = isLangsung
-                            ? ['hasil_dicapai', 'evaluasi_rekomendasi']
-                            : ['kendala', 'solusi', 'evaluasi_rekomendasi'];
+                        const summernoteFields = isLangsung ?
+                            ['hasil_dicapai', 'evaluasi_rekomendasi'] :
+                            ['kendala', 'solusi', 'evaluasi_rekomendasi'];
                         for (let name of summernoteFields) {
                             if (!isSummernoteFilled(`textarea[name="${name}"]`)) return false;
                         }
@@ -854,26 +891,21 @@
                         // Tahap 3: Lampiran Bukti
                         const isLangsung = document.querySelector('input[name="is_laporan_langsung"]');
                         const requiredFiles = [{
-                                key: 'foto_kegiatan',
-                                inputId: 'fotoInput'
-                            }
-                        ];
+                            key: 'foto_kegiatan',
+                            inputId: 'fotoInput'
+                        }];
 
                         if (!isLangsung) {
-                            requiredFiles.push(
-                                {
-                                    key: 'daftar_hadir',
-                                    inputId: 'daftarHadirInput'
-                                },
-                                {
-                                    key: 'materi',
-                                    inputId: 'materiInput'
-                                },
-                                {
-                                    key: 'berita_acara',
-                                    inputId: 'beritaAcaraInput'
-                                }
-                            );
+                            requiredFiles.push({
+                                key: 'daftar_hadir',
+                                inputId: 'daftarHadirInput'
+                            }, {
+                                key: 'materi',
+                                inputId: 'materiInput'
+                            }, {
+                                key: 'berita_acara',
+                                inputId: 'beritaAcaraInput'
+                            });
                         }
 
                         for (let req of requiredFiles) {
@@ -1097,30 +1129,25 @@
                     // 2. Validasi file lampiran wajib di Step 3
                     const isLangsung = document.querySelector('input[name="is_laporan_langsung"]');
                     const requiredFiles = [{
-                            key: 'foto_kegiatan',
-                            name: 'Foto Kegiatan',
-                            inputId: 'fotoInput'
-                        }
-                    ];
+                        key: 'foto_kegiatan',
+                        name: 'Foto Kegiatan',
+                        inputId: 'fotoInput'
+                    }];
 
                     if (!isLangsung) {
-                        requiredFiles.push(
-                            {
-                                key: 'daftar_hadir',
-                                name: 'Daftar Hadir',
-                                inputId: 'daftarHadirInput'
-                            },
-                            {
-                                key: 'materi',
-                                name: 'Materi',
-                                inputId: 'materiInput'
-                            },
-                            {
-                                key: 'berita_acara',
-                                name: 'Berita Acara',
-                                inputId: 'beritaAcaraInput'
-                            }
-                        );
+                        requiredFiles.push({
+                            key: 'daftar_hadir',
+                            name: 'Daftar Hadir',
+                            inputId: 'daftarHadirInput'
+                        }, {
+                            key: 'materi',
+                            name: 'Materi',
+                            inputId: 'materiInput'
+                        }, {
+                            key: 'berita_acara',
+                            name: 'Berita Acara',
+                            inputId: 'beritaAcaraInput'
+                        });
                     }
 
                     for (let req of requiredFiles) {
@@ -1243,7 +1270,8 @@
                     if (!file) return false;
                     const nameLower = (file.name || '').toLowerCase();
                     const typeLower = (file.type || '').toLowerCase();
-                    return typeLower.startsWith('image/') || nameLower.match(/\.(jpg|jpeg|png|webp|gif|bmp|heic|heif)$/i);
+                    return typeLower.startsWith('image/') || nameLower.match(
+                        /\.(jpg|jpeg|png|webp|gif|bmp|heic|heif)$/i);
                 }
 
                 async function handleFileUpload(fieldName, inputElement, isImage) {
@@ -1293,7 +1321,8 @@
                                 const nameLower = currentFile.name.toLowerCase();
 
                                 // 1. Konversi format HEIC/HEIF jika berasal dari iPhone
-                                if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile.type ===
+                                if (nameLower.endsWith('.heic') || nameLower.endsWith('.heif') || currentFile
+                                    .type ===
                                     'image/heic' || currentFile.type === 'image/heif') {
                                     try {
                                         if (typeof heic2any !== 'undefined') {
@@ -1311,7 +1340,8 @@
                                             });
                                         }
                                     } catch (err) {
-                                        console.error('Konversi HEIC gagal, gunakan file asli:', currentFile.name, err);
+                                        console.error('Konversi HEIC gagal, gunakan file asli:', currentFile.name,
+                                            err);
                                     }
                                 }
 

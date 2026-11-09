@@ -241,7 +241,8 @@
                 <tr>
                     <td>{{ $laporanKegiatan->isDarurat() ? 'Jumlah Peserta' : 'Realisasi Peserta' }}</td>
                     <td style="text-align: center;">:</td>
-                    <td>{{ $laporanKegiatan->realisasi_peserta ? $laporanKegiatan->realisasi_peserta . ' orang' : '-' }}</td>
+                    <td>{{ $laporanKegiatan->realisasi_peserta ? $laporanKegiatan->realisasi_peserta . ' orang' : '-' }}
+                    </td>
                 </tr>
             @endif
             @if (!$laporanKegiatan->isDarurat() || !empty(trim(strip_tags($laporanKegiatan->profil_peserta ?? ''))))
@@ -437,7 +438,9 @@
                         @foreach ($laporanKegiatan->materi as $index => $materi)
                             @php
                                 $filePath = is_array($materi) ? $materi['path'] ?? '' : $materi;
-                                $fileName = is_array($materi) ? $materi['original_name'] ?? basename($filePath) : basename($materi);
+                                $fileName = is_array($materi)
+                                    ? $materi['original_name'] ?? basename($filePath)
+                                    : basename($materi);
                             @endphp
                             @if (!empty($filePath))
                                 <div style="padding: 2px 0px;">
@@ -1012,35 +1015,41 @@
 @endsection
 
 @push('scripts')
-<script>
-    // Convert HEIC images to JPEG before printing
-    window.__heicDonePromise = (async function () {
-        if (typeof heic2any === 'undefined') return;
-        const heicImgs = Array.from(document.querySelectorAll('img[src*=".heic" i], img[src*=".heif" i]'));
-        if (heicImgs.length === 0) return;
+    <script>
+        // Convert HEIC images to JPEG before printing
+        window.__heicDonePromise = (async function() {
+            if (typeof heic2any === 'undefined') return;
+            const heicImgs = Array.from(document.querySelectorAll('img[src*=".heic" i], img[src*=".heif" i]'));
+            if (heicImgs.length === 0) return;
 
-        const promiseMap = new Map();
-        const conversions = heicImgs.map(async (img) => {
-            const src = img.getAttribute('src');
-            if (!src) return;
-            try {
-                if (!promiseMap.has(src)) {
-                    promiseMap.set(src, (async () => {
-                        const resp = await fetch(src);
-                        if (!resp.ok) throw new Error('Fetch failed: ' + resp.status);
-                        const blob = await resp.blob();
-                        const converted = await heic2any({ blob: blob, toType: 'image/jpeg', quality: 0.85 });
-                        const finalBlob = Array.isArray(converted) ? converted[0] : converted;
-                        return URL.createObjectURL(finalBlob);
-                    })());
+            const promiseMap = new Map();
+            const conversions = heicImgs.map(async (img) => {
+                const src = img.getAttribute('src');
+                if (!src) return;
+                try {
+                    if (!promiseMap.has(src)) {
+                        promiseMap.set(src, (async () => {
+                            const resp = await fetch(src);
+                            if (!resp.ok) throw new Error('Fetch failed: ' + resp
+                                .status);
+                            const blob = await resp.blob();
+                            const converted = await heic2any({
+                                blob: blob,
+                                toType: 'image/jpeg',
+                                quality: 0.85
+                            });
+                            const finalBlob = Array.isArray(converted) ? converted[
+                                0] : converted;
+                            return URL.createObjectURL(finalBlob);
+                        })());
+                    }
+                    const objUrl = await promiseMap.get(src);
+                    img.src = objUrl;
+                } catch (err) {
+                    console.error('HEIC auto-render failed in print view:', src, err);
                 }
-                const objUrl = await promiseMap.get(src);
-                img.src = objUrl;
-            } catch (err) {
-                console.error('HEIC auto-render failed in print view:', src, err);
-            }
-        });
-        await Promise.all(conversions);
-    })();
-</script>
+            });
+            await Promise.all(conversions);
+        })();
+    </script>
 @endpush
