@@ -880,23 +880,40 @@
             const lat = {{ $rencana_kegiatan->lat ?: -0.0227 }};
             const lng = {{ $rencana_kegiatan->lng ?: 109.3323 }};
             
-            // Inisialisasi Peta (Statis, tanpa zoom control dan drag)
+            // Inisialisasi Peta
             const map = L.map('map', {
                 center: [lat, lng],
                 zoom: 15,
-                zoomControl: false,
-                dragging: false,
+                zoomControl: true,
+                dragging: true,
                 scrollWheelZoom: false,
-                doubleClickZoom: false,
-                boxZoom: false,
-                keyboard: false
+                doubleClickZoom: true,
             });
             
-            // Tile Layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            // Base Layers: Standar (OSM), Satelit (Google Hybrid), dan Citra Esri
+            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
+            });
+
+            const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                attribution: '&copy; Google Maps'
+            });
+
+            const esriImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19,
+                attribution: '&copy; Esri World Imagery'
+            });
+
+            osmLayer.addTo(map);
+
+            const baseMaps = {
+                "Peta Standar": osmLayer,
+                "Satelit": googleHybrid,
+                "Citra Esri": esriImagery
+            };
+            L.control.layers(baseMaps, null, { position: 'topright' }).addTo(map);
             
             // Tambahkan Marker dengan Popup Responsif
             const popupContent = "<div style='text-align: center; max-width: 190px;'>" +

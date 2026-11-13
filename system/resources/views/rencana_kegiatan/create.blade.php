@@ -753,6 +753,39 @@
                 font-style: normal !important;
                 pointer-events: none;
             }
+
+            /* Leaflet Locate Control Tooltip */
+            .leaflet-control-locate {
+                position: relative;
+                background-color: #fff !important;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+            .leaflet-control-locate:hover {
+                background-color: #f8f9fa !important;
+            }
+            .leaflet-control-locate .locate-tooltip {
+                display: none;
+                position: absolute;
+                left: 38px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: #ffffff;
+                color: #333333;
+                padding: 4px 8px;
+                font-size: 11px;
+                font-weight: 600;
+                white-space: nowrap;
+                border: 1px solid #777;
+                border-radius: 3px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+                pointer-events: none;
+                z-index: 1000;
+            }
+            .leaflet-control-locate:hover .locate-tooltip {
+                display: block;
+            }
         </style>
     @endpush
 
@@ -766,13 +799,35 @@
         <script src="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // 1. Inisialisasi Peta (Default View: Pontianak)
-                window.map = L.map('map-create').setView([-0.0227, 109.3323], 12);
+                // 1. Inisialisasi Peta (Default fallback: Ketapang)
+                window.map = L.map('map-create').setView([-1.8465, 109.9714], 12);
 
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                // Base Layers: Standar (OSM), Satelit (Google Hybrid), dan Citra Esri
+                const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(window.map);
+                });
+
+                const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    attribution: '&copy; Google Maps'
+                });
+
+                const esriImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 19,
+                    attribution: '&copy; Esri World Imagery'
+                });
+
+                // Pasang layer default (Peta Standar)
+                osmLayer.addTo(window.map);
+
+                // Fitur Tampilan Satelit (Layer Switcher Control)
+                const baseMaps = {
+                    "Peta Standar": osmLayer,
+                    "Satelit": googleHybrid,
+                    "Citra Esri": esriImagery
+                };
+                L.control.layers(baseMaps, null, { position: 'topright' }).addTo(window.map);
 
                 // Variabel Global Marker
                 let pickMarker = null;
@@ -785,7 +840,7 @@
                 }
 
                 // Fungsi Buat/Pindah Marker
-                function createOrMoveMarker(latlng) {
+                function createOrMoveMarker(latlng, autoCenter = false) {
                     if (pickMarker) {
                         pickMarker.setLatLng(latlng);
                     } else {
@@ -798,8 +853,95 @@
                             updateLatLngInputs(pos.lat, pos.lng);
                         });
                     }
+                    if (autoCenter) {
+                        window.map.setView(latlng, 15);
+                    }
                     updateLatLngInputs(latlng.lat, latlng.lng);
                 }
+
+                // Fungsi Deteksi Lokasi Pengguna (Gunakan Lokasi Saya)
+                function getUserLocation(isUserClick = false) {
+                    if (!navigator.geolocation) {
+                        if (isUserClick) {
+                            alert('Browser Anda tidak mendukung fitur deteksi lokasi (Geolocation).');
+                        }
+                        return;
+                    }
+
+                    const locateIcon = document.getElementById('locate-icon');
+                    if (locateIcon) {
+                        locateIcon.className = 'fas fa-spinner fa-spin text-primary';
+                    }
+
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+                            const userLatLng = { lat: lat, lng: lng };
+
+                            createOrMoveMarker(userLatLng, true);
+
+                            if (locateIcon) {
+                                locateIcon.className = 'fas fa-map-marker-alt text-danger';
+                            }
+                        },
+                        function(error) {
+                            if (locateIcon) {
+                                locateIcon.className = 'fas fa-map-marker-alt text-danger';
+                            }
+
+                            if (isUserClick) {
+                                let pesan = 'Gagal mendeteksi lokasi.';
+                                if (error.code === error.PERMISSION_DENIED) {
+                                    pesan = 'Izin akses lokasi ditolak di browser. Pastikan GPS aktif dan izin lokasi telah diberikan pada browser.';
+                                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                                    pesan = 'Informasi lokasi saat ini tidak tersedia.';
+                                } else if (error.code === error.TIMEOUT) {
+                                    pesan = 'Waktu permintaan lokasi habis. Silakan coba lagi.';
+                                }
+                                alert(pesan);
+                            }
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 0
+                        }
+                    );
+                }
+
+                // Custom Leaflet Control: Tombol "Gunakan lokasi saya"
+                const LocationControl = L.Control.extend({
+                    options: { position: 'topleft' },
+                    onAdd: function(map) {
+                        const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                        const btn = L.DomUtil.create('a', 'leaflet-control-locate', container);
+                        btn.id = 'btn-locate-user';
+                        btn.href = '#';
+                        btn.title = 'Gunakan lokasi saya';
+                        btn.setAttribute('role', 'button');
+                        btn.setAttribute('aria-label', 'Gunakan lokasi saya');
+                        btn.style.width = '30px';
+                        btn.style.height = '30px';
+                        btn.style.lineHeight = '30px';
+                        btn.style.textAlign = 'center';
+                        btn.style.display = 'block';
+                        btn.style.cursor = 'pointer';
+                        btn.innerHTML = '<i class="fas fa-map-marker-alt text-danger" id="locate-icon" style="font-size: 15px;"></i><span class="locate-tooltip">Gunakan lokasi saya</span>';
+
+                        L.DomEvent.disableClickPropagation(container);
+                        L.DomEvent.on(btn, 'click', function(e) {
+                            L.DomEvent.preventDefault(e);
+                            getUserLocation(true);
+                        });
+
+                        return container;
+                    }
+                });
+                window.map.addControl(new LocationControl());
+
+                // Expose fungsi agar bisa diakses saat membuka step 2
+                window.getUserLocation = getUserLocation;
 
                 // Cek apakah ada koordinat dari old() (Setelah validasi error)
                 let oldLat = document.getElementById('location_lat').value;
@@ -809,8 +951,11 @@
                         lat: parseFloat(oldLat),
                         lng: parseFloat(oldLng)
                     };
-                    window.map.setView(oldLatLng, 15); // Zoom lebih dekat
+                    window.map.setView(oldLatLng, 15);
                     createOrMoveMarker(oldLatLng);
+                } else {
+                    // Default saat peta dibuka adalah lokasi saya
+                    getUserLocation(false);
                 }
 
                 // 2. Event Klik Manual pada Peta
@@ -822,7 +967,7 @@
                 L.Control.geocoder({
                         geocoder: L.Control.Geocoder.arcgis(),
                         defaultMarkGeocode: false,
-                        placeholder: "Cari nama jalan, desa, kota...",
+                        placeholder: "Cari desa, pulau, pantai...",
                     })
                     .on('markgeocode', function(e) {
                         const center = e.geocode.center;
@@ -940,7 +1085,16 @@
 
                     // Khusus Step 2: Trigger Leaflet agar me-render ulang ukuran container
                     if (steps[index] === 'step-2' && typeof window.map !== 'undefined') {
-                        setTimeout(() => window.map.invalidateSize(), 300);
+                        setTimeout(() => {
+                            window.map.invalidateSize();
+                            let curLat = document.getElementById('location_lat').value;
+                            let curLng = document.getElementById('location_lng').value;
+                            if (curLat && curLng) {
+                                window.map.setView([parseFloat(curLat), parseFloat(curLng)], window.map.getZoom() || 15);
+                            } else if (typeof window.getUserLocation === 'function') {
+                                window.getUserLocation(false);
+                            }
+                        }, 300);
                     }
 
                     // Update UI Progress Bar

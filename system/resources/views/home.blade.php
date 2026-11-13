@@ -297,6 +297,39 @@
             padding: 0.2em 0.5em !important;
             font-size: 0.8rem !important;
         }
+
+        /* Leaflet Locate Control Tooltip */
+        .leaflet-control-locate {
+            position: relative;
+            background-color: #fff !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+        .leaflet-control-locate:hover {
+            background-color: #f8f9fa !important;
+        }
+        .leaflet-control-locate .locate-tooltip {
+            display: none;
+            position: absolute;
+            left: 38px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ffffff;
+            color: #333333;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid #777;
+            border-radius: 3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .leaflet-control-locate:hover .locate-tooltip {
+            display: block;
+        }
     </style>
 @endpush
 
@@ -518,11 +551,30 @@
                 // Initialize map centered at first coordinate
                 var map = L.map('leafletMap').setView([mapData[0].lat, mapData[0].lng], 9);
 
-                // Add OpenStreetMap tiles
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                // Base Layers: Standar (OSM), Satelit (Google Hybrid), dan Citra Esri
+                var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(map);
+                    attribution: '&copy; OpenStreetMap contributors'
+                });
+
+                var googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    attribution: '&copy; Google Maps'
+                });
+
+                var esriImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 19,
+                    attribution: '&copy; Esri World Imagery'
+                });
+
+                osmLayer.addTo(map);
+
+                var baseMaps = {
+                    "Peta Standar": osmLayer,
+                    "Satelit": googleHybrid,
+                    "Citra Esri": esriImagery
+                };
+                L.control.layers(baseMaps, null, { position: 'topright' }).addTo(map);
 
                 // Setup custom marker icons
                 function getMarkerIcon(color) {
@@ -605,9 +657,8 @@
                 // Setup Kontrol Pencarian dengan Rekomendasi (Geocoder)
                 var geocoderControl = L.Control.geocoder({
                     geocoder: L.Control.Geocoder.arcgis(),
-                    geocoder: L.Control.Geocoder.arcgis(),
                     defaultMarkGeocode: false,
-                    placeholder: "Cari kegiatan, lokasi, desa...",
+                    placeholder: "Cari kegiatan, lokasi, desa, pantai...",
                     geocoder: L.Control.Geocoder.nominatim({
                         geocodingQueryParams: { countrycodes: 'id' }
                     })
@@ -616,6 +667,68 @@
                     map.fitBounds(e.geocode.bbox);
                 })
                 .addTo(map);
+
+                // Custom Leaflet Control: Tombol "Lokasi Saya"
+                var LocationControl = L.Control.extend({
+                    options: { position: 'topleft' },
+                    onAdd: function(map) {
+                        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                        var btn = L.DomUtil.create('a', 'leaflet-control-locate', container);
+                        btn.id = 'btn-locate-user-home';
+                        btn.href = '#';
+                        btn.title = 'Lokasi saya';
+                        btn.setAttribute('role', 'button');
+                        btn.setAttribute('aria-label', 'Lokasi saya');
+                        btn.style.width = '30px';
+                        btn.style.height = '30px';
+                        btn.style.lineHeight = '30px';
+                        btn.style.textAlign = 'center';
+                        btn.style.display = 'block';
+                        btn.style.cursor = 'pointer';
+                        btn.innerHTML = '<i class="fas fa-crosshairs text-danger" id="locate-icon-home" style="font-size: 15px;"></i><span class="locate-tooltip">Lokasi saya</span>';
+
+                        var userLocationMarker = null;
+
+                        L.DomEvent.disableClickPropagation(container);
+                        L.DomEvent.on(btn, 'click', function(e) {
+                            L.DomEvent.preventDefault(e);
+                            if (!navigator.geolocation) {
+                                alert('Browser Anda tidak mendukung deteksi lokasi.');
+                                return;
+                            }
+                            var iconEl = document.getElementById('locate-icon-home');
+                            if (iconEl) iconEl.className = 'fas fa-spinner fa-spin text-primary';
+
+                            navigator.geolocation.getCurrentPosition(function(pos) {
+                                var userLat = pos.coords.latitude;
+                                var userLng = pos.coords.longitude;
+                                map.flyTo([userLat, userLng], 14);
+
+                                if (userLocationMarker) {
+                                    userLocationMarker.setLatLng([userLat, userLng]);
+                                } else {
+                                    userLocationMarker = L.marker([userLat, userLng], {
+                                        icon: L.divIcon({
+                                            className: 'user-location-marker',
+                                            html: '<div style="background-color: #007bff; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 0 10px rgba(0,123,255,0.7);"></div>',
+                                            iconSize: [16, 16],
+                                            iconAnchor: [8, 8]
+                                        })
+                                    }).addTo(map);
+                                }
+                                userLocationMarker.bindPopup('<div class="p-1 text-center font-weight-bold" style="font-size: 0.85rem;"><i class="fas fa-street-view text-primary mr-1"></i> Lokasi Anda Saat Ini</div>').openPopup();
+
+                                if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
+                            }, function(err) {
+                                if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
+                                alert('Gagal mendeteksi lokasi. Pastikan izin akses lokasi aktif.');
+                            }, { enableHighAccuracy: true, timeout: 10000 });
+                        });
+
+                        return container;
+                    }
+                });
+                map.addControl(new LocationControl());
 
                 // Ambil elemen input dari geocoder untuk filter marker lokal (Real-time)
                 var geocoderInput = geocoderControl.getContainer().querySelector('input');
