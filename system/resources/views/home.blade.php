@@ -551,7 +551,7 @@
                 // Initialize map centered at first coordinate
                 var map = L.map('leafletMap').setView([mapData[0].lat, mapData[0].lng], 9);
 
-                // Base Layers: Standar (OSM), Satelit (Google Hybrid), dan Citra Esri
+                // Base Layers: Standar (OSM) dan Satelit (Google Hybrid)
                 var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '&copy; OpenStreetMap contributors'
@@ -562,17 +562,11 @@
                     attribution: '&copy; Google Maps'
                 });
 
-                var esriImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    maxZoom: 19,
-                    attribution: '&copy; Esri World Imagery'
-                });
-
                 osmLayer.addTo(map);
 
                 var baseMaps = {
                     "Peta Standar": osmLayer,
-                    "Satelit": googleHybrid,
-                    "Citra Esri": esriImagery
+                    "Satelit": googleHybrid
                 };
                 L.control.layers(baseMaps, null, { position: 'topright' }).addTo(map);
 

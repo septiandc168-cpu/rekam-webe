@@ -1016,7 +1016,7 @@
                 const initialLng = {{ old('lng', $rencana_kegiatan->lng) ?: 109.9714 }};
                 window.map = L.map('map-create').setView([initialLat, initialLng], 13);
 
-                // Base Layers: Standar (OSM), Satelit (Google Hybrid), dan Citra Esri
+                // Base Layers: Standar (OSM) dan Satelit (Google Hybrid)
                 const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '&copy; OpenStreetMap contributors'
@@ -1027,19 +1027,13 @@
                     attribution: '&copy; Google Maps'
                 });
 
-                const esriImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    maxZoom: 19,
-                    attribution: '&copy; Esri World Imagery'
-                });
-
                 // Pasang layer default (Peta Standar)
                 osmLayer.addTo(window.map);
 
                 // Fitur Tampilan Satelit (Layer Switcher Control)
                 const baseMaps = {
                     "Peta Standar": osmLayer,
-                    "Satelit": googleHybrid,
-                    "Citra Esri": esriImagery
+                    "Satelit": googleHybrid
                 };
                 L.control.layers(baseMaps, null, { position: 'topright' }).addTo(window.map);
 
