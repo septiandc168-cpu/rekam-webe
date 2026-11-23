@@ -298,37 +298,6 @@
             font-size: 0.8rem !important;
         }
 
-        /* Leaflet Locate Control Tooltip */
-        .leaflet-control-locate {
-            position: relative;
-            background-color: #fff !important;
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-        }
-        .leaflet-control-locate:hover {
-            background-color: #f8f9fa !important;
-        }
-        .leaflet-control-locate .locate-tooltip {
-            display: none;
-            position: absolute;
-            left: 38px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #ffffff;
-            color: #333333;
-            padding: 4px 8px;
-            font-size: 11px;
-            font-weight: 600;
-            white-space: nowrap;
-            border: 1px solid #777;
-            border-radius: 3px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-            pointer-events: none;
-            z-index: 1000;
-        }
-        .leaflet-control-locate:hover .locate-tooltip {
-            display: block;
         }
     </style>
 @endpush
@@ -668,100 +637,7 @@
                 })
                 .addTo(map);
 
-                // Custom Leaflet Control: Tombol "Lokasi Saya"
-                var LocationControl = L.Control.extend({
-                    options: { position: 'topleft' },
-                    onAdd: function(map) {
-                        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-                        var btn = L.DomUtil.create('a', 'leaflet-control-locate', container);
-                        btn.id = 'btn-locate-user-home';
-                        btn.href = '#';
-                        btn.title = 'Lokasi saya';
-                        btn.setAttribute('role', 'button');
-                        btn.setAttribute('aria-label', 'Lokasi saya');
-                        btn.style.width = '30px';
-                        btn.style.height = '30px';
-                        btn.style.lineHeight = '30px';
-                        btn.style.textAlign = 'center';
-                        btn.style.display = 'block';
-                        btn.style.cursor = 'pointer';
-                        btn.innerHTML = '<i class="fas fa-crosshairs text-danger" id="locate-icon-home" style="font-size: 15px;"></i><span class="locate-tooltip">Lokasi saya</span>';
 
-                        var userLocationMarker = null;
-
-                        function showHomeToast(icon, title) {
-                            if (typeof Swal !== 'undefined') {
-                                const Toast = Swal.mixin({
-                                    toast: true,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true
-                                });
-                                Toast.fire({ icon: icon, title: title });
-                            }
-                        }
-
-                        function setHomeUserLocation(userLat, userLng) {
-                            map.flyTo([userLat, userLng], 15);
-
-                            if (userLocationMarker) {
-                                userLocationMarker.setLatLng([userLat, userLng]);
-                            } else {
-                                userLocationMarker = L.marker([userLat, userLng], {
-                                    icon: L.divIcon({
-                                        className: 'user-location-marker',
-                                        html: '<div style="background-color: #007bff; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 0 10px rgba(0,123,255,0.7);"></div>',
-                                        iconSize: [16, 16],
-                                        iconAnchor: [8, 8]
-                                    })
-                                }).addTo(map);
-                            }
-                            userLocationMarker.bindPopup('<div class="p-1 text-center font-weight-bold" style="font-size: 0.85rem;"><i class="fas fa-street-view text-primary mr-1"></i> Lokasi Anda Saat Ini</div>').openPopup();
-
-                            var iconEl = document.getElementById('locate-icon-home');
-                            if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
-
-                            showHomeToast('success', 'Lokasi Anda berhasil ditemukan!');
-                        }
-
-                        L.DomEvent.disableClickPropagation(container);
-                        L.DomEvent.on(btn, 'click', function(e) {
-                            L.DomEvent.preventDefault(e);
-                            var iconEl = document.getElementById('locate-icon-home');
-                            if (iconEl) iconEl.className = 'fas fa-spinner fa-spin text-primary';
-
-                            function resetHomeIcon() {
-                                var iconEl = document.getElementById('locate-icon-home');
-                                if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
-                            }
-
-                            if (!navigator.geolocation) {
-                                resetHomeIcon();
-                                showHomeToast('warning', 'Browser Anda tidak mendukung deteksi lokasi.');
-                                return;
-                            }
-
-                            navigator.geolocation.getCurrentPosition(
-                                function(pos) {
-                                    setHomeUserLocation(pos.coords.latitude, pos.coords.longitude);
-                                },
-                                function(err) {
-                                    resetHomeIcon();
-                                    var msg = 'Tidak dapat mendeteksi sinyal GPS perangkat (terutama pada PC/Laptop). Silakan cari lokasi via kotak pencarian.';
-                                    if (err.code === err.PERMISSION_DENIED) {
-                                        msg = 'Izin akses lokasi ditolak pada browser.';
-                                    }
-                                    showHomeToast('warning', msg);
-                                },
-                                { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
-                            );
-                        });
-
-                        return container;
-                    }
-                });
-                map.addControl(new LocationControl());
 
                 // Ambil elemen input dari geocoder untuk filter marker lokal (Real-time)
                 var geocoderInput = geocoderControl.getContainer().querySelector('input');
