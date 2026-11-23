@@ -683,40 +683,81 @@
 
                         var userLocationMarker = null;
 
+                        function showHomeToast(icon, title) {
+                            if (typeof Swal !== 'undefined') {
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true
+                                });
+                                Toast.fire({ icon: icon, title: title });
+                            }
+                        }
+
+                        function setHomeUserLocation(userLat, userLng, isApprox) {
+                            map.flyTo([userLat, userLng], 14);
+
+                            if (userLocationMarker) {
+                                userLocationMarker.setLatLng([userLat, userLng]);
+                            } else {
+                                userLocationMarker = L.marker([userLat, userLng], {
+                                    icon: L.divIcon({
+                                        className: 'user-location-marker',
+                                        html: '<div style="background-color: #007bff; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 0 10px rgba(0,123,255,0.7);"></div>',
+                                        iconSize: [16, 16],
+                                        iconAnchor: [8, 8]
+                                    })
+                                }).addTo(map);
+                            }
+                            userLocationMarker.bindPopup('<div class="p-1 text-center font-weight-bold" style="font-size: 0.85rem;"><i class="fas fa-street-view text-primary mr-1"></i> Lokasi Anda Saat Ini</div>').openPopup();
+
+                            var iconEl = document.getElementById('locate-icon-home');
+                            if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
+
+                            if (isApprox) {
+                                showHomeToast('info', 'Lokasi didekati via jaringan internet');
+                            } else {
+                                showHomeToast('success', 'Lokasi Anda berhasil ditemukan!');
+                            }
+                        }
+
+                        function fallbackHomeToIp() {
+                            fetch('https://get.geojs.io/v1/ip/geo.json')
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data && data.latitude && data.longitude) {
+                                        setHomeUserLocation(data.latitude, data.longitude, true);
+                                    } else {
+                                        var iconEl = document.getElementById('locate-icon-home');
+                                        if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
+                                        showHomeToast('warning', 'Gagal mendeteksi lokasi saat ini.');
+                                    }
+                                })
+                                .catch(() => {
+                                    var iconEl = document.getElementById('locate-icon-home');
+                                    if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
+                                    showHomeToast('warning', 'Gagal mendeteksi lokasi saat ini.');
+                                });
+                        }
+
                         L.DomEvent.disableClickPropagation(container);
                         L.DomEvent.on(btn, 'click', function(e) {
                             L.DomEvent.preventDefault(e);
-                            if (!navigator.geolocation) {
-                                alert('Browser Anda tidak mendukung deteksi lokasi.');
-                                return;
-                            }
                             var iconEl = document.getElementById('locate-icon-home');
                             if (iconEl) iconEl.className = 'fas fa-spinner fa-spin text-primary';
 
+                            if (!navigator.geolocation) {
+                                fallbackHomeToIp();
+                                return;
+                            }
+
                             navigator.geolocation.getCurrentPosition(function(pos) {
-                                var userLat = pos.coords.latitude;
-                                var userLng = pos.coords.longitude;
-                                map.flyTo([userLat, userLng], 14);
-
-                                if (userLocationMarker) {
-                                    userLocationMarker.setLatLng([userLat, userLng]);
-                                } else {
-                                    userLocationMarker = L.marker([userLat, userLng], {
-                                        icon: L.divIcon({
-                                            className: 'user-location-marker',
-                                            html: '<div style="background-color: #007bff; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 0 10px rgba(0,123,255,0.7);"></div>',
-                                            iconSize: [16, 16],
-                                            iconAnchor: [8, 8]
-                                        })
-                                    }).addTo(map);
-                                }
-                                userLocationMarker.bindPopup('<div class="p-1 text-center font-weight-bold" style="font-size: 0.85rem;"><i class="fas fa-street-view text-primary mr-1"></i> Lokasi Anda Saat Ini</div>').openPopup();
-
-                                if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
+                                setHomeUserLocation(pos.coords.latitude, pos.coords.longitude, false);
                             }, function(err) {
-                                if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
-                                alert('Gagal mendeteksi lokasi. Pastikan izin akses lokasi aktif.');
-                            }, { enableHighAccuracy: true, timeout: 10000 });
+                                fallbackHomeToIp();
+                            }, { enableHighAccuracy: false, timeout: 7000, maximumAge: 180000 });
                         });
 
                         return container;

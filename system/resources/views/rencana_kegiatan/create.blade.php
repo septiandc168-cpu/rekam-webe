@@ -853,53 +853,93 @@
                     updateLatLngInputs(latlng.lat, latlng.lng);
                 }
 
+                // Helper Notifikasi Toast Lokasi
+                function showLocationToast(icon, title) {
+                    if (typeof Swal !== 'undefined') {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        Toast.fire({ icon: icon, title: title });
+                    }
+                }
+
                 // Fungsi Deteksi Lokasi Pengguna (Gunakan Lokasi Saya)
                 function getUserLocation(isUserClick = false) {
-                    if (!navigator.geolocation) {
-                        if (isUserClick) {
-                            alert('Browser Anda tidak mendukung fitur deteksi lokasi (Geolocation).');
-                        }
-                        return;
-                    }
-
                     const locateIcon = document.getElementById('locate-icon');
                     if (locateIcon) {
                         locateIcon.className = 'fas fa-spinner fa-spin text-primary';
                     }
 
+                    function resetIcon() {
+                        const icon = document.getElementById('locate-icon');
+                        if (icon) {
+                            icon.className = 'fas fa-map-marker-alt text-danger';
+                        }
+                    }
+
+                    function onLocationFound(lat, lng, isApprox = false) {
+                        const userLatLng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+                        createOrMoveMarker(userLatLng, true);
+                        resetIcon();
+
+                        if (isUserClick) {
+                            if (isApprox) {
+                                showLocationToast('info', 'Lokasi terdeteksi via jaringan internet');
+                            } else {
+                                showLocationToast('success', 'Lokasi Anda berhasil ditemukan!');
+                            }
+                        }
+                    }
+
+                    function fallbackToIp(reasonMsg) {
+                        fetch('https://get.geojs.io/v1/ip/geo.json')
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data && data.latitude && data.longitude) {
+                                    onLocationFound(data.latitude, data.longitude, true);
+                                } else {
+                                    resetIcon();
+                                    if (isUserClick) {
+                                        showLocationToast('warning', reasonMsg || 'Gagal mendeteksi lokasi.');
+                                    }
+                                }
+                            })
+                            .catch(() => {
+                                resetIcon();
+                                if (isUserClick) {
+                                    showLocationToast('warning', reasonMsg || 'Gagal mendeteksi lokasi.');
+                                }
+                            });
+                    }
+
+                    if (!navigator.geolocation) {
+                        fallbackToIp('Browser tidak mendukung deteksi lokasi.');
+                        return;
+                    }
+
+                    // Gunakan enableHighAccuracy: false agar cepat dan tidak timeout pada PC/laptop tanpa hardware GPS
                     navigator.geolocation.getCurrentPosition(
                         function(position) {
-                            const lat = position.coords.latitude;
-                            const lng = position.coords.longitude;
-                            const userLatLng = { lat: lat, lng: lng };
-
-                            createOrMoveMarker(userLatLng, true);
-
-                            if (locateIcon) {
-                                locateIcon.className = 'fas fa-map-marker-alt text-danger';
-                            }
+                            onLocationFound(position.coords.latitude, position.coords.longitude, false);
                         },
                         function(error) {
-                            if (locateIcon) {
-                                locateIcon.className = 'fas fa-map-marker-alt text-danger';
+                            let reason = 'Waktu permintaan lokasi habis.';
+                            if (error.code === error.PERMISSION_DENIED) {
+                                reason = 'Izin akses lokasi di browser ditolak.';
+                            } else if (error.code === error.POSITION_UNAVAILABLE) {
+                                reason = 'Informasi lokasi tidak tersedia.';
                             }
-
-                            if (isUserClick) {
-                                let pesan = 'Gagal mendeteksi lokasi.';
-                                if (error.code === error.PERMISSION_DENIED) {
-                                    pesan = 'Izin akses lokasi ditolak di browser. Pastikan GPS aktif dan izin lokasi telah diberikan pada browser.';
-                                } else if (error.code === error.POSITION_UNAVAILABLE) {
-                                    pesan = 'Informasi lokasi saat ini tidak tersedia.';
-                                } else if (error.code === error.TIMEOUT) {
-                                    pesan = 'Waktu permintaan lokasi habis. Silakan coba lagi.';
-                                }
-                                alert(pesan);
-                            }
+                            // Fallback otomatis ke IP lookup agar tidak macet / gagal
+                            fallbackToIp(reason);
                         },
                         {
-                            enableHighAccuracy: true,
-                            timeout: 10000,
-                            maximumAge: 0
+                            enableHighAccuracy: false,
+                            timeout: 7000,
+                            maximumAge: 180000
                         }
                     );
                 }
