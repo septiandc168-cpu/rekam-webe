@@ -172,26 +172,32 @@
             <div class="col-md-7 mb-4 d-flex">
                 <div class="card w-100 h-100 d-flex flex-column">
                     <div class="card-header bg-navy d-flex align-items-center justify-content-between flex-wrap">
-                        <div class="mb-1 mb-sm-0">
-                            <h3 class="card-title mb-0">
-                                <i class="fas fa-chart-bar mr-2"></i>
-                                Realisasi Kegiatan per Bulan
+                        <div class="d-flex flex-column py-1">
+                            <h3 class="card-title font-weight-bold mb-1" style="float: none; font-size: 1.05rem; display: block;">
+                                <i class="fas fa-chart-bar mr-2"></i>Realisasi Kegiatan per Bulan
                             </h3>
-                            <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
-                                <i class="fas fa-info-circle mr-1"></i> Grafik jumlah kegiatan yang telah terlaksana pada setiap bulan di tahun {{ $selectedYear }}
+                            <small class="text-white-50" style="font-size: 0.75rem; font-weight: normal; line-height: 1.3; display: block;">
+                                <i class="fas fa-info-circle mr-1"></i>Grafik jumlah kegiatan yang telah terlaksana pada setiap bulan di tahun {{ $selectedYear }}
                             </small>
                         </div>
                         <div class="card-tools d-flex align-items-center ml-auto">
                             <span class="badge badge-light text-navy font-weight-bold px-2 py-1 mr-2 d-none d-sm-inline-block shadow-sm" style="font-size: 0.8rem;" title="Total kegiatan terlaksana tahun {{ $selectedYear }}">
                                 <i class="fas fa-check-circle text-success mr-1"></i> Total: {{ $totalRealisasiTahun }} Selesai
                             </span>
-                            <form action="{{ route('home') }}" method="GET" class="d-inline-block mr-2" id="formFilterTahun">
-                                <select name="tahun" class="form-control form-control-sm text-dark font-weight-bold shadow-sm" onchange="this.form.submit()" style="border-radius: 4px; height: 31px; cursor: pointer;">
+                            <div class="dropdown d-inline-block mr-2">
+                                <button class="btn btn-sm bg-white text-navy font-weight-bold dropdown-toggle shadow-sm" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; height: 31px; border: 1px solid #ced4da; color: #001f3f !important;">
+                                    Tahun {{ $selectedYear }}
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right shadow-sm p-1" aria-labelledby="dropdownFilterTahun" style="min-width: 120px; border-radius: 6px; border: 1px solid #e2e8f0;">
                                     @foreach($availableYears as $yr)
-                                        <option value="{{ $yr }}" {{ (int)$yr === (int)$selectedYear ? 'selected' : '' }}>Tahun {{ $yr }}</option>
+                                        <a class="dropdown-item rounded font-weight-bold py-1 px-3 {{ (int)$yr === (int)$selectedYear ? 'active' : 'text-dark' }}" 
+                                           href="{{ route('home', ['tahun' => $yr]) }}"
+                                           style="{{ (int)$yr === (int)$selectedYear ? 'background-color: #001f3f !important; color: #ffffff !important;' : '' }}">
+                                            Tahun {{ $yr }}
+                                        </a>
                                     @endforeach
-                                </select>
-                            </form>
+                                </div>
+                            </div>
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -310,6 +316,16 @@
             font-size: 0.8rem !important;
         }
 
+        /* Custom Dropdown styling to match Navy theme */
+        .dropdown-menu .dropdown-item.active,
+        .dropdown-menu .dropdown-item:active {
+            background-color: #001f3f !important;
+            color: #ffffff !important;
+        }
+        .dropdown-menu .dropdown-item:hover,
+        .dropdown-menu .dropdown-item:focus {
+            background-color: #001f3f !important;
+            color: #ffffff !important;
         }
     </style>
 @endpush
@@ -372,6 +388,7 @@
                             bodyColor: '#fff',
                             padding: 10,
                             cornerRadius: 6,
+                            displayColors: false, // Hilangkan kotak berwarna di samping teks label
                             titleFont: {
                                 size: 12,
                                 weight: '600'
@@ -382,7 +399,7 @@
                             callbacks: {
                                 label: function(context) {
                                     var val = context.parsed.y || 0;
-                                    return '  Total: ' + val + ' Kegiatan Terlaksana';
+                                    return 'Total: ' + val + ' Kegiatan Terlaksana';
                                 },
                                 afterLabel: function(context) {
                                     var idx = context.dataIndex;
@@ -390,8 +407,8 @@
                                     var lng = dataLangsung[idx] || 0;
                                     var lines = [];
                                     if (context.parsed.y > 0) {
-                                        lines.push('   • Rencana Selesai: ' + rnc);
-                                        lines.push('   • Kegiatan Langsung: ' + lng);
+                                        lines.push(' • Rencana Selesai: ' + rnc);
+                                        lines.push(' • Kegiatan Langsung: ' + lng);
                                     }
                                     return lines;
                                 }
