@@ -1106,65 +1106,41 @@
                         }
                     }
 
-                    function onLocationFound(lat, lng, isApprox = false) {
-                        const userLatLng = { lat: parseFloat(lat), lng: parseFloat(lng) };
-                        createOrMoveMarker(userLatLng, true);
-                        resetIcon();
-
-                        if (isUserClick) {
-                            if (isApprox) {
-                                showLocationToast('info', 'Lokasi terdeteksi via jaringan internet');
-                            } else {
-                                showLocationToast('success', 'Lokasi Anda berhasil ditemukan!');
-                            }
-                        }
-                    }
-
-                    function fallbackToIp(reasonMsg) {
-                        fetch('https://get.geojs.io/v1/ip/geo.json')
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data && data.latitude && data.longitude) {
-                                    onLocationFound(data.latitude, data.longitude, true);
-                                } else {
-                                    resetIcon();
-                                    if (isUserClick) {
-                                        showLocationToast('warning', reasonMsg || 'Gagal mendeteksi lokasi.');
-                                    }
-                                }
-                            })
-                            .catch(() => {
-                                resetIcon();
-                                if (isUserClick) {
-                                    showLocationToast('warning', reasonMsg || 'Gagal mendeteksi lokasi.');
-                                }
-                            });
-                    }
-
                     if (!navigator.geolocation) {
-                        fallbackToIp('Browser tidak mendukung deteksi lokasi.');
+                        resetIcon();
+                        if (isUserClick) {
+                            showLocationToast('warning', 'Browser Anda tidak mendukung deteksi lokasi GPS.');
+                        }
                         return;
                     }
 
-                    // Gunakan enableHighAccuracy: false agar cepat dan tidak timeout pada PC/laptop tanpa hardware GPS
                     navigator.geolocation.getCurrentPosition(
                         function(position) {
-                            onLocationFound(position.coords.latitude, position.coords.longitude, false);
+                            const userLatLng = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            createOrMoveMarker(userLatLng, true);
+                            resetIcon();
+
+                            if (isUserClick) {
+                                showLocationToast('success', 'Lokasi Anda berhasil ditemukan!');
+                            }
                         },
                         function(error) {
-                            let reason = 'Waktu permintaan lokasi habis.';
-                            if (error.code === error.PERMISSION_DENIED) {
-                                reason = 'Izin akses lokasi di browser ditolak.';
-                            } else if (error.code === error.POSITION_UNAVAILABLE) {
-                                reason = 'Informasi lokasi tidak tersedia.';
+                            resetIcon();
+                            if (isUserClick) {
+                                let msg = 'Tidak dapat mendeteksi sinyal GPS perangkat (terutama pada PC/Laptop). Silakan klik langsung pada peta atau gunakan kotak pencarian.';
+                                if (error.code === error.PERMISSION_DENIED) {
+                                    msg = 'Izin akses lokasi di browser ditolak. Mohon izinkan akses lokasi pada setelan browser Anda.';
+                                }
+                                showLocationToast('warning', msg);
                             }
-                            // Fallback otomatis ke IP lookup agar tidak macet / gagal
-                            fallbackToIp(reason);
                         },
                         {
-                            enableHighAccuracy: false,
-                            timeout: 7000,
-                            maximumAge: 180000
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 30000
                         }
                     );
                 }

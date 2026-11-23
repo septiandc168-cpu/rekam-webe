@@ -696,8 +696,8 @@
                             }
                         }
 
-                        function setHomeUserLocation(userLat, userLng, isApprox) {
-                            map.flyTo([userLat, userLng], 14);
+                        function setHomeUserLocation(userLat, userLng) {
+                            map.flyTo([userLat, userLng], 15);
 
                             if (userLocationMarker) {
                                 userLocationMarker.setLatLng([userLat, userLng]);
@@ -716,30 +716,7 @@
                             var iconEl = document.getElementById('locate-icon-home');
                             if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
 
-                            if (isApprox) {
-                                showHomeToast('info', 'Lokasi didekati via jaringan internet');
-                            } else {
-                                showHomeToast('success', 'Lokasi Anda berhasil ditemukan!');
-                            }
-                        }
-
-                        function fallbackHomeToIp() {
-                            fetch('https://get.geojs.io/v1/ip/geo.json')
-                                .then(res => res.json())
-                                .then(data => {
-                                    if (data && data.latitude && data.longitude) {
-                                        setHomeUserLocation(data.latitude, data.longitude, true);
-                                    } else {
-                                        var iconEl = document.getElementById('locate-icon-home');
-                                        if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
-                                        showHomeToast('warning', 'Gagal mendeteksi lokasi saat ini.');
-                                    }
-                                })
-                                .catch(() => {
-                                    var iconEl = document.getElementById('locate-icon-home');
-                                    if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
-                                    showHomeToast('warning', 'Gagal mendeteksi lokasi saat ini.');
-                                });
+                            showHomeToast('success', 'Lokasi Anda berhasil ditemukan!');
                         }
 
                         L.DomEvent.disableClickPropagation(container);
@@ -748,16 +725,31 @@
                             var iconEl = document.getElementById('locate-icon-home');
                             if (iconEl) iconEl.className = 'fas fa-spinner fa-spin text-primary';
 
+                            function resetHomeIcon() {
+                                var iconEl = document.getElementById('locate-icon-home');
+                                if (iconEl) iconEl.className = 'fas fa-crosshairs text-danger';
+                            }
+
                             if (!navigator.geolocation) {
-                                fallbackHomeToIp();
+                                resetHomeIcon();
+                                showHomeToast('warning', 'Browser Anda tidak mendukung deteksi lokasi.');
                                 return;
                             }
 
-                            navigator.geolocation.getCurrentPosition(function(pos) {
-                                setHomeUserLocation(pos.coords.latitude, pos.coords.longitude, false);
-                            }, function(err) {
-                                fallbackHomeToIp();
-                            }, { enableHighAccuracy: false, timeout: 7000, maximumAge: 180000 });
+                            navigator.geolocation.getCurrentPosition(
+                                function(pos) {
+                                    setHomeUserLocation(pos.coords.latitude, pos.coords.longitude);
+                                },
+                                function(err) {
+                                    resetHomeIcon();
+                                    var msg = 'Tidak dapat mendeteksi sinyal GPS perangkat (terutama pada PC/Laptop). Silakan cari lokasi via kotak pencarian.';
+                                    if (err.code === err.PERMISSION_DENIED) {
+                                        msg = 'Izin akses lokasi ditolak pada browser.';
+                                    }
+                                    showHomeToast('warning', msg);
+                                },
+                                { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+                            );
                         });
 
                         return container;
