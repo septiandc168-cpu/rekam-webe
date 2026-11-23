@@ -1011,23 +1011,24 @@
         <script src="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // 1. Inisialisasi Peta (Batasi minZoom agar peta tidak mengecil/berulang)
+                // 1. Inisialisasi Peta (minZoom: 2 agar pas menampilkan satu dunia tanpa terulang/terpotong)
                 const initialLat = {{ old('lat', $rencana_kegiatan->lat) ?: -1.8465 }};
                 const initialLng = {{ old('lng', $rencana_kegiatan->lng) ?: 109.9714 }};
                 window.map = L.map('map-create', {
-                    minZoom: 5,
-                    maxZoom: 20
+                    minZoom: 2,
+                    maxZoom: 20,
+                    worldCopyJump: true
                 }).setView([initialLat, initialLng], 13);
 
                 // Base Layers: Standar (OSM) dan Satelit (Google Hybrid)
                 const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    minZoom: 5,
+                    minZoom: 2,
                     maxZoom: 19,
                     attribution: '&copy; OpenStreetMap contributors'
                 });
 
                 const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-                    minZoom: 5,
+                    minZoom: 2,
                     maxZoom: 20,
                     attribution: '&copy; Google Maps'
                 });
