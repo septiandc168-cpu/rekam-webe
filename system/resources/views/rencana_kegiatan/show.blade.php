@@ -880,10 +880,12 @@
             const lat = {{ $rencana_kegiatan->lat ?: -0.0227 }};
             const lng = {{ $rencana_kegiatan->lng ?: 109.3323 }};
             
-            // Inisialisasi Peta
+            // Inisialisasi Peta (Batasi minZoom agar peta tidak mengecil/berulang)
             const map = L.map('map', {
                 center: [lat, lng],
                 zoom: 15,
+                minZoom: 5,
+                maxZoom: 20,
                 zoomControl: true,
                 dragging: true,
                 scrollWheelZoom: false,
@@ -892,11 +894,13 @@
             
             // Base Layers: Standar (OSM) dan Satelit (Google Hybrid)
             const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                minZoom: 5,
                 maxZoom: 19,
                 attribution: '&copy; OpenStreetMap contributors'
             });
 
             const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                minZoom: 5,
                 maxZoom: 20,
                 attribution: '&copy; Google Maps'
             });

@@ -548,16 +548,21 @@
             var mapData = @json($mapData);
             
             if (mapData.length > 0) {
-                // Initialize map centered at first coordinate
-                var map = L.map('leafletMap').setView([mapData[0].lat, mapData[0].lng], 9);
+                // Initialize map centered at first coordinate (Batasi minZoom agar peta tidak mengecil/berulang)
+                var map = L.map('leafletMap', {
+                    minZoom: 5,
+                    maxZoom: 20
+                }).setView([mapData[0].lat, mapData[0].lng], 9);
 
                 // Base Layers: Standar (OSM) dan Satelit (Google Hybrid)
                 var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    minZoom: 5,
                     maxZoom: 19,
                     attribution: '&copy; OpenStreetMap contributors'
                 });
 
                 var googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                    minZoom: 5,
                     maxZoom: 20,
                     attribution: '&copy; Google Maps'
                 });

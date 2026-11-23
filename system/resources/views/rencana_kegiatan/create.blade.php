@@ -799,16 +799,21 @@
         <script src="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // 1. Inisialisasi Peta (Default fallback: Ketapang)
-                window.map = L.map('map-create').setView([-1.8465, 109.9714], 12);
+                // 1. Inisialisasi Peta (Default fallback: Ketapang, batasi minZoom agar peta tidak mengecil/berulang)
+                window.map = L.map('map-create', {
+                    minZoom: 5,
+                    maxZoom: 20
+                }).setView([-1.8465, 109.9714], 12);
 
                 // Base Layers: Standar (OSM) dan Satelit (Google Hybrid)
                 const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    minZoom: 5,
                     maxZoom: 19,
                     attribution: '&copy; OpenStreetMap contributors'
                 });
 
                 const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                    minZoom: 5,
                     maxZoom: 20,
                     attribution: '&copy; Google Maps'
                 });
