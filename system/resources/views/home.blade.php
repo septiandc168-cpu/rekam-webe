@@ -171,15 +171,27 @@
             <!-- Chart: Statistik Kegiatan per Bulan -->
             <div class="col-md-7 mb-4 d-flex">
                 <div class="card w-100 h-100 d-flex flex-column">
-                    <div class="card-header bg-navy">
-                        <h3 class="card-title mb-0">
-                            <i class="fas fa-chart-bar mr-2"></i>
-                            Statistik Kegiatan per Bulan
+                    <div class="card-header bg-navy d-flex align-items-center justify-content-between flex-wrap">
+                        <div class="mb-1 mb-sm-0">
+                            <h3 class="card-title mb-0">
+                                <i class="fas fa-chart-bar mr-2"></i>
+                                Realisasi Kegiatan per Bulan
+                            </h3>
                             <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
-                                <i class="fas fa-info-circle mr-1"></i> Grafik perbandingan jumlah kegiatan berdasarkan status pelaksanaan setiap bulan
+                                <i class="fas fa-info-circle mr-1"></i> Grafik jumlah kegiatan yang telah terlaksana pada setiap bulan di tahun {{ $selectedYear }}
                             </small>
-                        </h3>
-                        <div class="card-tools">
+                        </div>
+                        <div class="card-tools d-flex align-items-center ml-auto">
+                            <span class="badge badge-light text-navy font-weight-bold px-2 py-1 mr-2 d-none d-sm-inline-block shadow-sm" style="font-size: 0.8rem;" title="Total kegiatan terlaksana tahun {{ $selectedYear }}">
+                                <i class="fas fa-check-circle text-success mr-1"></i> Total: {{ $totalRealisasiTahun }} Selesai
+                            </span>
+                            <form action="{{ route('home') }}" method="GET" class="d-inline-block mr-2" id="formFilterTahun">
+                                <select name="tahun" class="form-control form-control-sm text-dark font-weight-bold shadow-sm" onchange="this.form.submit()" style="border-radius: 4px; height: 31px; cursor: pointer;">
+                                    @foreach($availableYears as $yr)
+                                        <option value="{{ $yr }}" {{ (int)$yr === (int)$selectedYear ? 'selected' : '' }}>Tahun {{ $yr }}</option>
+                                    @endforeach
+                                </select>
+                            </form>
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -323,42 +335,26 @@
                 $.fn.bootstrapTooltip = bootstrapTooltip;
             }
 
-            // === Chart.js: Stacked Bar Chart Kegiatan per Bulan ===
+            // === Chart.js: Realisasi Kegiatan per Bulan (Rekomendasi 1) ===
             var ctx = document.getElementById('chartKegiatan').getContext('2d');
+            var dataRealisasi = @json($chartRealisasi);
+            var dataRencana = @json($chartRencanaSelesai);
+            var dataLangsung = @json($chartLaporanLangsung);
+
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: @json($chartLabels),
                     datasets: [
                         {
-                            label: 'Akan Dilaksanakan',
-                            data: @json($chartDisetujui),
-                            backgroundColor: '#28a745',
-                            borderColor: '#1e7e34',
+                            label: 'Kegiatan Terlaksana',
+                            data: dataRealisasi,
+                            backgroundColor: 'rgba(0, 31, 63, 0.88)',
+                            hoverBackgroundColor: '#001f3f',
+                            borderColor: '#001f3f',
                             borderWidth: 1,
                             borderRadius: 4,
-                            stack: 'Stack 0',
-                            maxBarThickness: 40,
-                        },
-                        {
-                            label: 'Telah Selesai',
-                            data: @json($chartRencanaSelesai),
-                            backgroundColor: '#007bff',
-                            borderColor: '#0056b3',
-                            borderWidth: 1,
-                            borderRadius: 4,
-                            stack: 'Stack 0',
-                            maxBarThickness: 40,
-                        },
-                        {
-                            label: 'Kegiatan Langsung',
-                            data: @json($chartLaporanLangsung),
-                            backgroundColor: '#ffc107',
-                            borderColor: '#d39e00',
-                            borderWidth: 1,
-                            borderRadius: 4,
-                            stack: 'Stack 0',
-                            maxBarThickness: 40,
+                            maxBarThickness: 38,
                         }
                     ]
                 },
@@ -368,19 +364,7 @@
                     devicePixelRatio: window.devicePixelRatio || 2,
                     plugins: {
                         legend: {
-                            display: true,
-                            position: 'top',
-                            align: 'center',
-                            labels: {
-                                usePointStyle: true,
-                                pointStyle: 'rectRounded',
-                                padding: 14,
-                                font: {
-                                    size: 12,
-                                    weight: '600',
-                                    family: "'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-                                }
-                            }
+                            display: false
                         },
                         tooltip: {
                             backgroundColor: '#001f3f',
@@ -397,27 +381,29 @@
                             },
                             callbacks: {
                                 label: function(context) {
-                                    var label = context.dataset.label || '';
                                     var val = context.parsed.y || 0;
-                                    return '  • ' + label + ': ' + val + ' Kegiatan';
+                                    return '  Total: ' + val + ' Kegiatan Terlaksana';
                                 },
-                                footer: function(tooltipItems) {
-                                    var sum = 0;
-                                    tooltipItems.forEach(function(item) {
-                                        sum += item.parsed.y || 0;
-                                    });
-                                    return 'Total: ' + sum + ' Kegiatan';
+                                afterLabel: function(context) {
+                                    var idx = context.dataIndex;
+                                    var rnc = dataRencana[idx] || 0;
+                                    var lng = dataLangsung[idx] || 0;
+                                    var lines = [];
+                                    if (context.parsed.y > 0) {
+                                        lines.push('   • Rencana Selesai: ' + rnc);
+                                        lines.push('   • Kegiatan Langsung: ' + lng);
+                                    }
+                                    return lines;
                                 }
                             }
                         }
                     },
                     scales: {
                         x: {
-                            stacked: true,
                             ticks: {
                                 font: {
                                     size: 11,
-                                    weight: '500',
+                                    weight: '600',
                                     family: "'Source Sans Pro', sans-serif"
                                 }
                             },
@@ -426,7 +412,6 @@
                             }
                         },
                         y: {
-                            stacked: true,
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1,

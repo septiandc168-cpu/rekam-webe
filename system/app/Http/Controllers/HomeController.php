@@ -25,7 +25,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $isAdmin = $user && $user->role && $user->role->role_name === 'admin';
@@ -49,60 +49,97 @@ class HomeController extends Controller
             $totalUsers     = 0;
         }
 
-        // === Chart Data: Kegiatan per bulan (12 bulan: 2 bulan lalu s/d 9 bulan ke depan) ===
+        // === Filter Tahun untuk Chart Realisasi Kegiatan ===
+        $currentYear = Carbon::now()->year;
+        $yearsRencana = RencanaKegiatan::whereNotNull('tanggal_mulai')
+            ->selectRaw('YEAR(tanggal_mulai) as yr')
+            ->distinct()
+            ->pluck('yr')
+            ->toArray();
+
+        $yearsLaporan = LaporanKegiatan::whereNotNull('realisasi_tanggal_mulai')
+            ->selectRaw('YEAR(realisasi_tanggal_mulai) as yr')
+            ->distinct()
+            ->pluck('yr')
+            ->toArray();
+
+        $yearsLaporanCreated = LaporanKegiatan::whereNotNull('created_at')
+            ->selectRaw('YEAR(created_at) as yr')
+            ->distinct()
+            ->pluck('yr')
+            ->toArray();
+
+        $allYears = array_unique(array_filter(array_merge($yearsRencana, $yearsLaporan, $yearsLaporanCreated, [$currentYear])));
+        rsort($allYears);
+        $availableYears = array_values($allYears);
+
+        $selectedYear = (int) $request->input('tahun', $currentYear);
+        if (!in_array($selectedYear, $availableYears)) {
+            $availableYears[] = $selectedYear;
+            rsort($availableYears);
+        }
+
+        // === Chart Data: Realisasi Kegiatan per Bulan (12 Bulan Penuh Jan - Des) ===
         $chartLabels          = [];
-        $chartValues          = [];
-        $chartDisetujui       = [];
-        $chartSelesai         = [];
+        $chartRealisasi       = [];
         $chartRencanaSelesai  = [];
         $chartLaporanLangsung = [];
-        $now = Carbon::now();
+        $totalRealisasiTahun  = 0;
 
-        for ($i = -2; $i <= 9; $i++) {
-            $month = $now->copy()->addMonths($i);
-            $chartLabels[] = $month->translatedFormat('M Y');
+        for ($m = 1; $m <= 12; $m++) {
+            $monthDate = Carbon::createFromDate($selectedYear, $m, 1);
+            $chartLabels[] = $monthDate->translatedFormat('M');
 
-            $queryDisetujui = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
-                ->whereMonth('tanggal_mulai', $month->month)
-                ->where('status', RencanaKegiatan::STATUS_DISETUJUI);
+            // 1. Rencana Kegiatan yang selesai
+            $querySelesai = RencanaKegiatan::where('status', RencanaKegiatan::STATUS_SELESAI)
+                ->where(function ($q) use ($selectedYear, $m) {
+                    $q->whereHas('laporanKegiatan', function ($lq) use ($selectedYear, $m) {
+                        $lq->whereYear('realisasi_tanggal_mulai', $selectedYear)
+                           ->whereMonth('realisasi_tanggal_mulai', $m);
+                    })->orWhere(function ($q2) use ($selectedYear, $m) {
+                        $q2->whereDoesntHave('laporanKegiatan', function ($lq) {
+                            $lq->whereNotNull('realisasi_tanggal_mulai');
+                        })
+                        ->whereYear('tanggal_mulai', $selectedYear)
+                        ->whereMonth('tanggal_mulai', $m);
+                    });
+                });
 
-            $querySelesai = RencanaKegiatan::whereYear('tanggal_mulai', $month->year)
-                ->whereMonth('tanggal_mulai', $month->month)
-                ->where('status', RencanaKegiatan::STATUS_SELESAI);
-
-            // Hitung Laporan Langsung (Tanpa Rencana Kegiatan) yang resmi (hanya status diajukan & final, mengecualikan draft & revisi)
+            // 2. Laporan Kegiatan Langsung (tanpa rencana kegiatan)
             $queryLaporanLangsung = LaporanKegiatan::whereNull('rencana_kegiatan_id')
                 ->whereIn('status', [
                     LaporanKegiatan::STATUS_DIAJUKAN,
                     LaporanKegiatan::STATUS_FINAL
                 ])
-                ->where(function ($q) use ($month) {
-                    $q->whereYear('realisasi_tanggal_mulai', $month->year)
-                      ->whereMonth('realisasi_tanggal_mulai', $month->month)
-                      ->orWhere(function ($q2) use ($month) {
+                ->where(function ($q) use ($selectedYear, $m) {
+                    $q->whereYear('realisasi_tanggal_mulai', $selectedYear)
+                      ->whereMonth('realisasi_tanggal_mulai', $m)
+                      ->orWhere(function ($q2) use ($selectedYear, $m) {
                           $q2->whereNull('realisasi_tanggal_mulai')
-                             ->whereYear('created_at', $month->year)
-                             ->whereMonth('created_at', $month->month);
+                             ->whereYear('created_at', $selectedYear)
+                             ->whereMonth('created_at', $m);
                       });
                 });
 
             if (!$isAdmin) {
-                $queryDisetujui->where('user_id', $user->id);
                 $querySelesai->where('user_id', $user->id);
                 $queryLaporanLangsung->where('user_id', $user->id);
             }
 
-            $countDisetujui       = $queryDisetujui->count();
             $countRencanaSelesai  = $querySelesai->count();
             $countLaporanLangsung = $queryLaporanLangsung->count();
-            $countSelesaiTotal    = $countRencanaSelesai + $countLaporanLangsung;
+            $countTotal           = $countRencanaSelesai + $countLaporanLangsung;
 
-            $chartDisetujui[]       = $countDisetujui;
             $chartRencanaSelesai[]  = $countRencanaSelesai;
             $chartLaporanLangsung[] = $countLaporanLangsung;
-            $chartSelesai[]         = $countSelesaiTotal;
-            $chartValues[]          = $countDisetujui + $countSelesaiTotal;
+            $chartRealisasi[]       = $countTotal;
+            $totalRealisasiTahun   += $countTotal;
         }
+
+        // Kompatibilitas variabel
+        $chartValues    = $chartRealisasi;
+        $chartSelesai   = $chartRealisasi;
+        $chartDisetujui = [];
 
         // === Tabel: 5 Rencana Terbaru ===
         $rencanaQuery = RencanaKegiatan::with('user')->latest();
@@ -150,6 +187,10 @@ class HomeController extends Controller
             'chartRencanaSelesai',
             'chartLaporanLangsung',
             'chartSelesai',
+            'chartRealisasi',
+            'totalRealisasiTahun',
+            'selectedYear',
+            'availableYears',
             'rencanaTerbaru',
             'mapData'
         ));
