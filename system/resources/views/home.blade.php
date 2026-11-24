@@ -186,16 +186,16 @@
                             </button>
                         </div>
                     </div>
-                    <div class="card-body d-flex flex-column flex-grow-1">
+                    <div class="card-body d-flex flex-column flex-grow-1" style="position: relative; min-height: 350px;">
                         <!-- Toolbar di luar kotak navy (di atas chart) -->
-                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom flex-shrink-0">
                             <div>
                                 <span class="badge badge-light border text-navy font-weight-bold px-2 py-1 shadow-sm" style="font-size: 0.82rem; border-color: #dee2e6 !important;" title="Total kegiatan terlaksana tahun {{ $selectedYear }}">
                                     <i class="fas fa-check-circle text-success mr-1"></i> Total: {{ $totalRealisasiTahun }} Selesai
                                 </span>
                             </div>
                             <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-secondary bg-white text-navy font-weight-bold dropdown-toggle shadow-sm" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; height: 31px; border: 1px solid #ced4da; color: #001f3f !important;">
+                                <button class="btn btn-sm btn-outline-secondary bg-white text-navy font-weight-bold dropdown-toggle shadow-sm" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; height: 30px; border: 1px solid #ced4da; color: #001f3f !important;">
                                     <i class="fas fa-calendar-alt text-muted mr-1"></i> Tahun {{ $selectedYear }}
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right shadow-sm p-1" aria-labelledby="dropdownFilterTahun" style="min-width: 120px; border-radius: 6px; border: 1px solid #e2e8f0;">
@@ -209,8 +209,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex-grow-1 w-100" style="position: relative; min-height: 310px;">
-                            <canvas id="chartKegiatan"></canvas>
+                        <!-- Canvas Chart dengan wrapper absolute agar ukurannya presisi dan tidak memanjang liar -->
+                        <div class="flex-grow-1 w-100 position-relative" style="min-height: 240px; overflow: hidden;">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+                                <canvas id="chartKegiatan"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -375,7 +378,7 @@
                             borderColor: '#001f3f',
                             borderWidth: 1,
                             borderRadius: 4,
-                            maxBarThickness: 38,
+                            maxBarThickness: 32,
                         }
                     ]
                 },
@@ -435,6 +438,7 @@
                         },
                         y: {
                             beginAtZero: true,
+                            suggestedMax: 5,
                             ticks: {
                                 stepSize: 1,
                                 precision: 0,
