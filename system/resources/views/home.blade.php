@@ -171,18 +171,17 @@
             <!-- Chart: Statistik Kegiatan per Bulan -->
             <div class="col-md-7 mb-4 d-flex">
                 <div class="card w-100 h-100 d-flex flex-column">
-                    <div class="card-header bg-navy d-flex align-items-center justify-content-between flex-wrap">
-                        <div class="d-flex flex-column py-1">
-                            <h3 class="card-title font-weight-bold mb-1" style="float: none; font-size: 1.05rem; display: block;">
-                                <i class="fas fa-chart-bar mr-2"></i>Statistik Kegiatan per Bulan
-                            </h3>
-                            <small class="text-white-50" style="font-size: 0.75rem; font-weight: normal; line-height: 1.3; display: block;">
-                                <i class="fas fa-info-circle mr-1"></i>Grafik perbandingan jumlah kegiatan berdasarkan status pelaksanaan setiap bulan pada tahun {{ $selectedYear }}
+                    <div class="card-header bg-navy">
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-chart-bar mr-2"></i>
+                            Statistik Kegiatan per Bulan
+                            <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
+                                <i class="fas fa-info-circle mr-1"></i> Grafik kegiatan per bulan pada tahun {{ $selectedYear }}
                             </small>
-                        </div>
-                        <div class="card-tools d-flex align-items-center ml-auto">
+                        </h3>
+                        <div class="card-tools d-flex align-items-center">
                             <div class="dropdown d-inline-block mr-2">
-                                <button class="btn btn-sm bg-white text-navy font-weight-bold dropdown-toggle shadow-sm" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; height: 31px; border: 1px solid #ced4da; color: #001f3f !important;">
+                                <button class="btn btn-sm btn-light text-navy font-weight-bold dropdown-toggle shadow-sm px-2.5 py-1" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; font-size: 0.8rem; height: 30px; line-height: 1.2;">
                                     <i class="fas fa-calendar-alt text-muted mr-1"></i> Tahun {{ $selectedYear }}
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right shadow-sm p-1" aria-labelledby="dropdownFilterTahun" style="min-width: 120px; border-radius: 6px; border: 1px solid #e2e8f0;">
@@ -197,6 +196,9 @@
                             </div>
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool btn-sm" data-card-widget="maximize">
+                                <i class="fas fa-expand"></i>
                             </button>
                         </div>
                     </div>
@@ -321,6 +323,11 @@
         }
         .dropdown-menu .dropdown-item:hover,
         .dropdown-menu .dropdown-item:focus {
+            background-color: #e9ecef !important;
+            color: #001f3f !important;
+        }
+        .dropdown-menu .dropdown-item.active:hover,
+        .dropdown-menu .dropdown-item.active:focus {
             background-color: #001f3f !important;
             color: #ffffff !important;
         }
