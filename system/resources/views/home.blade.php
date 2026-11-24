@@ -176,29 +176,12 @@
                             <i class="fas fa-chart-bar mr-2"></i>
                             Statistik Kegiatan per Bulan
                             <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
-                                <i class="fas fa-info-circle mr-1"></i> Grafik kegiatan per bulan pada tahun {{ $selectedYear }}
+                                <i class="fas fa-info-circle mr-1"></i> Grafik perbandingan jumlah kegiatan berdasarkan status pelaksanaan setiap bulan
                             </small>
                         </h3>
-                        <div class="card-tools d-flex align-items-center">
-                            <div class="dropdown d-inline-block mr-2">
-                                <button class="btn btn-sm btn-light text-navy font-weight-bold dropdown-toggle shadow-sm px-2.5 py-1" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; font-size: 0.8rem; height: 30px; line-height: 1.2;">
-                                    <i class="fas fa-calendar-alt text-muted mr-1"></i> Tahun {{ $selectedYear }}
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right shadow-sm p-1" aria-labelledby="dropdownFilterTahun" style="min-width: 120px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                    @foreach($availableYears as $yr)
-                                        <a class="dropdown-item rounded font-weight-bold py-1 px-3 {{ (int)$yr === (int)$selectedYear ? 'active' : 'text-dark' }}" 
-                                           href="{{ route('home', ['tahun' => $yr]) }}"
-                                           style="{{ (int)$yr === (int)$selectedYear ? 'background-color: #001f3f !important; color: #ffffff !important;' : '' }}">
-                                            Tahun {{ $yr }}
-                                        </a>
-                                    @endforeach
-                                </div>
-                            </div>
+                        <div class="card-tools">
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool btn-sm" data-card-widget="maximize">
-                                <i class="fas fa-expand"></i>
                             </button>
                         </div>
                     </div>
@@ -315,21 +298,6 @@
             font-size: 0.8rem !important;
         }
 
-        /* Custom Dropdown styling to match Navy theme */
-        .dropdown-menu .dropdown-item.active,
-        .dropdown-menu .dropdown-item:active {
-            background-color: #001f3f !important;
-            color: #ffffff !important;
-        }
-        .dropdown-menu .dropdown-item:hover,
-        .dropdown-menu .dropdown-item:focus {
-            background-color: #e9ecef !important;
-            color: #001f3f !important;
-        }
-        .dropdown-menu .dropdown-item.active:hover,
-        .dropdown-menu .dropdown-item.active:focus {
-            background-color: #001f3f !important;
-            color: #ffffff !important;
         }
     </style>
 @endpush
@@ -428,12 +396,6 @@
                                 size: 12
                             },
                             callbacks: {
-                                title: function(tooltipItems) {
-                                    if (tooltipItems.length > 0) {
-                                        return tooltipItems[0].label + ' {{ $selectedYear }}';
-                                    }
-                                    return '';
-                                },
                                 label: function(context) {
                                     var label = context.dataset.label || '';
                                     var val = context.parsed.y || 0;
