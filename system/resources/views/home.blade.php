@@ -171,7 +171,7 @@
             <!-- Chart: Statistik Kegiatan per Bulan -->
             <div class="col-md-7 mb-4 d-flex">
                 <div class="card w-100 h-100 d-flex flex-column">
-                    <div class="card-header bg-navy d-flex align-items-center justify-content-between flex-wrap">
+                    <div class="card-header bg-navy d-flex align-items-center justify-content-between">
                         <div class="d-flex flex-column py-1">
                             <h3 class="card-title font-weight-bold mb-1" style="float: none; font-size: 1.05rem; display: block;">
                                 <i class="fas fa-chart-bar mr-2"></i>Realisasi Kegiatan per Bulan
@@ -180,13 +180,23 @@
                                 <i class="fas fa-info-circle mr-1"></i>Grafik jumlah kegiatan yang telah terlaksana pada setiap bulan di tahun {{ $selectedYear }}
                             </small>
                         </div>
-                        <div class="card-tools d-flex align-items-center ml-auto">
-                            <span class="badge badge-light text-navy font-weight-bold px-2 py-1 mr-2 d-none d-sm-inline-block shadow-sm" style="font-size: 0.8rem;" title="Total kegiatan terlaksana tahun {{ $selectedYear }}">
-                                <i class="fas fa-check-circle text-success mr-1"></i> Total: {{ $totalRealisasiTahun }} Selesai
-                            </span>
-                            <div class="dropdown d-inline-block mr-2">
-                                <button class="btn btn-sm bg-white text-navy font-weight-bold dropdown-toggle shadow-sm" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; height: 31px; border: 1px solid #ced4da; color: #001f3f !important;">
-                                    Tahun {{ $selectedYear }}
+                        <div class="card-tools ml-auto">
+                            <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body d-flex flex-column flex-grow-1">
+                        <!-- Toolbar di luar kotak navy (di atas chart) -->
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <div>
+                                <span class="badge badge-light border text-navy font-weight-bold px-2 py-1 shadow-sm" style="font-size: 0.82rem; border-color: #dee2e6 !important;" title="Total kegiatan terlaksana tahun {{ $selectedYear }}">
+                                    <i class="fas fa-check-circle text-success mr-1"></i> Total: {{ $totalRealisasiTahun }} Selesai
+                                </span>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary bg-white text-navy font-weight-bold dropdown-toggle shadow-sm" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; height: 31px; border: 1px solid #ced4da; color: #001f3f !important;">
+                                    <i class="fas fa-calendar-alt text-muted mr-1"></i> Tahun {{ $selectedYear }}
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right shadow-sm p-1" aria-labelledby="dropdownFilterTahun" style="min-width: 120px; border-radius: 6px; border: 1px solid #e2e8f0;">
                                     @foreach($availableYears as $yr)
@@ -198,13 +208,8 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
                         </div>
-                    </div>
-                    <div class="card-body flex-grow-1" style="position: relative; min-height: 350px;">
-                        <div style="position: absolute; top: 1.25rem; left: 1.25rem; right: 1.25rem; bottom: 1.25rem;">
+                        <div class="flex-grow-1 w-100" style="position: relative; min-height: 310px;">
                             <canvas id="chartKegiatan"></canvas>
                         </div>
                     </div>
