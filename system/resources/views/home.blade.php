@@ -171,49 +171,23 @@
             <!-- Chart: Statistik Kegiatan per Bulan -->
             <div class="col-md-7 mb-4 d-flex">
                 <div class="card w-100 h-100 d-flex flex-column">
-                    <div class="card-header bg-navy d-flex align-items-center justify-content-between">
-                        <div class="d-flex flex-column py-1">
-                            <h3 class="card-title font-weight-bold mb-1" style="float: none; font-size: 1.05rem; display: block;">
-                                <i class="fas fa-chart-bar mr-2"></i>Realisasi Kegiatan per Bulan
-                            </h3>
-                            <small class="text-white-50" style="font-size: 0.75rem; font-weight: normal; line-height: 1.3; display: block;">
-                                <i class="fas fa-info-circle mr-1"></i>Grafik jumlah kegiatan yang telah terlaksana pada setiap bulan di tahun {{ $selectedYear }}
+                    <div class="card-header bg-navy">
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-chart-bar mr-2"></i>
+                            Statistik Kegiatan per Bulan
+                            <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
+                                <i class="fas fa-info-circle mr-1"></i> Grafik perbandingan jumlah kegiatan berdasarkan status pelaksanaan setiap bulan
                             </small>
-                        </div>
-                        <div class="card-tools ml-auto">
+                        </h3>
+                        <div class="card-tools">
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="card-body d-flex flex-column flex-grow-1" style="position: relative; min-height: 350px;">
-                        <!-- Toolbar di luar kotak navy (di atas chart) -->
-                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom flex-shrink-0">
-                            <div>
-                                <span class="badge badge-light border text-navy font-weight-bold px-2 py-1 shadow-sm" style="font-size: 0.82rem; border-color: #dee2e6 !important;" title="Total kegiatan terlaksana tahun {{ $selectedYear }}">
-                                    <i class="fas fa-check-circle text-success mr-1"></i> Total: {{ $totalRealisasiTahun }} Selesai
-                                </span>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-secondary bg-white text-navy font-weight-bold dropdown-toggle shadow-sm" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; height: 30px; border: 1px solid #ced4da; color: #001f3f !important;">
-                                    <i class="fas fa-calendar-alt text-muted mr-1"></i> Tahun {{ $selectedYear }}
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right shadow-sm p-1" aria-labelledby="dropdownFilterTahun" style="min-width: 120px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                    @foreach($availableYears as $yr)
-                                        <a class="dropdown-item rounded font-weight-bold py-1 px-3 {{ (int)$yr === (int)$selectedYear ? 'active' : 'text-dark' }}" 
-                                           href="{{ route('home', ['tahun' => $yr]) }}"
-                                           style="{{ (int)$yr === (int)$selectedYear ? 'background-color: #001f3f !important; color: #ffffff !important;' : '' }}">
-                                            Tahun {{ $yr }}
-                                        </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Canvas Chart dengan wrapper absolute agar ukurannya presisi dan tidak memanjang liar -->
-                        <div class="flex-grow-1 w-100 position-relative" style="min-height: 240px; overflow: hidden;">
-                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-                                <canvas id="chartKegiatan"></canvas>
-                            </div>
+                    <div class="card-body flex-grow-1" style="position: relative; min-height: 350px;">
+                        <div style="position: absolute; top: 1.25rem; left: 1.25rem; right: 1.25rem; bottom: 1.25rem;">
+                            <canvas id="chartKegiatan"></canvas>
                         </div>
                     </div>
                 </div>
@@ -324,16 +298,6 @@
             font-size: 0.8rem !important;
         }
 
-        /* Custom Dropdown styling to match Navy theme */
-        .dropdown-menu .dropdown-item.active,
-        .dropdown-menu .dropdown-item:active {
-            background-color: #001f3f !important;
-            color: #ffffff !important;
-        }
-        .dropdown-menu .dropdown-item:hover,
-        .dropdown-menu .dropdown-item:focus {
-            background-color: #001f3f !important;
-            color: #ffffff !important;
         }
     </style>
 @endpush
@@ -359,26 +323,42 @@
                 $.fn.bootstrapTooltip = bootstrapTooltip;
             }
 
-            // === Chart.js: Realisasi Kegiatan per Bulan (Rekomendasi 1) ===
+            // === Chart.js: Stacked Bar Chart Kegiatan per Bulan ===
             var ctx = document.getElementById('chartKegiatan').getContext('2d');
-            var dataRealisasi = @json($chartRealisasi);
-            var dataRencana = @json($chartRencanaSelesai);
-            var dataLangsung = @json($chartLaporanLangsung);
-
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: @json($chartLabels),
                     datasets: [
                         {
-                            label: 'Kegiatan Terlaksana',
-                            data: dataRealisasi,
-                            backgroundColor: 'rgba(0, 31, 63, 0.88)',
-                            hoverBackgroundColor: '#001f3f',
-                            borderColor: '#001f3f',
+                            label: 'Akan Dilaksanakan',
+                            data: @json($chartDisetujui),
+                            backgroundColor: '#28a745',
+                            borderColor: '#1e7e34',
                             borderWidth: 1,
                             borderRadius: 4,
-                            maxBarThickness: 32,
+                            stack: 'Stack 0',
+                            maxBarThickness: 40,
+                        },
+                        {
+                            label: 'Telah Selesai',
+                            data: @json($chartRencanaSelesai),
+                            backgroundColor: '#007bff',
+                            borderColor: '#0056b3',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            stack: 'Stack 0',
+                            maxBarThickness: 40,
+                        },
+                        {
+                            label: 'Kegiatan Langsung',
+                            data: @json($chartLaporanLangsung),
+                            backgroundColor: '#ffc107',
+                            borderColor: '#d39e00',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            stack: 'Stack 0',
+                            maxBarThickness: 40,
                         }
                     ]
                 },
@@ -388,7 +368,19 @@
                     devicePixelRatio: window.devicePixelRatio || 2,
                     plugins: {
                         legend: {
-                            display: false
+                            display: true,
+                            position: 'top',
+                            align: 'center',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'rectRounded',
+                                padding: 14,
+                                font: {
+                                    size: 12,
+                                    weight: '600',
+                                    family: "'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+                                }
+                            }
                         },
                         tooltip: {
                             backgroundColor: '#001f3f',
@@ -396,7 +388,6 @@
                             bodyColor: '#fff',
                             padding: 10,
                             cornerRadius: 6,
-                            displayColors: false, // Hilangkan kotak berwarna di samping teks label
                             titleFont: {
                                 size: 12,
                                 weight: '600'
@@ -406,29 +397,27 @@
                             },
                             callbacks: {
                                 label: function(context) {
+                                    var label = context.dataset.label || '';
                                     var val = context.parsed.y || 0;
-                                    return 'Total: ' + val + ' Kegiatan Terlaksana';
+                                    return '  • ' + label + ': ' + val + ' Kegiatan';
                                 },
-                                afterLabel: function(context) {
-                                    var idx = context.dataIndex;
-                                    var rnc = dataRencana[idx] || 0;
-                                    var lng = dataLangsung[idx] || 0;
-                                    var lines = [];
-                                    if (context.parsed.y > 0) {
-                                        lines.push(' • Rencana Selesai: ' + rnc);
-                                        lines.push(' • Kegiatan Langsung: ' + lng);
-                                    }
-                                    return lines;
+                                footer: function(tooltipItems) {
+                                    var sum = 0;
+                                    tooltipItems.forEach(function(item) {
+                                        sum += item.parsed.y || 0;
+                                    });
+                                    return 'Total: ' + sum + ' Kegiatan';
                                 }
                             }
                         }
                     },
                     scales: {
                         x: {
+                            stacked: true,
                             ticks: {
                                 font: {
                                     size: 11,
-                                    weight: '600',
+                                    weight: '500',
                                     family: "'Source Sans Pro', sans-serif"
                                 }
                             },
@@ -437,8 +426,8 @@
                             }
                         },
                         y: {
+                            stacked: true,
                             beginAtZero: true,
-                            suggestedMax: 5,
                             ticks: {
                                 stepSize: 1,
                                 precision: 0,
