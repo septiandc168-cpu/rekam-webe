@@ -179,14 +179,7 @@
                                 <i class="fas fa-info-circle mr-1"></i> Grafik jumlah kegiatan yang telah terlaksana pada setiap bulan di tahun {{ $selectedYear }}
                             </small>
                         </h3>
-                        <div class="card-tools d-flex align-items-center">
-                            <select class="custom-select custom-select-sm font-weight-bold text-dark shadow-sm mr-2" onchange="window.location.href='{{ route('home') }}?tahun=' + this.value" style="border-radius: 4px; height: 30px; font-size: 0.8rem; width: auto; cursor: pointer;">
-                                @foreach($availableYears as $yr)
-                                    <option value="{{ $yr }}" {{ (int)$yr === (int)$selectedYear ? 'selected' : '' }}>
-                                        Tahun {{ $yr }}
-                                    </option>
-                                @endforeach
-                            </select>
+                        <div class="card-tools">
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -195,9 +188,34 @@
                             </button>
                         </div>
                     </div>
-                    <div class="card-body flex-grow-1" style="position: relative; min-height: 350px;">
-                        <div style="position: absolute; top: 1.25rem; left: 1.25rem; right: 1.25rem; bottom: 1.25rem;">
-                            <canvas id="chartKegiatan"></canvas>
+                    <div class="card-body d-flex flex-column flex-grow-1 p-3">
+                        <!-- Toolbar Sejajar dengan Tombol pada Kalender -->
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom flex-shrink-0" style="min-height: 38px;">
+                            <div>
+                                <span class="badge badge-light border text-navy font-weight-bold px-2.5 py-1.5 shadow-sm" style="font-size: 0.82rem; border-color: #dee2e6 !important;" title="Total kegiatan terlaksana tahun {{ $selectedYear }}">
+                                    <i class="fas fa-check-circle text-success mr-1"></i> Total: {{ $totalRealisasiTahun }} Selesai
+                                </span>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary bg-white text-navy font-weight-bold dropdown-toggle shadow-sm px-2.5" type="button" id="dropdownFilterTahun" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 4px; height: 31px; border: 1px solid #ced4da; color: #001f3f !important;">
+                                    <i class="fas fa-calendar-alt text-muted mr-1"></i> Tahun {{ $selectedYear }}
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right shadow-sm p-1" aria-labelledby="dropdownFilterTahun" style="min-width: 120px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                    @foreach($availableYears as $yr)
+                                        <a class="dropdown-item rounded font-weight-bold py-1 px-3 {{ (int)$yr === (int)$selectedYear ? 'active' : 'text-dark' }}" 
+                                           href="{{ route('home', ['tahun' => $yr]) }}"
+                                           style="{{ (int)$yr === (int)$selectedYear ? 'background-color: #001f3f !important; color: #ffffff !important;' : '' }}">
+                                            Tahun {{ $yr }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Canvas Chart Container dengan wrapper absolute agar stabil dan rapi -->
+                        <div class="flex-grow-1 w-100 position-relative" style="min-height: 250px; overflow: hidden;">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+                                <canvas id="chartKegiatan"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -307,7 +325,16 @@
             padding: 0.2em 0.5em !important;
             font-size: 0.8rem !important;
         }
-
+        .dropdown-menu .dropdown-item.active,
+        .dropdown-menu .dropdown-item:active {
+            background-color: #001f3f !important;
+            color: #ffffff !important;
+        }
+        .dropdown-menu .dropdown-item:hover,
+        .dropdown-menu .dropdown-item:focus {
+            background-color: #e9ecef !important;
+            color: #001f3f !important;
+        }
     </style>
 @endpush
 
