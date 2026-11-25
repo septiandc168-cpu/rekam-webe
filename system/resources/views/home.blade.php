@@ -174,14 +174,24 @@
                     <div class="card-header bg-navy">
                         <h3 class="card-title mb-0">
                             <i class="fas fa-chart-bar mr-2"></i>
-                            Statistik Kegiatan per Bulan
+                            Realisasi Kegiatan per Bulan
                             <small class="d-block text-white-50 mt-1" style="font-size: 0.73rem; font-weight: normal;">
-                                <i class="fas fa-info-circle mr-1"></i> Grafik perbandingan jumlah kegiatan berdasarkan status pelaksanaan setiap bulan
+                                <i class="fas fa-info-circle mr-1"></i> Grafik jumlah kegiatan yang telah terlaksana pada setiap bulan di tahun {{ $selectedYear }}
                             </small>
                         </h3>
-                        <div class="card-tools">
+                        <div class="card-tools d-flex align-items-center">
+                            <select class="custom-select custom-select-sm font-weight-bold text-dark shadow-sm mr-2" onchange="window.location.href='{{ route('home') }}?tahun=' + this.value" style="border-radius: 4px; height: 30px; font-size: 0.8rem; width: auto; cursor: pointer;">
+                                @foreach($availableYears as $yr)
+                                    <option value="{{ $yr }}" {{ (int)$yr === (int)$selectedYear ? 'selected' : '' }}>
+                                        Tahun {{ $yr }}
+                                    </option>
+                                @endforeach
+                            </select>
                             <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool btn-sm" data-card-widget="maximize">
+                                <i class="fas fa-expand"></i>
                             </button>
                         </div>
                     </div>
@@ -298,7 +308,6 @@
             font-size: 0.8rem !important;
         }
 
-        }
     </style>
 @endpush
 
@@ -323,42 +332,26 @@
                 $.fn.bootstrapTooltip = bootstrapTooltip;
             }
 
-            // === Chart.js: Stacked Bar Chart Kegiatan per Bulan ===
+            // === Chart.js: Realisasi Kegiatan per Bulan (Rekomendasi 1) ===
             var ctx = document.getElementById('chartKegiatan').getContext('2d');
+            var dataRealisasi = @json($chartRealisasi);
+            var dataRencana = @json($chartRencanaSelesai);
+            var dataLangsung = @json($chartLaporanLangsung);
+
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: @json($chartLabels),
                     datasets: [
                         {
-                            label: 'Akan Dilaksanakan',
-                            data: @json($chartDisetujui),
-                            backgroundColor: '#28a745',
-                            borderColor: '#1e7e34',
+                            label: 'Kegiatan Terlaksana',
+                            data: dataRealisasi,
+                            backgroundColor: 'rgba(0, 31, 63, 0.88)',
+                            hoverBackgroundColor: '#001f3f',
+                            borderColor: '#001f3f',
                             borderWidth: 1,
                             borderRadius: 4,
-                            stack: 'Stack 0',
-                            maxBarThickness: 40,
-                        },
-                        {
-                            label: 'Telah Selesai',
-                            data: @json($chartRencanaSelesai),
-                            backgroundColor: '#007bff',
-                            borderColor: '#0056b3',
-                            borderWidth: 1,
-                            borderRadius: 4,
-                            stack: 'Stack 0',
-                            maxBarThickness: 40,
-                        },
-                        {
-                            label: 'Kegiatan Langsung',
-                            data: @json($chartLaporanLangsung),
-                            backgroundColor: '#ffc107',
-                            borderColor: '#d39e00',
-                            borderWidth: 1,
-                            borderRadius: 4,
-                            stack: 'Stack 0',
-                            maxBarThickness: 40,
+                            maxBarThickness: 34,
                         }
                     ]
                 },
@@ -368,19 +361,7 @@
                     devicePixelRatio: window.devicePixelRatio || 2,
                     plugins: {
                         legend: {
-                            display: true,
-                            position: 'top',
-                            align: 'center',
-                            labels: {
-                                usePointStyle: true,
-                                pointStyle: 'rectRounded',
-                                padding: 14,
-                                font: {
-                                    size: 12,
-                                    weight: '600',
-                                    family: "'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-                                }
-                            }
+                            display: false
                         },
                         tooltip: {
                             backgroundColor: '#001f3f',
@@ -388,6 +369,7 @@
                             bodyColor: '#fff',
                             padding: 10,
                             cornerRadius: 6,
+                            displayColors: false, // Hilangkan kotak berwarna di samping teks label
                             titleFont: {
                                 size: 12,
                                 weight: '600'
@@ -396,28 +378,36 @@
                                 size: 12
                             },
                             callbacks: {
-                                label: function(context) {
-                                    var label = context.dataset.label || '';
-                                    var val = context.parsed.y || 0;
-                                    return '  • ' + label + ': ' + val + ' Kegiatan';
+                                title: function(tooltipItems) {
+                                    if (tooltipItems.length > 0) {
+                                        return tooltipItems[0].label + ' {{ $selectedYear }}';
+                                    }
+                                    return '';
                                 },
-                                footer: function(tooltipItems) {
-                                    var sum = 0;
-                                    tooltipItems.forEach(function(item) {
-                                        sum += item.parsed.y || 0;
-                                    });
-                                    return 'Total: ' + sum + ' Kegiatan';
+                                label: function(context) {
+                                    var val = context.parsed.y || 0;
+                                    return 'Total: ' + val + ' Kegiatan Terlaksana';
+                                },
+                                afterLabel: function(context) {
+                                    var idx = context.dataIndex;
+                                    var rnc = dataRencana[idx] || 0;
+                                    var lng = dataLangsung[idx] || 0;
+                                    var lines = [];
+                                    if (context.parsed.y > 0) {
+                                        lines.push(' • Rencana Selesai: ' + rnc);
+                                        lines.push(' • Kegiatan Langsung: ' + lng);
+                                    }
+                                    return lines;
                                 }
                             }
                         }
                     },
                     scales: {
                         x: {
-                            stacked: true,
                             ticks: {
                                 font: {
                                     size: 11,
-                                    weight: '500',
+                                    weight: '600',
                                     family: "'Source Sans Pro', sans-serif"
                                 }
                             },
@@ -426,8 +416,8 @@
                             }
                         },
                         y: {
-                            stacked: true,
                             beginAtZero: true,
+                            suggestedMax: 5,
                             ticks: {
                                 stepSize: 1,
                                 precision: 0,
